@@ -9,7 +9,7 @@
     "target": "es2019",
     "sourceMap": true,
     "strict": true,
-    "outDir": "./dist",
+    "outDir": "./lib",
     "baseUrl": "./",
     "incremental": true
   },

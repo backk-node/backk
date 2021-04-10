@@ -16,6 +16,8 @@ export default function performPostQueryOperations<T>(
   const rootProjection = getRootProjection(projection, EntityClass, Types);
 
   if (Object.keys(rootProjection).length > 0) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
     cursor.project(rootProjection);
   }
 

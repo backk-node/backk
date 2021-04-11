@@ -1,0 +1,1 @@
+{"version":3,"file":"getServiceNamespace.js","sourceRoot":"","sources":["../../src/utils/getServiceNamespace.ts"],"names":[],"mappings":";;;;;AAAA,sEAA8C;AAE9C,SAAwB,wBAAwB;IAC9C,IAAI,CAAC,OAAO,CAAC,GAAG,CAAC,iBAAiB,EAAE;QAClC,MAAM,IAAI,KAAK,CAAC,wDAAwD,CAAC,CAAC;KAC3E;IAED,OAAO,wBAAc,EAAE,GAAG,GAAG,GAAG,OAAO,CAAC,GAAG,CAAC,iBAAiB,CAAC;AAChE,CAAC;AAND,2CAMC"}

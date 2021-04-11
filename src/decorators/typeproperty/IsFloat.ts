@@ -1,8 +1,8 @@
-import { ValidationMetadataArgs } from "class-validator/metadata/ValidationMetadataArgs";
-import { getFromContainer, MetadataStorage, ValidationTypes } from "class-validator";
-import { ValidationMetadata } from "class-validator/metadata/ValidationMetadata";
+import { ValidationMetadataArgs } from 'class-validator/metadata/ValidationMetadataArgs';
+import { getFromContainer, MetadataStorage, ValidationTypes } from 'class-validator';
+import { ValidationMetadata } from 'class-validator/metadata/ValidationMetadata';
 
-export function IsFloat(maxDecimalPlaces: number, options?: { each: boolean}) {
+export default function IsFloat(maxDecimalPlaces: number, options?: { each: boolean }) {
   // eslint-disable-next-line @typescript-eslint/ban-types
   return function(object: Object, propertyName: string) {
     const validationMetadataArgs: ValidationMetadataArgs = {

@@ -1,7 +1,7 @@
 import typeAnnotationContainer from './typePropertyAnnotationContainer';
 import { HttpRequestOptions } from "../../remote/http/callRemoteService";
 
-export function FetchFromRemoteService<T, U>(
+export default function FetchFromRemoteService<T, U>(
   remoteServiceFunctionUrl: string,
   buildRemoteServiceFunctionArgument: (arg: T, response: U) => { [key: string]: any },
   options?: HttpRequestOptions

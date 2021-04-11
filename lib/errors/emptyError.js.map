@@ -1,0 +1,1 @@
+{"version":3,"file":"emptyError.js","sourceRoot":"","sources":["../../src/errors/emptyError.ts"],"names":[],"mappings":";;AAAA,oDAAmE;AAEnE,MAAM,UAAU,GAAe;IAC3B,CAAC,6BAAgB,CAAC,EAAE,IAAI;IACxB,UAAU,EAAE,GAAG;IACf,OAAO,EAAE,aAAa;CACzB,CAAA;AAED,kBAAe,UAAU,CAAC"}

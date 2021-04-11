@@ -7,7 +7,7 @@ import log, { Severity } from "../observability/logging/log";
 import scheduleCronJobsForExecution from "../scheduling/scheduleCronJobsForExecution";
 import scheduleJobsForExecution from "../scheduling/scheduleJobsForExecution";
 import StartupCheckService from "../service/startup/StartupCheckService";
-import initializeCls from "../continuationlocalstorages/initializeCls";
+import initializeCls from "../continuationlocalstorage/initializeCls";
 
 export default async function initializeBackk(controller: any, dbManager: AbstractDbManager) {
   initializeCls();

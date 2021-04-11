@@ -1,0 +1,1 @@
+{"version":3,"file":"isCreateFunction.js","sourceRoot":"","sources":["../../../../src/service/crudentity/utils/isCreateFunction.ts"],"names":[],"mappings":";;;;;AAAA,iJAAyH;AAEzH,SAAwB,gBAAgB,CAAC,YAAsB,EAAE,YAAoB;IACnF,OAAO,CACL,YAAY,CAAC,UAAU,CAAC,QAAQ,CAAC;QACjC,YAAY,CAAC,UAAU,CAAC,QAAQ,CAAC;QACjC,4CAAkC,CAAC,uBAAuB,CAAC,YAAY,EAAE,YAAY,CAAC,CACvF,CAAC;AACJ,CAAC;AAND,mCAMC"}

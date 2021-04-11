@@ -9,7 +9,7 @@ export default function ArrayNotUnique(validationOptions?: ValidationOptions) {
       constraints: ['arrayNotUnique'],
       options: validationOptions,
       validator: {
-        validate(value: any) {
+        validate() {
           return true;
         }
       }

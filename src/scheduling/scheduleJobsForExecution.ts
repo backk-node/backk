@@ -6,7 +6,7 @@ import __Backk__JobScheduling from "./entities/__Backk__JobScheduling";
 import { logError } from "../observability/logging/log";
 import forEachAsyncParallel from "../utils/forEachAsyncParallel";
 import { scheduleCronJob } from "./scheduleCronJob";
-import getClsNamespace from "../continuationlocalstorages/getClsNamespace";
+import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
 
 export let scheduledJobs: __Backk__JobScheduling[] | null | undefined = null;
 

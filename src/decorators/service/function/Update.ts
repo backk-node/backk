@@ -2,7 +2,7 @@ import serviceFunctionAnnotationContainer from './serviceFunctionAnnotationConta
 
 export type UpdateType = 'update' | 'addOrRemove';
 
-export function Update(updateType: UpdateType) {
+export default function Update(updateType: UpdateType) {
   // eslint-disable-next-line @typescript-eslint/ban-types
   return function(object: Object, functionName: string) {
     serviceFunctionAnnotationContainer.addUpdateAnnotation(object.constructor, functionName, updateType);

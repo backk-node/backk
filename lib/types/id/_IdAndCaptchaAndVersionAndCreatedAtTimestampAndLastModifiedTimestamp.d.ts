@@ -1,0 +1,4 @@
+import _IdAndCaptchaAndVersionAndCreatedAtTimestamp from "./_IdAndCaptchaAndVersionAndCreatedAtTimestamp";
+export default class _IdAndCaptchaAndVersionAndCreatedAtTimestampAndLastModifiedTimestamp extends _IdAndCaptchaAndVersionAndCreatedAtTimestamp {
+    readonly lastModifiedTimestamp: Date;
+}

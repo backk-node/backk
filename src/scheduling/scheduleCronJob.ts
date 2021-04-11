@@ -6,7 +6,7 @@ import wait from "../utils/wait";
 import __Backk__JobScheduling from "./entities/__Backk__JobScheduling";
 import tryExecuteServiceMethod from "../execution/tryExecuteServiceMethod";
 import { logError } from "../observability/logging/log";
-import getClsNamespace from "../continuationlocalstorages/getClsNamespace";
+import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
 
 const scheduledJobs: { [key: string]: CronJob } = {};
 

@@ -16,7 +16,7 @@ import shouldInitializeDb from './shouldInitializeDb';
 import removeDbInitialization from './removeDbInitialization';
 import setDbInitialized from './setDbInitialized';
 import removeDbInitializationWhenPendingTooLong from './removeDbInitializationWhenPendingTooLong';
-import getClsNamespace from '../../../../continuationlocalstorages/getClsNamespace';
+import getClsNamespace from '../../../../continuationlocalstorage/getClsNamespace';
 
 let isMongoDBInitialized = false;
 

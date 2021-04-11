@@ -47,7 +47,7 @@ function getCronIntervalStr(interval: number | undefined): string {
   return '/' + interval;
 }
 
-export function CronJob(cronSchedule: CronSchedule, retryIntervalsInSecs: number[] = defaultRetryIntervals) {
+export default function CronJob(cronSchedule: CronSchedule, retryIntervalsInSecs: number[] = defaultRetryIntervals) {
   const cronScheduleStr = Array(6)
     .fill('')
     .map((defaultCronParameter, index) => {

@@ -30,7 +30,7 @@ import { BACKK_ERRORS } from "../errors/backkErrors";
 import emptyError from "../errors/emptyError";
 import fetchFromRemoteServices from "./fetchFromRemoteServices";
 import isBackkError from "../errors/isBackkError";
-import getClsNamespace from "../continuationlocalstorages/getClsNamespace";
+import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
 
 export interface ExecuteServiceFunctionOptions {
   httpMethod?: 'POST' | 'GET';
@@ -383,7 +383,7 @@ export default async function tryExecuteServiceMethod(
             // noinspection ExceptionCaughtLocallyJS
             throw new Error(
               serviceFunctionName +
-                ": multiple remote service calls cannot be executed because distributed transactions are not supported. To allow multiple remote service calls that don't require a transaction, annotate service function with @NoDistributedTransaction"
+                ": multiple remote service calls cannot be executed because distributed transactions are not supported. To allow multiple remote service calls that don't require a transaction, annotate service function with @NoDistributedTransactionNeeded"
             );
           } else if (
             clsNamespace.get('dbManagerOperationAfterRemoteServiceCall') &&
@@ -395,7 +395,7 @@ export default async function tryExecuteServiceMethod(
             // noinspection ExceptionCaughtLocallyJS
             throw new Error(
               serviceFunctionName +
-                ': database manager operation(s) that can fail cannot be called after a remote service callRemoteService that cannot be rolled back. Alternatively, service function must be annotated with @NoDistributedTransaction if no distributed transaction is needed'
+                ': database manager operation(s) that can fail cannot be called after a remote service callRemoteService that cannot be rolled back. Alternatively, service function must be annotated with @NoDistributedTransactionNeeded if no distributed transaction is needed'
             );
           }
         } catch (error) {

@@ -3,7 +3,7 @@ import BaseService from "../service/BaseService";
 import forEachAsyncSequential from "../utils/forEachAsyncSequential";
 import serviceFunctionAnnotationContainer
   from "../decorators/service/function/serviceFunctionAnnotationContainer";
-import getClsNamespace from "../continuationlocalstorages/getClsNamespace";
+import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
 
 export default async function tryExecuteOnStartUpTasks(controller: any, dbManager: AbstractDbManager) {
   const clsNamespace = getClsNamespace('serviceFunctionExecution');

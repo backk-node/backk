@@ -12,7 +12,7 @@ import tryExecuteServiceMethod from "../execution/tryExecuteServiceMethod";
 import findServiceFunctionArgumentType from "../metadata/findServiceFunctionArgumentType";
 import BackkResponse from "../execution/BackkResponse";
 import { HttpStatusCodes, Values } from "../constants/constants";
-import getClsNamespace from "../continuationlocalstorages/getClsNamespace";
+import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
 
 const cronJobs: { [key: string]: CronJob } = {};
 

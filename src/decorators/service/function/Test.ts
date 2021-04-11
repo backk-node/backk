@@ -1,7 +1,7 @@
 import serviceFunctionAnnotationContainer from './serviceFunctionAnnotationContainer';
 import { FieldPathNameToFieldValueMap } from './PostTests';
 
-export function Test(expectedResult: FieldPathNameToFieldValueMap) {
+export default function Test(expectedResult: FieldPathNameToFieldValueMap) {
   const finalFieldPathNameToFieldValueMap = Object.entries(expectedResult).reduce(
     (finalFieldPathNameToFieldValueMap, [fieldPathName, fieldValue]) => {
       let finalFieldValue = fieldValue;

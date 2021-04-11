@@ -9,7 +9,7 @@ export type TestSetupSpec = {
   postmanTests?: string[];
 };
 
-export function TestSetup(serviceFunctionsOrSpecsToExecute: (string | TestSetupSpec)[]) {
+export default function TestSetup(serviceFunctionsOrSpecsToExecute: (string | TestSetupSpec)[]) {
   // eslint-disable-next-line @typescript-eslint/ban-types
   return function(object: Object, functionName: string) {
     serviceFunctionAnnotationContainer.addTestSetup(

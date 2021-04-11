@@ -15,7 +15,7 @@ export type FieldPathNameToFieldValueMap = {
   [key: string]: any;
 };
 
-export function PostTests(testSpecs: PostTestSpec[]) {
+export default function PostTests(testSpecs: PostTestSpec[]) {
   testSpecs.forEach(testSpec => {
     testSpec.expectedResult = Object.entries(
       testSpec.expectedResult

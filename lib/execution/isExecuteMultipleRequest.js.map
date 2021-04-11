@@ -1,0 +1,1 @@
+{"version":3,"file":"isExecuteMultipleRequest.js","sourceRoot":"","sources":["../../src/execution/isExecuteMultipleRequest.ts"],"names":[],"mappings":";;AAAA,SAAwB,wBAAwB,CAAC,mBAA2B;IAC1E,IACE,mBAAmB,KAAK,4CAA4C;QACpE,mBAAmB,KAAK,6CAA6C;QACrE,mBAAmB,KAAK,4CAA4C;QACpE,mBAAmB,KAAK,6CAA6C,EACrE;QACA,OAAO,IAAI,CAAC;KACb;IAED,OAAO,KAAK,CAAC;AACf,CAAC;AAXD,2CAWC"}

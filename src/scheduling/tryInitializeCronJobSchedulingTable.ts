@@ -6,7 +6,7 @@ import __Backk__CronJobScheduling from "./entities/__Backk__CronJobScheduling";
 import parser from "cron-parser";
 import forEachAsyncParallel from "../utils/forEachAsyncParallel";
 import { HttpStatusCodes } from "../constants/constants";
-import getClsNamespace from "../continuationlocalstorages/getClsNamespace";
+import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
 
 export default async function tryInitializeCronJobSchedulingTable(dbManager: AbstractDbManager) {
   const clsNamespace = getClsNamespace('serviceFunctionExecution');

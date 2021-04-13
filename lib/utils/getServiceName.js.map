@@ -1,1 +1,0 @@
-{"version":3,"file":"getServiceName.js","sourceRoot":"","sources":["../../src/utils/getServiceName.ts"],"names":[],"mappings":";;AAAA,SAAwB,cAAc;IACpC,MAAM,GAAG,GAAG,OAAO,CAAC,GAAG,EAAE,CAAC;IAC1B,OAAO,GAAG,CAAC,KAAK,CAAC,GAAG,CAAC,CAAC,OAAO,EAAE,CAAC,CAAC,CAAC,CAAC;AACrC,CAAC;AAHD,iCAGC"}

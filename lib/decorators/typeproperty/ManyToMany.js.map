@@ -1,1 +1,0 @@
-{"version":3,"file":"ManyToMany.js","sourceRoot":"","sources":["../../../src/decorators/typeproperty/ManyToMany.ts"],"names":[],"mappings":";;;;;AAAA,wGAAwE;AAExE,SAAwB,UAAU;IAEhC,OAAO,UAAS,MAAc,EAAE,YAAoB;QAClD,yCAAuB,CAAC,2BAA2B,CAAC,MAAM,CAAC,WAAW,EAAE,YAAY,CAAC,CAAC;IACxF,CAAC,CAAC;AACJ,CAAC;AALD,6BAKC"}

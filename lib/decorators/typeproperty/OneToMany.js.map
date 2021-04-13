@@ -1,1 +1,0 @@
-{"version":3,"file":"OneToMany.js","sourceRoot":"","sources":["../../../src/decorators/typeproperty/OneToMany.ts"],"names":[],"mappings":";;;;;AAAA,wGAAwE;AAExE,SAAwB,SAAS,CAAC,2BAA2B,GAAG,KAAK;IAEnE,OAAO,UAAS,MAAc,EAAE,YAAoB;QAClD,yCAAuB,CAAC,0BAA0B,CAChD,MAAM,CAAC,WAAW,EAClB,YAAY,EACZ,2BAA2B,CAC5B,CAAC;IACJ,CAAC,CAAC;AACJ,CAAC;AATD,4BASC"}

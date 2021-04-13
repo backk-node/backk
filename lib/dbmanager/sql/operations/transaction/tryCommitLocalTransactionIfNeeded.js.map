@@ -1,1 +1,0 @@
-{"version":3,"file":"tryCommitLocalTransactionIfNeeded.js","sourceRoot":"","sources":["../../../../../src/dbmanager/sql/operations/transaction/tryCommitLocalTransactionIfNeeded.ts"],"names":[],"mappings":";;AAEe,KAAK,UAAU,iCAAiC,CAAC,eAAwB,EAAE,SAA+B;IACvH,IAAI,eAAe,EAAE;QACnB,MAAM,SAAS,CAAC,oBAAoB,EAAE,CAAC;KACxC;AACH,CAAC;AAJD,oDAIC"}

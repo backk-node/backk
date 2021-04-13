@@ -1,1 +1,0 @@
-{"version":3,"file":"IsInternalField.js","sourceRoot":"","sources":["../../../src/decorators/typeproperty/IsInternalField.ts"],"names":[],"mappings":";;;;;;AAAA,wGAAwE;AAExE,SAAgB,eAAe;IAE7B,OAAO,UAAS,MAAc,EAAE,YAAoB;QAClD,yCAAuB,CAAC,yBAAyB,CAAC,MAAM,CAAC,WAAW,EAAE,YAAY,CAAC,CAAC;IACtF,CAAC,CAAC;AACJ,CAAC;AALD,0CAKC"}

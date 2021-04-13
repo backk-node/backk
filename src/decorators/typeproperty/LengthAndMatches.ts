@@ -15,8 +15,7 @@ export default function LengthAndMatches(
       constraints: ['lengthAndMatches', minLength, maxLength, regexp],
       options: validationOptions,
       validator: {
-        validate(value: any, args: ValidationArguments) {
-          // TODO implement array support
+        validate(value: any) {
           if (value.length > maxLength || value.length < minLength) {
             return false;
           }

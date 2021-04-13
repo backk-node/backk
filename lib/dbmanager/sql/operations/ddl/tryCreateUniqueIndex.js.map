@@ -1,1 +1,0 @@
-{"version":3,"file":"tryCreateUniqueIndex.js","sourceRoot":"","sources":["../../../../../src/dbmanager/sql/operations/ddl/tryCreateUniqueIndex.ts"],"names":[],"mappings":";;;;;AACA,sEAA8C;AAE/B,KAAK,UAAU,oBAAoB,CAChD,SAA4B,EAC5B,SAAiB,EACjB,MAA0B,EAC1B,WAAqB;IAErB,MAAM,wBAAc,CAAC,SAAS,EAAE,SAAS,EAAE,MAAM,EAAE,WAAW,EAAE,IAAI,CAAC,CAAC;AACxE,CAAC;AAPD,uCAOC"}

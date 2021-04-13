@@ -4,7 +4,7 @@ import StartupCheckService from './StartupCheckService';
 import createBackkErrorFromErrorMessageAndStatusCode from '../../errors/createBackkErrorFromErrorMessageAndStatusCode';
 import initializeDatabase, { isDbInitialized } from '../../dbmanager/sql/operations/ddl/initializeDatabase';
 import { HttpStatusCodes } from '../../constants/constants';
-import { AllowForClusterInternalUse } from '../../decorators/service/function/AllowForClusterInternalUse';
+import AllowForClusterInternalUse from '../../decorators/service/function/AllowForClusterInternalUse';
 import scheduleJobsForExecution, { scheduledJobs } from '../../scheduling/scheduleJobsForExecution';
 import { PromiseErrorOr } from '../../types/PromiseErrorOr';
 

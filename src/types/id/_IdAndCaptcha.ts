@@ -1,6 +1,6 @@
 import { IsAscii, IsString, MaxLength } from 'class-validator';
 import _Id from './_Id';
-import { Transient } from '../../decorators/typeproperty/Transient';
+import Transient from '../../decorators/typeproperty/Transient';
 import { Lengths } from '../../constants/constants';
 
 // eslint-disable-next-line @typescript-eslint/class-name-casing

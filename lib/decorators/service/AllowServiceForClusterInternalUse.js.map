@@ -1,1 +1,0 @@
-{"version":3,"file":"AllowServiceForClusterInternalUse.js","sourceRoot":"","sources":["../../../src/decorators/service/AllowServiceForClusterInternalUse.ts"],"names":[],"mappings":";;;;;AAAA,8FAAsE;AAEtE,SAAwB,iCAAiC;IACvD,OAAO,UAAS,YAAsB;QACpC,oCAA0B,CAAC,sCAAsC,CAAC,YAAY,CAAC,CAAC;IAClF,CAAC,CAAA;AACH,CAAC;AAJD,oDAIC"}

@@ -1,1 +1,0 @@
-{"version":3,"file":"tryRollbackLocalTransactionIfNeeded.js","sourceRoot":"","sources":["../../../../../src/dbmanager/sql/operations/transaction/tryRollbackLocalTransactionIfNeeded.ts"],"names":[],"mappings":";;AAEe,KAAK,UAAU,mCAAmC,CAAC,eAAwB,EAAE,SAA+B;IACzH,IAAI,eAAe,EAAE;QACnB,MAAM,SAAS,CAAC,sBAAsB,EAAE,CAAC;KAC1C;AACH,CAAC;AAJD,sDAIC"}

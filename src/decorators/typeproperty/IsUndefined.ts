@@ -9,8 +9,7 @@ export default function IsUndefined(validationOptions?: ValidationOptions) {
       constraints: ['isUndefined'],
       options: validationOptions,
       validator: {
-        validate(value: any, args: ValidationArguments) {
-          // TODO: support validationOption each:true
+        validate(value: any) {
           return value === undefined;
         },
         defaultMessage: () => propertyName + ' is not allowed'

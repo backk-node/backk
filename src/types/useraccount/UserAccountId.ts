@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/class-name-casing
-import { Unique } from "../../decorators/typeproperty/Unique";
+import Unique from "../../decorators/typeproperty/Unique";
 import IsStringOrObjectId from "../../decorators/typeproperty/IsStringOrObjectId";
 import MaxLengthAndMatches from "../../decorators/typeproperty/MaxLengthAndMatches";
 import { Values } from "../../constants/constants";

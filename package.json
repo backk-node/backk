@@ -1,8 +1,11 @@
 {
   "name": "backk",
-  "version": "0.0.1",
+  "version": "1.0.0-alpha.0",
   "description": "Backk - Modern microservice and backend framework for Node",
-  "author": "Petri Silen <petri.silen@silensoft.com>",
+  "author": {
+    "name": "Petri Silen",
+    "email": "petri.silen@silensoft.com"
+  },
   "engines": {
     "node": ">= 12.19"
   },
@@ -10,6 +13,29 @@
   "main": "lib/index.js",
   "files": [
     "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/backk-node/backk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/backk-node/backk/issues"
+  },
+  "keywords": [
+    "orm",
+    "typescript",
+    "microservice",
+    "backend",
+    "http",
+    "kafka",
+    "redis",
+    "kubernetes",
+    "postgresql",
+    "mariadb",
+    "mysql",
+    "mongodb",
+    "nest",
+    "framework"
   ],
   "scripts": {
     "prebuild": "rimraf build",

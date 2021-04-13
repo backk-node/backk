@@ -1,1 +1,0 @@
-{"version":3,"file":"AllowForUserRoles.js","sourceRoot":"","sources":["../../../../src/decorators/service/function/AllowForUserRoles.ts"],"names":[],"mappings":";;;;;AAAA,8GAAsF;AAEtF,SAAwB,iBAAiB,CAAC,KAAe;IAEvD,OAAO,UAAS,MAAc,EAAE,YAAoB;QAClD,4CAAkC,CAAC,mBAAmB,CAAC,MAAM,CAAC,WAAW,EAAE,YAAY,EAAE,KAAK,CAAC,CAAC;IAClG,CAAC,CAAC;AACJ,CAAC;AALD,oCAKC"}

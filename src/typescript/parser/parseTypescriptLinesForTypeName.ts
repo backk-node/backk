@@ -187,7 +187,7 @@ export default function parseTypescriptLinesForTypeName(
                 if (isPrivate) {
                   // TODO correct path
                   importLines.push(
-                    "import Entity from '../../../../backk/decorators/typeproperty/IsPrivate';"
+                    "import Private from 'backk';"
                   );
 
                   classProperty.decorators.push({
@@ -243,7 +243,7 @@ export default function parseTypescriptLinesForTypeName(
         if (isPrivate) {
           importLines.push(
             // TODO correct path
-            "import Entity from '../../../../backk/decorators/typeproperty/IsPrivate';"
+            "import Private from 'backk';"
           );
 
           classBodyNode.decorators.push({

@@ -10,7 +10,6 @@ export default function IsBigInt(validationOptions?: ValidationOptions) {
       options: validationOptions,
       validator: {
         validate(value: any, args: ValidationArguments) {
-          // TODO: support validationOption each:true
           return typeof value === 'number' && Number.isInteger(value);
         },
         defaultMessage: () => propertyName + ' must be an integer number'

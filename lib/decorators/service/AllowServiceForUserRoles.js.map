@@ -1,1 +1,0 @@
-{"version":3,"file":"AllowServiceForUserRoles.js","sourceRoot":"","sources":["../../../src/decorators/service/AllowServiceForUserRoles.ts"],"names":[],"mappings":";;;;;AAAA,8FAAsE;AAEtE,SAAwB,wBAAwB,CAAC,KAAe;IAC9D,OAAO,UAAS,YAAsB;QACpC,oCAA0B,CAAC,6BAA6B,CAAC,YAAY,EAAE,KAAK,CAAC,CAAC;IAChF,CAAC,CAAA;AACH,CAAC;AAJD,2CAIC"}

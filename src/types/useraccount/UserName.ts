@@ -1,8 +1,8 @@
-import { IsEmail, IsString, MaxLength } from "class-validator";
-import { Unique } from "../../decorators/typeproperty/Unique";
-import { Private } from "../../decorators/typeproperty/Private";
+import { IsEmail, IsString, MaxLength } from 'class-validator';
+import Unique from '../../decorators/typeproperty/Unique';
+import Private from '../../decorators/typeproperty/Private';
 
-export default class UserName{
+export default class UserName {
   @Unique()
   @IsString()
   @MaxLength(320)

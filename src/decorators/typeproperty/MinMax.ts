@@ -13,8 +13,7 @@ export default function MinMax(
       constraints: ['minMax', minValue, maxValue],
       options: validationOptions,
       validator: {
-        validate(value: any, args: ValidationArguments) {
-          // TODO implement array support
+        validate(value: any) {
           if (value > maxValue || value < minValue) {
             return false;
           }

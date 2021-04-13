@@ -15,8 +15,7 @@ export default function MaxLengthAndMatchesAll(
       constraints: ['maxLengthAndMatchesAll', maxLength, regExps],
       options: validationOptions,
       validator: {
-        validate(value: any, args: ValidationArguments) {
-          // TODO implement array support
+        validate(value: any) {
           if (value.length > maxLength) {
             return false;
           }

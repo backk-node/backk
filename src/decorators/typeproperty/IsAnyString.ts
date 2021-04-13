@@ -10,7 +10,6 @@ export default function IsAnyString(validationOptions?: ValidationOptions) {
       options: validationOptions,
       validator: {
         validate() {
-          // TODO: support validationOption each:true
           return true;
         }
       },

@@ -1,1 +1,0 @@
-{"version":3,"file":"startRedisConsumer.js","sourceRoot":"","sources":["../../src/initialization/startRedisConsumer.ts"],"names":[],"mappings":";;;;;AACA,qGAA6E;AAE9D,KAAK,UAAU,kBAAkB,CAAC,aAAkB;IACjE,MAAM,0BAAgB,CAAC,aAAa,EAAE,OAAO,CAAC,GAAG,CAAC,YAAY,EAAE,4BAA4B,CAAC,CAAC;AAChG,CAAC;AAFD,qCAEC"}

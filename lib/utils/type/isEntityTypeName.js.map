@@ -1,1 +1,0 @@
-{"version":3,"file":"isEntityTypeName.js","sourceRoot":"","sources":["../../../src/utils/type/isEntityTypeName.ts"],"names":[],"mappings":";;;;;AAAA,kHAA0F;AAE1F,SAAwB,gBAAgB,CAAC,QAAgB;IACvD,OAAO,mCAAyB,CAAC,oBAAoB,CAAC,QAAQ,CAAC;QAC7D,QAAQ,CAAC,CAAC,CAAC,KAAK,QAAQ,CAAC,CAAC,CAAC,CAAC,WAAW,EAAE;QACzC,QAAQ,CAAC,CAAC,CAAC,KAAK,GAAG,CAAA;AACvB,CAAC;AAJD,mCAIC"}

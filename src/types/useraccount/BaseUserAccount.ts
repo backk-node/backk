@@ -1,10 +1,10 @@
 import _IdAndCaptcha from "../id/_IdAndCaptcha";
-import { Unique } from "../../decorators/typeproperty/Unique";
+import Unique  from "../../decorators/typeproperty/Unique";
 import { IsEmail, IsString, MaxLength } from "class-validator";
 import { Lengths } from "../../constants/constants";
 import IsAnyString from "../../decorators/typeproperty/IsAnyString";
 import IsStrongPassword from "../../decorators/typeproperty/IsStrongPassword";
-import { Private } from "../../decorators/typeproperty/Private";
+import Private from "../../decorators/typeproperty/Private";
 import IsUndefined from "../../decorators/typeproperty/IsUndefined";
 
 export default class BaseUserAccount extends _IdAndCaptcha  {

@@ -1,1 +1,0 @@
-{"version":3,"file":"AllowForServiceInternalUse.js","sourceRoot":"","sources":["../../../../src/decorators/service/function/AllowForServiceInternalUse.ts"],"names":[],"mappings":";;;;;AAAA,8GAAsF;AAEtF,SAAwB,0BAA0B;IAEhD,OAAO,UAAS,MAAc,EAAE,YAAoB;QAClD,4CAAkC,CAAC,8CAA8C,CAAC,MAAM,CAAC,WAAW,EAAE,YAAY,CAAC,CAAC;IACtH,CAAC,CAAC;AACJ,CAAC;AALD,6CAKC"}

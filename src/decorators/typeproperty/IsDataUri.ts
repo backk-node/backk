@@ -11,7 +11,6 @@ export default function IsDataUri(validationOptions?: ValidationOptions) {
       options: validationOptions,
       validator: {
         validate(value: any) {
-          // TODO: support validationOption each:true
           return isDataUri(value);
         },
         defaultMessage: () =>

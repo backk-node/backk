@@ -14,4 +14,4 @@ export declare type CronSchedule = {
     daysOfWeek?: number | number[] | Range;
     weekDayInterval?: number;
 };
-export declare function CronJob(cronSchedule: CronSchedule, retryIntervalsInSecs?: number[]): (object: Object, functionName: string) => void;
+export default function CronJob(cronSchedule: CronSchedule, retryIntervalsInSecs?: number[]): (object: Object, functionName: string) => void;

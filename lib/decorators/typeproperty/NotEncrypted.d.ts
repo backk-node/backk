@@ -1,1 +1,1 @@
-export declare function NotEncrypted(): (object: Object, propertyName: string) => void;
+export default function NotEncrypted(): (object: Object, propertyName: string) => void;

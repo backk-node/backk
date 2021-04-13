@@ -1,4 +1,4 @@
-import { CallOrSendTo } from "../messagequeue/sendToRemoteServiceInsideTransaction";
+import { CallOrSendToSpec } from "../messagequeue/sendToRemoteServiceInsideTransaction";
 import forEachAsyncSequential from "../../utils/forEachAsyncSequential";
 import parseRemoteServiceFunctionCallUrlParts from "./parseRemoteServiceFunctionCallUrlParts";
 import fs from "fs";
@@ -11,7 +11,7 @@ import NoOpDbManager from "../../dbmanager/NoOpDbManager";
 export const remoteServiceNameToControllerMap: { [key: string]: any } = {};
 const noOpDbManager = new NoOpDbManager('');
 
-export async function validateServiceFunctionArguments(sends: CallOrSendTo[]) {
+export async function validateServiceFunctionArguments(sends: CallOrSendToSpec[]) {
   await forEachAsyncSequential(sends, async ({ remoteServiceFunctionUrl, serviceFunctionArgument }) => {
     const { topic, serviceFunctionName } = parseRemoteServiceFunctionCallUrlParts(remoteServiceFunctionUrl);
 

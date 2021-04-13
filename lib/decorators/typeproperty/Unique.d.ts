@@ -1,1 +1,1 @@
-export declare function Unique(): (object: Object, propertyName: string) => void;
+export default function Unique(): (object: Object, propertyName: string) => void;

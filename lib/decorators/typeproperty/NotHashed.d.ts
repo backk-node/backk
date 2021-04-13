@@ -1,1 +1,1 @@
-export declare function NotHashed(): (object: Object, propertyName: string) => void;
+export default function NotHashed(): (object: Object, propertyName: string) => void;

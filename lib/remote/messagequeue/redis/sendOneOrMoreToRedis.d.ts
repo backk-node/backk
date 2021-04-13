@@ -1,3 +1,3 @@
-import { CallOrSendTo } from "../sendToRemoteServiceInsideTransaction";
+import { CallOrSendToSpec } from "../sendToRemoteServiceInsideTransaction";
 import { PromiseErrorOr } from "../../../types/PromiseErrorOr";
-export default function sendOneOrMoreToRedis(sends: CallOrSendTo[], isTransactional: boolean): PromiseErrorOr<null>;
+export default function sendOneOrMoreToRedis(sends: CallOrSendToSpec[], isTransactional: boolean): PromiseErrorOr<null>;

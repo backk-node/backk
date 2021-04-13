@@ -1,1 +1,1 @@
-export declare function ResponseStatusCode(statusCode: number): (object: Object, functionName: string) => void;
+export default function ResponseStatusCode(statusCode: number): (object: Object, functionName: string) => void;

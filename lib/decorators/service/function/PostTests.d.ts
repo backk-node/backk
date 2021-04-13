@@ -11,4 +11,4 @@ export declare type PostTestSpec = {
 export declare type FieldPathNameToFieldValueMap = {
     [key: string]: any;
 };
-export declare function PostTests(testSpecs: PostTestSpec[]): (object: Object, functionName: string) => void;
+export default function PostTests(testSpecs: PostTestSpec[]): (object: Object, functionName: string) => void;

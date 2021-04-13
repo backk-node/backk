@@ -1,1 +1,1 @@
-export declare function Create(): (object: Object, functionName: string) => void;
+export default function Create(): (object: Object, functionName: string) => void;

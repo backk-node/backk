@@ -1,1 +1,1 @@
-export declare function Hashed(): (object: Object, propertyName: string) => void;
+export default function Hashed(): (object: Object, propertyName: string) => void;

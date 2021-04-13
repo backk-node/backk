@@ -1,1 +1,1 @@
-export declare function AllowForSelf(): (object: Object, functionName: string) => void;
+export default function AllowForSelf(): (object: Object, functionName: string) => void;

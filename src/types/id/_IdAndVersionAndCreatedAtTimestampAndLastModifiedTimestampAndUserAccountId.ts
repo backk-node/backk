@@ -1,6 +1,6 @@
 import _IdAndVersionAndCreatedAtTimestampAndLastModifiedTimestamp from './_IdAndVersionAndCreatedAtTimestampAndLastModifiedTimestamp';
-import IsStringOrObjectId from "../../decorators/typeproperty/IsStringOrObjectId";
-import MaxLengthAndMatches from "../../decorators/typeproperty/MaxLengthAndMatches";
+import IsStringOrObjectId from '../../decorators/typeproperty/IsStringOrObjectId';
+import MaxLengthAndMatches from '../../decorators/typeproperty/MaxLengthAndMatches';
 
 // eslint-disable-next-line @typescript-eslint/class-name-casing
 export default class _IdAndVersionAndCreatedAtTimestampAndLastModifiedTimestampAndUserAccountId extends _IdAndVersionAndCreatedAtTimestampAndLastModifiedTimestamp {

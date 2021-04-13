@@ -6,4 +6,4 @@ export declare type TestSetupSpec = {
     };
     postmanTests?: string[];
 };
-export declare function TestSetup(serviceFunctionsOrSpecsToExecute: (string | TestSetupSpec)[]): (object: Object, functionName: string) => void;
+export default function TestSetup(serviceFunctionsOrSpecsToExecute: (string | TestSetupSpec)[]): (object: Object, functionName: string) => void;

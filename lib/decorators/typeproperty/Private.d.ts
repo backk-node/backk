@@ -1,1 +1,1 @@
-export declare function Private(): (object: Object, propertyName: string) => void;
+export default function Private(): (object: Object, propertyName: string) => void;

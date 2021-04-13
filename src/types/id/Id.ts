@@ -1,5 +1,5 @@
-import MaxLengthAndMatches from "../../decorators/typeproperty/MaxLengthAndMatches";
-import IsStringOrObjectId from "../../decorators/typeproperty/IsStringOrObjectId";
+import MaxLengthAndMatches from '../../decorators/typeproperty/MaxLengthAndMatches';
+import IsStringOrObjectId from '../../decorators/typeproperty/IsStringOrObjectId';
 
 export default class Id {
   @IsStringOrObjectId()

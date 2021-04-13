@@ -4,11 +4,11 @@ import { ExporterConfig } from "@opentelemetry/exporter-jaeger/build/src/types";
 import tracerProvider from "./tracerProvider";
 import getServiceName from "../../utils/getServiceName";
 
-export function initializeTracing(spanProcessor: SpanProcessor) {
+function initializeTracing(spanProcessor: SpanProcessor) {
   tracerProvider.addSpanProcessor(spanProcessor);
 }
 
-export function initializeDefaultJaegerTracing(jaegerExporterOptions?: Partial<ExporterConfig>) {
+export default function initializeDefaultJaegerTracing(jaegerExporterOptions?: Partial<ExporterConfig>) {
   initializeTracing(
     new SimpleSpanProcessor(
       new JaegerExporter({

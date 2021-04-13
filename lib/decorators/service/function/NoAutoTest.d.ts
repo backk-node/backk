@@ -1,1 +1,1 @@
-export declare function NoAutoTest(): (object: Object, functionName: string) => void;
+export default function NoAutoTest(): (object: Object, functionName: string) => void;

@@ -1,19 +1,18 @@
-import { CompressionTypes } from 'kafkajs';
-import { BackkError } from '../../types/BackkError';
-import { getNamespace } from 'cls-hooked';
-import { CallOrSendTo } from './sendToRemoteServiceInsideTransaction';
-import sendOneOrMoreToKafka, { SendAcknowledgementType } from './kafka/sendOneOrMoreToKafka';
-import sendOneOrMoreToRedis from './redis/sendOneOrMoreToRedis';
-import parseRemoteServiceFunctionCallUrlParts from '../utils/parseRemoteServiceFunctionCallUrlParts';
-import { validateServiceFunctionArguments } from '../utils/validateServiceFunctionArguments';
-import { PromiseErrorOr } from '../../types/PromiseErrorOr';
+import { CompressionTypes } from "kafkajs";
+import { getNamespace } from "cls-hooked";
+import { CallOrSendToSpec } from "./sendToRemoteServiceInsideTransaction";
+import sendOneOrMoreToKafka, { SendAcknowledgementType } from "./kafka/sendOneOrMoreToKafka";
+import sendOneOrMoreToRedis from "./redis/sendOneOrMoreToRedis";
+import parseRemoteServiceFunctionCallUrlParts from "../utils/parseRemoteServiceFunctionCallUrlParts";
+import { validateServiceFunctionArguments } from "../utils/validateServiceFunctionArguments";
+import { PromiseErrorOr } from "../../types/PromiseErrorOr";
 
 export interface SendToOptions {
   compressionType?: CompressionTypes;
   sendAcknowledgementType?: SendAcknowledgementType;
 }
 
-export async function sendOneOrMore(sends: CallOrSendTo[], isTransactional: boolean): PromiseErrorOr<null> {
+export async function sendOneOrMore(sends: CallOrSendToSpec[], isTransactional: boolean): PromiseErrorOr<null> {
   const clsNamespace = getNamespace('serviceFunctionExecution');
 
   if (clsNamespace?.get('isInsidePostHook')) {

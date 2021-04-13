@@ -1,5 +1,5 @@
 import Redis from "ioredis";
-import { CallOrSendTo } from "../sendToRemoteServiceInsideTransaction";
+import { CallOrSendToSpec } from "../sendToRemoteServiceInsideTransaction";
 import parseRemoteServiceFunctionCallUrlParts from "../../utils/parseRemoteServiceFunctionCallUrlParts";
 import { getNamespace } from "cls-hooked";
 import forEachAsyncSequential from "../../../utils/forEachAsyncSequential";
@@ -9,7 +9,7 @@ import defaultServiceMetrics from "../../../observability/metrics/defaultService
 import { PromiseErrorOr } from "../../../types/PromiseErrorOr";
 
 export default async function sendOneOrMoreToRedis(
-  sends: CallOrSendTo[],
+  sends: CallOrSendToSpec[],
   isTransactional: boolean
 ): PromiseErrorOr<null> {
   const remoteServiceUrl = sends[0].remoteServiceFunctionUrl;
@@ -24,9 +24,9 @@ export default async function sendOneOrMoreToRedis(
 
     await forEachAsyncSequential(
       sends,
-      async ({ responseUrl, remoteServiceFunctionUrl, serviceFunctionArgument }: CallOrSendTo) => {
+      async ({ responseUrl, remoteServiceFunctionUrl, serviceFunctionArgument }: CallOrSendToSpec) => {
         const { serviceFunctionName } = parseRemoteServiceFunctionCallUrlParts(remoteServiceFunctionUrl);
-        log(Severity.DEBUG, 'CallOrSendTo to remote service for execution', '', {
+        log(Severity.DEBUG, 'CallOrSendToSpec to remote service for execution', '', {
           serviceFunctionCallUrl: remoteServiceFunctionUrl,
           serviceFunction: serviceFunctionName
         });

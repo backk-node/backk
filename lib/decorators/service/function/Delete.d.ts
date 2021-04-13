@@ -1,1 +1,1 @@
-export declare function Delete(): (object: Object, functionName: string) => void;
+export default function Delete(): (object: Object, functionName: string) => void;

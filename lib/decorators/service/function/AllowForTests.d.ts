@@ -1,1 +1,1 @@
-export declare function AllowForTests(): (object: Object, functionName: string) => void;
+export default function AllowForTests(): (object: Object, functionName: string) => void;

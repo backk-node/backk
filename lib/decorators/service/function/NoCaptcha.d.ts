@@ -1,1 +1,1 @@
-export declare function NoCaptcha(): (object: Object, functionName: string) => void;
+export default function NoCaptcha(reason: string): (object: Object, functionName: string) => void;

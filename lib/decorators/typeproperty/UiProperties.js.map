@@ -1,1 +1,1 @@
-{"version":3,"file":"UiProperties.js","sourceRoot":"","sources":["../../../src/decorators/typeproperty/UiProperties.ts"],"names":[],"mappings":";;;AAMA,SAAgB,YAAY,CAAC,YAA0B;IACrD,OAAO;IAEP,CAAC,CAAC;AACJ,CAAC;AAJD,oCAIC"}
+{"version":3,"file":"UiProperties.js","sourceRoot":"","sources":["../../../src/decorators/typeproperty/UiProperties.ts"],"names":[],"mappings":";;AAMA,SAAwB,YAAY,CAAC,YAAqB;IACxD,OAAO;IAEP,CAAC,CAAC;AACJ,CAAC;AAJD,+BAIC"}

@@ -1,6 +1,6 @@
-import IsStringOrObjectId from "../../decorators/typeproperty/IsStringOrObjectId";
-import MaxLengthAndMatches from "../../decorators/typeproperty/MaxLengthAndMatches";
-import _IdAndVersion from "./_IdAndVersion";
+import IsStringOrObjectId from '../../decorators/typeproperty/IsStringOrObjectId';
+import MaxLengthAndMatches from '../../decorators/typeproperty/MaxLengthAndMatches';
+import _IdAndVersion from './_IdAndVersion';
 
 // eslint-disable-next-line @typescript-eslint/class-name-casing
 export default class _IdAndVersionAndUserAccountId extends _IdAndVersion {

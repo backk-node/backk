@@ -167,3 +167,5 @@ export  { PromiseErrorOr } from './types/PromiseErrorOr';
 export { default as Version } from './types/Version';
 
 export { default as executeForAll } from './utils/executeForAll';
+
+export { default as tryExecuteServiceMethod } from './execution/tryExecuteServiceMethod';

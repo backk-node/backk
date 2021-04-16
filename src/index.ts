@@ -169,3 +169,6 @@ export { default as Version } from './types/Version';
 export { default as executeForAll } from './utils/executeForAll';
 
 export { default as tryExecuteServiceMethod } from './execution/tryExecuteServiceMethod';
+export { UserOperation, UserOperationResult, AuditLogEntry } from './observability/logging/audit/AuditLogEntry';
+export { default as AuditLoggingService } from './observability/logging/audit/AuditLoggingService'
+

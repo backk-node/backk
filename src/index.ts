@@ -176,3 +176,5 @@ export {
 } from './observability/logging/audit/AuditLogEntry';
 
 export { default as AuditLoggingService } from './observability/logging/audit/AuditLoggingService';
+export { default as StartupCheckServiceImpl } from './service/startup/StartupCheckServiceImpl';
+export { default as DefaultJwtAuthorizationServiceImpl } from './authorization/DefaultJwtAuthorizationServiceImpl';

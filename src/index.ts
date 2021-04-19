@@ -163,12 +163,16 @@ export { default as Captcha } from './types/Captcha';
 export { ErrorDefinition } from './types/ErrorDefinition';
 export { ErrorOr } from './types/ErrorOr';
 export { Name } from './types/Name';
-export  { PromiseErrorOr } from './types/PromiseErrorOr';
+export { PromiseErrorOr } from './types/PromiseErrorOr';
 export { default as Version } from './types/Version';
 
 export { default as executeForAll } from './utils/executeForAll';
-
 export { default as tryExecuteServiceMethod } from './execution/tryExecuteServiceMethod';
-export { UserOperation, UserOperationResult, AuditLogEntry } from './observability/logging/audit/AuditLogEntry';
-export { default as AuditLoggingService } from './observability/logging/audit/AuditLoggingService'
 
+export {
+  UserOperation,
+  UserOperationResult,
+  AuditLogEntry
+} from './observability/logging/audit/AuditLogEntry';
+
+export { default as AuditLoggingService } from './observability/logging/audit/AuditLoggingService';

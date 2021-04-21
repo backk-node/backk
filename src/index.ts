@@ -29,7 +29,7 @@ export { default as AllowForServiceInternalUse } from './decorators/service/func
 export { default as AllowForTests } from './decorators/service/function/AllowForTests';
 export { default as AllowForUserRoles } from './decorators/service/function/AllowForUserRoles';
 export { default as Create } from './decorators/service/function/Create';
-export { CronSchedule, Range, default as CronJon } from './decorators/service/function/CronJob';
+export { CronSchedule, Range, default as CronJob } from './decorators/service/function/CronJob';
 export { default as Delete } from './decorators/service/function/Delete';
 export { default as Metadata } from './decorators/service/function/Metadata';
 export { default as NoAutoTests } from './decorators/service/function/NoAutoTest';
@@ -186,3 +186,5 @@ export { default as SqlNotInExpression } from './dbmanager/sql/expressions/SqlNo
 
 export { default as getServiceName } from './utils/getServiceName';
 export { default as getServiceNamespace } from './utils/getServiceNamespace';
+
+export { default as MongoDbQuery } from './dbmanager/mongodb/MongoDbQuery';

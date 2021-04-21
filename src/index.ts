@@ -178,3 +178,11 @@ export {
 export { default as AuditLoggingService } from './observability/logging/audit/AuditLoggingService';
 export { default as StartupCheckServiceImpl } from './service/startup/StartupCheckServiceImpl';
 export { default as DefaultJwtAuthorizationServiceImpl } from './authorization/DefaultJwtAuthorizationServiceImpl';
+
+export { default as SqlEquals } from './dbmanager/sql/expressions/SqlEquals';
+export { default as SqlExpression } from './dbmanager/sql/expressions/SqlExpression';
+export { default as SqlInExpression } from './dbmanager/sql/expressions/SqlInExpression';
+export { default as SqlNotInExpression } from './dbmanager/sql/expressions/SqlNotInExpression';
+
+export { default as getServiceName } from './utils/getServiceName';
+export { default as getServiceNamespace } from './utils/getServiceNamespace';

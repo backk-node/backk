@@ -252,3 +252,11 @@ h
 .gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302
 <
 src/index.ts,c/5/c5fb850250c7443c48a6c12b5cf6916773da31f1
+f
+6src/observability/logging/audit/createAuditLogEntry.ts,9/3/93ee41cdce181e9e3b24f2cec0e1636fca8d4985
+f
+6src/observability/logging/audit/AuditLoggingService.ts,5/0/5094a81c71e92af423372d5e716a29f584c57805
+`
+0src/observability/logging/audit/AuditLogEntry.ts,5/6/56543d47b33540c49f8646fc49d968b70cba4a86
+>
+lib/index.d.ts,c/e/cecf50ad545002db5f8b54f63378dbfce02ad1d2

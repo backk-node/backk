@@ -84,7 +84,7 @@ export { default as tryGetObjectsFromCsvFile } from './file/tryGetObjectsFromCsv
 export { default as tryGetSeparatedValuesFromTextFile } from './file/tryGetSeparatedValuesFromTextFile';
 export { default as tryGetSeparatedNumericValuesFromTextFile } from './file/tryGetSeparatedNumericValuesFromTextFile';
 export { default as tryGetValuesByJsonPathFromJsonFile } from './file/tryGetValuesByJsonPathFromJsonFile';
-export { default as tryGetValuesByXPathPathFromXmlFile } from './file/tryGetValuesByXPathFromXmlFile';
+export { default as tryGetValuesByXPathFromXmlFile } from './file/tryGetValuesByXPathFromXmlFile';
 
 export { default as initializeBackk } from './initialization/initializeBackk';
 export { default as startHttpServer } from './initialization/startHttpServer';
@@ -189,5 +189,7 @@ export { default as getServiceNamespace } from './utils/getServiceNamespace';
 
 export { default as MongoDbQuery } from './dbmanager/mongodb/MongoDbQuery';
 export { default as DbTableVersion } from './dbmanager/version/DbTableVersion';
+
+export { default as createBackkErrorFromErrorMessageAndStatusCode } from './errors/createBackkErrorFromErrorMessageAndStatusCode';
 
 export * from 'class-validator';

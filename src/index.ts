@@ -193,3 +193,4 @@ export { default as DbTableVersion } from './dbmanager/version/DbTableVersion';
 export { default as createBackkErrorFromErrorMessageAndStatusCode } from './errors/createBackkErrorFromErrorMessageAndStatusCode';
 
 export * from 'class-validator';
+export * as argon2 from 'argon2';

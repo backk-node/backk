@@ -61,8 +61,8 @@ export default function getSrcFilePathNameForTypeName(typeName: string, serviceR
   );
 
   let backkSrcFilePathNames: string[] = [];
-  if (existsSync(process.cwd() + '/node_modules/backk/lib')) {
-    backkSrcFilePathNames = getFileNamesRecursively(process.cwd() + '/node_modules/backk/lib');
+  if (existsSync(process.cwd() + '/node_modules/backk/src')) {
+    backkSrcFilePathNames = getFileNamesRecursively(process.cwd() + '/node_modules/backk/src');
   }
 
   const foundFilePathNames = [...srcFilePathNames, ...backkSrcFilePathNames].filter(

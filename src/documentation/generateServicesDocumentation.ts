@@ -1,6 +1,6 @@
 import { Application, Comment, TSConfigReader, TypeDocReader } from 'typedoc-pksilen';
 
-export default function generateServicesDocumentation() {
+(function generateServicesDocumentation() {
   const app = new Application();
   app.options.addReader(new TSConfigReader());
   app.options.addReader(new TypeDocReader());
@@ -8,7 +8,7 @@ export default function generateServicesDocumentation() {
     exclude: ['**/*Impl.ts']
   });
 
-  const project = app.convert(app.expandInputFiles([process.cwd() + 'src/services']));
+  const project = app.convert(app.expandInputFiles(['src/services']));
 
   if (project) {
     project.children?.forEach((module) => {
@@ -24,7 +24,6 @@ export default function generateServicesDocumentation() {
                     )
                     .map((decorator) => {
                       const hasDecoratorArguments = Object.keys(decorator.arguments).length > 0;
-
                       return (
                         decorator.name +
                         '(' +
@@ -41,7 +40,6 @@ export default function generateServicesDocumentation() {
       }
     });
 
-    const outputDir = 'docs';
-    app.generateDocs(project, outputDir);
+    app.generateDocs(project, 'docs');
   }
-}
+})();

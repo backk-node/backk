@@ -38,7 +38,7 @@
     "framework"
   ],
   "scripts": {
-    "prebuild": "rimraf build",
+    "prebuild": "rimraf build && copyfiles -f \"./src/types/**/*.ts\" lib/src",
     "build": "tsc -p tsconfig.json",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint . --ext .ts",
@@ -111,6 +111,7 @@
     "@types/yesql": "3.2.2",
     "@typescript-eslint/eslint-plugin": "2.34.0",
     "@typescript-eslint/parser": "2.34.0",
+    "copyfiles": "^2.4.1",
     "eslint": "6.8.0",
     "eslint-config-prettier": "6.15.0",
     "eslint-plugin-import": "2.22.1",

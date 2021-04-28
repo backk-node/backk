@@ -8,7 +8,7 @@ export default function generateServicesDocumentation() {
     exclude: ['**/*Impl.ts']
   });
 
-  const project = app.convert(app.expandInputFiles(['src/services']));
+  const project = app.convert(app.expandInputFiles([process.cwd() + 'src/services']));
 
   if (project) {
     project.children?.forEach((module) => {
@@ -20,15 +20,15 @@ export default function generateServicesDocumentation() {
                 if (possibleProperty.decorators) {
                   const decorators = possibleProperty.decorators
                     .filter(
-                      (decorator) => decorator.name !== 'TestValue' && decorator.name !== 'TestValueType'
+                      (decorator) => decorator.name !== 'TestValue'
                     )
                     .map((decorator) => {
-                      const hasDecoratorArgumens = Object.keys(decorator.arguments).length > 0;
+                      const hasDecoratorArguments = Object.keys(decorator.arguments).length > 0;
 
                       return (
                         decorator.name +
                         '(' +
-                        (hasDecoratorArgumens ? JSON.stringify(decorator.arguments) : '') +
+                        (hasDecoratorArguments ? JSON.stringify(decorator.arguments) : '') +
                         ')'
                       );
                     });

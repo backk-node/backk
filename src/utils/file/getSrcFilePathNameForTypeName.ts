@@ -20,8 +20,8 @@ export function hasSrcFilenameForTypeName(typeName: string, serviceRootDir: stri
 
   const srcFilePathNames = getFileNamesRecursively(process.cwd() + (serviceRootDir ? '/' + serviceRootDir : '') + '/src');
   let backkSrcFilePathNames: string[] = [];
-  if (existsSync(process.cwd() + '/node_modules/backk/src')) {
-    backkSrcFilePathNames = getFileNamesRecursively(process.cwd() + '/node_modules/backk/src');
+  if (existsSync(process.cwd() + '/node_modules/backk/lib/src')) {
+    backkSrcFilePathNames = getFileNamesRecursively(process.cwd() + '/node_modules/backk/lib/src');
   }
 
   const foundFilePathName = [...srcFilePathNames, ...backkSrcFilePathNames].find((filePathName: string) => {
@@ -39,8 +39,8 @@ export function hasBackkSrcFilenameForTypeName(typeName: string) {
 
   const srcFilePathNames = getFileNamesRecursively(process.cwd() + '/src');
   let backkSrcFilePathNames: string[] = [];
-  if (existsSync(process.cwd() + '/node_modules/backk/src')) {
-    backkSrcFilePathNames = getFileNamesRecursively(process.cwd() + '/node_modules/backk/src');
+  if (existsSync(process.cwd() + '/node_modules/backk/lib/src')) {
+    backkSrcFilePathNames = getFileNamesRecursively(process.cwd() + '/node_modules/backk/lib/src');
   }
 
   const foundFilePathName = [...srcFilePathNames, ...backkSrcFilePathNames].find((filePathName: string) => {

@@ -10,7 +10,7 @@ import getSrcFilePathNameForTypeName, {
 function getDeclarationsFor(typeName: string, originatingTypeFilePathName: string) {
   let isBuiltInType = false;
   const typeFilePathName = getSrcFilePathNameForTypeName(typeName);
-  if (typeFilePathName.includes('node_modules/backk/src')) {
+  if (typeFilePathName.includes('node_modules/backk')) {
     isBuiltInType = true;
   }
   const fileContentsStr = readFileSync(typeFilePathName, { encoding: 'UTF-8' });
@@ -103,7 +103,7 @@ export default function parseTypescriptLinesForTypeName(
 
   if (hasSrcFilenameForTypeName(typeName)) {
     typeFilePathName = getSrcFilePathNameForTypeName(typeName);
-    if (typeFilePathName.includes('node_modules/backk/src')) {
+    if (typeFilePathName.includes('node_modules/backk')) {
       isBuiltInType = true;
     }
     fileContentsStr = readFileSync(typeFilePathName, { encoding: 'UTF-8' });

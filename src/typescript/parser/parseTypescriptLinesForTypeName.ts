@@ -88,9 +88,13 @@ export default function parseTypescriptLinesForTypeName(
 ): [string[], any[]] {
   let typeFilePathName;
   let fileContentsStr;
+  let isBuiltInType = false;
 
   if (hasSrcFilenameForTypeName(typeName)) {
     typeFilePathName = getSrcFilePathNameForTypeName(typeName);
+    if (typeFilePathName.includes('node_modules/backk/src')) {
+      isBuiltInType = true;
+    }
     fileContentsStr = readFileSync(typeFilePathName, { encoding: 'UTF-8' });
   } else {
     throw new Error('In type file: ' + originatingTypeFilePathName + ': Unsupported type: ' + typeName);
@@ -112,20 +116,24 @@ export default function parseTypescriptLinesForTypeName(
   for (const node of nodes) {
     if (node.type === 'ImportDeclaration') {
       if (node.source.value.startsWith('.')) {
-        const relativeImportPathName = node.source.value;
+        if (isBuiltInType) {
+          node.source.value = 'backk';
+        } else {
+          const relativeImportPathName = node.source.value;
 
-        const importAbsolutePathName = path.resolve(
-          path.dirname(typeFilePathName ?? ''),
-          relativeImportPathName
-        );
+          const importAbsolutePathName = path.resolve(
+            path.dirname(typeFilePathName ?? ''),
+            relativeImportPathName
+          );
 
-        const newRelativeImportPathName = path.relative(
-          path.dirname(originatingTypeFilePathName),
-          importAbsolutePathName
-        );
+          const newRelativeImportPathName = path.relative(
+            path.dirname(originatingTypeFilePathName),
+            importAbsolutePathName
+          );
 
-        if (newRelativeImportPathName !== relativeImportPathName) {
-          node.source.value = newRelativeImportPathName;
+          if (newRelativeImportPathName !== relativeImportPathName) {
+            node.source.value = newRelativeImportPathName;
+          }
         }
       }
 
@@ -185,10 +193,7 @@ export default function parseTypescriptLinesForTypeName(
                 }
 
                 if (isPrivate) {
-                  // TODO correct path
-                  importLines.push(
-                    "import Private from 'backk';"
-                  );
+                  importLines.push("import Private from 'backk';");
 
                   classProperty.decorators.push({
                     type: 'Decorator',
@@ -241,10 +246,7 @@ export default function parseTypescriptLinesForTypeName(
         }
 
         if (isPrivate) {
-          importLines.push(
-            // TODO correct path
-            "import Private from 'backk';"
-          );
+          importLines.push("import Private from 'backk';");
 
           classBodyNode.decorators.push({
             type: 'Decorator',

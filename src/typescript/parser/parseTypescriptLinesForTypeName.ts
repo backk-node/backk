@@ -35,6 +35,10 @@ function getDeclarationsFor(typeName: string, originatingTypeFilePathName: strin
       if (node.source.value.startsWith('.')) {
         if (isBuiltInType) {
           node.source.value = 'backk';
+          if (node.specifiers[0]?.type === 'ImportDefaultSpecifier') {
+            node.specifiers[0].type = 'ImportSpecifier';
+            node.specifiers[0].imported = node.specifiers[0].local;
+          }
         } else {
           const relativeImportPathName = node.source.value;
 
@@ -132,6 +136,10 @@ export default function parseTypescriptLinesForTypeName(
       if (node.source.value.startsWith('.')) {
         if (isBuiltInType) {
           node.source.value = 'backk';
+          if (node.specifiers[0]?.type === 'ImportDefaultSpecifier') {
+            node.specifiers[0].type = 'ImportSpecifier';
+            node.specifiers[0].imported = node.specifiers[0].local;
+          }
         } else {
           const relativeImportPathName = node.source.value;
 

@@ -8,7 +8,11 @@ import getSrcFilePathNameForTypeName, {
 } from '../../utils/file/getSrcFilePathNameForTypeName';
 
 function getDeclarationsFor(typeName: string, originatingTypeFilePathName: string) {
+  let isBuiltInType = false;
   const typeFilePathName = getSrcFilePathNameForTypeName(typeName);
+  if (typeFilePathName.includes('node_modules/backk/src')) {
+    isBuiltInType = true;
+  }
   const fileContentsStr = readFileSync(typeFilePathName, { encoding: 'UTF-8' });
 
   const ast = parseSync(fileContentsStr, {
@@ -25,25 +29,32 @@ function getDeclarationsFor(typeName: string, originatingTypeFilePathName: strin
 
   for (const node of nodes) {
     if (node.type === 'ImportDeclaration') {
+      if (isBuiltInType && node.source.value === 'class-validator') {
+        node.source.value = 'backk';
+      }
       if (node.source.value.startsWith('.')) {
-        const relativeImportPathName = node.source.value;
+        if (isBuiltInType) {
+          node.source.value = 'backk';
+        } else {
+          const relativeImportPathName = node.source.value;
 
-        const importAbsolutePathName = path.resolve(
-          path.dirname(typeFilePathName ?? ''),
-          relativeImportPathName
-        );
+          const importAbsolutePathName = path.resolve(
+            path.dirname(typeFilePathName ?? ''),
+            relativeImportPathName
+          );
 
-        let newRelativeImportPathName = path.relative(
-          path.dirname(originatingTypeFilePathName),
-          importAbsolutePathName
-        );
+          let newRelativeImportPathName = path.relative(
+            path.dirname(originatingTypeFilePathName),
+            importAbsolutePathName
+          );
 
-        if (!newRelativeImportPathName.startsWith('.')) {
-          newRelativeImportPathName = './' + newRelativeImportPathName;
-        }
+          if (!newRelativeImportPathName.startsWith('.')) {
+            newRelativeImportPathName = './' + newRelativeImportPathName;
+          }
 
-        if (newRelativeImportPathName !== relativeImportPathName) {
-          node.source.value = newRelativeImportPathName;
+          if (newRelativeImportPathName !== relativeImportPathName) {
+            node.source.value = newRelativeImportPathName;
+          }
         }
       }
 
@@ -115,6 +126,9 @@ export default function parseTypescriptLinesForTypeName(
 
   for (const node of nodes) {
     if (node.type === 'ImportDeclaration') {
+      if (isBuiltInType && node.source.value === 'class-validator') {
+        node.source.value = 'backk';
+      }
       if (node.source.value.startsWith('.')) {
         if (isBuiltInType) {
           node.source.value = 'backk';

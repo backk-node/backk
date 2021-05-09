@@ -21,6 +21,8 @@ class TypePropertyAnnotationContainer {
   private readonly typePropertyNameToIsOneToManyMap: { [key: string]: boolean } = {};
   private readonly typePropertyNameToIsExternalServiceEntityMap: { [key: string]: boolean } = {};
   private readonly typePropertyNameToRemoteServiceFetchSpecMap: { [key: string]: RemoteServiceFetchSpec } = {};
+  private readonly typePropertyNameToIsNotUniqueMap: { [key: string]: boolean } = {};
+  private readonly typePropertyNameToIsReadWriteMap: { [key: string]: boolean } = {};
 
   addDocumentationForTypeProperty(Type: Function, propertyName: string, docString: string) {
     this.typePropertyNameToDocStringMap[`${Type.name}${propertyName}`] = docString;
@@ -28,6 +30,10 @@ class TypePropertyAnnotationContainer {
 
   setTypePropertyAsUnique(Type: Function, propertyName: string) {
     this.typePropertyNameToIsUniqueMap[`${Type.name}${propertyName}`] = true;
+  }
+
+  setTypePropertyAsNotUnique(Type: Function, propertyName: string) {
+    this.typePropertyNameToIsNotUniqueMap[`${Type.name}${propertyName}`] = true;
   }
 
   setTypePropertyAsNotHashed(Type: Function, propertyName: string) {
@@ -73,6 +79,10 @@ class TypePropertyAnnotationContainer {
     this.typePropertyNameToIsInternalMap[`${Type.name}${propertyName}`] = true;
   }
 
+  setTypePropertyAsReadWrite(Type: Function, propertyName: string) {
+    this.typePropertyNameToIsReadWriteMap[`${Type.name}${propertyName}`] = true;
+  }
+
   setTypePropertyAsFetchedFromRemoteService(
     Type: Function,
     propertyName: string,
@@ -104,6 +114,18 @@ class TypePropertyAnnotationContainer {
     while (proto !== Object.prototype) {
       if (this.typePropertyNameToIsUniqueMap[`${proto.constructor.name}${propertyName}`] !== undefined) {
         return this.typePropertyNameToIsUniqueMap[`${proto.constructor.name}${propertyName}`];
+      }
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    return false;
+  }
+
+  isTypePropertyNotUnique(Type: Function, propertyName: string) {
+    let proto = Object.getPrototypeOf(new (Type as new () => any)());
+    while (proto !== Object.prototype) {
+      if (this.typePropertyNameToIsNotUniqueMap[`${proto.constructor.name}${propertyName}`] !== undefined) {
+        return this.typePropertyNameToIsNotUniqueMap[`${proto.constructor.name}${propertyName}`];
       }
       proto = Object.getPrototypeOf(proto);
     }
@@ -253,6 +275,18 @@ class TypePropertyAnnotationContainer {
     while (proto !== Object.prototype) {
       if (this.typePropertyNameToIsInternalMap[`${proto.constructor.name}${propertyName}`] !== undefined) {
         return this.typePropertyNameToIsInternalMap[`${proto.constructor.name}${propertyName}`];
+      }
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    return false;
+  }
+
+  isTypePropertyReadWrite(Type: Function, propertyName: string) {
+    let proto = Object.getPrototypeOf(new (Type as new () => any)());
+    while (proto !== Object.prototype) {
+      if (this.typePropertyNameToIsReadWriteMap[`${proto.constructor.name}${propertyName}`] !== undefined) {
+        return this.typePropertyNameToIsReadWriteMap[`${proto.constructor.name}${propertyName}`];
       }
       proto = Object.getPrototypeOf(proto);
     }

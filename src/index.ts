@@ -62,6 +62,7 @@ export { default as IsFloat } from './decorators/typeproperty/IsFloat';
 export { default as IsNoneOf } from './decorators/typeproperty/IsNoneOf';
 export { default as IsOneOf } from './decorators/typeproperty/IsOneOf';
 export { default as IsPostalCode } from './decorators/typeproperty/IsPostalCode';
+export { default as IsStringOrObjectId } from './decorators/typeproperty/IsStringOrObjectId';
 export { default as IsStrongPassword } from './decorators/typeproperty/IsStrongPassword';
 export { default as IsUndefined } from './decorators/typeproperty/IsUndefined';
 export { default as LengthAndMatches } from './decorators/typeproperty/LengthAndMatches';

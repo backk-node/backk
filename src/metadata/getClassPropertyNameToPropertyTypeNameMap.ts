@@ -277,6 +277,18 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
           constraints?.[0] === 'isUndefined'
       );
 
+      const isReadWriteProperty = typePropertyAnnotationContainer.isTypePropertyReadWrite(Class, validationMetadata.propertyName);
+
+      if (!undefinedValidation && !isReadWriteProperty) {
+        throw new Error(
+          'Property ' +
+          Class.name +
+          '.' +
+          validationMetadata.propertyName +
+          " must have a ReadWrite() annotation or 'readonly' specifier"
+        );
+      }
+
       if (!undefinedValidation && !arrayMaxSizeValidationMetadata) {
         throw new Error(
           'Property ' +
@@ -346,6 +358,21 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
     }
 
     if (isGeneration) {
+      if (validationMetadata.type === 'isInt' || (validationMetadata.type === 'customValidation' && validationMetadata.constraints[0] === 'isBigInt') || validationMetadata.type === 'isString') {
+        const isUnique = typePropertyAnnotationContainer.isTypePropertyUnique(Class, validationMetadata.propertyName);
+        const isNotUnique = typePropertyAnnotationContainer.isTypePropertyUnique(Class, validationMetadata.propertyName);
+
+        if (!isUnique && !isNotUnique) {
+          throw new Error(
+            'Property ' +
+            Class.name +
+            '.' +
+            validationMetadata.propertyName +
+            ' must have either @Unique() or @NotUnique() annotation'
+          );
+        }
+      }
+
       if (
         validationMetadata.type === 'isInt' ||
         validationMetadata.type === 'isNumber' ||

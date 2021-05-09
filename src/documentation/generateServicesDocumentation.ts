@@ -5,7 +5,7 @@ import { Application, Comment, TSConfigReader, TypeDocReader } from 'typedoc-pks
   app.options.addReader(new TSConfigReader());
   app.options.addReader(new TypeDocReader());
   app.bootstrap({
-    exclude: ['node_modules/**/*', '**/*Impl.ts'],
+    exclude: ['**/*Impl.ts', 'src/services/common/**/*.ts'],
     ignoreCompilerErrors: true
   });
 

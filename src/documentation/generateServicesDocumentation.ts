@@ -7,11 +7,10 @@ import { Application, Comment, TSConfigReader, TypeDocReader } from 'typedoc-pks
   app.bootstrap({
     exclude: ['**/*Impl.ts', 'src/services/common/**/*.ts'],
     ignoreCompilerErrors: true,
-    stripInternal: true,
-    externalPattern: ['node_modules/backk/lib/src']
+    stripInternal: true
   });
 
-  const project = app.convert(app.expandInputFiles(['src/services', 'node_modules/backk/lib/src']));
+  const project = app.convert(app.expandInputFiles(['src/services']));
 
   if (project) {
     project.children?.forEach((module) => {
@@ -22,9 +21,7 @@ import { Application, Comment, TSConfigReader, TypeDocReader } from 'typedoc-pks
               if (possibleProperty.kind === 1024) {
                 if (possibleProperty.decorators) {
                   const decorators = possibleProperty.decorators
-                    .filter(
-                      (decorator) => decorator.name !== 'TestValue'
-                    )
+                    .filter((decorator) => decorator.name !== 'TestValue')
                     .map((decorator) => {
                       const hasDecoratorArguments = Object.keys(decorator.arguments ?? {}).length > 0;
                       return (

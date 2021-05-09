@@ -26,7 +26,7 @@ import { Application, Comment, TSConfigReader, TypeDocReader } from 'typedoc-pks
                       (decorator) => decorator.name !== 'TestValue'
                     )
                     .map((decorator) => {
-                      const hasDecoratorArguments = Object.keys(decorator.arguments).length > 0;
+                      const hasDecoratorArguments = Object.keys(decorator.arguments ?? {}).length > 0;
                       return (
                         decorator.name +
                         '(' +

@@ -215,7 +215,7 @@ export default function parseTypescriptLinesForTypeName(
                 }
 
                 if (isPrivate) {
-                  importLines.push("import Private from 'backk';");
+                  importLines.push("import { Private } from 'backk';");
 
                   classProperty.decorators.push({
                     type: 'Decorator',
@@ -268,7 +268,7 @@ export default function parseTypescriptLinesForTypeName(
         }
 
         if (isPrivate) {
-          importLines.push("import Private from 'backk';");
+          importLines.push("import { Private } from 'backk';");
 
           classBodyNode.decorators.push({
             type: 'Decorator',

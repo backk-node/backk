@@ -3,9 +3,13 @@ import AbstractDbManager from '../dbmanager/AbstractDbManager';
 import { ErrorDefinitions } from '../types/ErrorDefinition';
 
 export default class BaseService implements Service {
+  /** @internal */
   readonly Types: object;
+
+  /** @internal */
   readonly PublicTypes: object;
 
+  /** @internal */
   constructor(private readonly errors: ErrorDefinitions, protected readonly dbManager: AbstractDbManager) {
     this.Types = {};
     this.PublicTypes = {};
@@ -34,10 +38,12 @@ export default class BaseService implements Service {
     }
   }
 
+  /** @internal */
   getDbManager(): AbstractDbManager {
     return this.dbManager;
   }
 
+  /** @internal */
   isUsersService(): boolean {
     return false;
   }

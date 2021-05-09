@@ -6,7 +6,9 @@ import { Application, Comment, TSConfigReader, TypeDocReader } from 'typedoc-pks
   app.options.addReader(new TypeDocReader());
   app.bootstrap({
     exclude: ['**/*Impl.ts', 'src/services/common/**/*.ts'],
-    ignoreCompilerErrors: true
+    ignoreCompilerErrors: true,
+    stripInternal: true,
+    externalPattern: ['node_modules/backk/lib/src']
   });
 
   const project = app.convert(app.expandInputFiles(['src/services']));

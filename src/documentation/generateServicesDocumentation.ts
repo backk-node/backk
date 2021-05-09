@@ -11,7 +11,7 @@ import { Application, Comment, TSConfigReader, TypeDocReader } from 'typedoc-pks
     externalPattern: ['node_modules/backk/lib/src']
   });
 
-  const project = app.convert(app.expandInputFiles(['src/services']));
+  const project = app.convert(app.expandInputFiles(['src/services', 'node_modules/backk/lib/src']));
 
   if (project) {
     project.children?.forEach((module) => {

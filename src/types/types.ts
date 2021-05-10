@@ -47,6 +47,7 @@ import _IdAndVersionAndLastModifiedTimestampAndUserAccountId
 import _IdAndDefaultPostQueryOperations from "./postqueryoperations/_IdAndDefaultPostQueryOperations";
 import UserNameAndDefaultPostQueryOperations
   from "./postqueryoperations/UserNameAndDefaultPostQueryOperations";
+import DbTableVersion from "./DbTableVersion";
 
 const types = {
   _Id,
@@ -87,7 +88,8 @@ const types = {
   _IdAndVersionAndCreatedAtTimestampAndUserAccountId,
   _IdAndVersionAndLastModifiedTimestampAndUserAccountId,
   _IdAndDefaultPostQueryOperations,
-  UserNameAndDefaultPostQueryOperations
+  UserNameAndDefaultPostQueryOperations,
+  DbTableVersion
 }
 
 export default types

@@ -26,7 +26,7 @@ export default function generateClassFromSrcFile(typeName: string, remoteService
 
   const outputRows = result.outputText.split('\n');
   let newOutputText = outputRows.slice(0, -2).join('\n') + '\n' + '(' + typeName + ')';
-  console.log(srcFilePathName, outputRows);
+  console.log(srcFilePathName, process.cwd());
 
   newOutputText = newOutputText.replace(
     /require\("\.{2}\//g,

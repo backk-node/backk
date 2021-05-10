@@ -88,8 +88,7 @@ const types = {
   _IdAndVersionAndCreatedAtTimestampAndUserAccountId,
   _IdAndVersionAndLastModifiedTimestampAndUserAccountId,
   _IdAndDefaultPostQueryOperations,
-  UserNameAndDefaultPostQueryOperations,
-  DbTableVersion
+  UserNameAndDefaultPostQueryOperations
 }
 
 export default types

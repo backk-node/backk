@@ -30,16 +30,16 @@ export default function generateClassFromSrcFile(typeName: string, remoteService
 
   newOutputText = newOutputText.replace(
     /require\("\.{2}\//g,
-    'require("' +
+    'require("../../../../..' +
       (remoteServiceRootDir ? '/' + remoteServiceRootDir : '') +
-      'dist' +
+      '/dist' +
       srcDirectory +
       '/../'
   );
 
   newOutputText = newOutputText.replace(
     /require\("\.\//g,
-    'require("../../../..' +
+    'require("../../../../..' +
       (remoteServiceRootDir ? '/' + remoteServiceRootDir : '') +
       '/dist' +
       srcDirectory +

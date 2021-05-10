@@ -38,7 +38,7 @@
     "framework"
   ],
   "scripts": {
-    "prebuild": "rimraf build && copyfiles -f \"./src/types/**/*.ts\" lib/src",
+    "prebuild": "rimraf build && copyfiles -f \"./src/types/**/*.ts\" lib/src && copyfiles -f \"./src/service/**/*Service.ts\" lib/src",
     "build": "tsc -p tsconfig.json",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint . --ext .ts",

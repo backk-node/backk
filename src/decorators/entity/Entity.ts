@@ -6,7 +6,7 @@ export default function Entity(
   additionalSqlCreateTableStatementOptions?: string
 ) {
   return function(EntityClass: Function) {
-    const foundInternalEntityClass = Object.values(types).find((type) => type === EntityClass);
+    const foundInternalEntityClass = Object.values(types ?? {}).find((type) => type === EntityClass);
     if (
       !foundInternalEntityClass &&
       !EntityClass.name.startsWith('__Backk') &&

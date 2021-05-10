@@ -17,7 +17,7 @@ import { PostHook } from './hooks/PostHook';
 import { FilterQuery } from 'mongodb';
 import { PromiseErrorOr } from '../types/PromiseErrorOr';
 import { EntityPreHook } from './hooks/EntityPreHook';
-import DbTableVersion from './version/DbTableVersion';
+import DbTableVersion from '../types/DbTableVersion';
 import { EntitiesPostHook } from './hooks/EntitiesPostHook';
 
 export interface Field {

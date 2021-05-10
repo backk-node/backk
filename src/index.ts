@@ -189,7 +189,7 @@ export { default as getServiceName } from './utils/getServiceName';
 export { default as getServiceNamespace } from './utils/getServiceNamespace';
 
 export { default as MongoDbQuery } from './dbmanager/mongodb/MongoDbQuery';
-export { default as DbTableVersion } from './dbmanager/version/DbTableVersion';
+export { default as DbTableVersion } from './types/DbTableVersion';
 
 export { default as createBackkErrorFromErrorMessageAndStatusCode } from './errors/createBackkErrorFromErrorMessageAndStatusCode';
 

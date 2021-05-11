@@ -79,6 +79,8 @@ export { default as ShouldBeTrueForEntity } from './decorators/typeproperty/Shou
 export { default as Transient } from './decorators/typeproperty/Transient';
 export { UiProps, default as UiProperties } from './decorators/typeproperty/UiProperties';
 export { default as Unique } from './decorators/typeproperty/Unique';
+export { default as NotUnique } from './decorators/typeproperty/NotUnique';
+export { default as ReadWrite } from './decorators/typeproperty/ReadWrite';
 export { default as registerCustomDecorator } from './decorators/registerCustomDecorator';
 
 export { default as tryGetObjectsFromCsvFile } from './file/tryGetObjectsFromCsvFile';

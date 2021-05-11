@@ -6,6 +6,8 @@ import IsAnyString from "../../decorators/typeproperty/IsAnyString";
 import IsStrongPassword from "../../decorators/typeproperty/IsStrongPassword";
 import Private from "../../decorators/typeproperty/Private";
 import IsUndefined from "../../decorators/typeproperty/IsUndefined";
+import ReadWrite from "../../decorators/typeproperty/ReadWrite";
+import NotUnique from "../../decorators/typeproperty/NotUnique";
 
 export default class BaseUserAccount extends _IdAndCaptcha  {
   @IsUndefined({ groups: ['__backk_update__'] })
@@ -19,6 +21,8 @@ export default class BaseUserAccount extends _IdAndCaptcha  {
   @IsString()
   @MaxLength(Lengths._512)
   @IsAnyString()
+  @ReadWrite()
+  @NotUnique()
   public displayName!: string;
 
   @IsUndefined({ groups: ['__backk_update__'] })

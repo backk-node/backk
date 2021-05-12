@@ -369,7 +369,8 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
           Class,
           validationMetadata.propertyName
         );
-        const isNotUnique = typePropertyAnnotationContainer.isTypePropertyUnique(
+
+        const isNotUnique = typePropertyAnnotationContainer.isTypePropertyNotUnique(
           Class,
           validationMetadata.propertyName
         );

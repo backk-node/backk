@@ -1,11 +1,12 @@
 # Vitja service
 
 TODO:
+- get<multiple>Entities should have mandatory postQueryOperations
+  - allowFetchingOnlyNextAndPreviousPages type flag mandatory get<U extends FetchType>
+  - if flag is set postQueryOperations must have currentPageToken and it will return also currentPageToken
 - getallentities should read by default all
 - add/remove subentities should read all entities for given path
-- @Private(isPublicInTests)
 - test error cases
-
 - remove extra deletes from deleteXXX funcs
 - remove create unique index for oneToMany table
 - Split to multiple microservices

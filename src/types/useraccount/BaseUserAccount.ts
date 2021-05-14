@@ -29,5 +29,6 @@ export default class BaseUserAccount extends _IdAndCaptcha  {
   @IsString()
   @IsStrongPassword()
   @Private()
+  @NotUnique()
   password!: string;
 }

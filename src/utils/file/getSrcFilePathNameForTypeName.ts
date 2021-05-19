@@ -44,7 +44,7 @@ export function hasBackkSrcFilenameForTypeName(typeName: string) {
   }
 
   const foundFilePathName = [...srcFilePathNames, ...backkSrcFilePathNames].find((filePathName: string) => {
-    return filePathName.includes('backk') && filePathName.endsWith('/' + typeName + '.ts');
+    return filePathName.includes('/node_modules/backk/lib/src') && filePathName.endsWith('/' + typeName + '.ts');
   });
 
   return !!foundFilePathName;

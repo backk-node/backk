@@ -338,27 +338,27 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
       }
     }
 
-    if (isGeneration) {
-      const isReadWriteProperty = typePropertyAnnotationContainer.isTypePropertyReadWrite(
-        Class,
-        validationMetadata.propertyName
+    const isReadWriteProperty = typePropertyAnnotationContainer.isTypePropertyReadWrite(
+      Class,
+      validationMetadata.propertyName
+    );
+
+    if (
+      !undefinedValidation &&
+      !isReadWriteProperty &&
+      isEntityTypeName(Class.name) &&
+      !typePropertyAnnotationContainer.isTypePropertyTransient(Class, validationMetadata.propertyName)
+    ) {
+      throw new Error(
+        'Property ' +
+        Class.name +
+        '.' +
+        validationMetadata.propertyName +
+        " must have a ReadWrite() annotation or 'readonly' specifier"
       );
+    }
 
-      if (
-        !undefinedValidation &&
-        !isReadWriteProperty &&
-        isEntityTypeName(Class.name) &&
-        !typePropertyAnnotationContainer.isTypePropertyTransient(Class, validationMetadata.propertyName)
-      ) {
-        throw new Error(
-          'Property ' +
-            Class.name +
-            '.' +
-            validationMetadata.propertyName +
-            " must have a ReadWrite() annotation or 'readonly' specifier"
-        );
-      }
-
+    if (isGeneration) {
       if (
         validationMetadata.type === 'isInt' ||
         (validationMetadata.type === 'customValidation' &&

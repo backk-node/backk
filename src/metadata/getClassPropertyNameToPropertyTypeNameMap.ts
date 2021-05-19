@@ -358,12 +358,19 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
       );
     }
 
+
     if (isGeneration) {
+      const isArrayValidationMetadata = validationMetadatas.find(
+        (otherValidationMetadata: ValidationMetadata) =>
+          otherValidationMetadata.propertyName === validationMetadata.propertyName &&
+          otherValidationMetadata.type === 'isArray'
+      );
+
       if (
-        validationMetadata.type === 'isInt' ||
+        (validationMetadata.type === 'isInt' ||
         (validationMetadata.type === 'customValidation' &&
           validationMetadata.constraints[0] === 'isBigInt') ||
-        validationMetadata.type === 'isString'
+        validationMetadata.type === 'isString') && !isArrayValidationMetadata
       ) {
         const isUnique = typePropertyAnnotationContainer.isTypePropertyUnique(
           Class,

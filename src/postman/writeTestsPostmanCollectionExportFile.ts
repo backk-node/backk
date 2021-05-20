@@ -470,12 +470,14 @@ export default function writeTestsPostmanCollectionExportFile<T>(
                 (serviceMetadata.serviceName + '.' + functionMetadata?.functionName).toLowerCase()
           )
           .find(({ testTemplate: { serviceFunctionName } }) => {
-            if (serviceFunctionName === serviceMetadata.serviceName + '.' + lastReadFunctionMetadata?.functionName) {
+            if (
+              serviceFunctionName ===
+              serviceMetadata.serviceName + '.' + lastReadFunctionMetadata?.functionName
+            ) {
               return true;
             }
             return false;
           });
-
 
         if (
           ((isUpdate && (updateType === 'update' || updateType === undefined)) || isDelete) &&

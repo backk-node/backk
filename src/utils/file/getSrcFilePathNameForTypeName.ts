@@ -2,14 +2,18 @@ import { Dirent, readdirSync, existsSync } from 'fs';
 import { resolve } from 'path';
 
 export function getFileNamesRecursively(directory: string): string[] {
-  const directoryEntries = readdirSync(directory, { withFileTypes: true });
+  if (existsSync(directory)) {
+    const directoryEntries = readdirSync(directory, { withFileTypes: true });
 
-  const files = directoryEntries.map((directoryEntry: Dirent) => {
-    const pathName = resolve(directory, directoryEntry.name);
-    return directoryEntry.isDirectory() ? getFileNamesRecursively(pathName) : pathName;
-  });
+    const files = directoryEntries.map((directoryEntry: Dirent) => {
+      const pathName = resolve(directory, directoryEntry.name);
+      return directoryEntry.isDirectory() ? getFileNamesRecursively(pathName) : pathName;
+    });
 
-  return Array.prototype.concat(...files);
+    return Array.prototype.concat(...files);
+  }
+
+  return [];
 }
 
 export function hasSrcFilenameForTypeName(typeName: string, serviceRootDir: string = '') {

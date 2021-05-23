@@ -9,12 +9,15 @@ export default class DefaultJwtAuthorizationServiceImpl extends AuthorizationSer
   private jwtSigningSecretOrPublicKey: string = '';
 
   constructor(
-    private readonly jwtSigningSecretOrPublicKeyFetchUrl: string,
+    private readonly jwtSigningSecretOrPublicKeyFetchUrl: string | undefined,
     private readonly userNameClaimPath: string,
     private readonly rolesClaimPath: string,
     private readonly publicKeyPath?: string
   ) {
     super();
+    if (!jwtSigningSecretOrPublicKeyFetchUrl) {
+      throw new Error('jwtSigningSecretOrPublicKeyFetchUrl cannot be undefined')
+    }
   }
 
   async areSameIdentities(userName: string | undefined, authHeader: string): Promise<boolean> {

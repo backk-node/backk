@@ -222,8 +222,6 @@ h
 :
 
 .gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302
-<
-src/index.ts,c/5/c5fb850250c7443c48a6c12b5cf6916773da31f1
 f
 6src/observability/logging/audit/createAuditLogEntry.ts,9/3/93ee41cdce181e9e3b24f2cec0e1636fca8d4985
 f

@@ -16,8 +16,11 @@ export class Lengths {
 
   static readonly _1K = Lengths._1024;
   static readonly _2K = 2 * Lengths._1024;
+  static readonly _3K = 3 * Lengths._1024;
   static readonly _4K = 4 * Lengths._1024;
+  static readonly _5K = 5 * Lengths._1024;
   static readonly _8K = 8 * Lengths._1024;
+  static readonly _10K = 10 * Lengths._1024;
   static readonly _16K = 16 * Lengths._1024;
   static readonly _32K = 32 * Lengths._1024;
   static readonly _64K = 64 * Lengths._1024;

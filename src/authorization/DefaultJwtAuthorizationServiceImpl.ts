@@ -7,9 +7,10 @@ import AuthorizationService from './AuthorizationService';
 
 export default class DefaultJwtAuthorizationServiceImpl extends AuthorizationService {
   private jwtSigningSecretOrPublicKey: string = '';
+  private readonly jwtSigningSecretOrPublicKeyFetchUrl: string;
 
   constructor(
-    private readonly jwtSigningSecretOrPublicKeyFetchUrl: string | undefined,
+    jwtSigningSecretOrPublicKeyFetchUrl: string | undefined,
     private readonly userNameClaimPath: string,
     private readonly rolesClaimPath: string,
     private readonly publicKeyPath?: string
@@ -18,6 +19,7 @@ export default class DefaultJwtAuthorizationServiceImpl extends AuthorizationSer
     if (!jwtSigningSecretOrPublicKeyFetchUrl) {
       throw new Error('jwtSigningSecretOrPublicKeyFetchUrl cannot be undefined')
     }
+    this.jwtSigningSecretOrPublicKeyFetchUrl = jwtSigningSecretOrPublicKeyFetchUrl;
   }
 
   async areSameIdentities(userName: string | undefined, authHeader: string): Promise<boolean> {

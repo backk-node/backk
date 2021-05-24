@@ -142,6 +142,15 @@ export default function setClassPropertyValidationDecorators(
             );
           }
 
+          if (!isPrivateProperty && typePropertyAnnotationContainer.isTypePropertyPrivate(Class, propertyName)) {
+            throw new Error(
+              Class.name +
+              '.' +
+              propertyName +
+              " is a public property and cannot have @Private() annotation"
+            );
+          }
+
           if (isPrivateProperty && entityAnnotationContainer.isEntity(Class)) {
             const validationMetadataArgs: ValidationMetadataArgs = {
               type: ValidationTypes.CUSTOM_VALIDATION,
@@ -154,6 +163,15 @@ export default function setClassPropertyValidationDecorators(
             const validationMetadata = new ValidationMetadata(validationMetadataArgs);
             validationMetadata.groups = ['__backk_update__'];
             getFromContainer(MetadataStorage).addValidationMetadata(validationMetadata);
+          }
+
+          if (classBodyNode.readonly && typePropertyAnnotationContainer.isTypePropertyReadWrite(Class, propertyName)) {
+            throw new Error(
+              Class.name +
+              '.' +
+              propertyName +
+              " is a readonly property and cannot have @ReadWrite() annotation"
+            );
           }
 
           if (classBodyNode.readonly && entityAnnotationContainer.isEntity(Class)) {

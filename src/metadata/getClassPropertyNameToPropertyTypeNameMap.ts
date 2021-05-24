@@ -360,6 +360,26 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
 
 
     if (isGeneration) {
+      const isUnique = typePropertyAnnotationContainer.isTypePropertyUnique(
+        Class,
+        validationMetadata.propertyName
+      );
+
+      const isNotUnique = typePropertyAnnotationContainer.isTypePropertyNotUnique(
+        Class,
+        validationMetadata.propertyName
+      );
+
+      if (isUnique && isNotUnique) {
+        throw new Error(
+          'Property ' +
+          Class.name +
+          '.' +
+          validationMetadata.propertyName +
+          ' cannot have both @Unique() and @NotUnique() annotation'
+        );
+      }
+
       const isArrayValidationMetadata = validationMetadatas.find(
         (otherValidationMetadata: ValidationMetadata) =>
           otherValidationMetadata.propertyName === validationMetadata.propertyName &&
@@ -372,16 +392,6 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
           validationMetadata.constraints[0] === 'isBigInt') ||
         validationMetadata.type === 'isString') && !isArrayValidationMetadata
       ) {
-        const isUnique = typePropertyAnnotationContainer.isTypePropertyUnique(
-          Class,
-          validationMetadata.propertyName
-        );
-
-        const isNotUnique = typePropertyAnnotationContainer.isTypePropertyNotUnique(
-          Class,
-          validationMetadata.propertyName
-        );
-
         if (
           isEntityTypeName(Class.name) &&
           !isUnique &&

@@ -11,9 +11,10 @@ const classNameToMetadataMap: { [key: string]: { [key: string]: string } } = {};
 export default function getClassPropertyNameToPropertyTypeNameMap<T>(
   Class: new () => T,
   dbManager?: AbstractDbManager,
-  isGeneration = false
+  isGeneration = false,
+  shouldStripPrivateReadonlyProperties = false
 ): { [key: string]: string } {
-  if (!isGeneration && classNameToMetadataMap[Class.name]) {
+  if (!isGeneration && classNameToMetadataMap[Class.name] && !shouldStripPrivateReadonlyProperties) {
     return classNameToMetadataMap[Class.name];
   }
 
@@ -58,6 +59,18 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
       );
     }
 
+    const undefinedValidation = validationMetadatas.find(
+      ({ propertyName, type, constraints }: ValidationMetadata) =>
+        propertyName === validationMetadata.propertyName &&
+        type === 'customValidation' &&
+        constraints?.[0] === 'isUndefined'
+    );
+
+    if (undefinedValidation && typePropertyAnnotationContainer.isTypePropertyPrivate(Class, validationMetadata.propertyName)) {
+      return;
+    }
+
+
     const hasDifferentDbManagerGroup = validationMetadata.groups?.find(
       (group) => group.startsWith('DbManager: ') && group !== 'DbManager: ' + dbManager?.getDbManagerType()
     );
@@ -65,13 +78,6 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
     if (hasDifferentDbManagerGroup) {
       return;
     }
-
-    const undefinedValidation = validationMetadatas.find(
-      ({ propertyName, type, constraints }: ValidationMetadata) =>
-        propertyName === validationMetadata.propertyName &&
-        type === 'customValidation' &&
-        constraints?.[0] === 'isUndefined'
-    );
 
     if (
       (validationMetadata.type === 'maxLength' ||

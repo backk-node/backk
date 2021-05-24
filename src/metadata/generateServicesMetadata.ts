@@ -46,7 +46,7 @@ export default function generateServicesMetadata<T>(
 
       const publicTypesMetadata = Object.entries((controller as any)[serviceName].PublicTypes ?? {}).reduce(
         (accumulatedTypes, [typeName, typeClass]: [string, any]) => {
-          const typeObject = getClassPropertyNameToPropertyTypeNameMap(typeClass);
+          const typeObject = getClassPropertyNameToPropertyTypeNameMap(typeClass, dbManager, false, true);
           return { ...accumulatedTypes, [typeName]: typeObject };
         },
         {}

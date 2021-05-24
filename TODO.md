@@ -1,7 +1,6 @@
 # Vitja service
 
 TODO:
-- disallow pairs: private/public, unique/notunique, readonly/readwrite
 - get<multiple>Entities should have mandatory postQueryOperations
   - allowFetchingOnlyNextAndPreviousPages type flag mandatory get<U extends FetchType>
   - if flag is set postQueryOperations must have currentPageToken and it will return also currentPageToken

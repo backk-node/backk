@@ -29,6 +29,7 @@ import isBackkError from "../../../../errors/isBackkError";
 import { PreHook } from "../../../hooks/PreHook";
 import tryExecutePreHooks from "../../../hooks/tryExecutePreHooks";
 import { plainToClass } from "class-transformer";
+import { One } from "../../../AbstractDbManager";
 
 export default async function createEntity<T extends BackkEntity | SubEntity>(
   dbManager: AbstractSqlDbManager,
@@ -40,7 +41,7 @@ export default async function createEntity<T extends BackkEntity | SubEntity>(
   postQueryOperations?: PostQueryOperations,
   isRecursiveCall = false,
   shouldReturnItem = true
-): PromiseErrorOr<T> {
+): PromiseErrorOr<One<T>> {
   // noinspection AssignmentToFunctionParameterJS
   EntityClass = dbManager.getType(EntityClass);
   let didStartTransaction = false;
@@ -230,7 +231,7 @@ export default async function createEntity<T extends BackkEntity | SubEntity>(
 
     const [createdEntity, error] =
       isRecursiveCall || !shouldReturnItem
-        ? ([{ _id } as T, null] as [T, null])
+        ? ([{ currentPageTokens: undefined, item: { _id } as T }, null])
         : await dbManager.getEntityById(EntityClass, _id, { postQueryOperations });
 
     if (!isRecursiveCall && postHook) {

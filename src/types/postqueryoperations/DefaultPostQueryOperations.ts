@@ -1,7 +1,8 @@
 import { PostQueryOperations } from "./PostQueryOperations";
 import SortBy from "./SortBy";
 import {
-  ArrayMaxSize, ArrayMinSize,
+  ArrayMaxSize,
+  ArrayMinSize,
   ArrayUnique,
   IsArray,
   IsInstance,
@@ -12,8 +13,13 @@ import {
 import Pagination from "./Pagination";
 import MaxLengthAndMatches from "../../decorators/typeproperty/MaxLengthAndMatches";
 import { Lengths, Values } from "../../constants/constants";
+import CurrentPageToken from "./CurrentPageToken";
 
 export default class DefaultPostQueryOperations implements PostQueryOperations {
+  constructor(pageSize: number = Values._50) {
+    this.paginations = [new Pagination('*', 1, pageSize)]
+  }
+
   @IsOptional()
   @IsString({ each: true })
   @MaxLengthAndMatches(Lengths._512, /^[a-zA-Z_]([a-zA-Z0-9_.])+$/, { each: true }, true)
@@ -46,5 +52,13 @@ export default class DefaultPostQueryOperations implements PostQueryOperations {
   @IsArray()
   @ArrayMinSize(0)
   @ArrayMaxSize(Values._25)
-  paginations: Pagination[] = [new Pagination('*', 1, Values._50)];
+  paginations: Pagination[];
+
+  @IsOptional()
+  @IsInstance(CurrentPageToken, { each: true })
+  @ValidateNested({ each: true })
+  @IsArray()
+  @ArrayMinSize(0)
+  @ArrayMaxSize(Values._25)
+  currentPageTokens: CurrentPageToken[] = []
 }

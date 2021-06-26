@@ -1,49 +1,50 @@
-import MongoDbQuery from "../../MongoDbQuery";
-import UserDefinedFilter from "../../../../types/userdefinedfilters/UserDefinedFilter";
-import SqlExpression from "../../../sql/expressions/SqlExpression";
-import { PostQueryOperations } from "../../../../types/postqueryoperations/PostQueryOperations";
-import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
-import startDbOperation from "../../../utils/startDbOperation";
-import updateDbLocalTransactionCount from "../../../sql/operations/dql/utils/updateDbLocalTransactionCount";
-import convertFilterObjectToMongoDbQueries from "../../convertFilterObjectToMongoDbQueries";
-import getRootOperations from "../../getRootOperations";
-import convertUserDefinedFiltersToMatchExpression from "../../convertUserDefinedFiltersToMatchExpression";
-import convertMongoDbQueriesToMatchExpression from "../../convertMongoDbQueriesToMatchExpression";
-import replaceIdStringsWithObjectIds from "../../replaceIdStringsWithObjectIds";
-import { getNamespace } from "cls-hooked";
-import { ObjectId } from "mongodb";
-import getJoinPipelines from "../../getJoinPipelines";
-import getTableName, { getEntityName } from "../../../utils/getTableName";
-import getFieldOrdering from "../../getFieldOrdering";
-import performPostQueryOperations from "../../performPostQueryOperations";
-import tryFetchAndAssignSubEntitiesForManyToManyRelationships
-  from "../../tryFetchAndAssignSubEntitiesForManyToManyRelationships";
-import paginateSubEntities from "../../paginateSubEntities";
-import removePrivateProperties from "../../removePrivateProperties";
-import decryptEntities from "../../../../crypt/decryptEntities";
-import isBackkError from "../../../../errors/isBackkError";
-import createBackkErrorFromError from "../../../../errors/createBackkErrorFromError";
-import recordDbOperationDuration from "../../../utils/recordDbOperationDuration";
-import MongoDbManager from "../../../MongoDbManager";
-import { PreHook } from "../../../hooks/PreHook";
-import tryStartLocalTransactionIfNeeded
-  from "../../../sql/operations/transaction/tryStartLocalTransactionIfNeeded";
-import tryExecutePreHooks from "../../../hooks/tryExecutePreHooks";
-import { EntitiesPostHook } from "../../../hooks/EntitiesPostHook";
-import tryExecuteEntitiesPostHook from "../../../hooks/tryExecuteEntitiesPostHook";
+import MongoDbQuery from '../../MongoDbQuery';
+import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
+import SqlExpression from '../../../sql/expressions/SqlExpression';
+import { PostQueryOperations } from '../../../../types/postqueryoperations/PostQueryOperations';
+import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
+import startDbOperation from '../../../utils/startDbOperation';
+import updateDbLocalTransactionCount from '../../../sql/operations/dql/utils/updateDbLocalTransactionCount';
+import convertFilterObjectToMongoDbQueries from '../../convertFilterObjectToMongoDbQueries';
+import getRootOperations from '../../getRootOperations';
+import convertUserDefinedFiltersToMatchExpression from '../../convertUserDefinedFiltersToMatchExpression';
+import convertMongoDbQueriesToMatchExpression from '../../convertMongoDbQueriesToMatchExpression';
+import replaceIdStringsWithObjectIds from '../../replaceIdStringsWithObjectIds';
+import { getNamespace } from 'cls-hooked';
+import { ObjectId } from 'mongodb';
+import getJoinPipelines from '../../getJoinPipelines';
+import getTableName, { getEntityName } from '../../../utils/getTableName';
+import getFieldOrdering from '../../getFieldOrdering';
+import performPostQueryOperations from '../../performPostQueryOperations';
+import tryFetchAndAssignSubEntitiesForManyToManyRelationships from '../../tryFetchAndAssignSubEntitiesForManyToManyRelationships';
+import paginateSubEntities from '../../paginateSubEntities';
+import removePrivateProperties from '../../removePrivateProperties';
+import decryptEntities from '../../../../crypt/decryptEntities';
+import isBackkError from '../../../../errors/isBackkError';
+import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
+import recordDbOperationDuration from '../../../utils/recordDbOperationDuration';
+import MongoDbManager from '../../../MongoDbManager';
+import { PreHook } from '../../../hooks/PreHook';
+import tryStartLocalTransactionIfNeeded from '../../../sql/operations/transaction/tryStartLocalTransactionIfNeeded';
+import tryExecutePreHooks from '../../../hooks/tryExecutePreHooks';
+import { EntitiesPostHook } from '../../../hooks/EntitiesPostHook';
+import tryExecuteEntitiesPostHook from '../../../hooks/tryExecuteEntitiesPostHook';
+import { Many } from '../../../AbstractDbManager';
+import { BackkEntity } from '../../../../types/entities/BackkEntity';
 
-export default async function getEntitiesByFilters<T>(
+export default async function getEntitiesByFilters<T extends BackkEntity>(
   dbManager: MongoDbManager,
   filters: Array<MongoDbQuery<T> | UserDefinedFilter | SqlExpression> | Partial<T> | object,
   EntityClass: new () => T,
+  postQueryOperations: PostQueryOperations,
+  allowFetchingOnlyPreviousOrNextPage: boolean,
   options?: {
     preHooks?: PreHook | PreHook[];
-    postQueryOperations?: PostQueryOperations;
-    postHook?: EntitiesPostHook<T>
+    postHook?: EntitiesPostHook<T>;
   },
   isRecursive = false,
   isInternalCall = false
-): PromiseErrorOr<T[]> {
+): PromiseErrorOr<Many<T>> {
   const dbOperationStartTimeInMillis = startDbOperation(dbManager, 'getEntitiesByFilters');
   let matchExpression: any;
   let finalFilters: Array<MongoDbQuery<T> | UserDefinedFilter | SqlExpression>;
@@ -119,7 +120,7 @@ export default async function getEntitiesByFilters<T>(
         .aggregate([...joinPipelines, getFieldOrdering((Types as any)[getEntityName(EntityClass.name)])])
         .match(matchExpression);
 
-      performPostQueryOperations(cursor, options?.postQueryOperations, EntityClass, Types);
+      performPostQueryOperations(cursor, postQueryOperations, EntityClass, Types);
       const rows = await cursor.toArray();
 
       await tryFetchAndAssignSubEntitiesForManyToManyRelationships(
@@ -128,11 +129,11 @@ export default async function getEntitiesByFilters<T>(
         EntityClass,
         dbManager.getTypes(),
         finalFilters as Array<MongoDbQuery<T>>,
-        options?.postQueryOperations,
+        postQueryOperations,
         isInternalCall
       );
 
-      paginateSubEntities(rows, options?.postQueryOperations?.paginations, EntityClass, dbManager.getTypes());
+      paginateSubEntities(rows, postQueryOperations.paginations, EntityClass, dbManager.getTypes());
       removePrivateProperties(rows, EntityClass, dbManager.getTypes(), isInternalCall);
       decryptEntities(rows, EntityClass, dbManager.getTypes(), false);
       return rows;
@@ -142,7 +143,7 @@ export default async function getEntitiesByFilters<T>(
       await tryExecuteEntitiesPostHook(options.postHook, entities);
     }
 
-    return [entities, null];
+    return [{ currentPageTokens: undefined, items: entities }, null];
   } catch (errorOrBackkError) {
     return isBackkError(errorOrBackkError)
       ? [null, errorOrBackkError]

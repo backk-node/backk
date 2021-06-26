@@ -8,6 +8,24 @@ export default function getTypeInfoForTypeName(typeName: string) {
     typeName = typeName.slice(15, -1);
   }
 
+  let isManyOf = false;
+
+  if (typeName.startsWith('Many<')) {
+    canBeError = true;
+    isManyOf = true;
+    // noinspection AssignmentToFunctionParameterJS
+    typeName = typeName.slice(5, -1);
+  }
+
+  let isOneOf = false;
+
+  if (typeName.startsWith('One<')) {
+    canBeError = true;
+    isOneOf = true;
+    // noinspection AssignmentToFunctionParameterJS
+    typeName = typeName.slice(4, -1);
+  }
+
   const isOptionalType = typeName.startsWith('?');
   // noinspection AssignmentToFunctionParameterJS
   typeName = isOptionalType ? typeName.slice(1) : typeName;
@@ -59,6 +77,8 @@ export default function getTypeInfoForTypeName(typeName: string) {
     defaultValueStr,
     isArrayType,
     isNullableType,
-    isOptionalType
+    isOptionalType,
+    isManyOf,
+    isOneOf
   };
 }

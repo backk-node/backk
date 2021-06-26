@@ -4,8 +4,6 @@ TODO:
 - get<multiple>Entities should have mandatory postQueryOperations
   - allowFetchingOnlyNextAndPreviousPages type flag mandatory get<U extends FetchType>
   - if flag is set postQueryOperations must have currentPageToken and it will return also currentPageToken
-- getallentities => getEntities
-- don't expose private readonly fields in metadata (like UserAccount isLocked)
   
 - add/remove subentities should read all entities for given path
 - test error cases

@@ -446,11 +446,19 @@ export default async function tryExecuteServiceMethod(
             serviceFunctionName
           );
         } else if (typeof response === 'object') {
-          await tryValidateServiceFunctionReturnValue(
-            response,
-            ServiceFunctionReturnType,
-            serviceFunctionName
-          );
+          if (response.currentPageToken && response.entities) {
+            await tryValidateServiceFunctionReturnValue(
+              response.entities[0],
+              ServiceFunctionReturnType,
+              serviceFunctionName
+            );
+          } else {
+            await tryValidateServiceFunctionReturnValue(
+              response,
+              ServiceFunctionReturnType,
+              serviceFunctionName
+            );
+          }
         }
 
         if (

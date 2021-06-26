@@ -18,6 +18,8 @@ import getRootOperations from './getRootOperations';
 import convertUserDefinedFiltersToMatchExpression from './convertUserDefinedFiltersToMatchExpression';
 import convertMongoDbQueriesToMatchExpression from './convertMongoDbQueriesToMatchExpression';
 import replaceIdStringsWithObjectIds from './replaceIdStringsWithObjectIds';
+import { One } from "../AbstractDbManager";
+import DefaultPostQueryOperations from "../../types/postqueryoperations/DefaultPostQueryOperations";
 
 export default async function addSimpleSubEntitiesOrValuesByFilters<
   T extends BackkEntity,
@@ -30,7 +32,7 @@ export default async function addSimpleSubEntitiesOrValuesByFilters<
   newSubEntities: Array<Omit<U, 'id'> | { _id: string } | string | number | boolean>,
   EntityClass: new () => T,
   options?: {
-    ifEntityNotFoundUse?: () => PromiseErrorOr<T>;
+    ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
     entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
     postHook?: PostHook<T>;
     postQueryOperations?: PostQueryOperations;
@@ -72,6 +74,8 @@ export default async function addSimpleSubEntitiesOrValuesByFilters<
     let [currentEntity, error] = await dbManager.getEntityByFilters(
       EntityClass,
       filters,
+      options?.postQueryOperations ?? new DefaultPostQueryOperations(),
+      false,
       undefined,
       true,
       true

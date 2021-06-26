@@ -16,6 +16,7 @@ import recordDbOperationDuration from '../utils/recordDbOperationDuration';
 import { ObjectId } from 'mongodb';
 import typePropertyAnnotationContainer from '../../decorators/typeproperty/typePropertyAnnotationContainer';
 import getClassPropertyNameToPropertyTypeNameMap from '../../metadata/getClassPropertyNameToPropertyTypeNameMap';
+import DefaultPostQueryOperations from '../../types/postqueryoperations/DefaultPostQueryOperations';
 
 export default async function removeSimpleSubEntityById<T extends BackkEntity, U extends SubEntity>(
   dbManager: MongoDbManager,
@@ -39,7 +40,15 @@ export default async function removeSimpleSubEntityById<T extends BackkEntity, U
 
     return await dbManager.tryExecute(shouldUseTransaction, async (client) => {
       if (options?.entityPreHooks) {
-        const [currentEntity, error] = await dbManager.getEntityById(EntityClass, _id, undefined);
+        const [currentEntity, error] = await dbManager.getEntityById(
+          EntityClass,
+          _id,
+          options?.postQueryOperations ?? new DefaultPostQueryOperations(),
+          false,
+          undefined,
+          true,
+          true
+        );
         if (!currentEntity) {
           throw error;
         }

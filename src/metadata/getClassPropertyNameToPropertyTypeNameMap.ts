@@ -70,7 +70,6 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
       return;
     }
 
-
     const hasDifferentDbManagerGroup = validationMetadata.groups?.find(
       (group) => group.startsWith('DbManager: ') && group !== 'DbManager: ' + dbManager?.getDbManagerType()
     );

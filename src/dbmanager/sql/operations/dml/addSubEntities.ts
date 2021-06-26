@@ -31,6 +31,8 @@ import { EntityPreHook } from "../../../hooks/EntityPreHook";
 import tryExecuteEntityPreHooks from "../../../hooks/tryExecuteEntityPreHooks";
 import { HttpStatusCodes } from "../../../../constants/constants";
 import findSubEntityClass from "../../../../utils/type/findSubEntityClass";
+import { One } from "../../../AbstractDbManager";
+import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
 
 // noinspection OverlyComplexFunctionJS,FunctionTooLongJS
 export default async function addSubEntities<T extends BackkEntity, U extends SubEntity>(
@@ -40,7 +42,7 @@ export default async function addSubEntities<T extends BackkEntity, U extends Su
   newSubEntities: Array<Omit<U, 'id'> | { _id: string }>,
   EntityClass: new () => T,
   options?: {
-    ifEntityNotFoundUse?: () => PromiseErrorOr<T>,
+    ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>,
     entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
     postHook?: PostHook<T>;
     postQueryOperations?: PostQueryOperations;
@@ -62,7 +64,9 @@ export default async function addSubEntities<T extends BackkEntity, U extends Su
       dbManager,
       _id,
       EntityClass,
-      { postQueryOperations: options?.postQueryOperations },
+      options?.postQueryOperations ?? new DefaultPostQueryOperations(),
+      false,
+      undefined,
       true,
       true
     );

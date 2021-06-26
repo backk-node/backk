@@ -10,7 +10,9 @@ import { MongoClient, ObjectId } from 'mongodb';
 import typePropertyAnnotationContainer from '../../decorators/typeproperty/typePropertyAnnotationContainer';
 import getClassPropertyNameToPropertyTypeNameMap from '../../metadata/getClassPropertyNameToPropertyTypeNameMap';
 import { HttpStatusCodes } from '../../constants/constants';
-import tryExecutePostHook from "../hooks/tryExecutePostHook";
+import tryExecutePostHook from '../hooks/tryExecutePostHook';
+import { One } from '../AbstractDbManager';
+import DefaultPostQueryOperations from '../../types/postqueryoperations/DefaultPostQueryOperations';
 
 export default async function addSimpleSubEntitiesOrValuesByEntityId<
   T extends BackkEntity,
@@ -23,16 +25,22 @@ export default async function addSimpleSubEntitiesOrValuesByEntityId<
   newSubEntities: Array<Omit<U, 'id'> | { _id: string } | string | number | boolean>,
   EntityClass: new () => T,
   options?: {
-    ifEntityNotFoundUse?: () => PromiseErrorOr<T>;
+    ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
     entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
     postHook?: PostHook<T>;
     postQueryOperations?: PostQueryOperations;
   }
 ): PromiseErrorOr<null> {
   if (options?.entityPreHooks) {
-    let [currentEntity, error] = await dbManager.getEntityById(EntityClass, _id, {
-      postQueryOperations: options?.postQueryOperations
-    });
+    let [currentEntity, error] = await dbManager.getEntityById(
+      EntityClass,
+      _id,
+      options?.postQueryOperations ?? new DefaultPostQueryOperations(),
+      false,
+      undefined,
+      true,
+      true
+    );
 
     if (error?.statusCode === HttpStatusCodes.NOT_FOUND && options?.ifEntityNotFoundUse) {
       [currentEntity, error] = await options.ifEntityNotFoundUse();
@@ -75,7 +83,7 @@ export default async function addSimpleSubEntitiesOrValuesByEntityId<
     );
 
   if (options?.postHook) {
-    await tryExecutePostHook(options.postHook, null)
+    await tryExecutePostHook(options.postHook, null);
   }
 
   return [null, null];

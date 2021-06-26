@@ -1,4 +1,4 @@
-import AbstractDbManager, { Field } from "./AbstractDbManager";
+import AbstractDbManager, { Field, Many, One } from "./AbstractDbManager";
 import { BackkEntity } from "../types/entities/BackkEntity";
 import { SubEntity } from "../types/entities/SubEntity";
 import MongoDbQuery from "./mongodb/MongoDbQuery";
@@ -26,7 +26,7 @@ export default class NoOpDbManager extends AbstractDbManager {
     throw new Error('Not implemented');
   }
 
-  createEntity<T>(): PromiseErrorOr<T> {
+  createEntity<T>(): PromiseErrorOr<One<T>> {
     throw new Error('Not implemented');
   }
 
@@ -50,7 +50,7 @@ export default class NoOpDbManager extends AbstractDbManager {
     throw new Error('Not implemented');
   }
 
-  getAllEntities<T>(): PromiseErrorOr<T[]> {
+  getAllEntities<T extends BackkEntity>(): PromiseErrorOr<Many<T>> {
     throw new Error('Not implemented');
   }
 
@@ -62,11 +62,11 @@ export default class NoOpDbManager extends AbstractDbManager {
     return '';
   }
 
-  getEntitiesByFilters<T>(): PromiseErrorOr<T[]> {
+  getEntitiesByFilters<T extends BackkEntity>(): PromiseErrorOr<Many<T>> {
     throw new Error('Not implemented');
   }
 
-  getEntitiesByIds<T>(): PromiseErrorOr<T[]> {
+  getEntitiesByIds<T>(): PromiseErrorOr<Many<T>> {
     throw new Error('Not implemented');
   }
 
@@ -74,24 +74,12 @@ export default class NoOpDbManager extends AbstractDbManager {
     throw new Error('Not implemented');
   }
 
-  getEntitiesByField<T>(): PromiseErrorOr<T[]> {
-    throw new Error('Not implemented');
-  }
-
-  getEntityById<T>(): PromiseErrorOr<T> {
-    throw new Error('Not implemented');
-  }
-
-  getEntityByField<T>(): PromiseErrorOr<T> {
+  getEntityById<T>(): PromiseErrorOr<One<T>> {
     throw new Error('Not implemented');
   }
 
   getIdColumnType(): string {
     return '';
-  }
-
-  getFirstSubEntityOfEntityById<T extends object, U extends object>(): PromiseErrorOr<U> {
-    throw new Error('Not implemented');
   }
 
   getTimestampType(): string {
@@ -162,7 +150,7 @@ export default class NoOpDbManager extends AbstractDbManager {
     return Promise.resolve(undefined);
   }
 
-  getEntityByFilters<T>(): PromiseErrorOr<T> {
+  getEntityByFilters<T extends BackkEntity>(): PromiseErrorOr<One<T>> {
     throw new Error('Not implemented');
   }
 

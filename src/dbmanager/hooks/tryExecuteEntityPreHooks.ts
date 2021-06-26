@@ -4,10 +4,11 @@ import { HttpStatusCodes } from '../../constants/constants';
 import { BackkEntity } from '../../types/entities/BackkEntity';
 import { SubEntity } from '../../types/entities/SubEntity';
 import { EntityPreHook } from './EntityPreHook';
+import { One } from "../AbstractDbManager";
 
 export default async function tryExecuteEntityPreHooks<T extends BackkEntity | SubEntity>(
   preHooks: EntityPreHook<T> | EntityPreHook<T>[],
-  entity: T
+  entity: One<T>
 ) {
   await forEachAsyncSequential(
     Array.isArray(preHooks) ? preHooks : [preHooks],
@@ -17,7 +18,7 @@ export default async function tryExecuteEntityPreHooks<T extends BackkEntity | S
 
       try {
         if (typeof preHook === 'object' && preHook.executePreHookIf) {
-          const shouldExecuteResult = await preHook.executePreHookIf(entity);
+          const shouldExecuteResult = await preHook.executePreHookIf(entity.item);
 
           if (typeof shouldExecuteResult === 'object' && shouldExecuteResult[1]) {
             throw shouldExecuteResult[1];
@@ -27,10 +28,10 @@ export default async function tryExecuteEntityPreHooks<T extends BackkEntity | S
             shouldExecuteResult === true ||
             (typeof shouldExecuteResult === 'object' && shouldExecuteResult[0])
           ) {
-            hookCallResult = await hookFunc(entity);
+            hookCallResult = await hookFunc(entity.item);
           }
         } else {
-          hookCallResult = await hookFunc(entity);
+          hookCallResult = await hookFunc(entity.item);
         }
       } catch (error) {
         throw new Error(

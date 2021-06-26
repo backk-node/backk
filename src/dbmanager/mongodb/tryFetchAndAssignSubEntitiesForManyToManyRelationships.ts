@@ -1,7 +1,6 @@
 import getClassPropertyNameToPropertyTypeNameMap
   from "../../metadata/getClassPropertyNameToPropertyTypeNameMap";
 import typePropertyAnnotationContainer from "../../decorators/typeproperty/typePropertyAnnotationContainer";
-import AbstractDbManager from "../AbstractDbManager";
 import { PostQueryOperations } from "../../types/postqueryoperations/PostQueryOperations";
 import DefaultPostQueryOperations from "../../types/postqueryoperations/DefaultPostQueryOperations";
 import forEachAsyncParallel from "../../utils/forEachAsyncParallel";
@@ -101,12 +100,14 @@ export default async function tryFetchAndAssignSubEntitiesForManyToManyRelations
               ...(subEntityFilters ?? [])
             ],
             (Types as any)[baseTypeName],
-            { postQueryOperations: {
+            {
               includeResponseFields: subEntityIncludeResponseFields,
               excludeResponseFields: subEntityExcludeResponseFields,
               sortBys: subEntitySortBys,
               paginations: subEntityPaginations
-            }},
+            },
+            false,
+            undefined,
             true,
             isInternalCall
           );

@@ -9,12 +9,15 @@ import Pagination from "../../../../types/postqueryoperations/Pagination";
 import getTableName from "../../../utils/getTableName";
 import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
 import { getNamespace } from "cls-hooked";
+import { Many } from "../../../AbstractDbManager";
+import { BackkEntity } from "../../../../types/entities/BackkEntity";
 
-export default async function getAllEntities<T>(
+export default async function getAllEntities<T extends BackkEntity>(
   dbManager: AbstractSqlDbManager,
   EntityClass: new () => T,
-  postQueryOperations?: PostQueryOperations
-): PromiseErrorOr<T[]> {
+  postQueryOperations: PostQueryOperations,
+  allowFetchingOnlyPreviousOrNextPage: boolean
+): PromiseErrorOr<Many<T>> {
   updateDbLocalTransactionCount(dbManager);
 
   // noinspection AssignmentToFunctionParameterJS
@@ -65,7 +68,7 @@ export default async function getAllEntities<T>(
       dbManager
     );
 
-    return [entities, null];
+    return [{ currentPageTokens: undefined, items: entities }, null];
   } catch (error) {
     return [null, createBackkErrorFromError(error)];
   }

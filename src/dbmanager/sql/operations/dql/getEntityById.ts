@@ -1,51 +1,55 @@
-import AbstractSqlDbManager from '../../../AbstractSqlDbManager';
-import transformRowsToObjects from './transformresults/transformRowsToObjects';
-import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
-import getClassPropertyNameToPropertyTypeNameMap from '../../../../metadata/getClassPropertyNameToPropertyTypeNameMap';
-import { PostQueryOperations } from '../../../../types/postqueryoperations/PostQueryOperations';
-import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
-import getSqlSelectStatementParts from './utils/getSqlSelectStatementParts';
-import updateDbLocalTransactionCount from './utils/updateDbLocalTransactionCount';
-import getTableName from '../../../utils/getTableName';
-import createBackkErrorFromErrorCodeMessageAndStatus from '../../../../errors/createBackkErrorFromErrorCodeMessageAndStatus';
-import createErrorFromErrorCodeMessageAndStatus from '../../../../errors/createErrorFromErrorCodeMessageAndStatus';
-import { BACKK_ERRORS } from '../../../../errors/backkErrors';
-import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
-import { PostHook } from '../../../hooks/PostHook';
-import tryStartLocalTransactionIfNeeded from '../transaction/tryStartLocalTransactionIfNeeded';
-import tryCommitLocalTransactionIfNeeded from '../transaction/tryCommitLocalTransactionIfNeeded';
-import tryRollbackLocalTransactionIfNeeded from '../transaction/tryRollbackLocalTransactionIfNeeded';
-import cleanupLocalTransactionIfNeeded from '../transaction/cleanupLocalTransactionIfNeeded';
-import { getNamespace } from 'cls-hooked';
+import AbstractSqlDbManager from "../../../AbstractSqlDbManager";
+import transformRowsToObjects from "./transformresults/transformRowsToObjects";
+import createBackkErrorFromError from "../../../../errors/createBackkErrorFromError";
+import getClassPropertyNameToPropertyTypeNameMap
+  from "../../../../metadata/getClassPropertyNameToPropertyTypeNameMap";
+import { PostQueryOperations } from "../../../../types/postqueryoperations/PostQueryOperations";
+import getSqlSelectStatementParts from "./utils/getSqlSelectStatementParts";
+import updateDbLocalTransactionCount from "./utils/updateDbLocalTransactionCount";
+import getTableName from "../../../utils/getTableName";
+import createBackkErrorFromErrorCodeMessageAndStatus
+  from "../../../../errors/createBackkErrorFromErrorCodeMessageAndStatus";
+import createErrorFromErrorCodeMessageAndStatus
+  from "../../../../errors/createErrorFromErrorCodeMessageAndStatus";
+import { BACKK_ERRORS } from "../../../../errors/backkErrors";
+import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
+import { PostHook } from "../../../hooks/PostHook";
+import tryStartLocalTransactionIfNeeded from "../transaction/tryStartLocalTransactionIfNeeded";
+import tryCommitLocalTransactionIfNeeded from "../transaction/tryCommitLocalTransactionIfNeeded";
+import tryRollbackLocalTransactionIfNeeded from "../transaction/tryRollbackLocalTransactionIfNeeded";
+import cleanupLocalTransactionIfNeeded from "../transaction/cleanupLocalTransactionIfNeeded";
+import { getNamespace } from "cls-hooked";
 import tryExecutePostHook from "../../../hooks/tryExecutePostHook";
 import { PreHook } from "../../../hooks/PreHook";
 import tryExecutePreHooks from "../../../hooks/tryExecutePreHooks";
+import { One } from "../../../AbstractDbManager";
+import { BackkEntity } from "../../../../types/entities/BackkEntity";
 
 // noinspection OverlyComplexFunctionJS,FunctionTooLongJS
-export default async function getEntityById<T>(
+export default async function getEntityById<T extends BackkEntity>(
   dbManager: AbstractSqlDbManager,
   _id: string,
   EntityClass: new () => T,
+  postQueryOperations: PostQueryOperations,
+  allowFetchingOnlyPreviousOrNextPage: boolean,
   options?: {
     preHooks?: PreHook | PreHook[],
-    postQueryOperations?: PostQueryOperations,
     postHook?: PostHook<T>,
-    ifEntityNotFoundReturn?: () => PromiseErrorOr<T>
+    ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>
   },
   isSelectForUpdate = false,
   isInternalCall = false
-): PromiseErrorOr<T> {
+): PromiseErrorOr<One<T>> {
   // noinspection AssignmentToFunctionParameterJS
   EntityClass = dbManager.getType(EntityClass);
-  const finalPostQueryOperations = options?.postQueryOperations ?? new DefaultPostQueryOperations();
   let didStartTransaction = false;
 
   try {
     if (
-      finalPostQueryOperations?.includeResponseFields?.length === 1 &&
-      finalPostQueryOperations.includeResponseFields[0] === '_id'
+      postQueryOperations?.includeResponseFields?.length === 1 &&
+      postQueryOperations.includeResponseFields[0] === '_id'
     ) {
-      return { _id } as any;
+      return [{ currentPageTokens: undefined, item: { _id } as T }, null];
     }
 
     if (options?.postHook || options?.preHooks || options?.ifEntityNotFoundReturn) {
@@ -66,7 +70,7 @@ export default async function getEntityById<T>(
 
     const { columns, joinClauses, outerSortClause } = getSqlSelectStatementParts(
       dbManager,
-      finalPostQueryOperations,
+      postQueryOperations,
       EntityClass,
       undefined,
       isInternalCall
@@ -117,7 +121,7 @@ export default async function getEntityById<T>(
       entity = transformRowsToObjects(
         dbManager.getResultRows(result),
         EntityClass,
-        finalPostQueryOperations,
+        postQueryOperations,
         dbManager,
         isInternalCall
       )[0];

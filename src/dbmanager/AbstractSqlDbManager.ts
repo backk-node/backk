@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import SqlExpression from './sql/expressions/SqlExpression';
-import AbstractDbManager, { Field } from './AbstractDbManager';
+import AbstractDbManager, { Field, Many, One } from './AbstractDbManager';
 import createEntity from './sql/operations/dml/createEntity';
 import getEntitiesByFilters from './sql/operations/dql/getEntitiesByFilters';
 import getEntitiesCount from './sql/operations/dql/getEntitiesCount';
@@ -35,7 +35,7 @@ import { PromiseErrorOr } from '../types/PromiseErrorOr';
 import updateEntitiesByFilters from './sql/operations/dml/updateEntitiesByFilters';
 import { EntityPreHook } from './hooks/EntityPreHook';
 import deleteEntityWhere from './sql/operations/dml/deleteEntityWhere';
-import removeSubEntitiesWhere from './sql/operations/dml/removeSubEntitiesWhere';
+import removeSubEntitiesByFilters from './sql/operations/dml/removeSubEntitiesWhere';
 import addFieldValues from './sql/operations/dml/addFieldValues';
 import removeFieldValues from './sql/operations/dml/removeFieldValues';
 import addSubEntitiesByFilters from './sql/operations/dml/addSubEntitiesByFilters';
@@ -43,8 +43,8 @@ import { EntitiesPostHook } from './hooks/EntitiesPostHook';
 import getEntityByFilters from './sql/operations/dql/getEntityByFilters';
 import deleteEntityByFilters from './sql/operations/dml/deleteEntityByFilters';
 import updateEntityByFilters from './sql/operations/dml/updateEntityByFilters';
-import removeSubEntitiesByFilters from './sql/operations/dml/removeSubEntitiesWhere';
 import doesEntityArrayFieldContainValue from './sql/operations/dql/doesEntityArrayFieldContainValue';
+import { options } from 'tsconfig-paths/lib/options';
 
 @Injectable()
 export default abstract class AbstractSqlDbManager extends AbstractDbManager {
@@ -431,7 +431,7 @@ export default abstract class AbstractSqlDbManager extends AbstractDbManager {
       postQueryOperations?: PostQueryOperations;
     },
     shouldReturnItem = true
-  ): PromiseErrorOr<T> {
+  ): PromiseErrorOr<One<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'createEntity');
     const response = await createEntity(
       this,
@@ -454,7 +454,7 @@ export default abstract class AbstractSqlDbManager extends AbstractDbManager {
     EntityClass: { new (): T },
     _id: string,
     options?: {
-      ifEntityNotFoundUse?: () => PromiseErrorOr<T>;
+      ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
       postQueryOperations?: PostQueryOperations;
       postHook?: PostHook<T>;
@@ -472,7 +472,7 @@ export default abstract class AbstractSqlDbManager extends AbstractDbManager {
     EntityClass: { new (): T },
     filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
     options?: {
-      ifEntityNotFoundUse?: () => PromiseErrorOr<T>;
+      ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
       postQueryOperations?: PostQueryOperations;
       postHook?: PostHook<T>;
@@ -497,7 +497,7 @@ export default abstract class AbstractSqlDbManager extends AbstractDbManager {
     EntityClass: { new (): T },
     filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
     options?: {
-      ifEntityNotFoundUse?: () => PromiseErrorOr<T>;
+      ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
       postQueryOperations?: PostQueryOperations;
       postHook?: PostHook<T>;
@@ -523,7 +523,7 @@ export default abstract class AbstractSqlDbManager extends AbstractDbManager {
     EntityClass: { new (): T },
     _id: string,
     options?: {
-      ifEntityNotFoundUse?: () => PromiseErrorOr<T>;
+      ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
       postQueryOperations?: PostQueryOperations;
       postHook?: PostHook<T>;
@@ -535,29 +535,41 @@ export default abstract class AbstractSqlDbManager extends AbstractDbManager {
     return response;
   }
 
-  async getAllEntities<T>(
+  async getAllEntities<T extends BackkEntity>(
     entityClass: new () => T,
-    options?: {
-      postQueryOperations?: PostQueryOperations;
-    }
-  ): PromiseErrorOr<T[]> {
+    postQueryOperations: PostQueryOperations,
+    allowFetchingOnlyPreviousOrNextPage: boolean
+  ): PromiseErrorOr<Many<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntitiesByFilters');
-    const response = await getAllEntities(this, entityClass, options?.postQueryOperations);
+    const response = await getAllEntities(
+      this,
+      entityClass,
+      postQueryOperations,
+      allowFetchingOnlyPreviousOrNextPage
+    );
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
     return response;
   }
 
-  async getEntitiesByFilters<T>(
+  async getEntitiesByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
     filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    postQueryOperations: PostQueryOperations,
+    allowFetchingOnlyPreviousOrNextPage: boolean,
     options?: {
       preHooks?: PreHook | PreHook[];
-      postQueryOperations?: PostQueryOperations;
       postHook?: EntitiesPostHook<T>;
     }
-  ): PromiseErrorOr<T[]> {
+  ): PromiseErrorOr<Many<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntitiesByFilters');
-    const response = await getEntitiesByFilters(this, filters, EntityClass, options);
+    const response = await getEntitiesByFilters(
+      this,
+      filters,
+      EntityClass,
+      postQueryOperations,
+      allowFetchingOnlyPreviousOrNextPage,
+      options
+    );
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
     return response;
   }
@@ -565,15 +577,23 @@ export default abstract class AbstractSqlDbManager extends AbstractDbManager {
   async getEntityByFilters<T>(
     EntityClass: { new (): T },
     filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    postQueryOperations: PostQueryOperations,
+    allowFetchingOnlyPreviousOrNextPage: boolean,
     options?: {
       preHooks?: PreHook | PreHook[];
-      postQueryOperations?: PostQueryOperations;
-      ifEntityNotFoundReturn?: () => PromiseErrorOr<T>;
+      ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>;
       postHook?: PostHook<T>;
     }
-  ): PromiseErrorOr<T> {
+  ): PromiseErrorOr<One<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntityByFilters');
-    const response = await getEntityByFilters(this, filters, EntityClass, options);
+    const response = await getEntityByFilters(
+      this,
+      filters,
+      EntityClass,
+      postQueryOperations,
+      allowFetchingOnlyPreviousOrNextPage,
+      options
+    );
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
     return response;
   }
@@ -588,18 +608,26 @@ export default abstract class AbstractSqlDbManager extends AbstractDbManager {
     return response;
   }
 
-  async getEntityById<T>(
+  async getEntityById<T extends BackkEntity>(
     EntityClass: { new (): T },
     _id: string,
+    postQueryOperations: PostQueryOperations,
+    allowFetchingOnlyPreviousOrNextPage: boolean,
     options?: {
       preHooks?: PreHook | PreHook[];
-      postQueryOperations?: PostQueryOperations;
-      ifEntityNotFoundReturn?: () => PromiseErrorOr<T>;
+      ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>;
       postHook?: PostHook<T>;
     }
-  ): PromiseErrorOr<T> {
+  ): PromiseErrorOr<One<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntityById');
-    const response = await getEntityById(this, _id, EntityClass, options);
+    const response = await getEntityById(
+      this,
+      _id,
+      EntityClass,
+      postQueryOperations,
+      allowFetchingOnlyPreviousOrNextPage,
+      options
+    );
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
     return response;
   }
@@ -607,58 +635,17 @@ export default abstract class AbstractSqlDbManager extends AbstractDbManager {
   async getEntitiesByIds<T>(
     EntityClass: { new (): T },
     _ids: string[],
-    options?: { postQueryOperations?: PostQueryOperations }
-  ): PromiseErrorOr<T[]> {
+    postQueryOperations: PostQueryOperations,
+    allowFetchingOnlyPreviousOrNextPage: boolean
+  ): PromiseErrorOr<Many<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntitiesByIds');
-    const response = await getEntitiesByIds(this, _ids, EntityClass, options?.postQueryOperations);
-    recordDbOperationDuration(this, dbOperationStartTimeInMillis);
-    return response;
-  }
-
-  async getEntityByField<T>(
-    entityClass: new () => T,
-    fieldPathName: string,
-    fieldValue: any,
-    options?: {
-      preHooks?: PreHook | PreHook[];
-      postQueryOperations?: PostQueryOperations;
-      postHook?: PostHook<T>;
-      ifEntityNotFoundReturn?: () => PromiseErrorOr<T>;
-    },
-    isSelectForUpdate = false
-  ): PromiseErrorOr<T> {
-    const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntityByField');
-    const response = await getEntityWhere(
+    const response = await getEntitiesByIds(
       this,
-      fieldPathName,
-      fieldValue,
-      entityClass,
-      options?.preHooks,
-      options?.postQueryOperations,
-      options?.postHook,
-      options?.ifEntityNotFoundReturn,
-      isSelectForUpdate
-    );
-    recordDbOperationDuration(this, dbOperationStartTimeInMillis);
-    return response;
-  }
-
-  async getEntitiesByField<T>(
-    EntityClass: { new (): T },
-    fieldPathName: string,
-    fieldValue: any,
-    options?: { postQueryOperations?: PostQueryOperations }
-  ): PromiseErrorOr<T[]> {
-    const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntitiesByField');
-
-    const response = await getEntitiesWhere(
-      this,
-      fieldPathName,
-      fieldValue,
+      _ids,
       EntityClass,
-      options?.postQueryOperations
+      postQueryOperations,
+      allowFetchingOnlyPreviousOrNextPage
     );
-
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
     return response;
   }

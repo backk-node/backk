@@ -9,10 +9,12 @@ export default function getTypeInfoForTypeName(typeName: string) {
   }
 
   let isManyOf = false;
+  let isArrayType = false;
 
   if (typeName.startsWith('Many<')) {
     canBeError = true;
     isManyOf = true;
+    isArrayType = true;
     // noinspection AssignmentToFunctionParameterJS
     typeName = typeName.slice(5, -1);
   }
@@ -37,7 +39,6 @@ export default function getTypeInfoForTypeName(typeName: string) {
   let defaultValueStr;
   [typeName, defaultValueStr] = typeName.split(' = ');
 
-  let isArrayType = false;
   if (typeName.endsWith('[]')) {
     isArrayType = true;
     // noinspection AssignmentToFunctionParameterJS

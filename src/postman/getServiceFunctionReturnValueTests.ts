@@ -30,7 +30,7 @@ export default function getServiceFunctionReturnValueTests(
   const serviceEntityName = serviceMetadata.serviceName.split('Service')[0];
 
   let javascriptLines =
-    responsePath === '[0].' || responsePath === '.' ? ['const response = pm.response.json();'] : [];
+    responsePath === '[0].' || responsePath === '.' ? ['let response = pm.response.json(); response = response.items || response.item || response;'] : [];
 
   Object.entries(returnValueMetadata).forEach(([propertyName, propertyTypeName]) => {
     if (

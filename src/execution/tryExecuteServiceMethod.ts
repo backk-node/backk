@@ -416,9 +416,9 @@ export default async function tryExecuteServiceMethod(
       }
 
       if (response) {
-        const serviceFunctionBaseReturnTypeName = getTypeInfoForTypeName(
+        const { baseTypeName: serviceFunctionBaseReturnTypeName, isOneOf, isManyOf } = getTypeInfoForTypeName(
           controller[`${serviceName}__BackkTypes__`].functionNameToReturnTypeNameMap[functionName]
-        ).baseTypeName;
+        );
 
         const ServiceFunctionReturnType = controller[serviceName]['Types'][serviceFunctionBaseReturnTypeName];
 
@@ -446,9 +446,15 @@ export default async function tryExecuteServiceMethod(
             serviceFunctionName
           );
         } else if (typeof response === 'object') {
-          if (response.currentPageToken && response.entities) {
+          if (isManyOf) {
             await tryValidateServiceFunctionReturnValue(
-              response.entities[0],
+              response.items[0],
+              ServiceFunctionReturnType,
+              serviceFunctionName
+            );
+          } else if (isOneOf) {
+            await tryValidateServiceFunctionReturnValue(
+              response.item,
               ServiceFunctionReturnType,
               serviceFunctionName
             );

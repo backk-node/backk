@@ -41,7 +41,7 @@ export default function getServiceFunctionTests(
         id: serviceMetadata.serviceName + '.' + functionMetadata.functionName,
         exec: [
           checkResponseCode,
-          'const response = pm.response.json()',
+          'let response = pm.response.json(); response = response.items || response.item || response;',
           ...getSetCollectionVariableStatements(
             serviceEntityName,
             baseTypeName,

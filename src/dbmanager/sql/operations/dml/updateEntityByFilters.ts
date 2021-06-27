@@ -1,26 +1,27 @@
-import MongoDbQuery from '../../../mongodb/MongoDbQuery';
-import SqlExpression from '../../expressions/SqlExpression';
-import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
-import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
-import convertFilterObjectToSqlEquals from '../dql/utils/convertFilterObjectToSqlEquals';
-import tryStartLocalTransactionIfNeeded from '../transaction/tryStartLocalTransactionIfNeeded';
-import tryGetWhereClause from '../dql/clauses/tryGetWhereClause';
-import tryCommitLocalTransactionIfNeeded from '../transaction/tryCommitLocalTransactionIfNeeded';
-import tryRollbackLocalTransactionIfNeeded from '../transaction/tryRollbackLocalTransactionIfNeeded';
-import isBackkError from '../../../../errors/isBackkError';
-import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
-import cleanupLocalTransactionIfNeeded from '../transaction/cleanupLocalTransactionIfNeeded';
-import AbstractSqlDbManager from '../../../AbstractSqlDbManager';
-import getFilterValues from '../dql/utils/getFilterValues';
-import getClassPropertyNameToPropertyTypeNameMap from '../../../../metadata/getClassPropertyNameToPropertyTypeNameMap';
-import { BackkEntity } from '../../../../types/entities/BackkEntity';
-import { EntityPreHook } from '../../../hooks/EntityPreHook';
-import { PostQueryOperations } from '../../../../types/postqueryoperations/PostQueryOperations';
-import { PostHook } from '../../../hooks/PostHook';
-import getEntityWhere from '../dql/getEntityWhere';
-import tryExecuteEntityPreHooks from '../../../hooks/tryExecuteEntityPreHooks';
-import getEntityByFilters from '../dql/getEntityByFilters';
+import MongoDbQuery from "../../../mongodb/MongoDbQuery";
+import SqlExpression from "../../expressions/SqlExpression";
+import UserDefinedFilter from "../../../../types/userdefinedfilters/UserDefinedFilter";
+import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
+import convertFilterObjectToSqlEquals from "../dql/utils/convertFilterObjectToSqlEquals";
+import tryStartLocalTransactionIfNeeded from "../transaction/tryStartLocalTransactionIfNeeded";
+import tryGetWhereClause from "../dql/clauses/tryGetWhereClause";
+import tryCommitLocalTransactionIfNeeded from "../transaction/tryCommitLocalTransactionIfNeeded";
+import tryRollbackLocalTransactionIfNeeded from "../transaction/tryRollbackLocalTransactionIfNeeded";
+import isBackkError from "../../../../errors/isBackkError";
+import createBackkErrorFromError from "../../../../errors/createBackkErrorFromError";
+import cleanupLocalTransactionIfNeeded from "../transaction/cleanupLocalTransactionIfNeeded";
+import AbstractSqlDbManager from "../../../AbstractSqlDbManager";
+import getFilterValues from "../dql/utils/getFilterValues";
+import getClassPropertyNameToPropertyTypeNameMap
+  from "../../../../metadata/getClassPropertyNameToPropertyTypeNameMap";
+import { BackkEntity } from "../../../../types/entities/BackkEntity";
+import { EntityPreHook } from "../../../hooks/EntityPreHook";
+import { PostQueryOperations } from "../../../../types/postqueryoperations/PostQueryOperations";
+import { PostHook } from "../../../hooks/PostHook";
+import tryExecuteEntityPreHooks from "../../../hooks/tryExecuteEntityPreHooks";
+import getEntityByFilters from "../dql/getEntityByFilters";
 import tryExecutePostHook from "../../../hooks/tryExecutePostHook";
+import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
 
 // noinspection DuplicatedCode
 export default async function updateEntityByFilters<T extends BackkEntity>(
@@ -60,7 +61,10 @@ export default async function updateEntityByFilters<T extends BackkEntity>(
       dbManager,
       filters,
       EntityClass,
-      { postQueryOperations: options?.postQueryOperations },
+      options?.postQueryOperations ?? new DefaultPostQueryOperations(),
+      false,
+      undefined,
+      true,
       true
     );
 

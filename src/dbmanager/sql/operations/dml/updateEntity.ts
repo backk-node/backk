@@ -31,6 +31,8 @@ import { EntityPreHook } from '../../../hooks/EntityPreHook';
 import tryExecuteEntityPreHooks from '../../../hooks/tryExecuteEntityPreHooks';
 import { PreHook } from "../../../hooks/PreHook";
 import tryExecutePreHooks from "../../../hooks/tryExecutePreHooks";
+import { One } from "../../../AbstractDbManager";
+import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
 
 // noinspection FunctionWithMoreThanThreeNegationsJS,FunctionWithMoreThanThreeNegationsJS,OverlyComplexFunctionJS,FunctionTooLongJS
 export default async function updateEntity<T extends BackkEntity>(
@@ -55,7 +57,7 @@ export default async function updateEntity<T extends BackkEntity>(
     }
 
     didStartTransaction = await tryStartLocalTransactionIfNeeded(dbManager);
-    let currentEntity: T | null | undefined;
+    let currentEntity: One<T> | null | undefined;
     let error: BackkError | null | undefined;
 
     if (!isRecursiveCall) {
@@ -63,9 +65,9 @@ export default async function updateEntity<T extends BackkEntity>(
         dbManager,
         _id ?? id,
         EntityClass,
-        {
-          postQueryOperations
-        },
+        postQueryOperations ?? new DefaultPostQueryOperations(),
+        false,
+        undefined,
         true,
         true
       );
@@ -280,9 +282,9 @@ export default async function updateEntity<T extends BackkEntity>(
             })
           );
         } else if (fieldName !== '_id' && fieldName !== 'id') {
-          if (fieldName === 'version' && currentEntity?.version) {
+          if (fieldName === 'version' && currentEntity?.item.version) {
             columns.push(fieldName);
-            values.push(currentEntity.version + 1);
+            values.push(currentEntity.item.version + 1);
           } else if (fieldName === 'lastModifiedTimestamp') {
             columns.push(fieldName);
             values.push(new Date());

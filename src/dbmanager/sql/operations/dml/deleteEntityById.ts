@@ -18,6 +18,7 @@ import isBackkError from "../../../../errors/isBackkError";
 import { PostQueryOperations } from "../../../../types/postqueryoperations/PostQueryOperations";
 import { EntityPreHook } from "../../../hooks/EntityPreHook";
 import tryExecuteEntityPreHooks from "../../../hooks/tryExecuteEntityPreHooks";
+import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
 
 export default async function deleteEntityById<T extends BackkEntity>(
   dbManager: AbstractSqlDbManager,
@@ -41,7 +42,9 @@ export default async function deleteEntityById<T extends BackkEntity>(
         dbManager,
         _id,
         EntityClass,
-        { postQueryOperations },
+        postQueryOperations ?? new DefaultPostQueryOperations(),
+        false,
+        undefined,
         true,
         true
       );

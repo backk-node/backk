@@ -20,6 +20,7 @@ import { PostHook } from "../../../hooks/PostHook";
 import tryExecuteEntityPreHooks from "../../../hooks/tryExecuteEntityPreHooks";
 import getEntityByFilters from "../dql/getEntityByFilters";
 import tryExecutePostHook from "../../../hooks/tryExecutePostHook";
+import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
 
 export default async function deleteEntityByFilters<T extends object>(
   dbManager: AbstractSqlDbManager,
@@ -60,7 +61,10 @@ export default async function deleteEntityByFilters<T extends object>(
         dbManager,
        filters,
         EntityClass,
-        { postQueryOperations: options?.postQueryOperations},
+        options?.postQueryOperations ?? new DefaultPostQueryOperations(),
+        false,
+        undefined,
+        true,
         true
       );
 

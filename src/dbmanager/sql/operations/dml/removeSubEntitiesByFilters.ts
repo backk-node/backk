@@ -1,31 +1,34 @@
-import { JSONPath } from 'jsonpath-plus';
-import { plainToClass } from 'class-transformer';
-import forEachAsyncParallel from '../../../../utils/forEachAsyncParallel';
-import AbstractSqlDbManager from '../../../AbstractSqlDbManager';
-import deleteEntityById from './deleteEntityById';
-import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
-import { BackkEntity } from '../../../../types/entities/BackkEntity';
-import tryStartLocalTransactionIfNeeded from '../transaction/tryStartLocalTransactionIfNeeded';
-import tryCommitLocalTransactionIfNeeded from '../transaction/tryCommitLocalTransactionIfNeeded';
-import tryRollbackLocalTransactionIfNeeded from '../transaction/tryRollbackLocalTransactionIfNeeded';
-import cleanupLocalTransactionIfNeeded from '../transaction/cleanupLocalTransactionIfNeeded';
-import tryUpdateEntityVersionAndLastModifiedTimestampIfNeeded from './utils/tryUpdateEntityVersionAndLastModifiedTimestampIfNeeded';
-import entityAnnotationContainer from '../../../../decorators/entity/entityAnnotationContainer';
-import findParentEntityAndPropertyNameForSubEntity from '../../../../metadata/findParentEntityAndPropertyNameForSubEntity';
-import typePropertyAnnotationContainer from '../../../../decorators/typeproperty/typePropertyAnnotationContainer';
-import { PostHook } from '../../../hooks/PostHook';
-import tryExecutePostHook from '../../../hooks/tryExecutePostHook';
-import { PostQueryOperations } from '../../../../types/postqueryoperations/PostQueryOperations';
-import getSingularName from '../../../../utils/getSingularName';
-import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
-import isBackkError from '../../../../errors/isBackkError';
-import { EntityPreHook } from '../../../hooks/EntityPreHook';
-import tryExecuteEntityPreHooks from '../../../hooks/tryExecuteEntityPreHooks';
-import getEntityWhere from '../dql/getEntityWhere';
-import MongoDbQuery from '../../../mongodb/MongoDbQuery';
-import SqlExpression from '../../expressions/SqlExpression';
-import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
-import getEntityByFilters from '../dql/getEntityByFilters';
+import { JSONPath } from "jsonpath-plus";
+import { plainToClass } from "class-transformer";
+import forEachAsyncParallel from "../../../../utils/forEachAsyncParallel";
+import AbstractSqlDbManager from "../../../AbstractSqlDbManager";
+import deleteEntityById from "./deleteEntityById";
+import createBackkErrorFromError from "../../../../errors/createBackkErrorFromError";
+import { BackkEntity } from "../../../../types/entities/BackkEntity";
+import tryStartLocalTransactionIfNeeded from "../transaction/tryStartLocalTransactionIfNeeded";
+import tryCommitLocalTransactionIfNeeded from "../transaction/tryCommitLocalTransactionIfNeeded";
+import tryRollbackLocalTransactionIfNeeded from "../transaction/tryRollbackLocalTransactionIfNeeded";
+import cleanupLocalTransactionIfNeeded from "../transaction/cleanupLocalTransactionIfNeeded";
+import tryUpdateEntityVersionAndLastModifiedTimestampIfNeeded
+  from "./utils/tryUpdateEntityVersionAndLastModifiedTimestampIfNeeded";
+import entityAnnotationContainer from "../../../../decorators/entity/entityAnnotationContainer";
+import findParentEntityAndPropertyNameForSubEntity
+  from "../../../../metadata/findParentEntityAndPropertyNameForSubEntity";
+import typePropertyAnnotationContainer
+  from "../../../../decorators/typeproperty/typePropertyAnnotationContainer";
+import { PostHook } from "../../../hooks/PostHook";
+import tryExecutePostHook from "../../../hooks/tryExecutePostHook";
+import { PostQueryOperations } from "../../../../types/postqueryoperations/PostQueryOperations";
+import getSingularName from "../../../../utils/getSingularName";
+import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
+import isBackkError from "../../../../errors/isBackkError";
+import { EntityPreHook } from "../../../hooks/EntityPreHook";
+import tryExecuteEntityPreHooks from "../../../hooks/tryExecuteEntityPreHooks";
+import MongoDbQuery from "../../../mongodb/MongoDbQuery";
+import SqlExpression from "../../expressions/SqlExpression";
+import UserDefinedFilter from "../../../../types/userdefinedfilters/UserDefinedFilter";
+import getEntityByFilters from "../dql/getEntityByFilters";
+import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
 
 export default async function removeSubEntitiesByFilters<T extends BackkEntity, U extends object>(
   dbManager: AbstractSqlDbManager,
@@ -47,7 +50,9 @@ export default async function removeSubEntitiesByFilters<T extends BackkEntity, 
       dbManager,
       filters,
       EntityClass,
-      { postQueryOperations },
+      postQueryOperations ?? new DefaultPostQueryOperations(),
+    false,
+    undefined,
       true,
       true
     );
@@ -81,7 +86,7 @@ export default async function removeSubEntitiesByFilters<T extends BackkEntity, 
             subEntityForeignIdFieldName
           } = entityAnnotationContainer.getManyToManyRelationTableSpec(associationTableName);
 
-          const numericId = parseInt(currentEntity._id, 10);
+          const numericId = parseInt(currentEntity.item._id, 10);
 
           await dbManager.tryExecuteSql(
             `DELETE FROM ${dbManager.schema.toLowerCase()}.${associationTableName.toLowerCase()} WHERE ${entityForeignIdFieldName.toLowerCase()} = ${dbManager.getValuePlaceholder(

@@ -1,39 +1,37 @@
-import { JSONPath } from "jsonpath-plus";
-import entityAnnotationContainer from "../../../../decorators/entity/entityAnnotationContainer";
-import AbstractSqlDbManager from "../../../AbstractSqlDbManager";
-import createBackkErrorFromError from "../../../../errors/createBackkErrorFromError";
-import { BackkEntity } from "../../../../types/entities/BackkEntity";
-import { PostQueryOperations } from "../../../../types/postqueryoperations/PostQueryOperations";
-import forEachAsyncParallel from "../../../../utils/forEachAsyncParallel";
-import tryStartLocalTransactionIfNeeded from "../transaction/tryStartLocalTransactionIfNeeded";
-import tryCommitLocalTransactionIfNeeded from "../transaction/tryCommitLocalTransactionIfNeeded";
-import tryRollbackLocalTransactionIfNeeded from "../transaction/tryRollbackLocalTransactionIfNeeded";
-import cleanupLocalTransactionIfNeeded from "../transaction/cleanupLocalTransactionIfNeeded";
-import findParentEntityAndPropertyNameForSubEntity
-  from "../../../../metadata/findParentEntityAndPropertyNameForSubEntity";
-import { getFromContainer, MetadataStorage } from "class-validator";
-import { ValidationMetadata } from "class-validator/metadata/ValidationMetadata";
-import tryUpdateEntityVersionAndLastModifiedTimestampIfNeeded
-  from "./utils/tryUpdateEntityVersionAndLastModifiedTimestampIfNeeded";
-import typePropertyAnnotationContainer
-  from "../../../../decorators/typeproperty/typePropertyAnnotationContainer";
-import { SubEntity } from "../../../../types/entities/SubEntity";
-import { PostHook } from "../../../hooks/PostHook";
-import tryExecutePostHook from "../../../hooks/tryExecutePostHook";
-import createBackkErrorFromErrorCodeMessageAndStatus
-  from "../../../../errors/createBackkErrorFromErrorCodeMessageAndStatus";
-import { BACKK_ERRORS } from "../../../../errors/backkErrors";
-import getSingularName from "../../../../utils/getSingularName";
-import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
-import isBackkError from "../../../../errors/isBackkError";
-import { EntityPreHook } from "../../../hooks/EntityPreHook";
-import tryExecuteEntityPreHooks from "../../../hooks/tryExecuteEntityPreHooks";
-import { HttpStatusCodes } from "../../../../constants/constants";
-import findSubEntityClass from "../../../../utils/type/findSubEntityClass";
-import MongoDbQuery from "../../../mongodb/MongoDbQuery";
-import SqlExpression from "../../expressions/SqlExpression";
-import UserDefinedFilter from "../../../../types/userdefinedfilters/UserDefinedFilter";
-import getEntityByFilters from "../dql/getEntityByFilters";
+import { JSONPath } from 'jsonpath-plus';
+import entityAnnotationContainer from '../../../../decorators/entity/entityAnnotationContainer';
+import AbstractSqlDbManager from '../../../AbstractSqlDbManager';
+import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
+import { BackkEntity } from '../../../../types/entities/BackkEntity';
+import { PostQueryOperations } from '../../../../types/postqueryoperations/PostQueryOperations';
+import forEachAsyncParallel from '../../../../utils/forEachAsyncParallel';
+import tryStartLocalTransactionIfNeeded from '../transaction/tryStartLocalTransactionIfNeeded';
+import tryCommitLocalTransactionIfNeeded from '../transaction/tryCommitLocalTransactionIfNeeded';
+import tryRollbackLocalTransactionIfNeeded from '../transaction/tryRollbackLocalTransactionIfNeeded';
+import cleanupLocalTransactionIfNeeded from '../transaction/cleanupLocalTransactionIfNeeded';
+import findParentEntityAndPropertyNameForSubEntity from '../../../../metadata/findParentEntityAndPropertyNameForSubEntity';
+import { getFromContainer, MetadataStorage } from 'class-validator';
+import { ValidationMetadata } from 'class-validator/metadata/ValidationMetadata';
+import tryUpdateEntityVersionAndLastModifiedTimestampIfNeeded from './utils/tryUpdateEntityVersionAndLastModifiedTimestampIfNeeded';
+import typePropertyAnnotationContainer from '../../../../decorators/typeproperty/typePropertyAnnotationContainer';
+import { SubEntity } from '../../../../types/entities/SubEntity';
+import { PostHook } from '../../../hooks/PostHook';
+import tryExecutePostHook from '../../../hooks/tryExecutePostHook';
+import createBackkErrorFromErrorCodeMessageAndStatus from '../../../../errors/createBackkErrorFromErrorCodeMessageAndStatus';
+import { BACKK_ERRORS } from '../../../../errors/backkErrors';
+import getSingularName from '../../../../utils/getSingularName';
+import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
+import isBackkError from '../../../../errors/isBackkError';
+import { EntityPreHook } from '../../../hooks/EntityPreHook';
+import tryExecuteEntityPreHooks from '../../../hooks/tryExecuteEntityPreHooks';
+import { HttpStatusCodes } from '../../../../constants/constants';
+import findSubEntityClass from '../../../../utils/type/findSubEntityClass';
+import MongoDbQuery from '../../../mongodb/MongoDbQuery';
+import SqlExpression from '../../expressions/SqlExpression';
+import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
+import getEntityByFilters from '../dql/getEntityByFilters';
+import { One } from '../../../AbstractDbManager';
+import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
 
 // noinspection OverlyComplexFunctionJS,FunctionTooLongJS
 export default async function addSubEntitiesByFilters<T extends BackkEntity, U extends SubEntity>(
@@ -43,7 +41,7 @@ export default async function addSubEntitiesByFilters<T extends BackkEntity, U e
   newSubEntities: Array<Omit<U, 'id'> | { _id: string }>,
   EntityClass: new () => T,
   options?: {
-    ifEntityNotFoundUse?: () => PromiseErrorOr<T>;
+    ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
     entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
     postHook?: PostHook<T>;
     postQueryOperations?: PostQueryOperations;
@@ -64,7 +62,9 @@ export default async function addSubEntitiesByFilters<T extends BackkEntity, U e
       dbManager,
       filters,
       EntityClass,
-      { postQueryOperations: options?.postQueryOperations },
+      options?.postQueryOperations ?? new DefaultPostQueryOperations(),
+      false,
+      undefined,
       true,
       true
     );
@@ -132,7 +132,12 @@ export default async function addSubEntitiesByFilters<T extends BackkEntity, U e
           parentEntityClassAndPropertyNameForSubEntity[1]
         )
       ) {
-        const [subEntity, error] = await dbManager.getEntityById(SubEntityClass, newSubEntity._id ?? '');
+        const [subEntity, error] = await dbManager.getEntityById(
+          SubEntityClass,
+          newSubEntity._id ?? '',
+          new DefaultPostQueryOperations(),
+          false
+        );
 
         if (!subEntity) {
           // noinspection ExceptionCaughtLocallyJS
@@ -152,7 +157,7 @@ export default async function addSubEntitiesByFilters<T extends BackkEntity, U e
           `INSERT INTO ${dbManager.schema.toLowerCase()}.${associationTable.toLowerCase()} (${entityForeignIdFieldName.toLowerCase()}, ${subEntityForeignIdFieldName.toLowerCase()}) VALUES (${dbManager.getValuePlaceholder(
             1
           )}, ${dbManager.getValuePlaceholder(2)})`,
-          [currentEntity?._id, subEntity._id]
+          [currentEntity?.item._id, subEntity.item._id]
         );
       } else {
         const foreignIdFieldName = entityAnnotationContainer.getForeignIdFieldName(SubEntityClass.name);
@@ -161,7 +166,7 @@ export default async function addSubEntitiesByFilters<T extends BackkEntity, U e
           SubEntityClass,
           {
             ...newSubEntity,
-            [foreignIdFieldName]: currentEntity?._id,
+            [foreignIdFieldName]: currentEntity?.item._id,
             id: (maxSubItemId + 1 + index).toString()
           } as any,
           undefined

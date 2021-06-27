@@ -13,13 +13,15 @@ import { getNamespace } from "cls-hooked";
 import getClassPropertyNameToPropertyTypeNameMap
   from "../../../../metadata/getClassPropertyNameToPropertyTypeNameMap";
 import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
+import { Many } from "../../../AbstractDbManager";
 
 export default async function getEntitiesByIds<T>(
   dbManager: AbstractSqlDbManager,
   _ids: string[],
   EntityClass: new () => T,
-  postQueryOperations?: PostQueryOperations
-): PromiseErrorOr<T[]> {
+  postQueryOperations: PostQueryOperations,
+  allowFetchingOnlyPreviousOrNextPage: boolean
+): PromiseErrorOr<Many<T>> {
   try {
     updateDbLocalTransactionCount(dbManager);
 
@@ -88,7 +90,7 @@ export default async function getEntitiesByIds<T>(
       dbManager
     );
 
-    return [entities, null];
+    return [{ currentPageTokens: undefined, items: entities }, null];
   } catch (error) {
     return [null, createBackkErrorFromError(error)];
   }

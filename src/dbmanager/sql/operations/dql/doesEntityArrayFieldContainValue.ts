@@ -6,7 +6,6 @@ import { BACKK_ERRORS } from "../../../../errors/backkErrors";
 import isBackkError from "../../../../errors/isBackkError";
 import createBackkErrorFromError from "../../../../errors/createBackkErrorFromError";
 import AbstractSqlDbManager from "../../../AbstractSqlDbManager";
-import { getNamespace } from "cls-hooked";
 import getTableName from "../../../utils/getTableName";
 
 export default async function doesEntityArrayFieldContainValue<T extends BackkEntity>(

@@ -25,6 +25,7 @@ import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
 import isBackkError from "../../../../errors/isBackkError";
 import { EntityPreHook } from "../../../hooks/EntityPreHook";
 import tryExecuteEntityPreHooks from "../../../hooks/tryExecuteEntityPreHooks";
+import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
 
 export default async function removeSubEntities<T extends BackkEntity, U extends object>(
   dbManager: AbstractSqlDbManager,
@@ -46,7 +47,9 @@ export default async function removeSubEntities<T extends BackkEntity, U extends
       dbManager,
       _id,
       EntityClass,
-      { postQueryOperations },
+      postQueryOperations ?? new DefaultPostQueryOperations(),
+      false,
+      undefined,
       true,
       true
     );

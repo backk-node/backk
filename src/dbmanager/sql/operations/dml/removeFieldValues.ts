@@ -16,6 +16,7 @@ import { PostQueryOperations } from "../../../../types/postqueryoperations/PostQ
 import { PostHook } from "../../../hooks/PostHook";
 import tryExecuteEntityPreHooks from "../../../hooks/tryExecuteEntityPreHooks";
 import tryExecutePostHook from "../../../hooks/tryExecutePostHook";
+import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
 
 // noinspection FunctionTooLongJS
 export default async function removeFieldValues<T extends BackkEntity>(
@@ -43,7 +44,9 @@ export default async function removeFieldValues<T extends BackkEntity>(
       dbManager,
       _id,
       EntityClass,
-      { postQueryOperations: options?.postQueryOperations },
+      options?.postQueryOperations ?? new DefaultPostQueryOperations(),
+      false,
+      undefined,
       true,
       true
     );
@@ -81,12 +84,12 @@ export default async function removeFieldValues<T extends BackkEntity>(
     const columns = [];
     const values = [];
 
-    if (currentEntity?.version) {
+    if (currentEntity?.item.version) {
       columns.push('version');
-      values.push(currentEntity.version + 1);
+      values.push(currentEntity.item.version + 1);
     }
 
-    if (currentEntity.lastModifiedTimestamp) {
+    if (currentEntity.item.lastModifiedTimestamp) {
       columns.push('lastModifiedTimestamp');
       values.push(new Date());
     }

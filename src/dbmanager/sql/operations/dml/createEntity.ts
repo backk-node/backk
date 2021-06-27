@@ -1,37 +1,33 @@
-import hashAndEncryptEntity from "../../../../crypt/hashAndEncryptEntity";
-import forEachAsyncParallel from "../../../../utils/forEachAsyncParallel";
-import AbstractSqlDbManager from "../../../AbstractSqlDbManager";
-import createBackkErrorFromError from "../../../../errors/createBackkErrorFromError";
-import getClassPropertyNameToPropertyTypeNameMap
-  from "../../../../metadata/getClassPropertyNameToPropertyTypeNameMap";
-import { PostQueryOperations } from "../../../../types/postqueryoperations/PostQueryOperations";
-import getTypeInfoForTypeName from "../../../../utils/type/getTypeInfoForTypeName";
-import isEntityTypeName from "../../../../utils/type/isEntityTypeName";
-import tryStartLocalTransactionIfNeeded from "../transaction/tryStartLocalTransactionIfNeeded";
-import tryCommitLocalTransactionIfNeeded from "../transaction/tryCommitLocalTransactionIfNeeded";
-import tryRollbackLocalTransactionIfNeeded from "../transaction/tryRollbackLocalTransactionIfNeeded";
-import cleanupLocalTransactionIfNeeded from "../transaction/cleanupLocalTransactionIfNeeded";
-import typePropertyAnnotationContainer
-  from "../../../../decorators/typeproperty/typePropertyAnnotationContainer";
-import entityAnnotationContainer from "../../../../decorators/entity/entityAnnotationContainer";
-import { PostHook } from "../../../hooks/PostHook";
-import tryExecutePostHook from "../../../hooks/tryExecutePostHook";
-import { BackkEntity } from "../../../../types/entities/BackkEntity";
-import { SubEntity } from "../../../../types/entities/SubEntity";
-import createBackkErrorFromErrorCodeMessageAndStatus
-  from "../../../../errors/createBackkErrorFromErrorCodeMessageAndStatus";
-import createErrorFromErrorCodeMessageAndStatus
-  from "../../../../errors/createErrorFromErrorCodeMessageAndStatus";
-import { BACKK_ERRORS } from "../../../../errors/backkErrors";
-import getSingularName from "../../../../utils/getSingularName";
-import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
-import isBackkError from "../../../../errors/isBackkError";
-import { PreHook } from "../../../hooks/PreHook";
-import tryExecutePreHooks from "../../../hooks/tryExecutePreHooks";
-import { plainToClass } from "class-transformer";
-import { One } from "../../../AbstractDbManager";
+import hashAndEncryptEntity from '../../../../crypt/hashAndEncryptEntity';
+import forEachAsyncParallel from '../../../../utils/forEachAsyncParallel';
+import AbstractSqlDbManager from '../../../AbstractSqlDbManager';
+import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
+import getClassPropertyNameToPropertyTypeNameMap from '../../../../metadata/getClassPropertyNameToPropertyTypeNameMap';
+import { PostQueryOperations } from '../../../../types/postqueryoperations/PostQueryOperations';
+import getTypeInfoForTypeName from '../../../../utils/type/getTypeInfoForTypeName';
+import isEntityTypeName from '../../../../utils/type/isEntityTypeName';
+import tryStartLocalTransactionIfNeeded from '../transaction/tryStartLocalTransactionIfNeeded';
+import tryCommitLocalTransactionIfNeeded from '../transaction/tryCommitLocalTransactionIfNeeded';
+import tryRollbackLocalTransactionIfNeeded from '../transaction/tryRollbackLocalTransactionIfNeeded';
+import cleanupLocalTransactionIfNeeded from '../transaction/cleanupLocalTransactionIfNeeded';
+import typePropertyAnnotationContainer from '../../../../decorators/typeproperty/typePropertyAnnotationContainer';
+import entityAnnotationContainer from '../../../../decorators/entity/entityAnnotationContainer';
+import { PostHook } from '../../../hooks/PostHook';
+import tryExecutePostHook from '../../../hooks/tryExecutePostHook';
+import { BackkEntity } from '../../../../types/entities/BackkEntity';
+import createBackkErrorFromErrorCodeMessageAndStatus from '../../../../errors/createBackkErrorFromErrorCodeMessageAndStatus';
+import createErrorFromErrorCodeMessageAndStatus from '../../../../errors/createErrorFromErrorCodeMessageAndStatus';
+import { BACKK_ERRORS } from '../../../../errors/backkErrors';
+import getSingularName from '../../../../utils/getSingularName';
+import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
+import isBackkError from '../../../../errors/isBackkError';
+import { PreHook } from '../../../hooks/PreHook';
+import tryExecutePreHooks from '../../../hooks/tryExecutePreHooks';
+import { plainToClass } from 'class-transformer';
+import { One } from '../../../AbstractDbManager';
+import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
 
-export default async function createEntity<T extends BackkEntity | SubEntity>(
+export default async function createEntity<T extends BackkEntity>(
   dbManager: AbstractSqlDbManager,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   entity: Omit<T, '_id' | 'createdAtTimestamp' | 'version' | 'lastModifiedTimestamp'>,
@@ -128,7 +124,7 @@ export default async function createEntity<T extends BackkEntity | SubEntity>(
       .map((_: any, index: number) => dbManager.getValuePlaceholder(index + 1))
       .join(', ');
 
-    const getIdSqlStatement = dbManager.getReturningIdClause('_id')
+    const getIdSqlStatement = dbManager.getReturningIdClause('_id');
     sqlStatement = `INSERT INTO ${dbManager.schema.toLowerCase()}.${EntityClass.name.toLowerCase()} (${sqlColumns}) VALUES (${sqlValuePlaceholders}) ${getIdSqlStatement}`;
     const result = await dbManager.tryExecuteQuery(sqlStatement, values);
     const _id = dbManager.getInsertId(result, '_id')?.toString();
@@ -212,27 +208,35 @@ export default async function createEntity<T extends BackkEntity | SubEntity>(
             throw error;
           }
         } else if (isArrayType) {
-          await forEachAsyncParallel((entity as any)[fieldName] ?? [], async (subItem: any, index: number) => {
-            const insertStatement = `INSERT INTO ${dbManager.schema.toLowerCase()}.${EntityClass.name.toLowerCase() +
-              '_' +
-              fieldName
+          await forEachAsyncParallel(
+            (entity as any)[fieldName] ?? [],
+            async (subItem: any, index: number) => {
+              const insertStatement = `INSERT INTO ${dbManager.schema.toLowerCase()}.${EntityClass.name.toLowerCase() +
+                '_' +
+                fieldName
+                  .slice(0, -1)
+                  .toLowerCase()} (id, ${foreignIdFieldName.toLowerCase()}, ${fieldName
                 .slice(0, -1)
-                .toLowerCase()} (id, ${foreignIdFieldName.toLowerCase()}, ${fieldName
-              .slice(0, -1)
-              .toLowerCase()}) VALUES(${index}, ${dbManager.getValuePlaceholder(
-              1
-            )}, ${dbManager.getValuePlaceholder(2)})`;
+                .toLowerCase()}) VALUES(${index}, ${dbManager.getValuePlaceholder(
+                1
+              )}, ${dbManager.getValuePlaceholder(2)})`;
 
-            await dbManager.tryExecuteSql(insertStatement, [_id, subItem]);
-          });
+              await dbManager.tryExecuteSql(insertStatement, [_id, subItem]);
+            }
+          );
         }
       }
     );
 
     const [createdEntity, error] =
       isRecursiveCall || !shouldReturnItem
-        ? ([{ currentPageTokens: undefined, item: { _id } as T }, null])
-        : await dbManager.getEntityById(EntityClass, _id, { postQueryOperations });
+        ? [{ currentPageTokens: undefined, item: { _id } as T }, null]
+        : await dbManager.getEntityById(
+            EntityClass,
+            _id,
+            postQueryOperations ?? new DefaultPostQueryOperations(),
+            false
+          );
 
     if (!isRecursiveCall && postHook) {
       await tryExecutePostHook(postHook, createdEntity);

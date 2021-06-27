@@ -7,6 +7,7 @@ import parser from "cron-parser";
 import forEachAsyncParallel from "../utils/forEachAsyncParallel";
 import { HttpStatusCodes } from "../constants/constants";
 import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
+import DefaultPostQueryOperations from "../types/postqueryoperations/DefaultPostQueryOperations";
 
 export default async function tryInitializeCronJobSchedulingTable(dbManager: AbstractDbManager) {
   const clsNamespace = getClsNamespace('serviceFunctionExecution');
@@ -21,7 +22,8 @@ export default async function tryInitializeCronJobSchedulingTable(dbManager: Abs
           const [entity, error] = await dbManager.getEntityByFilters(
             __Backk__CronJobScheduling,
             {serviceFunctionName },
-            undefined
+            new DefaultPostQueryOperations(Number.MAX_SAFE_INTEGER),
+            false
           );
 
           const interval = parser.parseExpression(cronSchedule);
@@ -34,7 +36,7 @@ export default async function tryInitializeCronJobSchedulingTable(dbManager: Abs
             });
           } else if (entity) {
             return dbManager.updateEntity(__Backk__CronJobScheduling, {
-              _id: entity._id,
+              _id: entity.item._id,
               serviceFunctionName,
               lastScheduledTimestamp: new Date(120000),
               nextScheduledTimestamp: interval.next().toDate()

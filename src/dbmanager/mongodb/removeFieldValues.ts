@@ -10,8 +10,9 @@ import tryExecutePostHook from '../hooks/tryExecutePostHook';
 import isBackkError from '../../errors/isBackkError';
 import createBackkErrorFromError from '../../errors/createBackkErrorFromError';
 import cleanupLocalTransactionIfNeeded from '../sql/operations/transaction/cleanupLocalTransactionIfNeeded';
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient, ObjectId } from 'mongodb';
 import getClassPropertyNameToPropertyTypeNameMap from '../../metadata/getClassPropertyNameToPropertyTypeNameMap';
+import DefaultPostQueryOperations from '../../types/postqueryoperations/DefaultPostQueryOperations';
 
 export default async function removeFieldValues<T extends BackkEntity>(
   client: MongoClient,
@@ -35,7 +36,13 @@ export default async function removeFieldValues<T extends BackkEntity>(
 
     return await dbManager.tryExecute(shouldUseTransaction, async (client) => {
       if (options?.entityPreHooks) {
-        const [currentEntity, error] = await dbManager.getEntityById(EntityClass, _id, undefined);
+        const [currentEntity, error] = await dbManager.getEntityById(
+          EntityClass,
+          _id,
+          options?.postQueryOperations ?? new DefaultPostQueryOperations(),
+          false,
+          undefined
+        );
         if (!currentEntity) {
           throw error;
         }

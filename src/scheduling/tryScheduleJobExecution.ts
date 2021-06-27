@@ -14,6 +14,7 @@ import createErrorFromErrorCodeMessageAndStatus from "../errors/createErrorFromE
 import { BACKK_ERRORS } from "../errors/backkErrors";
 import emptyError from "../errors/emptyError";
 import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
+import { One } from "../dbmanager/AbstractDbManager";
 
 export default async function tryScheduleJobExecution(
   controller: any,
@@ -74,7 +75,7 @@ export default async function tryScheduleJobExecution(
   // TODO check that seconds are zero, because 1 min granularity only allowed
   const dbManager = (controller[serviceName] as BaseService).getDbManager();
   // eslint-disable-next-line @typescript-eslint/camelcase
-  let entity: __Backk__JobScheduling | null | undefined = null;
+  let entity: One<__Backk__JobScheduling> | null | undefined;
   let error: BackkError | null | undefined = emptyError;
   const clsNamespace = getClsNamespace('serviceFunctionExecution');
 
@@ -91,11 +92,11 @@ export default async function tryScheduleJobExecution(
     dbManager.tryReleaseDbConnectionBackToPool();
   });
 
-  if (error) {
+  if (!entity) {
     throw error;
   }
 
-  const jobId = (entity as any)._id;
+  const jobId = entity?.item._id;
 
   await scheduleCronJob(
     scheduledExecutionTimestampAsDate,

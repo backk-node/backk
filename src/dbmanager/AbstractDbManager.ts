@@ -1,26 +1,26 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import { getNamespace, Namespace } from "cls-hooked";
-import SqlExpression from "./sql/expressions/SqlExpression";
-import { RecursivePartial } from "../types/RecursivePartial";
-import { PreHook } from "./hooks/PreHook";
-import { BackkEntity } from "../types/entities/BackkEntity";
-import { PostQueryOperations } from "../types/postqueryoperations/PostQueryOperations";
-import { Injectable } from "@nestjs/common";
-import forEachAsyncParallel from "../utils/forEachAsyncParallel";
-import UserDefinedFilter from "../types/userdefinedfilters/UserDefinedFilter";
-import BaseService from "../service/BaseService";
-import { SubEntity } from "../types/entities/SubEntity";
-import __Backk__CronJobScheduling from "../scheduling/entities/__Backk__CronJobScheduling";
-import __Backk__JobScheduling from "../scheduling/entities/__Backk__JobScheduling";
-import MongoDbQuery from "./mongodb/MongoDbQuery";
-import { PostHook } from "./hooks/PostHook";
-import { FilterQuery } from "mongodb";
-import { PromiseErrorOr } from "../types/PromiseErrorOr";
-import { EntityPreHook } from "./hooks/EntityPreHook";
-import DbTableVersion from "../types/DbTableVersion";
-import { EntitiesPostHook } from "./hooks/EntitiesPostHook";
-import CurrentPageToken from "../types/postqueryoperations/CurrentPageToken";
-import EntityCount from "../types/EntityCount";
+import { getNamespace, Namespace } from 'cls-hooked';
+import SqlExpression from './sql/expressions/SqlExpression';
+import { RecursivePartial } from '../types/RecursivePartial';
+import { PreHook } from './hooks/PreHook';
+import { BackkEntity } from '../types/entities/BackkEntity';
+import { PostQueryOperations } from '../types/postqueryoperations/PostQueryOperations';
+import { Injectable } from '@nestjs/common';
+import forEachAsyncParallel from '../utils/forEachAsyncParallel';
+import UserDefinedFilter from '../types/userdefinedfilters/UserDefinedFilter';
+import BaseService from '../service/BaseService';
+import { SubEntity } from '../types/entities/SubEntity';
+import __Backk__CronJobScheduling from '../scheduling/entities/__Backk__CronJobScheduling';
+import __Backk__JobScheduling from '../scheduling/entities/__Backk__JobScheduling';
+import MongoDbQuery from './mongodb/MongoDbQuery';
+import { PostHook } from './hooks/PostHook';
+import { FilterQuery } from 'mongodb';
+import { PromiseErrorOr } from '../types/PromiseErrorOr';
+import { EntityPreHook } from './hooks/EntityPreHook';
+import DbTableVersion from '../types/DbTableVersion';
+import { EntitiesPostHook } from './hooks/EntitiesPostHook';
+import CurrentPageToken from '../types/postqueryoperations/CurrentPageToken';
+import EntityCount from '../types/EntityCount';
 
 export interface Field {
   name: string;
@@ -30,17 +30,17 @@ export type Many<T> = {
   metadata: {
     currentPageTokens: CurrentPageToken[] | undefined;
     entityCounts: EntityCount[] | undefined;
-  }
+  };
   data: T[];
-}
+};
 
 export type One<T> = {
   metadata: {
     currentPageTokens: CurrentPageToken[] | undefined;
     entityCounts: EntityCount[] | undefined;
-  }
+  };
   data: T;
-}
+};
 
 @Injectable()
 export default abstract class AbstractDbManager {
@@ -124,6 +124,42 @@ export default abstract class AbstractDbManager {
       postHook?: PostHook<T>;
     }
   ): PromiseErrorOr<One<T>>;
+
+  async createEntities<T extends BackkEntity>(
+    EntityClass: { new (): T },
+    entities: Array<Omit<T, '_id' | 'createdAtTimestamp' | 'version' | 'lastModifiedTimestamp'>>,
+    options?: {
+      preHooks?: PreHook | PreHook[];
+      postQueryOperations?: PostQueryOperations;
+      postHook?: PostHook<T>;
+    }
+  ): PromiseErrorOr<Many<T>> {
+    return this.executeInsideTransaction(async () => {
+      try {
+        const createdEntities = await Promise.all(
+          entities.map(async (entity, index) => {
+            const [createdEntity, error] = await this.createEntity(EntityClass, entity, options);
+
+            if (!createdEntity) {
+              if (error) {
+                error.message = 'Entity ' + index + ': ' + error.message;
+              }
+              throw error;
+            }
+
+            return createdEntity.data;
+          })
+        );
+
+        return [
+          { metadata: { currentPageTokens: undefined, entityCounts: undefined }, data: createdEntities },
+          null
+        ];
+      } catch (error) {
+        return [null, error];
+      }
+    });
+  }
 
   // noinspection OverlyComplexFunctionJS
   abstract addSubEntityToEntityById<T extends BackkEntity, U extends SubEntity>(

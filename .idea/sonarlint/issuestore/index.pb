@@ -29,10 +29,6 @@ _
 /src/continuationlocalstorage/getClsNamespace.ts,7/6/762601a647d8d7d2b07fdc24143126a159b37a33
 V
 &src/controller/getControllerService.ts,3/b/3bc4cd65aef4b512fd9e72dd68cd4b2ccfea960c
-W
-'src/dbmanager/hooks/EntitiesPostHook.ts,e/f/ef048df771e38c1dea33da6d6b02696d831f65e7
-N
-src/dbmanager/hooks/PreHook.ts,a/3/a37e2a42abef4a0ac07c18bf06fe3806f2ea36a0
 Y
 )src/decorators/registerCustomDecorator.ts,b/2/b237259ab8cf95607e9c4d9d54dd46c159bf4b58
 W

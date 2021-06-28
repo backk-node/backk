@@ -1,6 +1,7 @@
 import { BackkEntity } from '../../types/entities/BackkEntity';
 import { PromiseErrorOr } from '../../types/PromiseErrorOr';
 import { BackkError } from '../../types/BackkError';
+import { Many, One } from "../AbstractDbManager";
 
 export interface ErrorDef {
   errorCode: string;
@@ -12,12 +13,12 @@ export type PreHook<> =
   | {
       executePreHookIf?: () => boolean | Promise<boolean> | PromiseErrorOr<boolean>;
       shouldSucceedOrBeTrue: () =>
-        | PromiseErrorOr<BackkEntity[] | BackkEntity | null>
+        | PromiseErrorOr<Many<BackkEntity> | One<BackkEntity> | null>
         | Promise<boolean | BackkError | null | undefined | void>
         | boolean;
       error?: ErrorDef;
     }
   | (() =>
-      | PromiseErrorOr<boolean | BackkEntity[] | BackkEntity | null>
+      | PromiseErrorOr<boolean | Many<BackkEntity> | One<BackkEntity> | null>
       | Promise<boolean | BackkError | null | undefined | void>
       | boolean);

@@ -68,7 +68,7 @@ export default async function getAllEntities<T extends BackkEntity>(
       dbManager
     );
 
-    return [{ currentPageTokens: undefined, items: entities }, null];
+    return [{ metadata: { currentPageTokens: undefined, entityCounts: undefined }, data: entities }, null];
   } catch (error) {
     return [null, createBackkErrorFromError(error)];
   }

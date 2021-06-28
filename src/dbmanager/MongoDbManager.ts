@@ -309,7 +309,10 @@ export default class MongoDbManager extends AbstractDbManager {
         const _id = createEntityResult?.insertedId.toHexString();
 
         const [createdEntity, error] = isInternalCall
-          ? [{ currentPageTokens: undefined, item: { _id } as T }, null]
+          ? [
+              { metadata: { currentPageTokens: undefined, entityCounts: undefined }, data: { _id } as T },
+              null
+            ]
           : await this.getEntityById(
               EntityClass,
               _id,
@@ -711,7 +714,7 @@ export default class MongoDbManager extends AbstractDbManager {
         return rows;
       });
 
-      return [{ currentPageTokens: undefined, items: entities }, null];
+      return [{ metadata: { currentPageTokens: undefined, entityCounts: undefined }, data: entities }, null];
     } catch (errorOrBackkError) {
       return isBackkError(errorOrBackkError)
         ? [null, errorOrBackkError]
@@ -848,7 +851,13 @@ export default class MongoDbManager extends AbstractDbManager {
         postQueryOperations.includeResponseFields?.length === 1 &&
         postQueryOperations.includeResponseFields[0] === '_id'
       ) {
-        return [{ currentPageTokens: undefined, item: ({ _id } as unknown) as T }, null];
+        return [
+          {
+            metadata: { currentPageTokens: undefined, entityCounts: undefined },
+            data: ({ _id } as unknown) as T
+          },
+          null
+        ];
       }
 
       if (options?.postHook || options?.preHooks || options?.ifEntityNotFoundReturn) {
@@ -993,7 +1002,7 @@ export default class MongoDbManager extends AbstractDbManager {
         return rows;
       });
 
-      return [{ currentPageTokens: undefined, items: entities }, null];
+      return [{ metadata: { currentPageTokens: undefined, entityCounts: undefined }, data: entities }, null];
     } catch (errorOrBackkError) {
       return isBackkError(errorOrBackkError)
         ? [null, errorOrBackkError]
@@ -1198,7 +1207,7 @@ export default class MongoDbManager extends AbstractDbManager {
           } else if (fieldName !== '_id') {
             if (fieldName === 'version') {
               (restOfEntity as any)[fieldName] =
-                (currentEntity?.item.version ?? (restOfEntity as any).version) + 1;
+                (currentEntity?.data.version ?? (restOfEntity as any).version) + 1;
             } else if (fieldName === 'lastModifiedTimestamp') {
               (restOfEntity as any)[fieldName] = new Date();
             }

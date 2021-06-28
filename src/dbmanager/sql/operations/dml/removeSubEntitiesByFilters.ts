@@ -86,7 +86,7 @@ export default async function removeSubEntitiesByFilters<T extends BackkEntity, 
             subEntityForeignIdFieldName
           } = entityAnnotationContainer.getManyToManyRelationTableSpec(associationTableName);
 
-          const numericId = parseInt(currentEntity.item._id, 10);
+          const numericId = parseInt(currentEntity.data._id, 10);
 
           await dbManager.tryExecuteSql(
             `DELETE FROM ${dbManager.schema.toLowerCase()}.${associationTableName.toLowerCase()} WHERE ${entityForeignIdFieldName.toLowerCase()} = ${dbManager.getValuePlaceholder(

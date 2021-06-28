@@ -203,7 +203,7 @@ export default function writeTestsPostmanCollectionExportFile<T>(
             script: {
               id: serviceMetadata.serviceName + '.' + functionMetadata.functionName,
               exec: [
-                'let response = pm.response.json(); response = response.items || response.item || response;',
+                'let response = pm.response.json(); response = response.data || response;',
                 ...serviceFunctionOrSpec.postmanTests.map(
                   (test: string) =>
                     `pm.test("test", function () {

@@ -6,9 +6,9 @@ export default async function tryUpdateEntityVersionAndLastModifiedTimestampIfNe
   currentEntity: One<T>,
   EntityClass: new () => T
 ) {
-  if ('version' in currentEntity.item || 'lastModifiedTimestamp' in currentEntity.item) {
+  if ('version' in currentEntity.data || 'lastModifiedTimestamp' in currentEntity.data) {
     const [, error] = await dbManager.updateEntity(EntityClass, {
-      _id: currentEntity.item._id
+      _id: currentEntity.data._id
     } as any);
 
     if (error) {

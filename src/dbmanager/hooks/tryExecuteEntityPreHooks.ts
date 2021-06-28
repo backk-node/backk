@@ -18,7 +18,7 @@ export default async function tryExecuteEntityPreHooks<T extends BackkEntity | S
 
       try {
         if (typeof preHook === 'object' && preHook.executePreHookIf) {
-          const shouldExecuteResult = await preHook.executePreHookIf(entity.item);
+          const shouldExecuteResult = await preHook.executePreHookIf(entity.data);
 
           if (typeof shouldExecuteResult === 'object' && shouldExecuteResult[1]) {
             throw shouldExecuteResult[1];
@@ -28,10 +28,10 @@ export default async function tryExecuteEntityPreHooks<T extends BackkEntity | S
             shouldExecuteResult === true ||
             (typeof shouldExecuteResult === 'object' && shouldExecuteResult[0])
           ) {
-            hookCallResult = await hookFunc(entity.item);
+            hookCallResult = await hookFunc(entity.data);
           }
         } else {
-          hookCallResult = await hookFunc(entity.item);
+          hookCallResult = await hookFunc(entity.data);
         }
       } catch (error) {
         throw new Error(

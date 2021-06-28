@@ -157,7 +157,7 @@ export default async function addSubEntitiesByFilters<T extends BackkEntity, U e
           `INSERT INTO ${dbManager.schema.toLowerCase()}.${associationTable.toLowerCase()} (${entityForeignIdFieldName.toLowerCase()}, ${subEntityForeignIdFieldName.toLowerCase()}) VALUES (${dbManager.getValuePlaceholder(
             1
           )}, ${dbManager.getValuePlaceholder(2)})`,
-          [currentEntity?.item._id, subEntity.item._id]
+          [currentEntity?.data._id, subEntity.data._id]
         );
       } else {
         const foreignIdFieldName = entityAnnotationContainer.getForeignIdFieldName(SubEntityClass.name);
@@ -166,7 +166,7 @@ export default async function addSubEntitiesByFilters<T extends BackkEntity, U e
           SubEntityClass,
           {
             ...newSubEntity,
-            [foreignIdFieldName]: currentEntity?.item._id,
+            [foreignIdFieldName]: currentEntity?.data._id,
             id: (maxSubItemId + 1 + index).toString()
           } as any,
           undefined

@@ -96,7 +96,7 @@ export default async function tryScheduleJobExecution(
     throw error;
   }
 
-  const jobId = entity?.item._id;
+  const jobId = entity?.data._id;
 
   await scheduleCronJob(
     scheduledExecutionTimestampAsDate,

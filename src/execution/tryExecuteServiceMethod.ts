@@ -448,13 +448,13 @@ export default async function tryExecuteServiceMethod(
         } else if (typeof response === 'object') {
           if (isManyOf) {
             await tryValidateServiceFunctionReturnValue(
-              response.items[0],
+              response.data[0],
               ServiceFunctionReturnType,
               serviceFunctionName
             );
           } else if (isOneOf) {
             await tryValidateServiceFunctionReturnValue(
-              response.item,
+              response.data,
               ServiceFunctionReturnType,
               serviceFunctionName
             );

@@ -20,19 +20,26 @@ import { EntityPreHook } from "./hooks/EntityPreHook";
 import DbTableVersion from "../types/DbTableVersion";
 import { EntitiesPostHook } from "./hooks/EntitiesPostHook";
 import CurrentPageToken from "../types/postqueryoperations/CurrentPageToken";
+import EntityCount from "../types/EntityCount";
 
 export interface Field {
   name: string;
 }
 
 export type Many<T> = {
-  currentPageTokens: CurrentPageToken[] | undefined;
-  items: T[];
+  metadata: {
+    currentPageTokens: CurrentPageToken[] | undefined;
+    entityCounts: EntityCount[] | undefined;
+  }
+  data: T[];
 }
 
 export type One<T> = {
-  currentPageTokens: CurrentPageToken[] | undefined;
-  item: T;
+  metadata: {
+    currentPageTokens: CurrentPageToken[] | undefined;
+    entityCounts: EntityCount[] | undefined;
+  }
+  data: T;
 }
 
 @Injectable()

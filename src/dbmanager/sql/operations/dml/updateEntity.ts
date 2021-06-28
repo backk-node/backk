@@ -282,9 +282,9 @@ export default async function updateEntity<T extends BackkEntity>(
             })
           );
         } else if (fieldName !== '_id' && fieldName !== 'id') {
-          if (fieldName === 'version' && currentEntity?.item.version) {
+          if (fieldName === 'version' && currentEntity?.data.version) {
             columns.push(fieldName);
-            values.push(currentEntity.item.version + 1);
+            values.push(currentEntity.data.version + 1);
           } else if (fieldName === 'lastModifiedTimestamp') {
             columns.push(fieldName);
             values.push(new Date());

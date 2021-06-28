@@ -1,28 +1,27 @@
-import SqlExpression from "../../expressions/SqlExpression";
-import AbstractSqlDbManager from "../../../AbstractSqlDbManager";
-import transformRowsToObjects from "./transformresults/transformRowsToObjects";
-import createBackkErrorFromError from "../../../../errors/createBackkErrorFromError";
-import { PostQueryOperations } from "../../../../types/postqueryoperations/PostQueryOperations";
-import getSqlSelectStatementParts from "./utils/getSqlSelectStatementParts";
-import updateDbLocalTransactionCount from "./utils/updateDbLocalTransactionCount";
-import UserDefinedFilter from "../../../../types/userdefinedfilters/UserDefinedFilter";
-import MongoDbQuery from "../../../mongodb/MongoDbQuery";
-import convertFilterObjectToSqlEquals from "./utils/convertFilterObjectToSqlEquals";
-import getTableName from "../../../utils/getTableName";
-import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
-import { getNamespace } from "cls-hooked";
-import { PreHook } from "../../../hooks/PreHook";
-import tryStartLocalTransactionIfNeeded from "../transaction/tryStartLocalTransactionIfNeeded";
-import tryExecutePreHooks from "../../../hooks/tryExecutePreHooks";
-import tryCommitLocalTransactionIfNeeded from "../transaction/tryCommitLocalTransactionIfNeeded";
-import tryRollbackLocalTransactionIfNeeded from "../transaction/tryRollbackLocalTransactionIfNeeded";
-import cleanupLocalTransactionIfNeeded from "../transaction/cleanupLocalTransactionIfNeeded";
-import createBackkErrorFromErrorCodeMessageAndStatus
-  from "../../../../errors/createBackkErrorFromErrorCodeMessageAndStatus";
-import { BACKK_ERRORS } from "../../../../errors/backkErrors";
-import tryExecutePostHook from "../../../hooks/tryExecutePostHook";
-import { PostHook } from "../../../hooks/PostHook";
-import { One } from "../../../AbstractDbManager";
+import SqlExpression from '../../expressions/SqlExpression';
+import AbstractSqlDbManager from '../../../AbstractSqlDbManager';
+import transformRowsToObjects from './transformresults/transformRowsToObjects';
+import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
+import { PostQueryOperations } from '../../../../types/postqueryoperations/PostQueryOperations';
+import getSqlSelectStatementParts from './utils/getSqlSelectStatementParts';
+import updateDbLocalTransactionCount from './utils/updateDbLocalTransactionCount';
+import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
+import MongoDbQuery from '../../../mongodb/MongoDbQuery';
+import convertFilterObjectToSqlEquals from './utils/convertFilterObjectToSqlEquals';
+import getTableName from '../../../utils/getTableName';
+import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
+import { getNamespace } from 'cls-hooked';
+import { PreHook } from '../../../hooks/PreHook';
+import tryStartLocalTransactionIfNeeded from '../transaction/tryStartLocalTransactionIfNeeded';
+import tryExecutePreHooks from '../../../hooks/tryExecutePreHooks';
+import tryCommitLocalTransactionIfNeeded from '../transaction/tryCommitLocalTransactionIfNeeded';
+import tryRollbackLocalTransactionIfNeeded from '../transaction/tryRollbackLocalTransactionIfNeeded';
+import cleanupLocalTransactionIfNeeded from '../transaction/cleanupLocalTransactionIfNeeded';
+import createBackkErrorFromErrorCodeMessageAndStatus from '../../../../errors/createBackkErrorFromErrorCodeMessageAndStatus';
+import { BACKK_ERRORS } from '../../../../errors/backkErrors';
+import tryExecutePostHook from '../../../hooks/tryExecutePostHook';
+import { PostHook } from '../../../hooks/PostHook';
+import { One } from '../../../AbstractDbManager';
 
 export default async function getEntityByFilters<T>(
   dbManager: AbstractSqlDbManager,
@@ -108,8 +107,12 @@ export default async function getEntityByFilters<T>(
       isInternalCall
     );
 
-    let entity: One<T> | null | undefined = { currentPageTokens: undefined, item: entities[0] },
-      error;
+    let entity: One<T> | null | undefined = {
+      metadata: { currentPageTokens: undefined, entityCounts: undefined },
+      data: entities[0]
+    };
+    let error;
+
     if (entities?.length === 0) {
       if (options?.ifEntityNotFoundReturn) {
         [entity, error] = await options.ifEntityNotFoundReturn();

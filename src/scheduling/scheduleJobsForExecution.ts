@@ -46,7 +46,7 @@ export default async function scheduleJobsForExecution(
   }
 
   await forEachAsyncParallel(
-    scheduledJobs.items,
+    scheduledJobs.data,
     async ({
       _id,
       retryIntervalsInSecs,

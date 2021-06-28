@@ -36,7 +36,7 @@ export default async function tryInitializeCronJobSchedulingTable(dbManager: Abs
             });
           } else if (entity) {
             return dbManager.updateEntity(__Backk__CronJobScheduling, {
-              _id: entity.item._id,
+              _id: entity.data._id,
               serviceFunctionName,
               lastScheduledTimestamp: new Date(120000),
               nextScheduledTimestamp: interval.next().toDate()

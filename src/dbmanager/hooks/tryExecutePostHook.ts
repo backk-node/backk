@@ -18,11 +18,11 @@ export default async function tryExecutePostHook<T extends BackkEntity | SubEnti
 
   try {
     if (typeof postHook === 'object' && postHook.executePostHookIf) {
-      if (postHook.executePostHookIf(entity?.item ?? null)) {
-        hookCallResult = await postHookFunc(entity?.item ?? null);
+      if (postHook.executePostHookIf(entity?.data ?? null)) {
+        hookCallResult = await postHookFunc(entity?.data ?? null);
       }
     } else {
-      hookCallResult = await postHookFunc(entity?.item ?? null);
+      hookCallResult = await postHookFunc(entity?.data ?? null);
     }
   } catch (error) {
     throw new Error(

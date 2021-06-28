@@ -1,26 +1,26 @@
-import SqlExpression from "../../expressions/SqlExpression";
-import AbstractSqlDbManager from "../../../AbstractSqlDbManager";
-import transformRowsToObjects from "./transformresults/transformRowsToObjects";
-import createBackkErrorFromError from "../../../../errors/createBackkErrorFromError";
-import { PostQueryOperations } from "../../../../types/postqueryoperations/PostQueryOperations";
-import getSqlSelectStatementParts from "./utils/getSqlSelectStatementParts";
-import updateDbLocalTransactionCount from "./utils/updateDbLocalTransactionCount";
-import UserDefinedFilter from "../../../../types/userdefinedfilters/UserDefinedFilter";
-import MongoDbQuery from "../../../mongodb/MongoDbQuery";
-import convertFilterObjectToSqlEquals from "./utils/convertFilterObjectToSqlEquals";
-import getTableName from "../../../utils/getTableName";
-import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
-import { getNamespace } from "cls-hooked";
-import { PreHook } from "../../../hooks/PreHook";
-import tryStartLocalTransactionIfNeeded from "../transaction/tryStartLocalTransactionIfNeeded";
-import tryExecutePreHooks from "../../../hooks/tryExecutePreHooks";
-import { EntitiesPostHook } from "../../../hooks/EntitiesPostHook";
-import tryCommitLocalTransactionIfNeeded from "../transaction/tryCommitLocalTransactionIfNeeded";
-import tryRollbackLocalTransactionIfNeeded from "../transaction/tryRollbackLocalTransactionIfNeeded";
-import cleanupLocalTransactionIfNeeded from "../transaction/cleanupLocalTransactionIfNeeded";
-import tryExecuteEntitiesPostHook from "../../../hooks/tryExecuteEntitiesPostHook";
-import { Many } from "../../../AbstractDbManager";
-import { BackkEntity } from "../../../../types/entities/BackkEntity";
+import SqlExpression from '../../expressions/SqlExpression';
+import AbstractSqlDbManager from '../../../AbstractSqlDbManager';
+import transformRowsToObjects from './transformresults/transformRowsToObjects';
+import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
+import { PostQueryOperations } from '../../../../types/postqueryoperations/PostQueryOperations';
+import getSqlSelectStatementParts from './utils/getSqlSelectStatementParts';
+import updateDbLocalTransactionCount from './utils/updateDbLocalTransactionCount';
+import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
+import MongoDbQuery from '../../../mongodb/MongoDbQuery';
+import convertFilterObjectToSqlEquals from './utils/convertFilterObjectToSqlEquals';
+import getTableName from '../../../utils/getTableName';
+import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
+import { getNamespace } from 'cls-hooked';
+import { PreHook } from '../../../hooks/PreHook';
+import tryStartLocalTransactionIfNeeded from '../transaction/tryStartLocalTransactionIfNeeded';
+import tryExecutePreHooks from '../../../hooks/tryExecutePreHooks';
+import { EntitiesPostHook } from '../../../hooks/EntitiesPostHook';
+import tryCommitLocalTransactionIfNeeded from '../transaction/tryCommitLocalTransactionIfNeeded';
+import tryRollbackLocalTransactionIfNeeded from '../transaction/tryRollbackLocalTransactionIfNeeded';
+import cleanupLocalTransactionIfNeeded from '../transaction/cleanupLocalTransactionIfNeeded';
+import tryExecuteEntitiesPostHook from '../../../hooks/tryExecuteEntitiesPostHook';
+import { Many } from '../../../AbstractDbManager';
+import { BackkEntity } from '../../../../types/entities/BackkEntity';
 
 export default async function getEntitiesByFilters<T extends BackkEntity>(
   dbManager: AbstractSqlDbManager,
@@ -30,7 +30,7 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
   allowFetchingOnlyPreviousOrNextPage: boolean,
   options?: {
     preHooks?: PreHook | PreHook[];
-    postHook?: EntitiesPostHook<T>
+    postHook?: EntitiesPostHook<T>;
   }
 ): PromiseErrorOr<Many<T>> {
   if (typeof filters === 'object' && !Array.isArray(filters)) {
@@ -69,12 +69,7 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
       joinClauses,
       filterValues,
       outerSortClause
-    } = getSqlSelectStatementParts(
-      dbManager,
-      postQueryOperations,
-      EntityClass,
-      filters as any
-    );
+    } = getSqlSelectStatementParts(dbManager, postQueryOperations, EntityClass, filters as any);
 
     const tableName = getTableName(EntityClass.name);
     const tableAlias = dbManager.schema + '_' + EntityClass.name.toLowerCase();
@@ -101,12 +96,12 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
       dbManager
     );
 
-    if(options?.postHook) {
+    if (options?.postHook) {
       await tryExecuteEntitiesPostHook(options.postHook, entities);
     }
 
     await tryCommitLocalTransactionIfNeeded(didStartTransaction, dbManager);
-    return [{ currentPageTokens: undefined, items: entities } , null];
+    return [{ metadata: { currentPageTokens: undefined, entityCounts: undefined }, data: entities }, null];
   } catch (error) {
     await tryRollbackLocalTransactionIfNeeded(didStartTransaction, dbManager);
     return [null, createBackkErrorFromError(error)];

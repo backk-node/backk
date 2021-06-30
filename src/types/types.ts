@@ -48,6 +48,9 @@ import _IdAndDefaultPostQueryOperations from "./postqueryoperations/_IdAndDefaul
 import UserNameAndDefaultPostQueryOperations
   from "./postqueryoperations/UserNameAndDefaultPostQueryOperations";
 import DbTableVersion from "./DbTableVersion";
+import CurrentPageToken from "./postqueryoperations/CurrentPageToken";
+import EntityCount from "./EntityCount";
+import EntityCountRequest from "./postqueryoperations/EntityCountRequest";
 
 const types = {
   _Id,
@@ -89,7 +92,10 @@ const types = {
   _IdAndVersionAndLastModifiedTimestampAndUserAccountId,
   _IdAndDefaultPostQueryOperations,
   UserNameAndDefaultPostQueryOperations,
-  DbTableVersion
+  DbTableVersion,
+  CurrentPageToken,
+  EntityCount,
+  EntityCountRequest
 }
 
 export default types

@@ -215,6 +215,7 @@ export default function parseTypescriptLinesForTypeName(
                 }
 
                 if (isPrivate) {
+                  classProperty.accessibility = undefined;
                   importLines.push("import { Private } from 'backk';");
 
                   classProperty.decorators.push({
@@ -268,6 +269,7 @@ export default function parseTypescriptLinesForTypeName(
         }
 
         if (isPrivate) {
+          classBodyNode.accessibility = undefined;
           importLines.push("import { Private } from 'backk';");
 
           classBodyNode.decorators.push({

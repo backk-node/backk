@@ -199,8 +199,6 @@ r
 Bsrc/types/postqueryoperations/_IdsAndDefaultPostQueryOperations.ts,f/b/fb84f5299ce4d72fbc12a8e4a6787b9eff81f90f
 Q
 !src/types/entities/BackkEntity.ts,6/6/66ec3a4b084b0406ac75f747a60854661057f34f
-h
-8src/typescript/parser/parseTypescriptLinesForTypeName.ts,a/a/aa07351c4fb11b1e1bb5806683662e4e5baf0f2a
 :
 
 .gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302
@@ -234,8 +232,6 @@ a
 1src/decorators/typeproperty/IsStringOrObjectId.ts,3/d/3dcbdab0b32d613001d9e23af1a82e227482dadd
 b
 2src/documentation/generateServicesDocumentation.ts,f/9/f9e42631db65e72b80c7f6a4559abd3f1d1e1654
-z
-Jsrc/typescript/generator/generateTypescriptFilesFromTypeDefinitionFiles.ts,b/7/b7cca6f35d8c9e702c044fe7ac7e1ca1c9ceaf0f
 Z
 *src/service/startup/StartupCheckService.ts,3/c/3c94b7ecf864ecb2fae8f2b6958fb46cc906661c
 X
@@ -274,8 +270,6 @@ b
 2src/decorators/entity/entityAnnotationContainer.ts,4/5/45e2edeb9f9919c0b080fa6fa451797fffa4ea35
 X
 (src/metadata/generateTypesForServices.ts,e/3/e33ed263df79829e5748ddff6b4b1c33d09b1b1a
-d
-4src/typescript/generator/generateClassFromSrcFile.ts,e/d/edbef0467980c046ac9523e4666f2b29c01d50b0
 X
 (src/types/useraccount/BaseUserAccount.ts,8/b/8b274571e805943b6735ea3689696d95bb211a18
 ]

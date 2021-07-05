@@ -66,7 +66,19 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
         constraints?.[0] === 'isUndefined'
     );
 
-    if (undefinedValidation && typePropertyAnnotationContainer.isTypePropertyPrivate(Class, validationMetadata.propertyName)) {
+    const fullyUndefinedValidation = validationMetadatas.find(
+      ({ propertyName, type, constraints, groups }: ValidationMetadata) =>
+        propertyName === validationMetadata.propertyName &&
+        type === 'customValidation' &&
+        constraints?.[0] === 'isUndefined' &&
+        groups.includes('__backk_create__') &&
+        groups.includes('__backk_updates__')
+    );
+
+    if (
+      fullyUndefinedValidation &&
+      typePropertyAnnotationContainer.isTypePropertyPrivate(Class, validationMetadata.propertyName)
+    ) {
       return;
     }
 
@@ -356,13 +368,12 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
     ) {
       throw new Error(
         'Property ' +
-        Class.name +
-        '.' +
-        validationMetadata.propertyName +
-        " must have a ReadWrite() annotation or 'readonly' specifier"
+          Class.name +
+          '.' +
+          validationMetadata.propertyName +
+          " must have a ReadWrite() annotation or 'readonly' specifier"
       );
     }
-
 
     if (isGeneration) {
       const isUnique = typePropertyAnnotationContainer.isTypePropertyUnique(
@@ -378,10 +389,10 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
       if (isUnique && isNotUnique) {
         throw new Error(
           'Property ' +
-          Class.name +
-          '.' +
-          validationMetadata.propertyName +
-          ' cannot have both @Unique() and @NotUnique() annotation'
+            Class.name +
+            '.' +
+            validationMetadata.propertyName +
+            ' cannot have both @Unique() and @NotUnique() annotation'
         );
       }
 
@@ -393,9 +404,10 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
 
       if (
         (validationMetadata.type === 'isInt' ||
-        (validationMetadata.type === 'customValidation' &&
-          validationMetadata.constraints[0] === 'isBigInt') ||
-        validationMetadata.type === 'isString') && !isArrayValidationMetadata
+          (validationMetadata.type === 'customValidation' &&
+            validationMetadata.constraints[0] === 'isBigInt') ||
+          validationMetadata.type === 'isString') &&
+        !isArrayValidationMetadata
       ) {
         if (
           isEntityTypeName(Class.name) &&

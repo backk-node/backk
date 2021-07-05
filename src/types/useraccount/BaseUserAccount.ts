@@ -15,6 +15,7 @@ export default class BaseUserAccount extends _IdAndCaptcha  {
   @IsString()
   @MaxLength(320)
   @IsEmail()
+  @ReadWrite()
   @Private()
   userName!: string;
 
@@ -29,6 +30,7 @@ export default class BaseUserAccount extends _IdAndCaptcha  {
   @IsString()
   @IsStrongPassword()
   @Private()
+  @ReadWrite()
   @NotUnique()
   password!: string;
 }

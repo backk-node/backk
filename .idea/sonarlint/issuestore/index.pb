@@ -270,8 +270,6 @@ b
 2src/decorators/entity/entityAnnotationContainer.ts,4/5/45e2edeb9f9919c0b080fa6fa451797fffa4ea35
 X
 (src/metadata/generateTypesForServices.ts,e/3/e33ed263df79829e5748ddff6b4b1c33d09b1b1a
-X
-(src/types/useraccount/BaseUserAccount.ts,8/b/8b274571e805943b6735ea3689696d95bb211a18
 ]
 -src/types/id/_IdAndVersionAndUserAccountId.ts,3/c/3c7ff2cafb55932d913fc0837734a1a2e163b290
 u

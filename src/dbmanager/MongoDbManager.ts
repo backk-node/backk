@@ -918,7 +918,7 @@ export default class MongoDbManager extends AbstractDbManager {
         metadata: { currentPageTokens: undefined, entityCounts: undefined },
         data: entities[0]
       };
-      
+
       let error = null;
 
       if (entities.length === 0) {

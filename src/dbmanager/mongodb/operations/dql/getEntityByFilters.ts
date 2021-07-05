@@ -138,11 +138,12 @@ export default async function getEntityByFilters<T extends BackkEntity>(
       decryptEntities(rows, EntityClass, dbManager.getTypes(), false);
 
       let entity: One<T> | null | undefined = {
-          metadata: { currentPageTokens: undefined, entityCounts: undefined },
-          data: rows[0]
-        },
-        error;
-      if (!entity) {
+        metadata: { currentPageTokens: undefined, entityCounts: undefined },
+        data: rows[0]
+      };
+      let error;
+
+      if (!rows[0]) {
         if (options?.ifEntityNotFoundReturn) {
           [entity, error] = await options.ifEntityNotFoundReturn();
         } else {

@@ -103,8 +103,9 @@ export default async function getEntityById<T extends BackkEntity>(
 
     const result = await dbManager.tryExecuteQuery(selectStatement, [numericId]);
 
-    let entity,
-      error = null;
+    let entity;
+    let error = null;
+
     if (dbManager.getResultRows(result).length === 0 && options?.ifEntityNotFoundReturn) {
       [entity, error] = await options?.ifEntityNotFoundReturn();
     } else {

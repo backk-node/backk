@@ -507,7 +507,7 @@ export default async function tryExecuteServiceMethod(
           } catch (error) {
             log(
               Severity.ERROR,
-              'Redis cache errorMessageOnPreHookFuncExecFailure: ' + error.message,
+              'Redis cache error message: ' + error.message,
               error.stack,
               {
                 redisUrl: process.env.REDIS_SERVER
@@ -516,7 +516,7 @@ export default async function tryExecuteServiceMethod(
           }
         }
 
-        if (response.version) {
+        if (response.data?.version) {
           if (response.version === headers['If-None-Match']) {
             response = null;
             resp?.status(HttpStatusCodes.NOT_MODIFIED);

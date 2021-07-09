@@ -118,7 +118,7 @@ export default async function tryFetchAndAssignSubEntitiesForManyToManyRelations
 
           const [subEntitiesParent] = JSONPath({ json: row, path: propertyJsonPath + propertyName + '^' });
           if (subEntitiesParent) {
-            subEntitiesParent[propertyName] = subEntities;
+            subEntitiesParent[propertyName] = subEntities?.data;
           }
         });
       }

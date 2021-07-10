@@ -517,15 +517,15 @@ export default async function tryExecuteServiceMethod(
         }
 
         if (response.data?.version) {
-          if (response.version === headers['If-None-Match']) {
+          if (response.data.version === headers['If-None-Match']) {
             response = null;
             resp?.status(HttpStatusCodes.NOT_MODIFIED);
           }
 
           if (typeof resp?.header === 'function') {
-            resp?.header('ETag', response.version);
+            resp?.header('ETag', response.data.version);
           } else if (typeof resp?.set === 'function') {
-            resp?.set('ETag', response.version);
+            resp?.set('ETag', response.data.version);
           }
         }
       }

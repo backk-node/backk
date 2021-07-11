@@ -60,7 +60,7 @@ export default async function removeSubEntities<T extends BackkEntity, U extends
 
     await tryExecuteEntityPreHooks(entityPreHooks ?? [], currentEntity);
     await tryUpdateEntityVersionAndLastModifiedTimestampIfNeeded(dbManager, currentEntity, EntityClass);
-    const currentEntityInstance = plainToClass(EntityClass, currentEntity);
+    const currentEntityInstance = plainToClass(EntityClass, currentEntity.data);
     const subEntities = JSONPath({ json: currentEntityInstance, path: subEntitiesJsonPath });
 
     await forEachAsyncParallel(subEntities, async (subEntity: any) => {

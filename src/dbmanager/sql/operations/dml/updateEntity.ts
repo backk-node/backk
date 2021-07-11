@@ -141,7 +141,7 @@ export default async function updateEntity<T extends BackkEntity>(
           if (finalAllowAdditionAndRemovalForSubEntities === 'all') {
             const { subEntitiesToDelete, subEntitiesToAdd, subEntitiesToUpdate } = getSubEntitiesByAction(
               subEntityOrEntities,
-              (currentEntity as any)?.data[fieldName]
+              currentEntity?.data[fieldName]
             );
 
             promises.push(

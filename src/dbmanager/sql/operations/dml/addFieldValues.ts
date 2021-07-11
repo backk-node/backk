@@ -76,7 +76,7 @@ export default async function addFieldValues<T extends BackkEntity>(
           fieldName.slice(0, -1).toLowerCase()} (id, ${foreignIdFieldName.toLowerCase()}, ${fieldName
           .slice(0, -1)
           .toLowerCase()}) VALUES(${
-          (currentEntity as any)[fieldName].length
+          currentEntity.data[fieldName].length
         }, ${dbManager.getValuePlaceholder(1)}, ${dbManager.getValuePlaceholder(2)})`;
 
         await dbManager.tryExecuteSql(insertStatement, [_id, fieldValue]);

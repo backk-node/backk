@@ -89,19 +89,21 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
 
     const result = await dbManager.tryExecuteQueryWithNamedParameters(selectStatement, filterValues);
 
-    const entities = transformRowsToObjects(
+    const objects = transformRowsToObjects(
       dbManager.getResultRows(result),
       EntityClass,
       postQueryOperations,
       dbManager
     );
 
+    const entities = { metadata: { currentPageTokens: undefined, entityCounts: undefined }, data: objects };
+
     if (options?.postHook) {
       await tryExecuteEntitiesPostHook(options.postHook, entities);
     }
 
     await tryCommitLocalTransactionIfNeeded(didStartTransaction, dbManager);
-    return [{ metadata: { currentPageTokens: undefined, entityCounts: undefined }, data: entities }, null];
+    return [entities, null];
   } catch (error) {
     await tryRollbackLocalTransactionIfNeeded(didStartTransaction, dbManager);
     return [null, createBackkErrorFromError(error)];

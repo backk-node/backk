@@ -4,10 +4,11 @@ import { HttpStatusCodes } from "../../constants/constants";
 import { BackkEntity } from "../../types/entities/BackkEntity";
 import { SubEntity } from "../../types/entities/SubEntity";
 import { EntitiesPostHook } from "./EntitiesPostHook";
+import { Many } from "../AbstractDbManager";
 
 export default async function tryExecuteEntitiesPostHook<T extends BackkEntity | SubEntity>(
   postHook: EntitiesPostHook<T>,
-  entities: T[] | null | undefined
+  entities: Many<T> | null | undefined
 ) {
   const clsNamespace = getNamespace('serviceFunctionExecution');
   clsNamespace?.set('isInsidePostHook', true);
@@ -17,11 +18,11 @@ export default async function tryExecuteEntitiesPostHook<T extends BackkEntity |
 
   try {
     if (typeof postHook === 'object' && postHook.executePostHookIf) {
-      if (postHook.executePostHookIf(entities ?? null)) {
-        hookCallResult = await postHookFunc(entities ?? null);
+      if (postHook.executePostHookIf(entities?.data ?? null)) {
+        hookCallResult = await postHookFunc(entities?.data ?? null);
       }
     } else {
-      hookCallResult = await postHookFunc(entities ?? null);
+      hookCallResult = await postHookFunc(entities?.data ?? null);
     }
   } catch (error) {
     throw new Error(

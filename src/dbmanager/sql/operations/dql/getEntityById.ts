@@ -127,6 +127,8 @@ export default async function getEntityById<T extends BackkEntity>(
         dbManager,
         isInternalCall
       )[0];
+
+      entity = { metadata: { currentPageTokens: undefined, entityCounts: undefined }, data: entity };
     }
 
     if (options?.postHook) {

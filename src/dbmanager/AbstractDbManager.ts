@@ -218,14 +218,14 @@ export default abstract class AbstractDbManager {
   abstract getAllEntities<T extends BackkEntity>(
     EntityClass: new () => T,
     postQueryOperations: PostQueryOperations,
-    allowFetchingOnlyPreviousOrNextPage: boolean
+    allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean
   ): PromiseErrorOr<Many<T>>;
 
   abstract getEntitiesByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
     filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
     postQueryOperations: PostQueryOperations,
-    allowFetchingOnlyPreviousOrNextPage: boolean,
+    allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
     options?: {
       preHooks?: PreHook | PreHook[];
       postHook?: EntitiesPostHook<T>;
@@ -236,7 +236,7 @@ export default abstract class AbstractDbManager {
     EntityClass: { new (): T },
     filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
     postQueryOperations: PostQueryOperations,
-    allowFetchingOnlyPreviousOrNextPage: boolean,
+    allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
     options?: {
       preHooks?: PreHook | PreHook[];
       ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>;
@@ -253,7 +253,7 @@ export default abstract class AbstractDbManager {
     EntityClass: { new (): T },
     _id: string,
     postQueryOperations: PostQueryOperations,
-    allowFetchingOnlyPreviousOrNextPage: boolean,
+    allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
     options?: {
       preHooks?: PreHook | PreHook[];
       ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>;
@@ -265,7 +265,7 @@ export default abstract class AbstractDbManager {
     EntityClass: { new (): T },
     _ids: string[],
     postQueryOperations: PostQueryOperations,
-    allowFetchingOnlyPreviousOrNextPage: boolean
+    allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean
   ): PromiseErrorOr<Many<T>>;
 
   abstract updateEntity<T extends BackkEntity>(

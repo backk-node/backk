@@ -21,6 +21,7 @@ import { PreHook } from '../../../hooks/PreHook';
 import tryExecutePreHooks from '../../../hooks/tryExecutePreHooks';
 import { One } from '../../../AbstractDbManager';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
+import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 
 // noinspection OverlyComplexFunctionJS,FunctionTooLongJS
 export default async function getEntityById<T extends BackkEntity>(
@@ -128,7 +129,15 @@ export default async function getEntityById<T extends BackkEntity>(
         isInternalCall
       )[0];
 
-      entity = { metadata: { currentPageTokens: undefined, entityCounts: undefined }, data: entity };
+      entity = {
+        metadata: {
+          currentPageTokens: allowFetchingOnlyPreviousOrNextPage
+            ? createCurrentPageTokens(postQueryOperations.paginations)
+            : undefined,
+          entityCounts: undefined
+        },
+        data: entity
+      };
     }
 
     if (options?.postHook) {

@@ -12,6 +12,7 @@ import { getNamespace } from 'cls-hooked';
 import getClassPropertyNameToPropertyTypeNameMap from '../../../../metadata/getClassPropertyNameToPropertyTypeNameMap';
 import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
 import { Many } from '../../../AbstractDbManager';
+import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 
 export default async function getEntitiesByIds<T>(
   dbManager: AbstractSqlDbManager,
@@ -95,7 +96,18 @@ export default async function getEntitiesByIds<T>(
       dbManager
     );
 
-    return [{ metadata: { currentPageTokens: undefined, entityCounts: undefined }, data: entities }, null];
+    return [
+      {
+        metadata: {
+          currentPageTokens: allowFetchingOnlyPreviousOrNextPage
+            ? createCurrentPageTokens(postQueryOperations.paginations)
+            : undefined,
+          entityCounts: undefined
+        },
+        data: entities
+      },
+      null
+    ];
   } catch (error) {
     return [null, createBackkErrorFromError(error)];
   }

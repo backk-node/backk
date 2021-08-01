@@ -31,6 +31,7 @@ import { EntitiesPostHook } from '../../../hooks/EntitiesPostHook';
 import tryExecuteEntitiesPostHook from '../../../hooks/tryExecuteEntitiesPostHook';
 import { Many } from '../../../AbstractDbManager';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
+import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 
 export default async function getEntitiesByFilters<T extends BackkEntity>(
   dbManager: MongoDbManager,
@@ -139,7 +140,15 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
       return rows;
     });
 
-    const entities = { metadata: { currentPageTokens: undefined, entityCounts: undefined }, data: rows };
+    const entities = {
+      metadata: {
+        currentPageTokens: allowFetchingOnlyPreviousOrNextPage
+          ? createCurrentPageTokens(postQueryOperations.paginations)
+          : undefined,
+        entityCounts: undefined
+      },
+      data: rows
+    };
 
     if (options?.postHook) {
       await tryExecuteEntitiesPostHook(options.postHook, entities);

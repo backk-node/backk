@@ -22,6 +22,7 @@ import { BACKK_ERRORS } from '../../../../errors/backkErrors';
 import tryExecutePostHook from '../../../hooks/tryExecutePostHook';
 import { PostHook } from '../../../hooks/PostHook';
 import { One } from '../../../AbstractDbManager';
+import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 
 export default async function getEntityByFilters<T>(
   dbManager: AbstractSqlDbManager,
@@ -108,7 +109,12 @@ export default async function getEntityByFilters<T>(
     );
 
     let entity: One<T> | null | undefined = {
-      metadata: { currentPageTokens: undefined, entityCounts: undefined },
+      metadata: {
+        currentPageTokens: allowFetchingOnlyPreviousOrNextPage
+          ? createCurrentPageTokens(postQueryOperations.paginations)
+          : undefined,
+        entityCounts: undefined
+      },
       data: entities[0]
     };
     let error;

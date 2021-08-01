@@ -33,6 +33,7 @@ import { BACKK_ERRORS } from '../../../../errors/backkErrors';
 import tryExecutePostHook from '../../../hooks/tryExecutePostHook';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import { One } from '../../../AbstractDbManager';
+import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 
 export default async function getEntityByFilters<T extends BackkEntity>(
   dbManager: MongoDbManager,
@@ -138,7 +139,12 @@ export default async function getEntityByFilters<T extends BackkEntity>(
       decryptEntities(rows, EntityClass, dbManager.getTypes(), false);
 
       let entity: One<T> | null | undefined = {
-        metadata: { currentPageTokens: undefined, entityCounts: undefined },
+        metadata: {
+          currentPageTokens: allowFetchingOnlyPreviousOrNextPage
+            ? createCurrentPageTokens(postQueryOperations?.paginations)
+            : undefined,
+          entityCounts: undefined
+        },
         data: rows[0]
       };
       let error;

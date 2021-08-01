@@ -1,16 +1,17 @@
-import AbstractSqlDbManager from "../../../AbstractSqlDbManager";
-import transformRowsToObjects from "./transformresults/transformRowsToObjects";
-import createBackkErrorFromError from "../../../../errors/createBackkErrorFromError";
-import { PostQueryOperations } from "../../../../types/postqueryoperations/PostQueryOperations";
-import getSqlSelectStatementParts from "./utils/getSqlSelectStatementParts";
-import updateDbLocalTransactionCount from "./utils/updateDbLocalTransactionCount";
-import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
-import Pagination from "../../../../types/postqueryoperations/Pagination";
-import getTableName from "../../../utils/getTableName";
-import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
-import { getNamespace } from "cls-hooked";
-import { Many } from "../../../AbstractDbManager";
-import { BackkEntity } from "../../../../types/entities/BackkEntity";
+import AbstractSqlDbManager from '../../../AbstractSqlDbManager';
+import transformRowsToObjects from './transformresults/transformRowsToObjects';
+import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
+import { PostQueryOperations } from '../../../../types/postqueryoperations/PostQueryOperations';
+import getSqlSelectStatementParts from './utils/getSqlSelectStatementParts';
+import updateDbLocalTransactionCount from './utils/updateDbLocalTransactionCount';
+import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
+import Pagination from '../../../../types/postqueryoperations/Pagination';
+import getTableName from '../../../utils/getTableName';
+import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
+import { getNamespace } from 'cls-hooked';
+import { Many } from '../../../AbstractDbManager';
+import { BackkEntity } from '../../../../types/entities/BackkEntity';
+import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 
 export default async function getAllEntities<T extends BackkEntity>(
   dbManager: AbstractSqlDbManager,
@@ -22,11 +23,6 @@ export default async function getAllEntities<T extends BackkEntity>(
 
   // noinspection AssignmentToFunctionParameterJS
   EntityClass = dbManager.getType(EntityClass);
-
-  const finalPostQueryOperations: PostQueryOperations = postQueryOperations ?? {
-    ...new DefaultPostQueryOperations(),
-    paginations: [new Pagination('', 1, Number.MAX_SAFE_INTEGER)]
-  };
 
   try {
     let isSelectForUpdate = false;
@@ -41,7 +37,7 @@ export default async function getAllEntities<T extends BackkEntity>(
 
     const { columns, joinClauses, rootSortClause, outerSortClause } = getSqlSelectStatementParts(
       dbManager,
-      finalPostQueryOperations,
+      postQueryOperations,
       EntityClass
     );
 
@@ -64,11 +60,22 @@ export default async function getAllEntities<T extends BackkEntity>(
     const entities = transformRowsToObjects(
       dbManager.getResultRows(result),
       EntityClass,
-      finalPostQueryOperations,
+      postQueryOperations,
       dbManager
     );
 
-    return [{ metadata: { currentPageTokens: undefined, entityCounts: undefined }, data: entities }, null];
+    return [
+      {
+        metadata: {
+          currentPageTokens: allowFetchingOnlyPreviousOrNextPage
+            ? createCurrentPageTokens(postQueryOperations.paginations)
+            : undefined,
+          entityCounts: undefined
+        },
+        data: entities
+      },
+      null
+    ];
   } catch (error) {
     return [null, createBackkErrorFromError(error)];
   }

@@ -21,6 +21,7 @@ import cleanupLocalTransactionIfNeeded from '../transaction/cleanupLocalTransact
 import tryExecuteEntitiesPostHook from '../../../hooks/tryExecuteEntitiesPostHook';
 import { Many } from '../../../AbstractDbManager';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
+import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 
 export default async function getEntitiesByFilters<T extends BackkEntity>(
   dbManager: AbstractSqlDbManager,
@@ -96,7 +97,15 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
       dbManager
     );
 
-    const entities = { metadata: { currentPageTokens: undefined, entityCounts: undefined }, data: objects };
+    const entities = {
+      metadata: {
+        currentPageTokens: allowFetchingOnlyPreviousOrNextPage
+          ? createCurrentPageTokens(postQueryOperations.paginations)
+          : undefined,
+        entityCounts: undefined
+      },
+      data: objects
+    };
 
     if (options?.postHook) {
       await tryExecuteEntitiesPostHook(options.postHook, entities);

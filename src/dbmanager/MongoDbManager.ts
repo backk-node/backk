@@ -70,6 +70,7 @@ import findSubEntityClass from '../utils/type/findSubEntityClass';
 import getEntityByFilters from './mongodb/operations/dql/getEntityByFilters';
 import addSimpleSubEntitiesOrValuesByFilters from './mongodb/addSimpleSubEntitiesOrValuesByFilters';
 import DefaultPostQueryOperations from '../types/postqueryoperations/DefaultPostQueryOperations';
+import createCurrentPageTokens from './utils/createCurrentPageTokens';
 
 @Injectable()
 export default class MongoDbManager extends AbstractDbManager {
@@ -708,13 +709,23 @@ export default class MongoDbManager extends AbstractDbManager {
         );
 
         paginateSubEntities(rows, postQueryOperations.paginations, EntityClass, this.getTypes());
-
         removePrivateProperties(rows, EntityClass, this.getTypes());
         decryptEntities(rows, EntityClass, this.getTypes(), false);
         return rows;
       });
 
-      return [{ metadata: { currentPageTokens: undefined, entityCounts: undefined }, data: entities }, null];
+      return [
+        {
+          metadata: {
+            currentPageTokens: allowFetchingOnlyPreviousOrNextPage
+              ? createCurrentPageTokens(postQueryOperations.paginations)
+              : undefined,
+            entityCounts: undefined
+          },
+          data: entities
+        },
+        null
+      ];
     } catch (errorOrBackkError) {
       return isBackkError(errorOrBackkError)
         ? [null, errorOrBackkError]
@@ -915,7 +926,12 @@ export default class MongoDbManager extends AbstractDbManager {
       });
 
       let entity: One<T> | null | undefined = {
-        metadata: { currentPageTokens: undefined, entityCounts: undefined },
+        metadata: {
+          currentPageTokens: allowFetchingOnlyPreviousOrNextPage
+            ? createCurrentPageTokens(postQueryOperations.paginations)
+            : undefined,
+          entityCounts: undefined
+        },
         data: entities[0]
       };
 
@@ -1007,100 +1023,18 @@ export default class MongoDbManager extends AbstractDbManager {
         return rows;
       });
 
-      return [{ metadata: { currentPageTokens: undefined, entityCounts: undefined }, data: entities }, null];
-    } catch (errorOrBackkError) {
-      return isBackkError(errorOrBackkError)
-        ? [null, errorOrBackkError]
-        : [null, createBackkErrorFromError(errorOrBackkError)];
-    } finally {
-      recordDbOperationDuration(this, dbOperationStartTimeInMillis);
-    }
-  }
-
-  async getEntitiesByField<T>(
-    EntityClass: { new (): T },
-    fieldPathName: string,
-    fieldValue: any,
-    options?: { postQueryOperations?: PostQueryOperations }
-  ): PromiseErrorOr<T[]> {
-    if (!isUniqueField(fieldPathName, EntityClass, this.getTypes())) {
-      throw new Error(`Field ${fieldPathName} is not unique. Annotate entity field with @Unique annotation`);
-    }
-
-    const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntitiesByField');
-    updateDbLocalTransactionCount(this);
-
-    let finalFieldValue = fieldValue;
-    const lastDotPosition = fieldPathName.lastIndexOf('.');
-    const fieldName = lastDotPosition === -1 ? fieldPathName : fieldPathName.slice(lastDotPosition + 1);
-    if (!shouldUseRandomInitializationVector(fieldName) && shouldEncryptValue(fieldName)) {
-      finalFieldValue = encrypt(fieldValue, false);
-    }
-
-    const filters = [
-      new MongoDbQuery(
-        { [fieldName]: finalFieldValue },
-        lastDotPosition === -1 ? '' : fieldPathName.slice(0, lastDotPosition)
-      )
-    ];
-
-    const rootFilters = getRootOperations(filters as Array<MongoDbQuery<T>>, EntityClass, this.getTypes());
-    const matchExpression = convertMongoDbQueriesToMatchExpression(rootFilters);
-
-    try {
-      let isSelectForUpdate = false;
-
-      if (
-        getNamespace('multipleServiceFunctionExecutions')?.get('globalTransaction') ||
-        this.getClsNamespace()?.get('globalTransaction') ||
-        this.getClsNamespace()?.get('localTransaction')
-      ) {
-        isSelectForUpdate = true;
-      }
-
-      const entities = await this.tryExecute(false, async (client) => {
-        if (isSelectForUpdate) {
-          await client
-            .db(this.dbName)
-            .collection(EntityClass.name.toLowerCase())
-            .updateMany(matchExpression, { $set: { _backkLock: new ObjectId() } });
-        }
-
-        const joinPipelines = getJoinPipelines(EntityClass, this.getTypes());
-
-        const cursor = client
-          .db(this.dbName)
-          .collection(getTableName(EntityClass.name))
-          .aggregate([...joinPipelines, getFieldOrdering(EntityClass)])
-          .match(matchExpression);
-
-        performPostQueryOperations(cursor, options?.postQueryOperations, EntityClass, this.getTypes());
-        const rows = await cursor.toArray();
-
-        await tryFetchAndAssignSubEntitiesForManyToManyRelationships(
-          this,
-          rows,
-          EntityClass,
-          this.getTypes(),
-          filters as Array<MongoDbQuery<T>>,
-          options?.postQueryOperations
-        );
-
-        paginateSubEntities(rows, options?.postQueryOperations?.paginations, EntityClass, this.getTypes());
-        removePrivateProperties(rows, EntityClass, this.getTypes());
-        decryptEntities(rows, EntityClass, this.getTypes(), false);
-        return rows;
-      });
-
-      return entities.length === 0
-        ? [
-            null,
-            createBackkErrorFromErrorCodeMessageAndStatus({
-              ...BACKK_ERRORS.ENTITY_NOT_FOUND,
-              message: `${EntityClass.name} with ${fieldName}: ${fieldValue} not found`
-            })
-          ]
-        : [entities, null];
+      return [
+        {
+          metadata: {
+            currentPageTokens: allowFetchingOnlyPreviousOrNextPage
+              ? createCurrentPageTokens(postQueryOperations.paginations)
+              : undefined,
+            entityCounts: undefined
+          },
+          data: entities
+        },
+        null
+      ];
     } catch (errorOrBackkError) {
       return isBackkError(errorOrBackkError)
         ? [null, errorOrBackkError]

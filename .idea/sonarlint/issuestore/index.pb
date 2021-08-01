@@ -195,8 +195,6 @@ e
 5src/decorators/typeproperty/MaxLengthAndMatchesAll.ts,e/c/ec895cc05a93d6b2a1d02424ebed0deb14d3add0
 r
 Bsrc/types/postqueryoperations/_IdsAndDefaultPostQueryOperations.ts,f/b/fb84f5299ce4d72fbc12a8e4a6787b9eff81f90f
-Q
-!src/types/entities/BackkEntity.ts,6/6/66ec3a4b084b0406ac75f747a60854661057f34f
 :
 
 .gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302

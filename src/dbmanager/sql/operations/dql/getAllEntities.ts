@@ -12,6 +12,7 @@ import { getNamespace } from 'cls-hooked';
 import { Many } from '../../../AbstractDbManager';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
+import tryEnsureProperPageIsRequested from "../../../utils/tryEnsureProperPageIsRequested";
 
 export default async function getAllEntities<T extends BackkEntity>(
   dbManager: AbstractSqlDbManager,
@@ -19,6 +20,10 @@ export default async function getAllEntities<T extends BackkEntity>(
   postQueryOperations: PostQueryOperations,
   allowFetchingOnlyPreviousOrNextPage: boolean
 ): PromiseErrorOr<Many<T>> {
+  if (allowFetchingOnlyPreviousOrNextPage) {
+    tryEnsureProperPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+  }
+
   updateDbLocalTransactionCount(dbManager);
 
   // noinspection AssignmentToFunctionParameterJS

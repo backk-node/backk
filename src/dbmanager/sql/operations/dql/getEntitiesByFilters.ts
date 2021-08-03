@@ -22,6 +22,7 @@ import tryExecuteEntitiesPostHook from '../../../hooks/tryExecuteEntitiesPostHoo
 import { Many } from '../../../AbstractDbManager';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
+import tryEnsureProperPageIsRequested from "../../../utils/tryEnsureProperPageIsRequested";
 
 export default async function getEntitiesByFilters<T extends BackkEntity>(
   dbManager: AbstractSqlDbManager,
@@ -34,6 +35,10 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
     postHook?: EntitiesPostHook<T>;
   }
 ): PromiseErrorOr<Many<T>> {
+  if (allowFetchingOnlyPreviousOrNextPage) {
+    tryEnsureProperPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+  }
+
   if (typeof filters === 'object' && !Array.isArray(filters)) {
     // noinspection AssignmentToFunctionParameterJS
     filters = convertFilterObjectToSqlEquals(filters);

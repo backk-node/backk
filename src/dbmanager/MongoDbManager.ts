@@ -71,6 +71,7 @@ import getEntityByFilters from './mongodb/operations/dql/getEntityByFilters';
 import addSimpleSubEntitiesOrValuesByFilters from './mongodb/addSimpleSubEntitiesOrValuesByFilters';
 import DefaultPostQueryOperations from '../types/postqueryoperations/DefaultPostQueryOperations';
 import createCurrentPageTokens from './utils/createCurrentPageTokens';
+import tryEnsureProperPageIsRequested from "./utils/tryEnsureProperPageIsRequested";
 
 @Injectable()
 export default class MongoDbManager extends AbstractDbManager {
@@ -669,6 +670,10 @@ export default class MongoDbManager extends AbstractDbManager {
     // noinspection AssignmentToFunctionParameterJS
     EntityClass = this.getType(EntityClass);
 
+    if (allowFetchingOnlyPreviousOrNextPage) {
+      tryEnsureProperPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+    }
+
     try {
       let isSelectForUpdate = false;
 
@@ -853,6 +858,10 @@ export default class MongoDbManager extends AbstractDbManager {
   ): PromiseErrorOr<One<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntityById');
 
+    if (allowFetchingOnlyPreviousOrNextPage) {
+      tryEnsureProperPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+    }
+
     // noinspection AssignmentToFunctionParameterJS
     EntityClass = this.getType(EntityClass);
     let shouldUseTransaction = false;
@@ -972,6 +981,10 @@ export default class MongoDbManager extends AbstractDbManager {
     allowFetchingOnlyPreviousOrNextPage: boolean
   ): PromiseErrorOr<Many<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntitiesByIds');
+    if (allowFetchingOnlyPreviousOrNextPage) {
+      tryEnsureProperPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+    }
+
     updateDbLocalTransactionCount(this);
     // noinspection AssignmentToFunctionParameterJS
     EntityClass = this.getType(EntityClass);

@@ -22,6 +22,7 @@ import tryExecutePreHooks from '../../../hooks/tryExecutePreHooks';
 import { One } from '../../../AbstractDbManager';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
+import tryEnsureProperPageIsRequested from "../../../utils/tryEnsureProperPageIsRequested";
 
 // noinspection OverlyComplexFunctionJS,FunctionTooLongJS
 export default async function getEntityById<T extends BackkEntity>(
@@ -38,6 +39,10 @@ export default async function getEntityById<T extends BackkEntity>(
   isSelectForUpdate = false,
   isInternalCall = false
 ): PromiseErrorOr<One<T>> {
+  if (allowFetchingOnlyPreviousOrNextPage) {
+    tryEnsureProperPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+  }
+
   // noinspection AssignmentToFunctionParameterJS
   EntityClass = dbManager.getType(EntityClass);
   let didStartTransaction = false;

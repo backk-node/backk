@@ -23,6 +23,7 @@ import tryExecutePostHook from '../../../hooks/tryExecutePostHook';
 import { PostHook } from '../../../hooks/PostHook';
 import { One } from '../../../AbstractDbManager';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
+import tryEnsureProperPageIsRequested from "../../../utils/tryEnsureProperPageIsRequested";
 
 export default async function getEntityByFilters<T>(
   dbManager: AbstractSqlDbManager,
@@ -38,6 +39,10 @@ export default async function getEntityByFilters<T>(
   isSelectForUpdate = false,
   isInternalCall = false
 ): PromiseErrorOr<One<T>> {
+  if (allowFetchingOnlyPreviousOrNextPage) {
+    tryEnsureProperPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+  }
+
   if (typeof filters === 'object' && !Array.isArray(filters)) {
     // noinspection AssignmentToFunctionParameterJS
     filters = convertFilterObjectToSqlEquals(filters);

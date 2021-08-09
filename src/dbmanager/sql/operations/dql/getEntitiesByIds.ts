@@ -13,7 +13,7 @@ import getClassPropertyNameToPropertyTypeNameMap from '../../../../metadata/getC
 import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
 import { Many } from '../../../AbstractDbManager';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
-import tryEnsureProperPageIsRequested from "../../../utils/tryEnsureProperPageIsRequested";
+import tryEnsurePreviousOrNextPageIsRequested from "../../../utils/tryEnsurePreviousOrNextPageIsRequested";
 
 export default async function getEntitiesByIds<T>(
   dbManager: AbstractSqlDbManager,
@@ -24,9 +24,9 @@ export default async function getEntitiesByIds<T>(
 ): PromiseErrorOr<Many<T>> {
   try {
     if (allowFetchingOnlyPreviousOrNextPage) {
-      tryEnsureProperPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+      tryEnsurePreviousOrNextPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
     }
-    
+
     updateDbLocalTransactionCount(dbManager);
 
     let isSelectForUpdate = false;

@@ -27,13 +27,24 @@ const serviceName = getServiceName();
 const packageJson = fs.readFileSync(cwd + '/package.json', { encoding: 'UTF-8' });
 const packageObj = JSON.parse(packageJson);
 
-if (
-  process.env.NODE_ENV !== 'development' &&
-  (!process.env.NODE_NAME || !process.env.SERVICE_NAMESPACE || !process.env.SERVICE_INSTANCE_ID)
-) {
-  throw new Error(
-    'NODE_NAME, SERVICE_NAMESPACE and SERVICE_INSTANCE_ID environment variables must be defined'
-  );
+if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'integration') {
+  if (!process.env.NODE_NAME) {
+    throw new Error(
+      'NODE_NAME environment variable must be defined'
+    );
+  }
+
+  if (!process.env.SERVICE_NAMESPACE) {
+    throw new Error(
+      'SERVICE_NAMESPACE environment variable must be defined'
+    );
+  }
+
+  if (!process.env.SERVICE_INSTANCE_ID) {
+    throw new Error(
+      'SERVICE_INSTANCE_ID environment variable must be defined'
+    );
+  }
 }
 
 let lastLoggedErrorName = '';

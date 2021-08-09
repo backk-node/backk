@@ -32,7 +32,7 @@ import tryExecuteEntitiesPostHook from '../../../hooks/tryExecuteEntitiesPostHoo
 import { Many } from '../../../AbstractDbManager';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
-import tryEnsureProperPageIsRequested from "../../../utils/tryEnsureProperPageIsRequested";
+import tryEnsurePreviousOrNextPageIsRequested from "../../../utils/tryEnsurePreviousOrNextPageIsRequested";
 
 export default async function getEntitiesByFilters<T extends BackkEntity>(
   dbManager: MongoDbManager,
@@ -50,7 +50,7 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
   const dbOperationStartTimeInMillis = startDbOperation(dbManager, 'getEntitiesByFilters');
 
   if (allowFetchingOnlyPreviousOrNextPage) {
-    tryEnsureProperPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+    tryEnsurePreviousOrNextPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
   }
 
   let matchExpression: any;

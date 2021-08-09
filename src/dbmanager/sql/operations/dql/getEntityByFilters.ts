@@ -23,7 +23,7 @@ import tryExecutePostHook from '../../../hooks/tryExecutePostHook';
 import { PostHook } from '../../../hooks/PostHook';
 import { One } from '../../../AbstractDbManager';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
-import tryEnsureProperPageIsRequested from "../../../utils/tryEnsureProperPageIsRequested";
+import tryEnsurePreviousOrNextPageIsRequested from "../../../utils/tryEnsurePreviousOrNextPageIsRequested";
 
 export default async function getEntityByFilters<T>(
   dbManager: AbstractSqlDbManager,
@@ -40,7 +40,7 @@ export default async function getEntityByFilters<T>(
   isInternalCall = false
 ): PromiseErrorOr<One<T>> {
   if (allowFetchingOnlyPreviousOrNextPage) {
-    tryEnsureProperPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+    tryEnsurePreviousOrNextPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
   }
 
   if (typeof filters === 'object' && !Array.isArray(filters)) {

@@ -22,7 +22,7 @@ import tryExecutePreHooks from '../../../hooks/tryExecutePreHooks';
 import { One } from '../../../AbstractDbManager';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
-import tryEnsureProperPageIsRequested from "../../../utils/tryEnsureProperPageIsRequested";
+import tryEnsurePreviousOrNextPageIsRequested from "../../../utils/tryEnsurePreviousOrNextPageIsRequested";
 
 // noinspection OverlyComplexFunctionJS,FunctionTooLongJS
 export default async function getEntityById<T extends BackkEntity>(
@@ -40,7 +40,7 @@ export default async function getEntityById<T extends BackkEntity>(
   isInternalCall = false
 ): PromiseErrorOr<One<T>> {
   if (allowFetchingOnlyPreviousOrNextPage) {
-    tryEnsureProperPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+    tryEnsurePreviousOrNextPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
   }
 
   // noinspection AssignmentToFunctionParameterJS

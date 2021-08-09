@@ -71,7 +71,7 @@ import getEntityByFilters from './mongodb/operations/dql/getEntityByFilters';
 import addSimpleSubEntitiesOrValuesByFilters from './mongodb/addSimpleSubEntitiesOrValuesByFilters';
 import DefaultPostQueryOperations from '../types/postqueryoperations/DefaultPostQueryOperations';
 import createCurrentPageTokens from './utils/createCurrentPageTokens';
-import tryEnsureProperPageIsRequested from "./utils/tryEnsureProperPageIsRequested";
+import tryEnsurePreviousOrNextPageIsRequested from "./utils/tryEnsurePreviousOrNextPageIsRequested";
 
 @Injectable()
 export default class MongoDbManager extends AbstractDbManager {
@@ -671,7 +671,7 @@ export default class MongoDbManager extends AbstractDbManager {
     EntityClass = this.getType(EntityClass);
 
     if (allowFetchingOnlyPreviousOrNextPage) {
-      tryEnsureProperPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+      tryEnsurePreviousOrNextPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
     }
 
     try {
@@ -859,7 +859,7 @@ export default class MongoDbManager extends AbstractDbManager {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntityById');
 
     if (allowFetchingOnlyPreviousOrNextPage) {
-      tryEnsureProperPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+      tryEnsurePreviousOrNextPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
     }
 
     // noinspection AssignmentToFunctionParameterJS
@@ -982,7 +982,7 @@ export default class MongoDbManager extends AbstractDbManager {
   ): PromiseErrorOr<Many<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntitiesByIds');
     if (allowFetchingOnlyPreviousOrNextPage) {
-      tryEnsureProperPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+      tryEnsurePreviousOrNextPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
     }
 
     updateDbLocalTransactionCount(this);

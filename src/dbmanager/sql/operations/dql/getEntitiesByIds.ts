@@ -14,13 +14,15 @@ import DefaultPostQueryOperations from '../../../../types/postqueryoperations/De
 import { Many } from '../../../AbstractDbManager';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from "../../../utils/tryEnsurePreviousOrNextPageIsRequested";
+import EntityCountRequest from "../../../../types/postqueryoperations/EntityCountRequest";
 
 export default async function getEntitiesByIds<T>(
   dbManager: AbstractSqlDbManager,
   _ids: string[],
   EntityClass: new () => T,
   postQueryOperations: PostQueryOperations,
-  allowFetchingOnlyPreviousOrNextPage: boolean
+  allowFetchingOnlyPreviousOrNextPage: boolean,
+  entityCountRequests?: EntityCountRequest[]
 ): PromiseErrorOr<Many<T>> {
   try {
     if (allowFetchingOnlyPreviousOrNextPage) {
@@ -70,8 +72,16 @@ export default async function getEntitiesByIds<T>(
     const tableName = getTableName(EntityClass.name);
     const tableAlias = dbManager.schema + '_' + EntityClass.name.toLowerCase();
 
+    const shouldReturnRootEntityCount = entityCountRequests?.find(
+      (entityCountRequest) =>
+        entityCountRequest.subEntityPath === '' || entityCountRequest.subEntityPath === '*'
+    );
+
     const selectStatement = [
-      `SELECT ${columns} FROM (SELECT * FROM ${dbManager.schema}.${tableName} WHERE ${idFieldName} IN (${idPlaceholders})`,
+      `SELECT ${
+        shouldReturnRootEntityCount ? [columns, 'COUNT(*) OVER() as _count'].join(', ') : columns
+      } FROM (SELECT * FROM ${dbManager.schema}.${tableName}`,
+      `WHERE ${idFieldName} IN (${idPlaceholders}`,
       rootSortClause,
       rootPaginationClause,
       `) AS ${tableAlias}`,
@@ -106,8 +116,7 @@ export default async function getEntitiesByIds<T>(
         metadata: {
           currentPageTokens: allowFetchingOnlyPreviousOrNextPage
             ? createCurrentPageTokens(postQueryOperations.paginations)
-            : undefined,
-          entityCounts: undefined
+            : undefined
         },
         data: entities
       },

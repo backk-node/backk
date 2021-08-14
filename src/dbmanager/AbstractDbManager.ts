@@ -20,7 +20,7 @@ import { EntityPreHook } from './hooks/EntityPreHook';
 import DbTableVersion from '../types/DbTableVersion';
 import { EntitiesPostHook } from './hooks/EntitiesPostHook';
 import CurrentPageToken from '../types/postqueryoperations/CurrentPageToken';
-import EntityCount from '../types/EntityCount';
+import EntityCountRequest from "../types/postqueryoperations/EntityCountRequest";
 
 export interface Field {
   name: string;
@@ -29,7 +29,6 @@ export interface Field {
 export type Many<T> = {
   metadata: {
     currentPageTokens: CurrentPageToken[] | undefined;
-    entityCounts: EntityCount[] | undefined;
   };
   data: T[];
 };
@@ -37,7 +36,6 @@ export type Many<T> = {
 export type One<T> = {
   metadata: {
     currentPageTokens: CurrentPageToken[] | undefined;
-    entityCounts: EntityCount[] | undefined;
   };
   data: T;
 };
@@ -218,7 +216,8 @@ export default abstract class AbstractDbManager {
   abstract getAllEntities<T extends BackkEntity>(
     EntityClass: new () => T,
     postQueryOperations: PostQueryOperations,
-    allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean
+    allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
+    entityCountRequests?: EntityCountRequest[]
   ): PromiseErrorOr<Many<T>>;
 
   abstract getEntitiesByFilters<T extends BackkEntity>(
@@ -229,6 +228,7 @@ export default abstract class AbstractDbManager {
     options?: {
       preHooks?: PreHook | PreHook[];
       postHook?: EntitiesPostHook<T>;
+      entityCountRequests?: EntityCountRequest[]
     }
   ): PromiseErrorOr<Many<T>>;
 
@@ -241,6 +241,7 @@ export default abstract class AbstractDbManager {
       preHooks?: PreHook | PreHook[];
       ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>;
       postHook?: PostHook<T>;
+      entityCountRequests?: EntityCountRequest[]
     }
   ): PromiseErrorOr<One<T>>;
 
@@ -258,6 +259,7 @@ export default abstract class AbstractDbManager {
       preHooks?: PreHook | PreHook[];
       ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>;
       postHook?: PostHook<T>;
+      entityCountRequests?: EntityCountRequest[]
     }
   ): PromiseErrorOr<One<T>>;
 
@@ -265,7 +267,8 @@ export default abstract class AbstractDbManager {
     EntityClass: { new (): T },
     _ids: string[],
     postQueryOperations: PostQueryOperations,
-    allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean
+    allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
+    entityCountRequests?: EntityCountRequest[]
   ): PromiseErrorOr<Many<T>>;
 
   abstract updateEntity<T extends BackkEntity>(

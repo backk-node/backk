@@ -1,45 +1,46 @@
-import { Injectable } from "@nestjs/common";
-import SqlExpression from "./sql/expressions/SqlExpression";
-import AbstractDbManager, { Field, Many, One } from "./AbstractDbManager";
-import createEntity from "./sql/operations/dml/createEntity";
-import getEntitiesByFilters from "./sql/operations/dql/getEntitiesByFilters";
-import getEntitiesCount from "./sql/operations/dql/getEntitiesCount";
-import getEntityById from "./sql/operations/dql/getEntityById";
-import updateEntity from "./sql/operations/dml/updateEntity";
-import deleteEntityById from "./sql/operations/dml/deleteEntityById";
-import removeSubEntities from "./sql/operations/dml/removeSubEntities";
-import deleteAllEntities from "./sql/operations/dml/deleteAllEntities";
-import getEntitiesByIds from "./sql/operations/dql/getEntitiesByIds";
-import { RecursivePartial } from "../types/RecursivePartial";
-import { PreHook } from "./hooks/PreHook";
-import { BackkEntity } from "../types/entities/BackkEntity";
-import { PostQueryOperations } from "../types/postqueryoperations/PostQueryOperations";
-import defaultServiceMetrics from "../observability/metrics/defaultServiceMetrics";
-import createBackkErrorFromError from "../errors/createBackkErrorFromError";
-import log, { Severity } from "../observability/logging/log";
-import addSubEntities from "./sql/operations/dml/addSubEntities";
-import startDbOperation from "./utils/startDbOperation";
-import recordDbOperationDuration from "./utils/recordDbOperationDuration";
-import deleteEntitiesWhere from "./sql/operations/dml/deleteEntitiesWhere";
-import { getNamespace } from "cls-hooked";
-import UserDefinedFilter from "../types/userdefinedfilters/UserDefinedFilter";
-import getAllEntities from "./sql/operations/dql/getAllEntities";
-import { SubEntity } from "../types/entities/SubEntity";
-import deleteEntitiesByFilters from "./sql/operations/dml/deleteEntitiesByFilters";
-import MongoDbQuery from "./mongodb/MongoDbQuery";
-import { PostHook } from "./hooks/PostHook";
-import { PromiseErrorOr } from "../types/PromiseErrorOr";
-import updateEntitiesByFilters from "./sql/operations/dml/updateEntitiesByFilters";
-import { EntityPreHook } from "./hooks/EntityPreHook";
-import removeSubEntitiesByFilters from "./sql/operations/dml/removeSubEntitiesByFilters";
-import addFieldValues from "./sql/operations/dml/addFieldValues";
-import removeFieldValues from "./sql/operations/dml/removeFieldValues";
-import addSubEntitiesByFilters from "./sql/operations/dml/addSubEntitiesByFilters";
-import { EntitiesPostHook } from "./hooks/EntitiesPostHook";
-import getEntityByFilters from "./sql/operations/dql/getEntityByFilters";
-import deleteEntityByFilters from "./sql/operations/dml/deleteEntityByFilters";
-import updateEntityByFilters from "./sql/operations/dml/updateEntityByFilters";
-import doesEntityArrayFieldContainValue from "./sql/operations/dql/doesEntityArrayFieldContainValue";
+import { Injectable } from '@nestjs/common';
+import SqlExpression from './sql/expressions/SqlExpression';
+import AbstractDbManager, { Field, Many, One } from './AbstractDbManager';
+import createEntity from './sql/operations/dml/createEntity';
+import getEntitiesByFilters from './sql/operations/dql/getEntitiesByFilters';
+import getEntitiesCount from './sql/operations/dql/getEntitiesCount';
+import getEntityById from './sql/operations/dql/getEntityById';
+import updateEntity from './sql/operations/dml/updateEntity';
+import deleteEntityById from './sql/operations/dml/deleteEntityById';
+import removeSubEntities from './sql/operations/dml/removeSubEntities';
+import deleteAllEntities from './sql/operations/dml/deleteAllEntities';
+import getEntitiesByIds from './sql/operations/dql/getEntitiesByIds';
+import { RecursivePartial } from '../types/RecursivePartial';
+import { PreHook } from './hooks/PreHook';
+import { BackkEntity } from '../types/entities/BackkEntity';
+import { PostQueryOperations } from '../types/postqueryoperations/PostQueryOperations';
+import defaultServiceMetrics from '../observability/metrics/defaultServiceMetrics';
+import createBackkErrorFromError from '../errors/createBackkErrorFromError';
+import log, { Severity } from '../observability/logging/log';
+import addSubEntities from './sql/operations/dml/addSubEntities';
+import startDbOperation from './utils/startDbOperation';
+import recordDbOperationDuration from './utils/recordDbOperationDuration';
+import deleteEntitiesWhere from './sql/operations/dml/deleteEntitiesWhere';
+import { getNamespace } from 'cls-hooked';
+import UserDefinedFilter from '../types/userdefinedfilters/UserDefinedFilter';
+import getAllEntities from './sql/operations/dql/getAllEntities';
+import { SubEntity } from '../types/entities/SubEntity';
+import deleteEntitiesByFilters from './sql/operations/dml/deleteEntitiesByFilters';
+import MongoDbQuery from './mongodb/MongoDbQuery';
+import { PostHook } from './hooks/PostHook';
+import { PromiseErrorOr } from '../types/PromiseErrorOr';
+import updateEntitiesByFilters from './sql/operations/dml/updateEntitiesByFilters';
+import { EntityPreHook } from './hooks/EntityPreHook';
+import removeSubEntitiesByFilters from './sql/operations/dml/removeSubEntitiesByFilters';
+import addFieldValues from './sql/operations/dml/addFieldValues';
+import removeFieldValues from './sql/operations/dml/removeFieldValues';
+import addSubEntitiesByFilters from './sql/operations/dml/addSubEntitiesByFilters';
+import { EntitiesPostHook } from './hooks/EntitiesPostHook';
+import getEntityByFilters from './sql/operations/dql/getEntityByFilters';
+import deleteEntityByFilters from './sql/operations/dml/deleteEntityByFilters';
+import updateEntityByFilters from './sql/operations/dml/updateEntityByFilters';
+import doesEntityArrayFieldContainValue from './sql/operations/dql/doesEntityArrayFieldContainValue';
+import EntityCountRequest from '../types/postqueryoperations/EntityCountRequest';
 
 @Injectable()
 export default abstract class AbstractSqlDbManager extends AbstractDbManager {
@@ -533,14 +534,16 @@ export default abstract class AbstractSqlDbManager extends AbstractDbManager {
   async getAllEntities<T extends BackkEntity>(
     entityClass: new () => T,
     postQueryOperations: PostQueryOperations,
-    allowFetchingOnlyPreviousOrNextPage: boolean
+    allowFetchingOnlyPreviousOrNextPage: boolean,
+    entityCountRequests?: EntityCountRequest[]
   ): PromiseErrorOr<Many<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntitiesByFilters');
     const response = await getAllEntities(
       this,
       entityClass,
       postQueryOperations,
-      allowFetchingOnlyPreviousOrNextPage
+      allowFetchingOnlyPreviousOrNextPage,
+      entityCountRequests
     );
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
     return response;
@@ -554,6 +557,7 @@ export default abstract class AbstractSqlDbManager extends AbstractDbManager {
     options?: {
       preHooks?: PreHook | PreHook[];
       postHook?: EntitiesPostHook<T>;
+      entityCountRequests?: EntityCountRequest[];
     }
   ): PromiseErrorOr<Many<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntitiesByFilters');
@@ -578,6 +582,7 @@ export default abstract class AbstractSqlDbManager extends AbstractDbManager {
       preHooks?: PreHook | PreHook[];
       ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>;
       postHook?: PostHook<T>;
+      entityCountRequests?: EntityCountRequest[];
     }
   ): PromiseErrorOr<One<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntityByFilters');
@@ -612,6 +617,7 @@ export default abstract class AbstractSqlDbManager extends AbstractDbManager {
       preHooks?: PreHook | PreHook[];
       ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>;
       postHook?: PostHook<T>;
+      entityCountRequests?: EntityCountRequest[];
     }
   ): PromiseErrorOr<One<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntityById');
@@ -631,7 +637,8 @@ export default abstract class AbstractSqlDbManager extends AbstractDbManager {
     EntityClass: { new (): T },
     _ids: string[],
     postQueryOperations: PostQueryOperations,
-    allowFetchingOnlyPreviousOrNextPage: boolean
+    allowFetchingOnlyPreviousOrNextPage: boolean,
+    entityCountRequests?: EntityCountRequest[]
   ): PromiseErrorOr<Many<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntitiesByIds');
     const response = await getEntitiesByIds(
@@ -639,7 +646,8 @@ export default abstract class AbstractSqlDbManager extends AbstractDbManager {
       _ids,
       EntityClass,
       postQueryOperations,
-      allowFetchingOnlyPreviousOrNextPage
+      allowFetchingOnlyPreviousOrNextPage,
+      entityCountRequests
     );
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
     return response;

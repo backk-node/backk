@@ -24,6 +24,7 @@ import { PostHook } from '../../../hooks/PostHook';
 import { One } from '../../../AbstractDbManager';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from "../../../utils/tryEnsurePreviousOrNextPageIsRequested";
+import EntityCountRequest from "../../../../types/postqueryoperations/EntityCountRequest";
 
 export default async function getEntityByFilters<T>(
   dbManager: AbstractSqlDbManager,
@@ -35,6 +36,7 @@ export default async function getEntityByFilters<T>(
     preHooks?: PreHook | PreHook[];
     ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>;
     postHook?: PostHook<T>;
+    entityCountRequests?: EntityCountRequest[]
   },
   isSelectForUpdate = false,
   isInternalCall = false
@@ -90,8 +92,15 @@ export default async function getEntityByFilters<T>(
     const tableName = getTableName(EntityClass.name);
     const tableAlias = dbManager.schema + '_' + EntityClass.name.toLowerCase();
 
+    const shouldReturnRootEntityCount = options?.entityCountRequests?.find(
+      (entityCountRequest) =>
+        entityCountRequest.subEntityPath === '' || entityCountRequest.subEntityPath === '*'
+    );
+
     const selectStatement = [
-      `SELECT ${columns} FROM (SELECT * FROM ${dbManager.schema}.${tableName}`,
+      `SELECT ${
+        shouldReturnRootEntityCount ? [columns, 'COUNT(*) OVER() as _count'].join(', ') : columns
+      } FROM (SELECT * FROM ${dbManager.schema}.${tableName}`,
       rootWhereClause,
       rootSortClause,
       rootPaginationClause,
@@ -117,8 +126,7 @@ export default async function getEntityByFilters<T>(
       metadata: {
         currentPageTokens: allowFetchingOnlyPreviousOrNextPage
           ? createCurrentPageTokens(postQueryOperations.paginations)
-          : undefined,
-        entityCounts: undefined
+          : undefined
       },
       data: entities[0]
     };

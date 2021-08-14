@@ -22,7 +22,8 @@ import tryExecutePreHooks from '../../../hooks/tryExecutePreHooks';
 import { One } from '../../../AbstractDbManager';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
-import tryEnsurePreviousOrNextPageIsRequested from "../../../utils/tryEnsurePreviousOrNextPageIsRequested";
+import tryEnsurePreviousOrNextPageIsRequested from '../../../utils/tryEnsurePreviousOrNextPageIsRequested';
+import EntityCountRequest from '../../../../types/postqueryoperations/EntityCountRequest';
 
 // noinspection OverlyComplexFunctionJS,FunctionTooLongJS
 export default async function getEntityById<T extends BackkEntity>(
@@ -35,12 +36,16 @@ export default async function getEntityById<T extends BackkEntity>(
     preHooks?: PreHook | PreHook[];
     postHook?: PostHook<T>;
     ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>;
+    entityCountRequests?: EntityCountRequest[];
   },
   isSelectForUpdate = false,
   isInternalCall = false
 ): PromiseErrorOr<One<T>> {
   if (allowFetchingOnlyPreviousOrNextPage) {
-    tryEnsurePreviousOrNextPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+    tryEnsurePreviousOrNextPageIsRequested(
+      postQueryOperations.currentPageTokens,
+      postQueryOperations.paginations
+    );
   }
 
   // noinspection AssignmentToFunctionParameterJS
@@ -52,10 +57,7 @@ export default async function getEntityById<T extends BackkEntity>(
       postQueryOperations?.includeResponseFields?.length === 1 &&
       postQueryOperations.includeResponseFields[0] === '_id'
     ) {
-      return [
-        { metadata: { currentPageTokens: undefined, entityCounts: undefined }, data: { _id } as T },
-        null
-      ];
+      return [{ metadata: { currentPageTokens: undefined }, data: { _id } as T }, null];
     }
 
     if (options?.postHook || options?.preHooks || options?.ifEntityNotFoundReturn) {
@@ -96,9 +98,15 @@ export default async function getEntityById<T extends BackkEntity>(
 
     const tableName = getTableName(EntityClass.name);
     const tableAlias = dbManager.schema + '_' + EntityClass.name.toLowerCase();
+    const shouldReturnRootEntityCount = options?.entityCountRequests?.find(
+      (entityCountRequest) =>
+        entityCountRequest.subEntityPath === '' || entityCountRequest.subEntityPath === '*'
+    );
 
     const selectStatement = [
-      `SELECT ${columns} FROM (SELECT * FROM ${dbManager.schema}.${tableName}`,
+      `SELECT ${
+        shouldReturnRootEntityCount ? [columns, 'COUNT(*) OVER() as _count'].join(', ') : columns
+      } FROM (SELECT * FROM ${dbManager.schema}.${tableName}`,
       `WHERE ${idFieldName} = ${dbManager.getValuePlaceholder(1)} LIMIT 1) AS ${tableAlias}`,
       joinClauses,
       outerSortClause,
@@ -138,8 +146,7 @@ export default async function getEntityById<T extends BackkEntity>(
         metadata: {
           currentPageTokens: allowFetchingOnlyPreviousOrNextPage
             ? createCurrentPageTokens(postQueryOperations.paginations)
-            : undefined,
-          entityCounts: undefined
+            : undefined
         },
         data: entity
       };

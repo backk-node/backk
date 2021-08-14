@@ -72,6 +72,7 @@ import addSimpleSubEntitiesOrValuesByFilters from './mongodb/addSimpleSubEntitie
 import DefaultPostQueryOperations from '../types/postqueryoperations/DefaultPostQueryOperations';
 import createCurrentPageTokens from './utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from "./utils/tryEnsurePreviousOrNextPageIsRequested";
+import EntityCountRequest from "../types/postqueryoperations/EntityCountRequest";
 
 @Injectable()
 export default class MongoDbManager extends AbstractDbManager {
@@ -663,7 +664,8 @@ export default class MongoDbManager extends AbstractDbManager {
   async getAllEntities<T extends BackkEntity>(
     EntityClass: new () => T,
     postQueryOperations: PostQueryOperations,
-    allowFetchingOnlyPreviousOrNextPage: boolean
+    allowFetchingOnlyPreviousOrNextPage: boolean,
+    entityCountRequests?: EntityCountRequest[]
   ): PromiseErrorOr<Many<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getAllEntities');
     updateDbLocalTransactionCount(this);
@@ -724,8 +726,7 @@ export default class MongoDbManager extends AbstractDbManager {
           metadata: {
             currentPageTokens: allowFetchingOnlyPreviousOrNextPage
               ? createCurrentPageTokens(postQueryOperations.paginations)
-              : undefined,
-            entityCounts: undefined
+              : undefined
           },
           data: entities
         },
@@ -748,6 +749,7 @@ export default class MongoDbManager extends AbstractDbManager {
     options?: {
       preHooks?: PreHook | PreHook[];
       postHook?: EntitiesPostHook<T>;
+      entityCountRequests?: EntityCountRequest[]
     }
   ): PromiseErrorOr<Many<T>> {
     return getEntitiesByFilters(
@@ -769,6 +771,7 @@ export default class MongoDbManager extends AbstractDbManager {
       preHooks?: PreHook | PreHook[];
       ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>;
       postHook?: PostHook<T>;
+      entityCountRequests?: EntityCountRequest[]
     },
     isSelectForUpdate = false,
     isInternalCall = false
@@ -852,6 +855,7 @@ export default class MongoDbManager extends AbstractDbManager {
       preHooks?: PreHook | PreHook[];
       postHook?: PostHook<T>;
       ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>;
+      entityCountRequests?: EntityCountRequest[]
     },
     isSelectForUpdate = false,
     isInternalCall = false
@@ -873,7 +877,7 @@ export default class MongoDbManager extends AbstractDbManager {
       ) {
         return [
           {
-            metadata: { currentPageTokens: undefined, entityCounts: undefined },
+            metadata: { currentPageTokens: undefined },
             data: ({ _id } as unknown) as T
           },
           null
@@ -938,8 +942,7 @@ export default class MongoDbManager extends AbstractDbManager {
         metadata: {
           currentPageTokens: allowFetchingOnlyPreviousOrNextPage
             ? createCurrentPageTokens(postQueryOperations.paginations)
-            : undefined,
-          entityCounts: undefined
+            : undefined
         },
         data: entities[0]
       };
@@ -978,7 +981,8 @@ export default class MongoDbManager extends AbstractDbManager {
     EntityClass: { new (): T },
     _ids: string[],
     postQueryOperations: PostQueryOperations,
-    allowFetchingOnlyPreviousOrNextPage: boolean
+    allowFetchingOnlyPreviousOrNextPage: boolean,
+    entityCountRequests?: EntityCountRequest[]
   ): PromiseErrorOr<Many<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntitiesByIds');
     if (allowFetchingOnlyPreviousOrNextPage) {
@@ -1041,8 +1045,7 @@ export default class MongoDbManager extends AbstractDbManager {
           metadata: {
             currentPageTokens: allowFetchingOnlyPreviousOrNextPage
               ? createCurrentPageTokens(postQueryOperations.paginations)
-              : undefined,
-            entityCounts: undefined
+              : undefined
           },
           data: entities
         },

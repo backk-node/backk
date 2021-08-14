@@ -33,6 +33,7 @@ import { Many } from '../../../AbstractDbManager';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from "../../../utils/tryEnsurePreviousOrNextPageIsRequested";
+import EntityCountRequest from "../../../../types/postqueryoperations/EntityCountRequest";
 
 export default async function getEntitiesByFilters<T extends BackkEntity>(
   dbManager: MongoDbManager,
@@ -43,6 +44,7 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
   options?: {
     preHooks?: PreHook | PreHook[];
     postHook?: EntitiesPostHook<T>;
+    entityCountRequests?: EntityCountRequest[]
   },
   isRecursive = false,
   isInternalCall = false
@@ -150,8 +152,7 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
       metadata: {
         currentPageTokens: allowFetchingOnlyPreviousOrNextPage
           ? createCurrentPageTokens(postQueryOperations.paginations)
-          : undefined,
-        entityCounts: undefined
+          : undefined
       },
       data: rows
     };

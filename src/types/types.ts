@@ -49,7 +49,6 @@ import UserNameAndDefaultPostQueryOperations
   from "./postqueryoperations/UserNameAndDefaultPostQueryOperations";
 import DbTableVersion from "./DbTableVersion";
 import CurrentPageToken from "./postqueryoperations/CurrentPageToken";
-import EntityCount from "./EntityCount";
 import EntityCountRequest from "./postqueryoperations/EntityCountRequest";
 
 const types = {
@@ -94,7 +93,6 @@ const types = {
   UserNameAndDefaultPostQueryOperations,
   DbTableVersion,
   CurrentPageToken,
-  EntityCount,
   EntityCountRequest
 }
 

@@ -4,24 +4,27 @@ import createBackkErrorFromError from '../../../../errors/createBackkErrorFromEr
 import { PostQueryOperations } from '../../../../types/postqueryoperations/PostQueryOperations';
 import getSqlSelectStatementParts from './utils/getSqlSelectStatementParts';
 import updateDbLocalTransactionCount from './utils/updateDbLocalTransactionCount';
-import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
-import Pagination from '../../../../types/postqueryoperations/Pagination';
 import getTableName from '../../../utils/getTableName';
 import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
 import { getNamespace } from 'cls-hooked';
 import { Many } from '../../../AbstractDbManager';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
-import tryEnsurePreviousOrNextPageIsRequested from "../../../utils/tryEnsurePreviousOrNextPageIsRequested";
+import tryEnsurePreviousOrNextPageIsRequested from '../../../utils/tryEnsurePreviousOrNextPageIsRequested';
+import EntityCountRequest from '../../../../types/postqueryoperations/EntityCountRequest';
 
 export default async function getAllEntities<T extends BackkEntity>(
   dbManager: AbstractSqlDbManager,
   EntityClass: new () => T,
   postQueryOperations: PostQueryOperations,
-  allowFetchingOnlyPreviousOrNextPage: boolean
+  allowFetchingOnlyPreviousOrNextPage: boolean,
+  entityCountRequests?: EntityCountRequest[]
 ): PromiseErrorOr<Many<T>> {
   if (allowFetchingOnlyPreviousOrNextPage) {
-    tryEnsurePreviousOrNextPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+    tryEnsurePreviousOrNextPageIsRequested(
+      postQueryOperations.currentPageTokens,
+      postQueryOperations.paginations
+    );
   }
 
   updateDbLocalTransactionCount(dbManager);
@@ -40,18 +43,28 @@ export default async function getAllEntities<T extends BackkEntity>(
       isSelectForUpdate = true;
     }
 
-    const { columns, joinClauses, rootSortClause, outerSortClause } = getSqlSelectStatementParts(
-      dbManager,
-      postQueryOperations,
-      EntityClass
-    );
+    const {
+      columns,
+      joinClauses,
+      rootSortClause,
+      rootPaginationClause,
+      outerSortClause
+    } = getSqlSelectStatementParts(dbManager, postQueryOperations, EntityClass);
 
     const tableName = getTableName(EntityClass.name);
     const tableAlias = dbManager.schema + '_' + EntityClass.name.toLowerCase();
 
+    const shouldReturnRootEntityCount = entityCountRequests?.find(
+      (entityCountRequest) =>
+        entityCountRequest.subEntityPath === '' || entityCountRequest.subEntityPath === '*'
+    );
+
     const selectStatement = [
-      `SELECT ${columns} FROM (SELECT * FROM ${dbManager.schema}.${tableName}`,
+      `SELECT ${
+        shouldReturnRootEntityCount ? [columns, 'COUNT(*) OVER() as _count'].join(', ') : columns
+      } FROM (SELECT * FROM ${dbManager.schema}.${tableName}`,
       rootSortClause,
+      rootPaginationClause,
       `) AS ${tableAlias}`,
       joinClauses,
       outerSortClause,
@@ -74,8 +87,7 @@ export default async function getAllEntities<T extends BackkEntity>(
         metadata: {
           currentPageTokens: allowFetchingOnlyPreviousOrNextPage
             ? createCurrentPageTokens(postQueryOperations.paginations)
-            : undefined,
-          entityCounts: undefined
+            : undefined
         },
         data: entities
       },

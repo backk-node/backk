@@ -62,12 +62,4 @@ export default class DefaultPostQueryOperations implements PostQueryOperations {
   @ArrayMinSize(0)
   @ArrayMaxSize(Values._25)
   currentPageTokens: CurrentPageToken[] = []
-
-  @IsOptional()
-  @IsInstance(EntityCountRequest, { each: true })
-  @ValidateNested({ each: true })
-  @IsArray()
-  @ArrayMinSize(0)
-  @ArrayMaxSize(Values._25)
-  entityCountRequests: EntityCountRequest[] = []
 }

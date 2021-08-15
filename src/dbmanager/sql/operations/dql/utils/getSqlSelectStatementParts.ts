@@ -11,12 +11,14 @@ import getPaginationClause from '../clauses/getPaginationClause';
 import SortBy from '../../../../../types/postqueryoperations/SortBy';
 import Pagination from "../../../../../types/postqueryoperations/Pagination";
 import { Values } from "../../../../../constants/constants";
+import EntityCountRequest from "../../../../../types/postqueryoperations/EntityCountRequest";
 
 export default function getSqlSelectStatementParts<T>(
   dbManager: AbstractSqlDbManager,
   { sortBys, paginations, ...projection }: PostQueryOperations,
   EntityClass: new () => T,
   filters?: SqlExpression[] | UserDefinedFilter[],
+  entityCountRequests?: EntityCountRequest[],
   isInternalCall = false
 ) {
   const Types = dbManager.getTypes();
@@ -40,6 +42,7 @@ export default function getSqlSelectStatementParts<T>(
     filters,
     sortBys,
     paginations,
+    entityCountRequests,
     EntityClass,
     Types,
     outerSortBys,

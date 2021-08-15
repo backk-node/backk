@@ -88,6 +88,43 @@ export default function setClassPropertyValidationDecorators(
     return;
   }
 
+  if (entityAnnotationContainer.isEntity(Class)) {
+    const optionalValidationMetadataArgs: ValidationMetadataArgs = {
+      type: ValidationTypes.CONDITIONAL_VALIDATION,
+      target: Class,
+      constraints: [
+        (object: any) => {
+          return object['_count'] !== null && object['_count'] !== undefined;
+        },
+        'isOptional'
+      ],
+      '_count'
+    };
+
+    const validationMetadata = new ValidationMetadata(optionalValidationMetadataArgs);
+    validationMetadata.groups = ['__backk_update__'];
+    getFromContainer(MetadataStorage).addValidationMetadata(validationMetadata);
+
+    const validationMetadataArgs: ValidationMetadataArgs = {
+      type: ValidationTypes.CUSTOM_VALIDATION,
+      target: Class,
+      propertyName,
+      constraints: ['isUndefined'],
+      validationOptions: { each: isArrayType }
+    };
+
+    const validationMetadata = new ValidationMetadata(validationMetadataArgs);
+
+    if (propertyName === '_id') {
+      validationMetadata.groups = ['__backk_create__'];
+    } else {
+      validationMetadata.groups = ['__backk_create__', '__backk_update__'];
+    }
+
+    getFromContainer(MetadataStorage).addValidationMetadata(validationMetadata);
+  }
+}
+
   const fileContentsStr = readFileSync(getSrcFilePathNameForTypeName(className, remoteServiceRootDir), {
     encoding: 'UTF-8'
   });

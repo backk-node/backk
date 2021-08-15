@@ -13,6 +13,7 @@ import AbstractSqlDbManager from '../../../../AbstractSqlDbManager';
 import SortBy from '../../../../../types/postqueryoperations/SortBy';
 import Pagination from '../../../../../types/postqueryoperations/Pagination';
 import typePropertyAnnotationContainer from '../../../../../decorators/typeproperty/typePropertyAnnotationContainer';
+import EntityCountRequest from '../../../../../types/postqueryoperations/EntityCountRequest';
 
 // noinspection OverlyComplexFunctionJS
 export default function getJoinClauses(
@@ -22,6 +23,7 @@ export default function getJoinClauses(
   filters: SqlExpression[] | UserDefinedFilter[] | undefined,
   sortBys: SortBy[],
   paginations: Pagination[],
+  entityCountRequests: EntityCountRequest[] | undefined,
   EntityClass: new () => any,
   Types: object,
   resultOuterSortBys: string[],
@@ -39,8 +41,9 @@ export default function getJoinClauses(
           : joinSpec.entityFieldName;
 
         if (
-          !shouldIncludeField('', joinEntityPath, projection) || !isInternalCall &&
-          typePropertyAnnotationContainer.isTypePropertyPrivate(EntityClass, joinSpec.entityFieldName)
+          !shouldIncludeField('', joinEntityPath, projection) ||
+          (!isInternalCall &&
+            typePropertyAnnotationContainer.isTypePropertyPrivate(EntityClass, joinSpec.entityFieldName))
         ) {
           return '';
         }
@@ -83,7 +86,15 @@ export default function getJoinClauses(
           '.' +
           joinSpec.entityIdFieldName.toLowerCase();
 
-        let joinClausePart = 'LEFT JOIN LATERAL (SELECT * FROM ';
+        const shouldReturnEntityCount = entityCountRequests?.find(
+          (entityCountRequest) =>
+            entityCountRequest.subEntityPath === joinEntityPath || entityCountRequest.subEntityPath === '*'
+        );
+
+        let joinClausePart = `LEFT JOIN LATERAL (SELECT *${
+          shouldReturnEntityCount ? ', COUNT(*) OVER() AS _count' : ''
+        } FROM `;
+
         joinClausePart += dbManager.schema + '.' + physicalSubEntityTableName.toLowerCase();
 
         joinClausePart +=
@@ -144,8 +155,9 @@ export default function getJoinClauses(
             '_id',
             subEntityPath ? subEntityPath + '.' + entityFieldName : entityFieldName,
             projection
-          ) || !isInternalCall &&
-          typePropertyAnnotationContainer.isTypePropertyPrivate(EntityClass, entityFieldName)
+          ) ||
+          (!isInternalCall &&
+            typePropertyAnnotationContainer.isTypePropertyPrivate(EntityClass, entityFieldName))
         ) {
           return '';
         }
@@ -183,6 +195,11 @@ export default function getJoinClauses(
           '.' +
           subEntityForeignIdFieldName.toLowerCase();
 
+        const shouldReturnEntityCount = entityCountRequests?.find(
+          (entityCountRequest) =>
+            entityCountRequest.subEntityPath === joinEntityPath || entityCountRequest.subEntityPath === '*'
+        );
+
         let joinClausePart = 'LEFT JOIN ';
         joinClausePart += dbManager.schema + '.' + associationTableName.toLowerCase();
         joinClausePart += ' ON ';
@@ -197,7 +214,9 @@ export default function getJoinClauses(
           associationTableName.toLowerCase() +
           '.' +
           entityForeignIdFieldName.toLowerCase() +
-          ' LEFT JOIN LATERAL (SELECT * FROM ' +
+          ` LEFT JOIN LATERAL (SELECT *${
+            shouldReturnEntityCount ? ', COUNT(*) OVER() AS _count' : ''
+          } FROM ` +
           dbManager.schema +
           '.' +
           physicalSubEntityTableName.toLowerCase() +
@@ -243,6 +262,7 @@ export default function getJoinClauses(
         filters,
         sortBys,
         paginations,
+        entityCountRequests,
         (Types as any)[baseTypeName],
         Types,
         resultOuterSortBys,

@@ -50,7 +50,9 @@ export default async function getEntitiesByIds<T>(
     } = getSqlSelectStatementParts(
       dbManager,
       postQueryOperations ?? new DefaultPostQueryOperations(),
-      EntityClass
+      EntityClass,
+      undefined,
+      entityCountRequests
     );
 
     const numericIds = _ids.map((id) => {

@@ -49,7 +49,13 @@ export default async function getAllEntities<T extends BackkEntity>(
       rootSortClause,
       rootPaginationClause,
       outerSortClause
-    } = getSqlSelectStatementParts(dbManager, postQueryOperations, EntityClass);
+    } = getSqlSelectStatementParts(
+      dbManager,
+      postQueryOperations,
+      EntityClass,
+      undefined,
+      entityCountRequests
+    );
 
     const tableName = getTableName(EntityClass.name);
     const tableAlias = dbManager.schema + '_' + EntityClass.name.toLowerCase();

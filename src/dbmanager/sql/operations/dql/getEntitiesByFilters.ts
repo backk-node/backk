@@ -77,7 +77,7 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
       joinClauses,
       filterValues,
       outerSortClause
-    } = getSqlSelectStatementParts(dbManager, postQueryOperations, EntityClass, filters as any);
+    } = getSqlSelectStatementParts(dbManager, postQueryOperations, EntityClass, filters as any, options?.entityCountRequests);
 
     const tableName = getTableName(EntityClass.name);
     const tableAlias = dbManager.schema + '_' + EntityClass.name.toLowerCase();

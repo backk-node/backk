@@ -98,32 +98,23 @@ export default function setClassPropertyValidationDecorators(
         },
         'isOptional'
       ],
-      '_count'
+      propertyName: '_count'
     };
 
-    const validationMetadata = new ValidationMetadata(optionalValidationMetadataArgs);
-    validationMetadata.groups = ['__backk_update__'];
-    getFromContainer(MetadataStorage).addValidationMetadata(validationMetadata);
+    const optionalValidationMetadata = new ValidationMetadata(optionalValidationMetadataArgs);
+    getFromContainer(MetadataStorage).addValidationMetadata(optionalValidationMetadata);
 
     const validationMetadataArgs: ValidationMetadataArgs = {
       type: ValidationTypes.CUSTOM_VALIDATION,
       target: Class,
-      propertyName,
-      constraints: ['isUndefined'],
-      validationOptions: { each: isArrayType }
+      propertyName: '_count',
+      constraints: ['isUndefined']
     };
 
     const validationMetadata = new ValidationMetadata(validationMetadataArgs);
-
-    if (propertyName === '_id') {
-      validationMetadata.groups = ['__backk_create__'];
-    } else {
-      validationMetadata.groups = ['__backk_create__', '__backk_update__'];
-    }
-
+    validationMetadata.groups = ['__backk_create__', '__backk_update__'];
     getFromContainer(MetadataStorage).addValidationMetadata(validationMetadata);
   }
-}
 
   const fileContentsStr = readFileSync(getSrcFilePathNameForTypeName(className, remoteServiceRootDir), {
     encoding: 'UTF-8'
@@ -179,12 +170,12 @@ export default function setClassPropertyValidationDecorators(
             );
           }
 
-          if (!isPrivateProperty && typePropertyAnnotationContainer.isTypePropertyPrivate(Class, propertyName)) {
+          if (
+            !isPrivateProperty &&
+            typePropertyAnnotationContainer.isTypePropertyPrivate(Class, propertyName)
+          ) {
             throw new Error(
-              Class.name +
-              '.' +
-              propertyName +
-              " is a public property and cannot have @Private() annotation"
+              Class.name + '.' + propertyName + ' is a public property and cannot have @Private() annotation'
             );
           }
 
@@ -202,12 +193,15 @@ export default function setClassPropertyValidationDecorators(
             getFromContainer(MetadataStorage).addValidationMetadata(validationMetadata);
           }
 
-          if (classBodyNode.readonly && typePropertyAnnotationContainer.isTypePropertyReadWrite(Class, propertyName)) {
+          if (
+            classBodyNode.readonly &&
+            typePropertyAnnotationContainer.isTypePropertyReadWrite(Class, propertyName)
+          ) {
             throw new Error(
               Class.name +
-              '.' +
-              propertyName +
-              " is a readonly property and cannot have @ReadWrite() annotation"
+                '.' +
+                propertyName +
+                ' is a readonly property and cannot have @ReadWrite() annotation'
             );
           }
 
@@ -326,9 +320,9 @@ export default function setClassPropertyValidationDecorators(
             ) {
               throw new Error(
                 Class.name +
-                '.' +
-                propertyName +
-                ' must have either @IsInt(), @IsFloat() or @IsBigInt() annotation'
+                  '.' +
+                  propertyName +
+                  ' must have either @IsInt(), @IsFloat() or @IsBigInt() annotation'
               );
             }
           } else if (baseTypeName === 'string') {
@@ -485,9 +479,9 @@ export default function setClassPropertyValidationDecorators(
               ) {
                 throw new Error(
                   Class.name +
-                  '.' +
-                  propertyName +
-                  ' must have either @ArrayUnique() or @ArrayNotUnique() annotation'
+                    '.' +
+                    propertyName +
+                    ' must have either @ArrayUnique() or @ArrayNotUnique() annotation'
                 );
               }
 
@@ -497,20 +491,20 @@ export default function setClassPropertyValidationDecorators(
             } else {
               throw new Error(
                 'Type: ' +
-                baseTypeName +
-                ' not found in ' +
-                serviceName.charAt(0).toUpperCase() +
-                serviceName.slice(1) +
-                '.Types'
+                  baseTypeName +
+                  ' not found in ' +
+                  serviceName.charAt(0).toUpperCase() +
+                  serviceName.slice(1) +
+                  '.Types'
               );
             }
           } else if (baseTypeName === 'any') {
             if (!typePropertyAnnotationContainer.getTypePropertyRemoteServiceFetchSpec(Class, propertyName)) {
               throw new Error(
                 Class.name +
-                '.' +
-                propertyName +
-                " type 'any' allowed only with @FetchFromRemoteService() annotation present"
+                  '.' +
+                  propertyName +
+                  " type 'any' allowed only with @FetchFromRemoteService() annotation present"
               );
             }
           } else if (baseTypeName !== 'any') {
@@ -583,9 +577,9 @@ export default function setClassPropertyValidationDecorators(
             if (!classBodyNode.readonly) {
               throw new Error(
                 Class.name +
-                '.' +
-                propertyName +
-                ' must be a readonly property when property decorated with @FetchFromRemoteService() annotation'
+                  '.' +
+                  propertyName +
+                  ' must be a readonly property when property decorated with @FetchFromRemoteService() annotation'
               );
             }
           }

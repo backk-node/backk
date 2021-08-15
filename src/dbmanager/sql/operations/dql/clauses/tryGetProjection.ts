@@ -4,12 +4,14 @@ import getFieldsForEntity from '../utils/columns/getFieldsForEntity';
 import createErrorMessageWithStatusCode from '../../../../../errors/createErrorMessageWithStatusCode';
 import AbstractSqlDbManager from '../../../../AbstractSqlDbManager';
 import { HttpStatusCodes } from '../../../../../constants/constants';
+import EntityCountRequest from '../../../../../types/postqueryoperations/EntityCountRequest';
 
 export default function tryGetProjection(
   dbManager: AbstractSqlDbManager,
   projection: Projection,
   EntityClass: Function,
   Types: object,
+  entityCountRequests?: EntityCountRequest[],
   isInternalCall = false
 ): string {
   const fields: string[] = [];
@@ -33,6 +35,7 @@ export default function tryGetProjection(
         Types,
         { includeResponseFields: [includeResponseField] },
         '',
+        entityCountRequests,
         isInternalCall
       );
 
@@ -58,6 +61,7 @@ export default function tryGetProjection(
         Types,
         { includeResponseFields: [excludeResponseField] },
         '',
+        entityCountRequests,
         isInternalCall
       );
 
@@ -72,6 +76,15 @@ export default function tryGetProjection(
     });
   }
 
-  getFieldsForEntity(dbManager, fields, EntityClass as any, Types, projection, '', isInternalCall);
+  getFieldsForEntity(
+    dbManager,
+    fields,
+    EntityClass as any,
+    Types,
+    projection,
+    '',
+    entityCountRequests,
+    isInternalCall
+  );
   return fields.join(', ');
 }

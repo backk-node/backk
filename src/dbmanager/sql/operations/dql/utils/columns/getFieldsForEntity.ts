@@ -5,6 +5,7 @@ import shouldIncludeField from './shouldIncludeField';
 import getTypeInfoForTypeName from '../../../../../../utils/type/getTypeInfoForTypeName';
 import isEntityTypeName from '../../../../../../utils/type/isEntityTypeName';
 import AbstractSqlDbManager from '../../../../../AbstractSqlDbManager';
+import EntityCountRequest from "../../../../../../types/postqueryoperations/EntityCountRequest";
 
 export default function getFieldsForEntity(
   dbManager: AbstractSqlDbManager,
@@ -13,6 +14,7 @@ export default function getFieldsForEntity(
   Types: object,
   projection: Projection,
   fieldPath: string,
+  entityCountRequests?: EntityCountRequest[],
   isInternalCall = false,
   tableAlias = EntityClass.name.toLowerCase()
 ) {
@@ -24,6 +26,18 @@ export default function getFieldsForEntity(
     entityPropertyNameToPropertyTypeNameMap = {
       ...entityPropertyNameToPropertyTypeNameMap,
       _id: 'string'
+    }
+  }
+
+  const shouldReturnEntityCount = entityCountRequests?.find(
+    (entityCountRequest) =>
+      entityCountRequest.subEntityPath === fieldPath || entityCountRequest.subEntityPath === '*'
+  );
+
+  if (shouldReturnEntityCount) {
+    entityPropertyNameToPropertyTypeNameMap = {
+      ...entityPropertyNameToPropertyTypeNameMap,
+      _count: 'integer'
     }
   }
 
@@ -47,6 +61,7 @@ export default function getFieldsForEntity(
           Types,
           projection,
           fieldPath + entityPropertyName + '.',
+          entityCountRequests,
           isInternalCall,
           tableAlias + '_' + entityPropertyName.toLowerCase()
         );

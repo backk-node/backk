@@ -9,9 +9,9 @@ import tryGetSortClause from '../clauses/tryGetOrderByClause';
 import UserDefinedFilter from '../../../../../types/userdefinedfilters/UserDefinedFilter';
 import getPaginationClause from '../clauses/getPaginationClause';
 import SortBy from '../../../../../types/postqueryoperations/SortBy';
-import Pagination from "../../../../../types/postqueryoperations/Pagination";
-import { Values } from "../../../../../constants/constants";
-import EntityCountRequest from "../../../../../types/postqueryoperations/EntityCountRequest";
+import Pagination from '../../../../../types/postqueryoperations/Pagination';
+import { Values } from '../../../../../constants/constants';
+import EntityCountRequest from '../../../../../types/postqueryoperations/EntityCountRequest';
 
 export default function getSqlSelectStatementParts<T>(
   dbManager: AbstractSqlDbManager,
@@ -22,7 +22,14 @@ export default function getSqlSelectStatementParts<T>(
   isInternalCall = false
 ) {
   const Types = dbManager.getTypes();
-  const columns = tryGetProjection(dbManager, projection, EntityClass, Types, isInternalCall);
+  const columns = tryGetProjection(
+    dbManager,
+    projection,
+    EntityClass,
+    Types,
+    entityCountRequests,
+    isInternalCall
+  );
   const outerSortBys: string[] = [];
 
   if (!sortBys) {

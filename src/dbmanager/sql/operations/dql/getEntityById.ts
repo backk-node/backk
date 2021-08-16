@@ -105,9 +105,9 @@ export default async function getEntityById<T extends BackkEntity>(
     );
 
     const selectStatement = [
-      `SELECT ${
-        shouldReturnRootEntityCount ? [columns, 'COUNT(*) OVER() as _count'].join(', ') : columns
-      } FROM (SELECT * FROM ${dbManager.schema}.${tableName}`,
+      `SELECT ${columns} FROM (SELECT *${
+          shouldReturnRootEntityCount ? ', COUNT(*) OVER() AS _count' : ''
+        } FROM ${dbManager.schema}.${tableName}`,
       `WHERE ${idFieldName} = ${dbManager.getValuePlaceholder(1)} LIMIT 1) AS ${tableAlias}`,
       joinClauses,
       outerSortClause,

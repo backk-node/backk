@@ -80,9 +80,9 @@ export default async function getEntitiesByIds<T>(
     );
 
     const selectStatement = [
-      `SELECT ${
-        shouldReturnRootEntityCount ? [columns, 'COUNT(*) OVER() as _count'].join(', ') : columns
-      } FROM (SELECT * FROM ${dbManager.schema}.${tableName}`,
+      `SELECT ${columns} FROM (SELECT *${
+          shouldReturnRootEntityCount ? ', COUNT(*) OVER() AS _count' : ''
+        } FROM ${dbManager.schema}.${tableName}`,
       `WHERE ${idFieldName} IN (${idPlaceholders}`,
       rootSortClause,
       rootPaginationClause,

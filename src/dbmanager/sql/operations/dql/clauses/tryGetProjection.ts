@@ -4,7 +4,7 @@ import getFieldsForEntity from '../utils/columns/getFieldsForEntity';
 import createErrorMessageWithStatusCode from '../../../../../errors/createErrorMessageWithStatusCode';
 import AbstractSqlDbManager from '../../../../AbstractSqlDbManager';
 import { HttpStatusCodes } from '../../../../../constants/constants';
-import EntityCountRequest from '../../../../../types/postqueryoperations/EntityCountRequest';
+import EntityCountRequest from '../../../../../types/EntityCountRequest';
 
 export default function tryGetProjection(
   dbManager: AbstractSqlDbManager,

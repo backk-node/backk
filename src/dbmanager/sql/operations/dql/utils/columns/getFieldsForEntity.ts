@@ -5,7 +5,7 @@ import shouldIncludeField from './shouldIncludeField';
 import getTypeInfoForTypeName from '../../../../../../utils/type/getTypeInfoForTypeName';
 import isEntityTypeName from '../../../../../../utils/type/isEntityTypeName';
 import AbstractSqlDbManager from '../../../../../AbstractSqlDbManager';
-import EntityCountRequest from "../../../../../../types/postqueryoperations/EntityCountRequest";
+import EntityCountRequest from "../../../../../../types/EntityCountRequest";
 
 export default function getFieldsForEntity(
   dbManager: AbstractSqlDbManager,

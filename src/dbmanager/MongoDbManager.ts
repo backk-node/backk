@@ -72,7 +72,7 @@ import addSimpleSubEntitiesOrValuesByFilters from './mongodb/addSimpleSubEntitie
 import DefaultPostQueryOperations from '../types/postqueryoperations/DefaultPostQueryOperations';
 import createCurrentPageTokens from './utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from "./utils/tryEnsurePreviousOrNextPageIsRequested";
-import EntityCountRequest from "../types/postqueryoperations/EntityCountRequest";
+import EntityCountRequest from "../types/EntityCountRequest";
 
 @Injectable()
 export default class MongoDbManager extends AbstractDbManager {

@@ -35,7 +35,7 @@ import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import { One } from '../../../AbstractDbManager';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from '../../../utils/tryEnsurePreviousOrNextPageIsRequested';
-import EntityCountRequest from '../../../../types/postqueryoperations/EntityCountRequest';
+import EntityCountRequest from '../../../../types/EntityCountRequest';
 
 export default async function getEntityByFilters<T extends BackkEntity>(
   dbManager: MongoDbManager,

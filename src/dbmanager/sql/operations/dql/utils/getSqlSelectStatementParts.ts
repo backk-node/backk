@@ -11,7 +11,7 @@ import getPaginationClause from '../clauses/getPaginationClause';
 import SortBy from '../../../../../types/postqueryoperations/SortBy';
 import Pagination from '../../../../../types/postqueryoperations/Pagination';
 import { Values } from '../../../../../constants/constants';
-import EntityCountRequest from '../../../../../types/postqueryoperations/EntityCountRequest';
+import EntityCountRequest from '../../../../../types/EntityCountRequest';
 
 export default function getSqlSelectStatementParts<T>(
   dbManager: AbstractSqlDbManager,

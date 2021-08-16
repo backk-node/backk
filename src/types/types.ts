@@ -49,7 +49,7 @@ import UserNameAndDefaultPostQueryOperations
   from "./postqueryoperations/UserNameAndDefaultPostQueryOperations";
 import DbTableVersion from "./DbTableVersion";
 import CurrentPageToken from "./postqueryoperations/CurrentPageToken";
-import EntityCountRequest from "./postqueryoperations/EntityCountRequest";
+import EntityCountRequest from "./EntityCountRequest";
 
 const types = {
   _Id,

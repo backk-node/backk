@@ -23,7 +23,7 @@ import { One } from '../../../AbstractDbManager';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from '../../../utils/tryEnsurePreviousOrNextPageIsRequested';
-import EntityCountRequest from '../../../../types/postqueryoperations/EntityCountRequest';
+import EntityCountRequest from '../../../../types/EntityCountRequest';
 
 // noinspection OverlyComplexFunctionJS,FunctionTooLongJS
 export default async function getEntityById<T extends BackkEntity>(

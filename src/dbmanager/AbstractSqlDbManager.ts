@@ -40,7 +40,7 @@ import getEntityByFilters from './sql/operations/dql/getEntityByFilters';
 import deleteEntityByFilters from './sql/operations/dml/deleteEntityByFilters';
 import updateEntityByFilters from './sql/operations/dml/updateEntityByFilters';
 import doesEntityArrayFieldContainValue from './sql/operations/dql/doesEntityArrayFieldContainValue';
-import EntityCountRequest from '../types/postqueryoperations/EntityCountRequest';
+import EntityCountRequest from '../types/EntityCountRequest';
 
 @Injectable()
 export default abstract class AbstractSqlDbManager extends AbstractDbManager {

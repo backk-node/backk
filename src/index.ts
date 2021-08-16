@@ -196,6 +196,7 @@ export { default as DbTableVersion } from './types/DbTableVersion';
 export { default as createBackkErrorFromErrorMessageAndStatusCode } from './errors/createBackkErrorFromErrorMessageAndStatusCode';
 
 export { One, Many } from './dbmanager/AbstractDbManager';
+export { default as EntityCountRequest } from './types/EntityCountRequest';
 
 export * from 'class-validator';
 export * as argon2 from 'argon2';

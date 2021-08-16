@@ -20,7 +20,7 @@ import { EntityPreHook } from './hooks/EntityPreHook';
 import DbTableVersion from '../types/DbTableVersion';
 import { EntitiesPostHook } from './hooks/EntitiesPostHook';
 import CurrentPageToken from '../types/postqueryoperations/CurrentPageToken';
-import EntityCountRequest from "../types/postqueryoperations/EntityCountRequest";
+import EntityCountRequest from "../types/EntityCountRequest";
 
 export interface Field {
   name: string;

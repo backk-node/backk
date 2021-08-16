@@ -13,7 +13,7 @@ import AbstractSqlDbManager from '../../../../AbstractSqlDbManager';
 import SortBy from '../../../../../types/postqueryoperations/SortBy';
 import Pagination from '../../../../../types/postqueryoperations/Pagination';
 import typePropertyAnnotationContainer from '../../../../../decorators/typeproperty/typePropertyAnnotationContainer';
-import EntityCountRequest from '../../../../../types/postqueryoperations/EntityCountRequest';
+import EntityCountRequest from '../../../../../types/EntityCountRequest';
 
 // noinspection OverlyComplexFunctionJS
 export default function getJoinClauses(

@@ -108,7 +108,8 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
       dbManager.getResultRows(result),
       EntityClass,
       postQueryOperations,
-      dbManager
+      dbManager,
+      options?.entityCountRequests
     );
 
     const entities = {

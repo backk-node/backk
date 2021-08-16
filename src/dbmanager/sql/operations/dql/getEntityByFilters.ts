@@ -120,6 +120,7 @@ export default async function getEntityByFilters<T>(
       EntityClass,
       postQueryOperations,
       dbManager,
+      options?.entityCountRequests,
       isInternalCall
     );
 

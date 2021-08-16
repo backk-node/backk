@@ -8,6 +8,7 @@ import Pagination from '../../../../../types/postqueryoperations/Pagination';
 import convertTinyIntegersToBooleans from './convertTinyIntegersToBooleans';
 import AbstractDbManager from '../../../../AbstractDbManager';
 import { Values } from "../../../../../constants/constants";
+import EntityCountRequest from "../../../../../types/EntityCountRequest";
 
 const parsedRowProcessingBatchSize = parseInt(process.env.ROW_PROCESSING_BATCH_SIZE ?? '500', 10);
 const ROW_PROCESSING_BATCH_SIZE = isNaN(parsedRowProcessingBatchSize) ? Values._500 : parsedRowProcessingBatchSize;
@@ -44,12 +45,13 @@ export default function transformRowsToObjects<T>(
   EntityClass: { new (): T },
   { paginations, includeResponseFields, excludeResponseFields }: PostQueryOperations,
   dbManager: AbstractDbManager,
+  entityCountRequests?: EntityCountRequest[],
   isInternalCall = false
 ) {
   const resultMaps = createResultMaps(EntityClass, dbManager.getTypes(), {
     includeResponseFields,
     excludeResponseFields
-  }, isInternalCall);
+  }, entityCountRequests, isInternalCall);
 
   let mappedRows: any[] = [];
 

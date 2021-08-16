@@ -110,7 +110,8 @@ export default async function getEntitiesByIds<T>(
       dbManager.getResultRows(result),
       EntityClass,
       postQueryOperations ?? new DefaultPostQueryOperations(),
-      dbManager
+      dbManager,
+      entityCountRequests
     );
 
     return [

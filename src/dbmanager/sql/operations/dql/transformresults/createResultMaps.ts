@@ -3,6 +3,7 @@ import { Projection } from '../../../../../types/postqueryoperations/Projection'
 import getClassPropertyNameToPropertyTypeNameMap from '../../../../../metadata/getClassPropertyNameToPropertyTypeNameMap';
 import getTypeInfoForTypeName from '../../../../../utils/type/getTypeInfoForTypeName';
 import isEntityTypeName from '../../../../../utils/type/isEntityTypeName';
+import EntityCountRequest from '../../../../../types/EntityCountRequest';
 
 function updateResultMaps(
   entityClassOrName: Function | string,
@@ -10,6 +11,7 @@ function updateResultMaps(
   resultMaps: any[],
   projection: Projection,
   fieldPath: string,
+  entityCountRequests: EntityCountRequest[] | undefined,
   isInternalCall: boolean,
   suppliedEntityMetadata: { [key: string]: string } = {},
   ParentEntityClass?: Function,
@@ -42,8 +44,20 @@ function updateResultMaps(
   if (isInternalCall) {
     entityMetadata = {
       ...entityMetadata,
-      '_id': 'string'
-    }
+      _id: 'string'
+    };
+  }
+
+  const shouldReturnEntityCount = entityCountRequests?.find(
+    (entityCountRequest) =>
+      entityCountRequest.subEntityPath === fieldPath || entityCountRequest.subEntityPath === '*'
+  );
+
+  if (shouldReturnEntityCount) {
+    entityMetadata = {
+      ...entityMetadata,
+      _count: 'integer'
+    };
   }
 
   Object.entries(entityMetadata).forEach(([fieldName, fieldTypeName]: [string, any]) => {
@@ -67,6 +81,7 @@ function updateResultMaps(
           resultMaps,
           projection,
           fieldPath + fieldName + '.',
+          entityCountRequests,
           isInternalCall,
           {},
           entityClassOrName as Function,
@@ -90,6 +105,7 @@ function updateResultMaps(
           resultMaps,
           projection,
           fieldPath + fieldName + '.',
+          entityCountRequests,
           isInternalCall,
           {},
           entityClassOrName as Function,
@@ -112,6 +128,7 @@ function updateResultMaps(
           resultMaps,
           projection,
           fieldPath + fieldName + '.',
+          entityCountRequests,
           isInternalCall,
           {
             id: 'integer',
@@ -136,9 +153,10 @@ export default function createResultMaps(
   entityClass: Function,
   Types: object,
   projection: Projection,
+  entityCountRequests: EntityCountRequest[] | undefined,
   isInternalCall: boolean
 ) {
   const resultMaps: any[] = [];
-  updateResultMaps(entityClass, Types, resultMaps, projection, '', isInternalCall);
+  updateResultMaps(entityClass, Types, resultMaps, projection, '', entityCountRequests, isInternalCall);
   return resultMaps;
 }

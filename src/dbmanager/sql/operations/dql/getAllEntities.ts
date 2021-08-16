@@ -85,7 +85,8 @@ export default async function getAllEntities<T extends BackkEntity>(
       dbManager.getResultRows(result),
       EntityClass,
       postQueryOperations,
-      dbManager
+      dbManager,
+      entityCountRequests
     );
 
     return [

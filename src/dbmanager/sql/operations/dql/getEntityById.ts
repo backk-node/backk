@@ -140,6 +140,7 @@ export default async function getEntityById<T extends BackkEntity>(
         EntityClass,
         postQueryOperations,
         dbManager,
+        options?.entityCountRequests,
         isInternalCall
       )[0];
 

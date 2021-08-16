@@ -67,7 +67,7 @@ export default function getFieldsForEntity(
         );
       } else if (isArrayType) {
         if (
-          shouldIncludeField(entityPropertyName, fieldPath, projection) &&
+          shouldIncludeField(entityPropertyName, fieldPath, projection, false) &&
           !projection.includeResponseFields?.[0]?.endsWith('._id')
         ) {
           const idFieldName = (

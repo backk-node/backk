@@ -65,7 +65,7 @@ function updateResultMaps(
 
     if (isArrayType && isEntityTypeName(baseTypeName)) {
       // noinspection DuplicatedCode
-      if (shouldIncludeField(fieldName, fieldPath, projection)) {
+      if (shouldIncludeField(fieldName, fieldPath, projection, false)) {
         const relationEntityName = baseTypeName;
 
         resultMap.collections.push({
@@ -90,7 +90,7 @@ function updateResultMaps(
       }
     } else if (isEntityTypeName(baseTypeName)) {
       // noinspection DuplicatedCode
-      if (shouldIncludeField(fieldName, fieldPath, projection)) {
+      if (shouldIncludeField(fieldName, fieldPath, projection, false)) {
         const relationEntityName = baseTypeName;
 
         resultMap.associations.push({
@@ -113,7 +113,7 @@ function updateResultMaps(
         );
       }
     } else if (isArrayType) {
-      if (shouldIncludeField(fieldName, fieldPath, projection)) {
+      if (shouldIncludeField(fieldName, fieldPath, projection, false)) {
         const relationEntityName = tablePath + '_' + fieldName.toLowerCase();
 
         resultMap.collections.push({
@@ -140,7 +140,7 @@ function updateResultMaps(
       }
     } else if (
       ((!ParentEntityClass && fieldName !== '_id') || (ParentEntityClass && fieldName !== 'id')) &&
-      shouldIncludeField(fieldName, fieldPath, projection)
+      shouldIncludeField(fieldName, fieldPath, projection, shouldReturnEntityCount)
     ) {
       resultMap.properties.push({ name: fieldName, column: fieldName.toLowerCase() });
     }

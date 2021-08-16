@@ -41,7 +41,7 @@ export default function getJoinClauses(
           : joinSpec.entityFieldName;
 
         if (
-          !shouldIncludeField('', joinEntityPath, projection) ||
+          !shouldIncludeField('', joinEntityPath, projection, false) ||
           (!isInternalCall &&
             typePropertyAnnotationContainer.isTypePropertyPrivate(EntityClass, joinSpec.entityFieldName))
         ) {
@@ -154,7 +154,8 @@ export default function getJoinClauses(
           !shouldIncludeField(
             '_id',
             subEntityPath ? subEntityPath + '.' + entityFieldName : entityFieldName,
-            projection
+            projection,
+            false
           ) ||
           (!isInternalCall &&
             typePropertyAnnotationContainer.isTypePropertyPrivate(EntityClass, entityFieldName))

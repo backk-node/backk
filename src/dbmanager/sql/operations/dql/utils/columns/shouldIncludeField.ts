@@ -3,11 +3,16 @@ import { Projection } from '../../../../../../types/postqueryoperations/Projecti
 export default function shouldIncludeField(
   fieldName: string,
   fieldPath: string,
-  { includeResponseFields, excludeResponseFields }: Projection
+  { includeResponseFields, excludeResponseFields }: Projection,
+  shouldReturnEntityCount = false
 ): boolean {
   let shouldIncludeField = true;
   const fullFieldPath =
     fieldPath.endsWith('.') || !fieldPath ? fieldPath + fieldName : fieldPath + (fieldName ? '.' : '') + fieldName;
+
+  if (fieldName === '_count' && shouldReturnEntityCount) {
+    return true;
+  }
 
   if (includeResponseFields && includeResponseFields.length > 0) {
     shouldIncludeField = !!includeResponseFields.find((includeResponseField) => {

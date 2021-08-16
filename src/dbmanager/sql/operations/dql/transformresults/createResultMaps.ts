@@ -48,7 +48,7 @@ function updateResultMaps(
     };
   }
 
-  const shouldReturnEntityCount = entityCountRequests?.find(
+  const shouldReturnEntityCount = !!entityCountRequests?.find(
     (entityCountRequest) =>
       entityCountRequest.subEntityPath === fieldPath || entityCountRequest.subEntityPath === '*'
   );

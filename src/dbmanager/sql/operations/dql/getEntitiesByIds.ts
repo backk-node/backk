@@ -74,7 +74,7 @@ export default async function getEntitiesByIds<T>(
     const tableName = getTableName(EntityClass.name);
     const tableAlias = dbManager.schema + '_' + EntityClass.name.toLowerCase();
 
-    const shouldReturnRootEntityCount = entityCountRequests?.find(
+    const shouldReturnRootEntityCount = !!entityCountRequests?.find(
       (entityCountRequest) =>
         entityCountRequest.subEntityPath === '' || entityCountRequest.subEntityPath === '*'
     );

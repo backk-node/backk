@@ -60,7 +60,7 @@ export default async function getAllEntities<T extends BackkEntity>(
     const tableName = getTableName(EntityClass.name);
     const tableAlias = dbManager.schema + '_' + EntityClass.name.toLowerCase();
 
-    const shouldReturnRootEntityCount = entityCountRequests?.find(
+    const shouldReturnRootEntityCount = !!entityCountRequests?.find(
       (entityCountRequest) =>
         entityCountRequest.subEntityPath === '' || entityCountRequest.subEntityPath === '*'
     );

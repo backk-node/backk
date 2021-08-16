@@ -99,7 +99,8 @@ export default async function getEntityById<T extends BackkEntity>(
 
     const tableName = getTableName(EntityClass.name);
     const tableAlias = dbManager.schema + '_' + EntityClass.name.toLowerCase();
-    const shouldReturnRootEntityCount = options?.entityCountRequests?.find(
+
+    const shouldReturnRootEntityCount = !!options?.entityCountRequests?.find(
       (entityCountRequest) =>
         entityCountRequest.subEntityPath === '' || entityCountRequest.subEntityPath === '*'
     );

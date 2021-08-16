@@ -86,7 +86,7 @@ export default function getJoinClauses(
           '.' +
           joinSpec.entityIdFieldName.toLowerCase();
 
-        const shouldReturnEntityCount = entityCountRequests?.find(
+        const shouldReturnEntityCount = !!entityCountRequests?.find(
           (entityCountRequest) =>
             entityCountRequest.subEntityPath === joinEntityPath || entityCountRequest.subEntityPath === '*'
         );
@@ -195,7 +195,7 @@ export default function getJoinClauses(
           '.' +
           subEntityForeignIdFieldName.toLowerCase();
 
-        const shouldReturnEntityCount = entityCountRequests?.find(
+        const shouldReturnEntityCount = !!entityCountRequests?.find(
           (entityCountRequest) =>
             entityCountRequest.subEntityPath === joinEntityPath || entityCountRequest.subEntityPath === '*'
         );

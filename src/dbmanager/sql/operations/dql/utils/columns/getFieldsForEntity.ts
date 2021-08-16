@@ -29,7 +29,7 @@ export default function getFieldsForEntity(
     }
   }
 
-  const shouldReturnEntityCount = entityCountRequests?.find(
+  const shouldReturnEntityCount = !!entityCountRequests?.find(
     (entityCountRequest) =>
       entityCountRequest.subEntityPath === fieldPath || entityCountRequest.subEntityPath === '*'
   );
@@ -91,7 +91,7 @@ export default function getFieldsForEntity(
           fields.push(`${dbManager.schema}_${relationEntityName}.id AS ${relationEntityName}_id`);
         }
       } else {
-        if (shouldIncludeField(entityPropertyName, fieldPath, projection)) {
+        if (shouldIncludeField(entityPropertyName, fieldPath, projection, shouldReturnEntityCount)) {
           if (
             entityPropertyName === '_id' ||
             entityPropertyName === 'id' ||

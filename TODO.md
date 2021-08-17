@@ -1,22 +1,11 @@
 # Vitja service
 
 TODO:
-- get<multiple>Entities should have mandatory postQueryOperations
-  - allowFetchingOnlyNextAndPreviousPages type flag mandatory get<U extends FetchType>
-  - if flag is set postQueryOperations must have currentPageToken and it will return also currentPageToken
-  
 - add/remove subentities should read all entities for given path
 - test error cases
 - remove extra deletes from deleteXXX funcs
 - remove create unique index for oneToMany table
 - Split to multiple microservices
-- Node project for Backk: https://github.com/jsynowiec/node-typescript-boilerplate
-- Starter projects:
-   http-kubernetes-mysql,
-   http-kubernetes-postgresql
-   http-kubernetes-mongodb
-   kafka-kubernetes-mysql...
-   redis-kubernetes-mysql...
 
 - In @Tests to give remoteServiceUrl and test if that url was called with expected result, 
   remote services will keep hashmap of calls by url and argument
@@ -59,8 +48,7 @@ Split services to different microservices
 
 - Backk-frontend automatically create a frontend for one or more backends
   - backend metadata fetch urls are given in env variable as parameter
-
-Release 3:
+  
 - Create opentelemetry kafkajs plugin
 - Create opentelemetry mysql2 plugin
 - gRPC support (convert using protobufjs toObject)

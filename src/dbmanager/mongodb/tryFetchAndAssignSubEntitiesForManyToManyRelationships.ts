@@ -1,20 +1,20 @@
-import getClassPropertyNameToPropertyTypeNameMap
-  from "../../metadata/getClassPropertyNameToPropertyTypeNameMap";
-import typePropertyAnnotationContainer from "../../decorators/typeproperty/typePropertyAnnotationContainer";
-import { PostQueryOperations } from "../../types/postqueryoperations/PostQueryOperations";
-import DefaultPostQueryOperations from "../../types/postqueryoperations/DefaultPostQueryOperations";
-import forEachAsyncParallel from "../../utils/forEachAsyncParallel";
-import getTypeInfoForTypeName from "../../utils/type/getTypeInfoForTypeName";
-import { ObjectId } from "mongodb";
-import isEntityTypeName from "../../utils/type/isEntityTypeName";
-import { JSONPath } from "jsonpath-plus";
-import MongoDbQuery from "./MongoDbQuery";
-import replaceSubEntityPaths from "./replaceSubEntityPaths";
-import replaceFieldPathNames from "./replaceFieldPathNames";
-import getProjection from "./getProjection";
-import getRootProjection from "./getRootProjection";
-import getEntitiesByFilters from "./operations/dql/getEntitiesByFilters";
-import MongoDbManager from "../MongoDbManager";
+import getClassPropertyNameToPropertyTypeNameMap from '../../metadata/getClassPropertyNameToPropertyTypeNameMap';
+import typePropertyAnnotationContainer from '../../decorators/typeproperty/typePropertyAnnotationContainer';
+import { PostQueryOperations } from '../../types/postqueryoperations/PostQueryOperations';
+import DefaultPostQueryOperations from '../../types/postqueryoperations/DefaultPostQueryOperations';
+import forEachAsyncParallel from '../../utils/forEachAsyncParallel';
+import getTypeInfoForTypeName from '../../utils/type/getTypeInfoForTypeName';
+import { ObjectId } from 'mongodb';
+import isEntityTypeName from '../../utils/type/isEntityTypeName';
+import { JSONPath } from 'jsonpath-plus';
+import MongoDbQuery from './MongoDbQuery';
+import replaceSubEntityPaths from './replaceSubEntityPaths';
+import replaceFieldPathNames from './replaceFieldPathNames';
+import getProjection from './getProjection';
+import getRootProjection from './getRootProjection';
+import getEntitiesByFilters from './operations/dql/getEntitiesByFilters';
+import MongoDbManager from '../MongoDbManager';
+import EntityCountRequest from '../../types/EntityCountRequest';
 
 export default async function tryFetchAndAssignSubEntitiesForManyToManyRelationships<T>(
   dbManager: MongoDbManager,
@@ -23,9 +23,10 @@ export default async function tryFetchAndAssignSubEntitiesForManyToManyRelations
   Types: object,
   filters?: Array<MongoDbQuery<T>>,
   postQueryOperations?: PostQueryOperations,
+  entityCountRequests?: EntityCountRequest[],
   isInternalCall = false,
   propertyJsonPath = '$.',
-  subEntityPath = '',
+  subEntityPath = ''
 ): Promise<void> {
   const entityPropertyNameToPropertyTypeMap = getClassPropertyNameToPropertyTypeNameMap(EntityClass as any);
   const projection = getProjection(EntityClass, postQueryOperations);
@@ -76,6 +77,8 @@ export default async function tryFetchAndAssignSubEntitiesForManyToManyRelations
             wantedSubEntityPath
           );
 
+          const subEntityCountRequests = replaceSubEntityPaths(entityCountRequests, wantedSubEntityPath);
+
           const subEntityPaginations = replaceSubEntityPaths(
             finalPostQueryOperations.paginations,
             wantedSubEntityPath
@@ -107,7 +110,9 @@ export default async function tryFetchAndAssignSubEntitiesForManyToManyRelations
               paginations: subEntityPaginations
             },
             false,
-            undefined,
+            {
+              entityCountRequests: subEntityCountRequests
+            },
             true,
             isInternalCall
           );
@@ -134,6 +139,7 @@ export default async function tryFetchAndAssignSubEntitiesForManyToManyRelations
           Types,
           filters,
           postQueryOperations,
+          entityCountRequests,
           isInternalCall,
           propertyJsonPath + propertyName + '[*].',
           subEntityPath + propertyName

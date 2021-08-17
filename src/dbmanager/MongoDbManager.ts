@@ -71,8 +71,8 @@ import getEntityByFilters from './mongodb/operations/dql/getEntityByFilters';
 import addSimpleSubEntitiesOrValuesByFilters from './mongodb/addSimpleSubEntitiesOrValuesByFilters';
 import DefaultPostQueryOperations from '../types/postqueryoperations/DefaultPostQueryOperations';
 import createCurrentPageTokens from './utils/createCurrentPageTokens';
-import tryEnsurePreviousOrNextPageIsRequested from "./utils/tryEnsurePreviousOrNextPageIsRequested";
-import EntityCountRequest from "../types/EntityCountRequest";
+import tryEnsurePreviousOrNextPageIsRequested from './utils/tryEnsurePreviousOrNextPageIsRequested';
+import EntityCountRequest from '../types/EntityCountRequest';
 
 @Injectable()
 export default class MongoDbManager extends AbstractDbManager {
@@ -673,7 +673,10 @@ export default class MongoDbManager extends AbstractDbManager {
     EntityClass = this.getType(EntityClass);
 
     if (allowFetchingOnlyPreviousOrNextPage) {
-      tryEnsurePreviousOrNextPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+      tryEnsurePreviousOrNextPageIsRequested(
+        postQueryOperations.currentPageTokens,
+        postQueryOperations.paginations
+      );
     }
 
     try {
@@ -704,7 +707,22 @@ export default class MongoDbManager extends AbstractDbManager {
           .match({});
 
         performPostQueryOperations(cursor, postQueryOperations, EntityClass, this.getTypes());
-        const rows = await cursor.toArray();
+
+        const shouldReturnRootEntityCount = !!entityCountRequests?.find(
+          (entityCountRequest) =>
+            entityCountRequest.subEntityPath === '' || entityCountRequest.subEntityPath === '*'
+        );
+
+        const [rows, count] = await Promise.all([
+          cursor.toArray(),
+          shouldReturnRootEntityCount ? cursor.count() : Promise.resolve(undefined)
+        ]);
+
+        if (count !== undefined) {
+          rows.forEach(row => {
+            (row as any)._count = count;
+          });
+        }
 
         await tryFetchAndAssignSubEntitiesForManyToManyRelationships(
           this,
@@ -712,10 +730,11 @@ export default class MongoDbManager extends AbstractDbManager {
           EntityClass,
           this.getTypes(),
           undefined,
-          postQueryOperations
+          postQueryOperations,
+          entityCountRequests
         );
 
-        paginateSubEntities(rows, postQueryOperations.paginations, EntityClass, this.getTypes());
+        paginateSubEntities(rows, postQueryOperations.paginations, EntityClass, this.getTypes(), entityCountRequests);
         removePrivateProperties(rows, EntityClass, this.getTypes());
         decryptEntities(rows, EntityClass, this.getTypes(), false);
         return rows;
@@ -749,7 +768,7 @@ export default class MongoDbManager extends AbstractDbManager {
     options?: {
       preHooks?: PreHook | PreHook[];
       postHook?: EntitiesPostHook<T>;
-      entityCountRequests?: EntityCountRequest[]
+      entityCountRequests?: EntityCountRequest[];
     }
   ): PromiseErrorOr<Many<T>> {
     return getEntitiesByFilters(
@@ -771,7 +790,7 @@ export default class MongoDbManager extends AbstractDbManager {
       preHooks?: PreHook | PreHook[];
       ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>;
       postHook?: PostHook<T>;
-      entityCountRequests?: EntityCountRequest[]
+      entityCountRequests?: EntityCountRequest[];
     },
     isSelectForUpdate = false,
     isInternalCall = false
@@ -855,7 +874,7 @@ export default class MongoDbManager extends AbstractDbManager {
       preHooks?: PreHook | PreHook[];
       postHook?: PostHook<T>;
       ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>;
-      entityCountRequests?: EntityCountRequest[]
+      entityCountRequests?: EntityCountRequest[];
     },
     isSelectForUpdate = false,
     isInternalCall = false
@@ -863,7 +882,10 @@ export default class MongoDbManager extends AbstractDbManager {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntityById');
 
     if (allowFetchingOnlyPreviousOrNextPage) {
-      tryEnsurePreviousOrNextPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+      tryEnsurePreviousOrNextPageIsRequested(
+        postQueryOperations.currentPageTokens,
+        postQueryOperations.paginations
+      );
     }
 
     // noinspection AssignmentToFunctionParameterJS
@@ -920,7 +942,22 @@ export default class MongoDbManager extends AbstractDbManager {
           .match({ _id: new ObjectId(_id) });
 
         performPostQueryOperations(cursor, postQueryOperations, EntityClass, this.getTypes());
-        const rows = await cursor.toArray();
+
+        const shouldReturnRootEntityCount = !!options?.entityCountRequests?.find(
+          (entityCountRequest) =>
+            entityCountRequest.subEntityPath === '' || entityCountRequest.subEntityPath === '*'
+        );
+
+        const [rows, count] = await Promise.all([
+          cursor.toArray(),
+          shouldReturnRootEntityCount ? cursor.count() : Promise.resolve(undefined)
+        ]);
+
+        if (count !== undefined) {
+          rows.forEach(row => {
+            (row as any)._count = count;
+          });
+        }
 
         await tryFetchAndAssignSubEntitiesForManyToManyRelationships(
           this,
@@ -929,6 +966,7 @@ export default class MongoDbManager extends AbstractDbManager {
           this.getTypes(),
           undefined,
           postQueryOperations,
+          options?.entityCountRequests,
           isInternalCall
         );
 
@@ -986,7 +1024,10 @@ export default class MongoDbManager extends AbstractDbManager {
   ): PromiseErrorOr<Many<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntitiesByIds');
     if (allowFetchingOnlyPreviousOrNextPage) {
-      tryEnsurePreviousOrNextPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+      tryEnsurePreviousOrNextPageIsRequested(
+        postQueryOperations.currentPageTokens,
+        postQueryOperations.paginations
+      );
     }
 
     updateDbLocalTransactionCount(this);
@@ -1023,7 +1064,22 @@ export default class MongoDbManager extends AbstractDbManager {
           .match({ _id: { $in: _ids.map((_id: string) => new ObjectId(_id)) } });
 
         performPostQueryOperations(cursor, postQueryOperations, EntityClass, this.getTypes());
-        const rows = await cursor.toArray();
+
+        const shouldReturnRootEntityCount = !!entityCountRequests?.find(
+          (entityCountRequest) =>
+            entityCountRequest.subEntityPath === '' || entityCountRequest.subEntityPath === '*'
+        );
+
+        const [rows, count] = await Promise.all([
+          cursor.toArray(),
+          shouldReturnRootEntityCount ? cursor.count() : Promise.resolve(undefined)
+        ]);
+
+        if (count !== undefined) {
+          rows.forEach(row => {
+            (row as any)._count = count;
+          });
+        }
 
         await tryFetchAndAssignSubEntitiesForManyToManyRelationships(
           this,
@@ -1031,7 +1087,8 @@ export default class MongoDbManager extends AbstractDbManager {
           EntityClass,
           this.getTypes(),
           undefined,
-          postQueryOperations
+          postQueryOperations,
+          entityCountRequests
         );
 
         paginateSubEntities(rows, postQueryOperations.paginations, EntityClass, this.getTypes());

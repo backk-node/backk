@@ -130,7 +130,22 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
         .match(matchExpression);
 
       performPostQueryOperations(cursor, postQueryOperations, EntityClass, Types);
-      const rows = await cursor.toArray();
+
+      const shouldReturnRootEntityCount = !!options?.entityCountRequests?.find(
+        (entityCountRequest) =>
+          entityCountRequest.subEntityPath === '' || entityCountRequest.subEntityPath === '*'
+      );
+
+      const [rows, count] = await Promise.all([
+        cursor.toArray(),
+        shouldReturnRootEntityCount ? cursor.count() : Promise.resolve(undefined)
+      ]);
+
+      if (count !== undefined) {
+        rows.forEach(row => {
+          (row as any)._count = count;
+        });
+      }
 
       await tryFetchAndAssignSubEntitiesForManyToManyRelationships(
         dbManager,
@@ -139,6 +154,7 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
         dbManager.getTypes(),
         finalFilters as Array<MongoDbQuery<T>>,
         postQueryOperations,
+        options?.entityCountRequests,
         isInternalCall
       );
 

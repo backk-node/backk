@@ -141,7 +141,10 @@ export default async function getEntityByFilters<T extends BackkEntity>(
 
       const [rows, count] = await Promise.all([
         cursor.toArray(),
-        shouldReturnRootEntityCount ? cursor.count() : Promise.resolve(undefined)
+        shouldReturnRootEntityCount ? client
+          .db(dbManager.dbName)
+          .collection<T>(getTableName(EntityClass.name))
+          .countDocuments(matchExpression) : Promise.resolve(undefined)
       ]);
 
       if (count !== undefined) {

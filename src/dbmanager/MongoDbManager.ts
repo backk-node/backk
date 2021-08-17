@@ -715,11 +715,16 @@ export default class MongoDbManager extends AbstractDbManager {
 
         const [rows, count] = await Promise.all([
           cursor.toArray(),
-          shouldReturnRootEntityCount ? cursor.count() : Promise.resolve(undefined)
+          shouldReturnRootEntityCount
+            ? client
+                .db(this.dbName)
+                .collection<T>(getTableName(EntityClass.name))
+                .countDocuments({})
+            : Promise.resolve(undefined)
         ]);
 
         if (count !== undefined) {
-          rows.forEach(row => {
+          rows.forEach((row) => {
             (row as any)._count = count;
           });
         }
@@ -734,7 +739,13 @@ export default class MongoDbManager extends AbstractDbManager {
           entityCountRequests
         );
 
-        paginateSubEntities(rows, postQueryOperations.paginations, EntityClass, this.getTypes(), entityCountRequests);
+        paginateSubEntities(
+          rows,
+          postQueryOperations.paginations,
+          EntityClass,
+          this.getTypes(),
+          entityCountRequests
+        );
         removePrivateProperties(rows, EntityClass, this.getTypes());
         decryptEntities(rows, EntityClass, this.getTypes(), false);
         return rows;
@@ -950,11 +961,14 @@ export default class MongoDbManager extends AbstractDbManager {
 
         const [rows, count] = await Promise.all([
           cursor.toArray(),
-          shouldReturnRootEntityCount ? cursor.count() : Promise.resolve(undefined)
+          shouldReturnRootEntityCount ? client
+            .db(this.dbName)
+            .collection<T>(getTableName(EntityClass.name))
+            .countDocuments({ _id: new ObjectId(_id) } as object) : Promise.resolve(undefined)
         ]);
 
         if (count !== undefined) {
-          rows.forEach(row => {
+          rows.forEach((row) => {
             (row as any)._count = count;
           });
         }
@@ -1072,11 +1086,14 @@ export default class MongoDbManager extends AbstractDbManager {
 
         const [rows, count] = await Promise.all([
           cursor.toArray(),
-          shouldReturnRootEntityCount ? cursor.count() : Promise.resolve(undefined)
+          shouldReturnRootEntityCount ? client
+            .db(this.dbName)
+            .collection<T>(getTableName(EntityClass.name))
+            .countDocuments({ _id: { $in: _ids.map((_id: string) => new ObjectId(_id)) } } as object) : Promise.resolve(undefined)
         ]);
 
         if (count !== undefined) {
-          rows.forEach(row => {
+          rows.forEach((row) => {
             (row as any)._count = count;
           });
         }

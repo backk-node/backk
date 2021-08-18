@@ -1,12 +1,11 @@
-# Backk
-
 [![version][version-badge]][package]
 [![Downloads][Downloads]][package]
 [![MIT License][license-badge]][license]
 
-**Node.js framework for secure cloud-native microservices**
 
-*NOTE! Backk is currently in alpha phase.*
+<h1 align="center">Backk<br/></h1>
+<h3 align="center">Node.js framework for secure cloud-native microservices</h3>
+<h4 align="center">Backk is currently in alpha phase</h4>
 
 ## Install
 

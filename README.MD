@@ -4,7 +4,7 @@
 
 
 <h1 align="center">Backk<br/></h1>
-<h3 align="center">Node.js framework for secure cloud-native microservices for Kubernetes in Typescript</h3>
+<h3 align="center">Node.js framework for creating secure cloud-native microservices for Kubernetes in Typescript</h3>
 <h4 align="center">Backk is currently in alpha phase</h4>
 
 ## Table of Contents

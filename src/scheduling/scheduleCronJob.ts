@@ -1,4 +1,4 @@
-import AbstractDbManager from "../dbmanager/AbstractDbManager";
+import AbstractDataStore from "../datastore/AbstractDataStore";
 import { CronJob } from "cron";
 import findAsyncSequential from "../utils/findAsyncSequential";
 import wait from "../utils/wait";
@@ -13,7 +13,7 @@ const scheduledJobs: { [key: string]: CronJob } = {};
 export async function scheduleCronJob(
   scheduledExecutionTimestampAsDate: Date,
   retryIntervalsInSecs: number[],
-  dbManager: AbstractDbManager,
+  dataStore: AbstractDataStore,
   jobId: string,
   controller: any,
   serviceFunctionName: string,
@@ -27,12 +27,12 @@ export async function scheduleCronJob(
       return clsNamespace.runAndReturn(async () => {
         return clsNamespace2.runAndReturn(async () => {
           try {
-            await dbManager.tryReserveDbConnectionFromPool();
+            await dataStore.tryReserveDbConnectionFromPool();
             clsNamespace.set('connection', true);
-            const possibleErrorResponse = await dbManager.executeInsideTransaction(async () => {
+            const possibleErrorResponse = await dataStore.executeInsideTransaction(async () => {
               clsNamespace.set('globalTransaction', true);
 
-              const possibleErrorResponse = await dbManager.deleteEntityById(__Backk__JobScheduling, jobId, {
+              const possibleErrorResponse = await dataStore.deleteEntityById(__Backk__JobScheduling, jobId, {
                 entityPreHooks: (jobScheduling) => !!jobScheduling
               });
 
@@ -61,7 +61,7 @@ export async function scheduleCronJob(
             logError(error);
             return false;
           } finally {
-            dbManager.tryReleaseDbConnectionBackToPool();
+            dataStore.tryReleaseDbConnectionBackToPool();
             clsNamespace.set('connection', false);
           }
         });

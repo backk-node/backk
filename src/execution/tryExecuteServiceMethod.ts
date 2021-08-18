@@ -221,7 +221,7 @@ export default async function tryExecuteServiceMethod(
       usersService as UserAccountBaseService | undefined
     );
 
-    const dbManager = (controller[serviceName] as BaseService).getDbManager();
+    const dataStore = (controller[serviceName] as BaseService).getDataStore();
 
     let instantiatedServiceFunctionArgument: any;
     if (serviceFunctionArgumentTypeName) {
@@ -271,7 +271,7 @@ export default async function tryExecuteServiceMethod(
       await tryValidateServiceFunctionArgument(
         controller[serviceName].constructor,
         functionName,
-        dbManager,
+        dataStore,
         instantiatedServiceFunctionArgument
       );
     }
@@ -330,20 +330,20 @@ export default async function tryExecuteServiceMethod(
         clsNamespace.set('dbLocalTransactionCount', 0);
         clsNamespace.set('remoteServiceCallCount', 0);
         clsNamespace.set('postHookRemoteServiceCallCount', 0);
-        clsNamespace.set('dbManagerOperationAfterRemoteServiceCall', false);
+        clsNamespace.set('dataStoreOperationAfterRemoteServiceCall', false);
 
         // noinspection ExceptionCaughtLocallyJS
         try {
-          if (dbManager) {
-            await dbManager.tryReserveDbConnectionFromPool();
+          if (dataStore) {
+            await dataStore.tryReserveDbConnectionFromPool();
           }
 
           [response, backkError] = await controller[serviceName][functionName](
             instantiatedServiceFunctionArgument
           );
 
-          if (dbManager) {
-            dbManager.tryReleaseDbConnectionBackToPool();
+          if (dataStore) {
+            dataStore.tryReleaseDbConnectionBackToPool();
           }
 
           if (
@@ -386,7 +386,7 @@ export default async function tryExecuteServiceMethod(
                 ": multiple remote service calls cannot be executed because distributed transactions are not supported. To allow multiple remote service calls that don't require a transaction, annotate service function with @NoDistributedTransactionNeeded"
             );
           } else if (
-            clsNamespace.get('dbManagerOperationAfterRemoteServiceCall') &&
+            clsNamespace.get('dataStoreOperationAfterRemoteServiceCall') &&
             !serviceFunctionAnnotationContainer.isServiceFunctionNonDistributedTransactional(
               controller[serviceName].constructor,
               functionName

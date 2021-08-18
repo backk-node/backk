@@ -14,7 +14,7 @@ import createErrorFromErrorCodeMessageAndStatus from "../errors/createErrorFromE
 import { BACKK_ERRORS } from "../errors/backkErrors";
 import emptyError from "../errors/emptyError";
 import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
-import { One } from "../dbmanager/AbstractDbManager";
+import { One } from "../datastore/AbstractDataStore";
 
 export default async function tryScheduleJobExecution(
   controller: any,
@@ -73,23 +73,23 @@ export default async function tryScheduleJobExecution(
   const serviceFunctionArgumentStr = serviceFunctionArgument ? JSON.stringify(serviceFunctionArgument) : '';
   const scheduledExecutionTimestampAsDate = new Date(Date.parse(scheduledExecutionTimestamp));
   // TODO check that seconds are zero, because 1 min granularity only allowed
-  const dbManager = (controller[serviceName] as BaseService).getDbManager();
+  const dataStore = (controller[serviceName] as BaseService).getDataStore();
   // eslint-disable-next-line @typescript-eslint/camelcase
   let entity: One<__Backk__JobScheduling> | null | undefined;
   let error: BackkError | null | undefined = emptyError;
   const clsNamespace = getClsNamespace('serviceFunctionExecution');
 
   await clsNamespace.runAndReturn(async () => {
-    await dbManager.tryReserveDbConnectionFromPool();
+    await dataStore.tryReserveDbConnectionFromPool();
 
-    [entity, error] = await dbManager.createEntity(__Backk__JobScheduling, {
+    [entity, error] = await dataStore.createEntity(__Backk__JobScheduling, {
       serviceFunctionName,
       retryIntervalsInSecs: retryIntervalsInSecsStr,
       scheduledExecutionTimestamp: scheduledExecutionTimestampAsDate,
       serviceFunctionArgument: serviceFunctionArgumentStr
     });
 
-    dbManager.tryReleaseDbConnectionBackToPool();
+    dataStore.tryReleaseDbConnectionBackToPool();
   });
 
   if (!entity) {
@@ -101,7 +101,7 @@ export default async function tryScheduleJobExecution(
   await scheduleCronJob(
     scheduledExecutionTimestampAsDate,
     retryIntervalsInSecs,
-    dbManager,
+    dataStore,
     jobId,
     controller,
     serviceFunctionName,

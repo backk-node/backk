@@ -6,10 +6,10 @@ import generateClassFromSrcFile from "../../typescript/generator/generateClassFr
 import initializeController from "../../controller/initializeController";
 import { plainToClass } from "class-transformer";
 import tryValidateServiceFunctionArgument from "../../validation/tryValidateServiceFunctionArgument";
-import NoOpDbManager from "../../dbmanager/NoOpDbManager";
+import NoOpDataStore from "../../datastore/NoOpDataStore";
 
 export const remoteServiceNameToControllerMap: { [key: string]: any } = {};
-const noOpDbManager = new NoOpDbManager('');
+const noOpDataStore = new NoOpDataStore('');
 
 export async function validateServiceFunctionArguments(sends: CallOrSendToSpec[]) {
   await forEachAsyncSequential(sends, async ({ remoteServiceFunctionUrl, serviceFunctionArgument }) => {
@@ -38,13 +38,13 @@ export async function validateServiceFunctionArguments(sends: CallOrSendToSpec[]
         remoteServiceRootDir
       );
 
-      const serviceInstance = new ServiceClass(noOpDbManager);
+      const serviceInstance = new ServiceClass(noOpDataStore);
 
       controller = {
         [serviceName]: serviceInstance
       };
 
-      initializeController(controller, noOpDbManager, undefined, remoteServiceRootDir);
+      initializeController(controller, noOpDataStore, undefined, remoteServiceRootDir);
       remoteServiceNameToControllerMap[`${topic}$/${serviceName}`] = controller;
     }
 
@@ -62,7 +62,7 @@ export async function validateServiceFunctionArguments(sends: CallOrSendToSpec[]
       await tryValidateServiceFunctionArgument(
         ServiceClass,
         functionName,
-        noOpDbManager,
+        noOpDataStore,
         instantiatedServiceFunctionArgument as object
       );
     } catch (error) {

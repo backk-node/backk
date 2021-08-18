@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import AbstractDbManager from '../../dbmanager/AbstractDbManager';
+import AbstractDataStore from '../../datastore/AbstractDataStore';
 import StartupCheckService from './StartupCheckService';
 import createBackkErrorFromErrorMessageAndStatusCode from '../../errors/createBackkErrorFromErrorMessageAndStatusCode';
-import initializeDatabase, { isDbInitialized } from '../../dbmanager/sql/operations/ddl/initializeDatabase';
+import initializeDatabase, { isDbInitialized } from '../../datastore/sql/operations/ddl/initializeDatabase';
 import { HttpStatusCodes } from '../../constants/constants';
 import AllowForClusterInternalUse from '../../decorators/service/function/AllowForClusterInternalUse';
 import scheduleJobsForExecution, { scheduledJobs } from '../../scheduling/scheduleJobsForExecution';
@@ -10,16 +10,16 @@ import { PromiseErrorOr } from '../../types/PromiseErrorOr';
 
 @Injectable()
 export default class StartupCheckServiceImpl extends StartupCheckService {
-  constructor(dbManager: AbstractDbManager) {
-    super({}, dbManager);
+  constructor(dataStore: AbstractDataStore) {
+    super({}, dataStore);
   }
 
   // noinspection FunctionWithMoreThanThreeNegationsJS
   @AllowForClusterInternalUse()
   async isServiceStarted(): PromiseErrorOr<null> {
     if (
-      !(await isDbInitialized(this.dbManager)) &&
-      !(await initializeDatabase(StartupCheckService.controller, this.dbManager))
+      !(await isDbInitialized(this.dataStore)) &&
+      !(await initializeDatabase(StartupCheckService.controller, this.dataStore))
     ) {
       return [
         null,
@@ -30,7 +30,7 @@ export default class StartupCheckServiceImpl extends StartupCheckService {
       ];
     } else if (
       !scheduledJobs &&
-      !(await scheduleJobsForExecution(StartupCheckService.controller, this.dbManager))
+      !(await scheduleJobsForExecution(StartupCheckService.controller, this.dataStore))
     ) {
       return [
         null,

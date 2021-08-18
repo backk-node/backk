@@ -5,14 +5,14 @@ export * from './constants/constants';
 export { default as getClsNamespace } from './continuationlocalstorage/getClsNamespace';
 export { ControllerInitOptions, default as initializeController } from './controller/initializeController';
 
-export { default as AbstractDbManager } from './dbmanager/AbstractDbManager';
-export { default as MongoDbManager } from './dbmanager/MongoDbManager';
-export { default as MySqlDbManager } from './dbmanager/MySqlDbManager';
-export { default as PostgreSqlDbManager } from './dbmanager/PostgreSqlDbManager';
-export * from './dbmanager/hooks/EntitiesPostHook';
-export { EntityPreHook } from './dbmanager/hooks/EntityPreHook';
-export * from './dbmanager/hooks/PostHook';
-export * from './dbmanager/hooks/PreHook';
+export { default as AbstractDataStore } from './datastore/AbstractDataStore';
+export { default as MongoDbDataStore } from './datastore/MongoDbDataStore';
+export { default as MySqlDataStore } from './datastore/MySqlDataStore';
+export { default as PostgreSqlDataStore } from './datastore/PostgreSqlDataStore';
+export * from './datastore/hooks/EntitiesPostHook';
+export { EntityPreHook } from './datastore/hooks/EntityPreHook';
+export * from './datastore/hooks/PostHook';
+export * from './datastore/hooks/PreHook';
 
 // Decorators
 export { default as CompositeIndex } from './decorators/entity/CompositeIndex';
@@ -182,20 +182,20 @@ export { default as AuditLoggingService } from './observability/logging/audit/Au
 export { default as StartupCheckServiceImpl } from './service/startup/StartupCheckServiceImpl';
 export { default as DefaultJwtAuthorizationServiceImpl } from './authorization/DefaultJwtAuthorizationServiceImpl';
 
-export { default as SqlEquals } from './dbmanager/sql/expressions/SqlEquals';
-export { default as SqlExpression } from './dbmanager/sql/expressions/SqlExpression';
-export { default as SqlInExpression } from './dbmanager/sql/expressions/SqlInExpression';
-export { default as SqlNotInExpression } from './dbmanager/sql/expressions/SqlNotInExpression';
+export { default as SqlEquals } from './datastore/sql/expressions/SqlEquals';
+export { default as SqlExpression } from './datastore/sql/expressions/SqlExpression';
+export { default as SqlInExpression } from './datastore/sql/expressions/SqlInExpression';
+export { default as SqlNotInExpression } from './datastore/sql/expressions/SqlNotInExpression';
 
 export { default as getServiceName } from './utils/getServiceName';
 export { default as getServiceNamespace } from './utils/getServiceNamespace';
 
-export { default as MongoDbQuery } from './dbmanager/mongodb/MongoDbQuery';
+export { default as MongoDbQuery } from './datastore/mongodb/MongoDbQuery';
 export { default as DbTableVersion } from './types/DbTableVersion';
 
 export { default as createBackkErrorFromErrorMessageAndStatusCode } from './errors/createBackkErrorFromErrorMessageAndStatusCode';
 
-export { One, Many } from './dbmanager/AbstractDbManager';
+export { One, Many } from './datastore/AbstractDataStore';
 export { default as EntityCountRequest } from './types/EntityCountRequest';
 
 export * from 'class-validator';

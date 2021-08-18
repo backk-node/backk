@@ -1,6 +1,6 @@
 import { getFromContainer, MetadataStorage } from 'class-validator';
 import { ValidationMetadata } from 'class-validator/metadata/ValidationMetadata';
-import AbstractDbManager from '../dbmanager/AbstractDbManager';
+import AbstractDataStore from '../datastore/AbstractDataStore';
 import { MAX_INT_VALUE } from '../constants/constants';
 import typePropertyAnnotationContainer from '../decorators/typeproperty/typePropertyAnnotationContainer';
 import isEntityTypeName from '../utils/type/isEntityTypeName';
@@ -10,7 +10,7 @@ const classNameToMetadataMap: { [key: string]: { [key: string]: string } } = {};
 // noinspection FunctionWithMoreThanThreeNegationsJS
 export default function getClassPropertyNameToPropertyTypeNameMap<T>(
   Class: new () => T,
-  dbManager?: AbstractDbManager,
+  dataStore?: AbstractDataStore,
   isGeneration = false,
   shouldStripPrivateReadonlyProperties = false
 ): { [key: string]: string } {
@@ -82,11 +82,11 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
       return;
     }
 
-    const hasDifferentDbManagerGroup = validationMetadata.groups?.find(
-      (group) => group.startsWith('DbManager: ') && group !== 'DbManager: ' + dbManager?.getDbManagerType()
+    const hasDifferentDataStoreGroup = validationMetadata.groups?.find(
+      (group) => group.startsWith('DataStore: ') && group !== 'DataStore: ' + dataStore?.getDataStoreType()
     );
 
-    if (hasDifferentDbManagerGroup) {
+    if (hasDifferentDataStoreGroup) {
       return;
     }
 

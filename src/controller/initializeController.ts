@@ -9,7 +9,7 @@ import writeTestsPostmanCollectionExportFile from '../postman/writeTestsPostmanC
 import writeApiPostmanCollectionExportFile from '../postman/writeApiPostmanCollectionExportFile';
 import generateTypesForServices from '../metadata/generateTypesForServices';
 import getNestedClasses from '../metadata/getNestedClasses';
-import AbstractDbManager from '../dbmanager/AbstractDbManager';
+import AbstractDataStore from '../datastore/AbstractDataStore';
 import log, { Severity } from '../observability/logging/log';
 import { BACKK_ERRORS } from '../errors/backkErrors';
 
@@ -20,7 +20,7 @@ export interface ControllerInitOptions {
 
 export default function initializeController(
   controller: any,
-  dbManager: AbstractDbManager,
+  dataStore: AbstractDataStore,
   controllerInitOptions?: ControllerInitOptions,
   remoteServiceRootDir = ''
 ) {
@@ -33,11 +33,11 @@ export default function initializeController(
   }
 
   if (!remoteServiceRootDir) {
-    const servicesUniqueByDbManager = _.uniqBy(serviceNameToServiceEntries, ([, service]: [string, any]) =>
-      service.getDbManager()
+    const servicesUniqueByDataStore = _.uniqBy(serviceNameToServiceEntries, ([, service]: [string, any]) =>
+      service.getDataStore()
     );
 
-    if (servicesUniqueByDbManager.length > 1) {
+    if (servicesUniqueByDataStore.length > 1) {
       throw new Error('Services can use only one same database manager');
     }
   }
@@ -99,7 +99,7 @@ export default function initializeController(
       }, {});
     });
 
-  const servicesMetadata = generateServicesMetadata(controller, dbManager, remoteServiceRootDir);
+  const servicesMetadata = generateServicesMetadata(controller, dataStore, remoteServiceRootDir);
 
   if (!remoteServiceRootDir) {
     controller.servicesMetadata = servicesMetadata;

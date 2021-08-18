@@ -23,6 +23,7 @@ export default async function tryAuthorize(
     throw new Error('Authorization service missing');
   }
 
+  // TODO check that X-Original-Uri is not set to public URI for this microservice
   if (authHeader === undefined) {
     if (
       serviceAnnotationContainer.isServiceAllowedForClusterInternalUse(ServiceClass) ||

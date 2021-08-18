@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import AbstractDbManager, { Many } from "../dbmanager/AbstractDbManager";
+import AbstractDataStore, { Many } from "../datastore/AbstractDataStore";
 import findAsyncSequential from '../utils/findAsyncSequential';
 import wait from '../utils/wait';
 import __Backk__JobScheduling from './entities/__Backk__JobScheduling';
@@ -13,7 +13,7 @@ export let scheduledJobs: Many<__Backk__JobScheduling> | null | undefined = null
 
 export default async function scheduleJobsForExecution(
   controller: any | undefined,
-  dbManager: AbstractDbManager
+  dataStore: AbstractDataStore
 ) {
   if (!controller) {
     return false;
@@ -25,13 +25,13 @@ export default async function scheduleJobsForExecution(
 
     await clsNamespace.runAndReturn(async () => {
       try {
-        await dbManager.tryReserveDbConnectionFromPool();
-        [scheduledJobs] = await dbManager.getAllEntities(
+        await dataStore.tryReserveDbConnectionFromPool();
+        [scheduledJobs] = await dataStore.getAllEntities(
           __Backk__JobScheduling,
           new DefaultPostQueryOperations(Number.MAX_SAFE_INTEGER),
           false
         );
-        dbManager.tryReleaseDbConnectionBackToPool();
+        dataStore.tryReleaseDbConnectionBackToPool();
       } catch (error) {
         // No operation
       }
@@ -57,7 +57,7 @@ export default async function scheduleJobsForExecution(
       await scheduleCronJob(
         scheduledExecutionTimestamp,
         retryIntervalsInSecs.split(',').map((retryIntervalInSecs) => parseInt(retryIntervalInSecs, 10)),
-        dbManager,
+        dataStore,
         _id,
         controller,
         serviceFunctionName,

@@ -1,4 +1,4 @@
-import { ErrorDef } from '../../../dbmanager/hooks/PreHook';
+import { ErrorDef } from '../../../datastore/hooks/PreHook';
 import { HttpHeaders } from './ResponseHeaders';
 import { UpdateType } from './Update';
 import { PostTestSpec } from './PostTests';

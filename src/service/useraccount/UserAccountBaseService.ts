@@ -3,7 +3,7 @@ import CrudEntityService from "../crudentity/CrudEntityService";
 import AllowForServiceInternalUse from "../../decorators/service/function/AllowForServiceInternalUse";
 import { PromiseErrorOr } from "../../types/PromiseErrorOr";
 import UserName from "../../types/useraccount/UserName";
-import { One } from "../../dbmanager/AbstractDbManager";
+import { One } from "../../datastore/AbstractDataStore";
 
 export default class UserAccountBaseService extends CrudEntityService {
   isUsersService(): boolean {

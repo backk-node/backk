@@ -8,14 +8,14 @@ import getTypeDocumentation from './getTypeDocumentation';
 import getTypePropertyModifiers from './getTypePropertyModifiers';
 import CrudEntityService from '../service/crudentity/CrudEntityService';
 import assertFunctionNamesAreValidForCrudEntityService from '../service/crudentity/assertFunctionNamesAreValidForCrudEntityService';
-import AbstractDbManager from '../dbmanager/AbstractDbManager';
+import AbstractDataStore from '../datastore/AbstractDataStore';
 import entityAnnotationContainer from '../decorators/entity/entityAnnotationContainer';
 import isCreateFunction from '../service/crudentity/utils/isCreateFunction';
 import { ErrorDefinitions } from "../types/ErrorDefinition";
 
 export default function generateServicesMetadata<T>(
   controller: T,
-  dbManager: AbstractDbManager,
+  dataStore: AbstractDataStore,
   remoteServiceRootDir = ''
 ): ServiceMetadata[] {
   // noinspection FunctionWithMoreThanThreeNegationsJS
@@ -37,7 +37,7 @@ export default function generateServicesMetadata<T>(
 
       const typesMetadata = Object.entries((controller as any)[serviceName].Types ?? {}).reduce(
         (accumulatedTypes, [typeName, Class]: [string, any]) => {
-          const typeObject = getClassPropertyNameToPropertyTypeNameMap(Class, dbManager, true);
+          const typeObject = getClassPropertyNameToPropertyTypeNameMap(Class, dataStore, true);
 
           return { ...accumulatedTypes, [typeName]: typeObject };
         },
@@ -46,7 +46,7 @@ export default function generateServicesMetadata<T>(
 
       const publicTypesMetadata = Object.entries((controller as any)[serviceName].PublicTypes ?? {}).reduce(
         (accumulatedTypes, [typeName, typeClass]: [string, any]) => {
-          const typeObject = getClassPropertyNameToPropertyTypeNameMap(typeClass, dbManager, false, true);
+          const typeObject = getClassPropertyNameToPropertyTypeNameMap(typeClass, dataStore, false, true);
           return { ...accumulatedTypes, [typeName]: typeObject };
         },
         {}

@@ -1,4 +1,4 @@
-import { ErrorDef } from "../../dbmanager/hooks/PreHook";
+import { ErrorDef } from "../../datastore/hooks/PreHook";
 
 export type FunctionMetadata = {
   functionName: string;

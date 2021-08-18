@@ -1,5 +1,5 @@
 import { Service } from './Service';
-import AbstractDbManager from '../dbmanager/AbstractDbManager';
+import AbstractDataStore from '../datastore/AbstractDataStore';
 import { ErrorDefinitions } from '../types/ErrorDefinition';
 
 export default class BaseService implements Service {
@@ -10,12 +10,12 @@ export default class BaseService implements Service {
   readonly PublicTypes: object;
 
   /** @internal */
-  constructor(private readonly errors: ErrorDefinitions, protected readonly dbManager: AbstractDbManager) {
+  constructor(private readonly errors: ErrorDefinitions, protected readonly dataStore: AbstractDataStore) {
     this.Types = {};
     this.PublicTypes = {};
 
-    if (dbManager) {
-      dbManager.addService(this);
+    if (dataStore) {
+      dataStore.addService(this);
     }
 
     const hasUniqueErrors = Object.values(errors).reduce((hasUniqueErrors, errorDef) => {
@@ -39,8 +39,8 @@ export default class BaseService implements Service {
   }
 
   /** @internal */
-  getDbManager(): AbstractDbManager {
-    return this.dbManager;
+  getDataStore(): AbstractDataStore {
+    return this.dataStore;
   }
 
   /** @internal */

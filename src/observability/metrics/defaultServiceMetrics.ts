@@ -172,13 +172,13 @@ class DefaultServiceMetrics {
     this.http5xxErrorCounter.add(1);
   }
 
-  incrementDbOperationErrorsByOne(dbManagerType: string, dbHost: string) {
-    this.dbOperationErrorCounter.bind({ ...this.defaultLabels, dbManagerType, dbHost }).add(1);
+  incrementDbOperationErrorsByOne(dataStoreType: string, dbHost: string) {
+    this.dbOperationErrorCounter.bind({ ...this.defaultLabels, dataStoreType, dbHost }).add(1);
   }
 
-  recordDbFailureDurationInSecs(dbManagerType: string, dbHost: string, failureDurationInSecs: number) {
+  recordDbFailureDurationInSecs(dataStoreType: string, dbHost: string, failureDurationInSecs: number) {
     this.dbFailureDurationInSecsRecorder
-      .bind({ ...this.defaultLabels, dbManagerType, dbHost })
+      .bind({ ...this.defaultLabels, dataStoreType, dbHost })
       .record(failureDurationInSecs);
   }
 
@@ -201,7 +201,7 @@ class DefaultServiceMetrics {
   }
 
   incrementDbOperationProcessingTimeInSecsBucketCounterByOne(
-    dbManagerType: string,
+    dataStoreType: string,
     dbHost: string,
     processingTimeInSecs: number
   ) {
@@ -212,7 +212,7 @@ class DefaultServiceMetrics {
     this.dbOperationProcessingTimeCounter
       .bind({
         ...this.defaultLabels,
-        dbManagerType,
+        dataStoreType,
         dbHost,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         processingTimeInSecsBucket: foundProcessingTimeInSecsBucket!.toString()

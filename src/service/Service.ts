@@ -1,5 +1,5 @@
-import AbstractDbManager from "../dbmanager/AbstractDbManager";
+import AbstractDataStore from "../datastore/AbstractDataStore";
 
 export interface Service {
-  getDbManager(): AbstractDbManager
+  getDataStore(): AbstractDataStore
 }

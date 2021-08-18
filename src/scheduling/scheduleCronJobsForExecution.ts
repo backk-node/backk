@@ -1,6 +1,6 @@
 import { CronJob } from "cron";
 import parser from "cron-parser";
-import AbstractDbManager from "../dbmanager/AbstractDbManager";
+import AbstractDataStore from "../datastore/AbstractDataStore";
 import serviceFunctionAnnotationContainer
   from "../decorators/service/function/serviceFunctionAnnotationContainer";
 // eslint-disable-next-line @typescript-eslint/camelcase
@@ -16,7 +16,7 @@ import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
 
 const cronJobs: { [key: string]: CronJob } = {};
 
-export default function scheduleCronJobsForExecution(controller: any, dbManager: AbstractDbManager) {
+export default function scheduleCronJobsForExecution(controller: any, dataStore: AbstractDataStore) {
   if (process.env.NODE_ENV === 'development') {
     return;
   }
@@ -34,13 +34,13 @@ export default function scheduleCronJobsForExecution(controller: any, dbManager:
           return getClsNamespace('multipleServiceFunctionExecutions').runAndReturn(async () => {
             return getClsNamespace('serviceFunctionExecution').runAndReturn(async () => {
               try {
-                await dbManager.tryReserveDbConnectionFromPool();
+                await dataStore.tryReserveDbConnectionFromPool();
                 getClsNamespace('multipleServiceFunctionExecutions').set('connection', true);
 
-                const [, error] = await dbManager.executeInsideTransaction(async () => {
+                const [, error] = await dataStore.executeInsideTransaction(async () => {
                   getClsNamespace('multipleServiceFunctionExecutions').set('globalTransaction', true);
 
-                  const [, error] = await dbManager.updateEntityByFilters(__Backk__CronJobScheduling, { serviceFunctionName }, {
+                  const [, error] = await dataStore.updateEntityByFilters(__Backk__CronJobScheduling, { serviceFunctionName }, {
                     lastScheduledTimestamp: new Date(),
                     nextScheduledTimestamp: interval.next().toDate()
                   }, {
@@ -85,7 +85,7 @@ export default function scheduleCronJobsForExecution(controller: any, dbManager:
                 logError(error);
                 return false;
               } finally {
-                dbManager.tryReleaseDbConnectionBackToPool();
+                dataStore.tryReleaseDbConnectionBackToPool();
                 getClsNamespace('multipleServiceFunctionExecutions').set('connection', false);
               }
             });

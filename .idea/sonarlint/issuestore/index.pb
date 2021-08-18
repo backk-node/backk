@@ -27,8 +27,6 @@ Y
 )src/decorators/registerCustomDecorator.ts,b/2/b237259ab8cf95607e9c4d9d54dd46c159bf4b58
 W
 'src/decorators/entity/CompositeIndex.ts,a/1/a1526aa334ef3e35a09af79712effd08d1d91f6c
-m
-=src/decorators/service/function/AllowForClusterInternalUse.ts,2/6/26ca47359752a98665e145335e5307ec8019e32c
 d
 4src/decorators/service/function/AllowForEveryUser.ts,8/3/83ff187a7fbb3434e468019f76ea81486266353e
 _

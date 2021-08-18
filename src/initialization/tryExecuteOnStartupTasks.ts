@@ -1,16 +1,16 @@
-import AbstractDbManager from "../dbmanager/AbstractDbManager";
+import AbstractDataStore from "../datastore/AbstractDataStore";
 import BaseService from "../service/BaseService";
 import forEachAsyncSequential from "../utils/forEachAsyncSequential";
 import serviceFunctionAnnotationContainer
   from "../decorators/service/function/serviceFunctionAnnotationContainer";
 import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
 
-export default async function tryExecuteOnStartUpTasks(controller: any, dbManager: AbstractDbManager) {
+export default async function tryExecuteOnStartUpTasks(controller: any, dataStore: AbstractDataStore) {
   const clsNamespace = getClsNamespace('serviceFunctionExecution');
   const [, error] = await clsNamespace.runAndReturn(async () => {
-    await dbManager.tryReserveDbConnectionFromPool();
+    await dataStore.tryReserveDbConnectionFromPool();
 
-    const [, error]= await dbManager.executeInsideTransaction(async () => {
+    const [, error]= await dataStore.executeInsideTransaction(async () => {
       const serviceNameToServiceEntries = Object.entries(controller).filter(
         ([, service]: [string, any]) => service instanceof BaseService
       );
@@ -37,7 +37,7 @@ export default async function tryExecuteOnStartUpTasks(controller: any, dbManage
       return [null, null];
     });
 
-    dbManager.tryReleaseDbConnectionBackToPool();
+    dataStore.tryReleaseDbConnectionBackToPool();
     return [null, error];
   });
 

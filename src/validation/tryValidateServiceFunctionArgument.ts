@@ -4,7 +4,7 @@ import createErrorMessageWithStatusCode from '../errors/createErrorMessageWithSt
 import getValidationErrors from './getValidationErrors';
 import { HttpStatusCodes } from '../constants/constants';
 import isCreateFunction from '../service/crudentity/utils/isCreateFunction';
-import AbstractDbManager from '../dbmanager/AbstractDbManager';
+import AbstractDataStore from '../datastore/AbstractDataStore';
 import { BACKK_ERRORS } from '../errors/backkErrors';
 
 function filterOutManyToManyIdErrors(validationErrors: ValidationError[]) {
@@ -39,14 +39,14 @@ function getValidationErrorConstraintsCount(validationErrors: ValidationError[])
 export default async function tryValidateServiceFunctionArgument(
   ServiceClass: Function,
   functionName: string,
-  dbManager: AbstractDbManager | undefined,
+  dataStore: AbstractDataStore | undefined,
   serviceFunctionArgument: object
 ): Promise<void> {
   try {
     await validateOrReject(serviceFunctionArgument, {
       groups: [
         '__backk_firstRound__',
-        ...(dbManager ? [dbManager.getDbManagerType()] : []),
+        ...(dataStore ? [dataStore.getDataStoreType()] : []),
         ...(isCreateFunction(ServiceClass, functionName) ? ['__backk_firstRoundWhenCreate__'] : []),
         ...(isCreateFunction(ServiceClass, functionName) ? [] : ['__backk_firstRoundWhenUpdate__'])
       ]

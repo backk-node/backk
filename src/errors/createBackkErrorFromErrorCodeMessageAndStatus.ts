@@ -1,4 +1,4 @@
-import { ErrorDef } from '../dbmanager/hooks/PreHook';
+import { ErrorDef } from '../datastore/hooks/PreHook';
 import createBackkErrorFromError from './createBackkErrorFromError';
 import { HttpStatusCodes } from '../constants/constants';
 

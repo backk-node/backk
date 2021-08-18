@@ -28,10 +28,13 @@
   * No need for learning any technology like REST API, GraphQL or gRPC
   * Can be used for resource based or RPC based microservices
 * Supports multiple databases
-  * Postgre SQL
+  * PostgreSQL
   * MySQL
   * MongoDB
   * MariaDB
+  * Vitess (MySQL compatible)
+  * YugabyteDB (PostgreSQL compatible)
+  * CockroachDB (PostgreSQL compatible)
 * ORM (Object-relational mapper)
   * Entities
   * Validations
@@ -41,6 +44,8 @@
   * Captcha Verification support
   * Automatic password hashing using Argon2 algorithm
   * Automatic PII encryption/decryption
+  * Mandatory validation required by Entity field type
+    * e.g. string field must have a maximum length validation
 * Redis Response Cache support
 * Automatic microservice documentation generation
   * TypeDoc

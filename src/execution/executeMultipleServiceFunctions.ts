@@ -146,17 +146,17 @@ export default async function executeMultipleServiceFunctions(
   const serviceFunctionCallIdToResponseMap: { [key: string]: ServiceFunctionCallResponse } = {};
   const statusCodes: number[] = [];
   const services = Object.values(controller).filter((service) => service instanceof BaseService);
-  const dbManager = (services as BaseService[])[0].getDbManager();
+  const dataStore = (services as BaseService[])[0].getDataStore();
 
   const clsNamespace = getClsNamespace('multipleServiceFunctionExecutions');
   const clsNamespace2 = getClsNamespace('serviceFunctionExecution');
   await clsNamespace.runAndReturn(async () => {
     await clsNamespace2.runAndReturn(async () => {
-      await dbManager.tryReserveDbConnectionFromPool();
+      await dataStore.tryReserveDbConnectionFromPool();
       clsNamespace.set('connection', true);
 
       if (shouldExecuteInsideTransaction) {
-        await dbManager.executeInsideTransaction(async () => {
+        await dataStore.executeInsideTransaction(async () => {
           clsNamespace.set('globalTransaction', true);
 
           await executeMultiple(
@@ -189,7 +189,7 @@ export default async function executeMultipleServiceFunctions(
         clsNamespace.set('globalTransaction', false);
       }
 
-      dbManager.tryReleaseDbConnectionBackToPool();
+      dataStore.tryReleaseDbConnectionBackToPool();
       clsNamespace.set('connection', false);
     });
   });

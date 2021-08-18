@@ -1,4 +1,4 @@
-import AbstractDbManager from "../dbmanager/AbstractDbManager";
+import AbstractDataStore from "../datastore/AbstractDataStore";
 import serviceFunctionAnnotationContainer
   from "../decorators/service/function/serviceFunctionAnnotationContainer";
 // eslint-disable-next-line @typescript-eslint/camelcase
@@ -9,17 +9,17 @@ import { HttpStatusCodes } from "../constants/constants";
 import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
 import DefaultPostQueryOperations from "../types/postqueryoperations/DefaultPostQueryOperations";
 
-export default async function tryInitializeCronJobSchedulingTable(dbManager: AbstractDbManager) {
+export default async function tryInitializeCronJobSchedulingTable(dataStore: AbstractDataStore) {
   const clsNamespace = getClsNamespace('serviceFunctionExecution');
 
   await forEachAsyncParallel(
     Object.entries(serviceFunctionAnnotationContainer.getServiceFunctionNameToCronScheduleMap()),
     async ([serviceFunctionName, cronSchedule]) => {
       const [, error] = await clsNamespace.runAndReturn(async () => {
-        await dbManager.tryReserveDbConnectionFromPool();
+        await dataStore.tryReserveDbConnectionFromPool();
 
-        const [, error] = await dbManager.executeInsideTransaction(async () => {
-          const [entity, error] = await dbManager.getEntityByFilters(
+        const [, error] = await dataStore.executeInsideTransaction(async () => {
+          const [entity, error] = await dataStore.getEntityByFilters(
             __Backk__CronJobScheduling,
             {serviceFunctionName },
             new DefaultPostQueryOperations(Number.MAX_SAFE_INTEGER),
@@ -29,13 +29,13 @@ export default async function tryInitializeCronJobSchedulingTable(dbManager: Abs
           const interval = parser.parseExpression(cronSchedule);
 
           if (error?.statusCode === HttpStatusCodes.NOT_FOUND) {
-            return dbManager.createEntity(__Backk__CronJobScheduling, {
+            return dataStore.createEntity(__Backk__CronJobScheduling, {
               serviceFunctionName,
               lastScheduledTimestamp: new Date(120000),
               nextScheduledTimestamp: interval.next().toDate()
             });
           } else if (entity) {
-            return dbManager.updateEntity(__Backk__CronJobScheduling, {
+            return dataStore.updateEntity(__Backk__CronJobScheduling, {
               _id: entity.data._id,
               serviceFunctionName,
               lastScheduledTimestamp: new Date(120000),
@@ -46,7 +46,7 @@ export default async function tryInitializeCronJobSchedulingTable(dbManager: Abs
           return [entity, error];
         });
 
-        dbManager.tryReleaseDbConnectionBackToPool();
+        dataStore.tryReleaseDbConnectionBackToPool();
         return [null, error];
       });
 

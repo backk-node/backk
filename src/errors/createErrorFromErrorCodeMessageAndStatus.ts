@@ -1,4 +1,4 @@
-import { ErrorDef } from "../dbmanager/hooks/PreHook";
+import { ErrorDef } from "../datastore/hooks/PreHook";
 import { HttpStatusCodes } from "../constants/constants";
 
 export default function createErrorFromErrorCodeMessageAndStatus(errorCodeMessageAndStatus: ErrorDef): Error {

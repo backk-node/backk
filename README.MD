@@ -7,11 +7,69 @@
 <h3 align="center">Node.js framework for secure cloud-native microservices</h3>
 <h4 align="center">Backk is currently in alpha phase</h4>
 
-## Install
+## Table of Contents
+
+- [Features](#features)
+- [Install](#install)
+- [Sample Microservice](#sample-microservice)
+- [Usage Documentation](#usage)
+- [Feedback](#feedback)
+- [Contributing](#contributing)
+- [Contributors](#contributors)
+- [Sponsors](#sponsors)
+- [License](#license)
+
+## <a href="install"></a> Features
+* Create synchronous and asynchronous microservices using
+  * HTTP
+  * Apache Kafka
+  * Redis
+* Write our microservices using Typescript and plain functions that are called by remote clients
+  * No need for learning any technology like REST API, GraphQL or gRPC
+  * Can be used for resource based or RPC based microservices
+* Supports multiple databases
+  * Postgre SQL
+  * MySQL
+  * MongoDB
+  * MariaDB
+* ORM (Object-relational mapper)
+  * Entities
+  * Validations
+* Automatic database schema generation
+* Security
+  * OAuth 2.0 Auhtorization support
+  * Captcha Verification support
+  * Automatic password hashing using Argon2 algorithm
+  * Automatic PII encryption/decryption
+* Redis Response Cache support
+* Automatic microservice documentation generation
+  * TypeDoc
+  * Postman
+* Automatic microservice integration test generation
+* Built-in Observability
+  * Distributed tracing using OpenTelemetry API (Jaeger)
+  * Logging using Open Telemetry specification
+  * Metrics collection using OpenTelemetry API (Prometheus)
+* Scheduled functions
+  * Scheduled as per client request
+  * Cron jobs
+* Liveness, Readiness and Startup probes support
+
+## <a href="install"></a> Install
 
     npm install --save backk
 
-## License
+## <a href="sample-microservice"></a> Sample Microservice
+
+## <a href="usage"></a> Usage Documentation
+
+## <a href="feedback"></a> Feedback
+
+## <a href="contributing"></a> Contributing
+
+## <a href="contributors"></a> Contributors
+
+## <a href="license"></a>License
 
 MIT License
 

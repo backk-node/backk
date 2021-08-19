@@ -89,10 +89,10 @@ export { default as tryGetSeparatedNumericValuesFromTextFile } from './file/tryG
 export { default as tryGetValuesByJsonPathFromJsonFile } from './file/tryGetValuesByJsonPathFromJsonFile';
 export { default as tryGetValuesByXPathFromXmlFile } from './file/tryGetValuesByXPathFromXmlFile';
 
-export { default as initializeBackk } from './initialization/initialize';
-export { default as startHttpServer } from './initialization/startHttpServerFor';
-export { default as startKafkaConsumer } from './initialization/startKafkaConsumerFor';
-export { default as startRedisConsumer } from './initialization/startRedisConsumerFor';
+export { default as initialize } from './initialization/initialize';
+export { default as startHttpServerFor } from './initialization/startHttpServerFor';
+export { default as startKafkaConsumerFor } from './initialization/startKafkaConsumerFor';
+export { default as startRedisConsumerFor } from './initialization/startRedisConsumerFor';
 
 export { default as initializeDefaultJaegerTracing } from './observability/distributedtracinig/initializeDefaultJaegerTracing';
 export { Severity, default as log } from './observability/logging/log';

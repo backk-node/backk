@@ -9,7 +9,7 @@ export type HttpVersion = 1;
 // TODO check microservice is initialized before calling this function
 export default async function startHttpServerFor(
   microservice: Microservice,
-  options: ServiceFunctionExecutionOptions,
+  options?: ServiceFunctionExecutionOptions,
   httpVersion: HttpVersion = 1
 ) {
   const server = createServer((request, response) => {

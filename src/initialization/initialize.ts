@@ -11,7 +11,7 @@ import initializeCls from "../continuationlocalstorage/initializeCls";
 import Microservice from "../microservice/Microservice";
 import initializeController from "../controller/initializeController";
 
-export default async function initializeBackk(microservice: Microservice) {
+export default async function initialize(microservice: Microservice) {
   initializeController(microservice, microservice.dataStore);
   initializeCls();
   StartupCheckService.microservice = microservice;

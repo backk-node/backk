@@ -1,5 +1,5 @@
 import Mustache from "mustache";
-import tryExecuteServiceMethod, { ExecuteServiceFunctionOptions } from "./tryExecuteServiceMethod";
+import tryExecuteServiceMethod, { ServiceFunctionExecutionOptions } from "./tryExecuteServiceMethod";
 import forEachAsyncParallel from "../utils/forEachAsyncParallel";
 import { ServiceFunctionCall } from "./ServiceFunctionCall";
 import { ServiceFunctionCallResponse } from "./ServiceFunctionCallResponse";
@@ -20,8 +20,8 @@ async function executeMultiple<T>(
   isConcurrent: boolean,
   serviceFunctionArgument: object,
   controller: any,
-  headers: { [p: string]: string },
-  options: ExecuteServiceFunctionOptions | undefined,
+  headers: { [key: string]: string | string[] | undefined },
+  options: ServiceFunctionExecutionOptions | undefined,
   serviceFunctionCallIdToResponseMap: { [p: string]: ServiceFunctionCallResponse },
   statusCodes: number[],
   isTransactional = false
@@ -94,6 +94,7 @@ async function executeMultiple<T>(
           localOrRemoteServiceFunctionName,
           renderedServiceFunctionArgument,
           headers,
+          'POST',
           response,
           options,
           false
@@ -119,9 +120,9 @@ export default async function executeMultipleServiceFunctions(
   shouldExecuteInsideTransaction: boolean,
   controller: any,
   serviceFunctionCalls: object,
-  headers: { [key: string]: string },
+  headers: { [key: string]: string | string[] | undefined },
   resp?: any,
-  options?: ExecuteServiceFunctionOptions
+  options?: ServiceFunctionExecutionOptions
 ): Promise<void | object> {
   const areServiceFunctionCallsValid = Object.values(serviceFunctionCalls).reduce(
     (areCallsValid, serviceFunctionCall) =>

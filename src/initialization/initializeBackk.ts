@@ -8,15 +8,16 @@ import scheduleCronJobsForExecution from "../scheduling/scheduleCronJobsForExecu
 import scheduleJobsForExecution from "../scheduling/scheduleJobsForExecution";
 import StartupCheckService from "../service/startup/StartupCheckService";
 import initializeCls from "../continuationlocalstorage/initializeCls";
+import Microservice from "../microservice/Microservice";
 
-export default async function initializeBackk(controller: any, dataStore: AbstractDataStore) {
+export default async function initializeBackk(microservice: Microservice) {
   initializeCls();
-  StartupCheckService.controller = controller;
+  StartupCheckService.microservice = microservice;
   logEnvironment();
   defaultSystemAndNodeJsMetrics.startCollectingMetrics();
-  await initializeDatabase(controller, dataStore);
-  scheduleCronJobsForExecution(controller, dataStore);
-  await scheduleJobsForExecution(controller, dataStore);
+  await initializeDatabase(microservice, microservice.dataStore);
+  scheduleCronJobsForExecution(microservice, microservice.dataStore);
+  await scheduleJobsForExecution(microservice, microservice.dataStore);
   reloadLoggingConfigOnChange();
   log(Severity.INFO, 'Service started', '');
 }

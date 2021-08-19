@@ -1,7 +1,7 @@
 export default abstract class AuthorizationService {
-  abstract hasUserRoleIn(roles: string[], authHeader: string): Promise<boolean>;
+  abstract hasUserRoleIn(roles: string[], authHeader: string | string[] | undefined): Promise<boolean>;
   abstract areSameIdentities(
     userName: string | undefined,
-    authHeader: string
+    authHeader: string | string[] | undefined
   ): Promise<boolean>;
 }

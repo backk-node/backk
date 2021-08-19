@@ -71,6 +71,7 @@ export default function scheduleCronJobsForExecution(controller: any, dataStore:
                     serviceFunctionName,
                     serviceFunctionArgument,
                     {},
+                    'POST',
                     response,
                     undefined,
                     false

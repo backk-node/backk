@@ -1,39 +1,36 @@
-import { HttpException } from "@nestjs/common";
-import { plainToClass } from "class-transformer";
-import _ from "lodash";
-import Redis from "ioredis";
-import tryAuthorize from "../authorization/tryAuthorize";
-import BaseService from "../service/BaseService";
-import tryVerifyCaptchaToken from "../captcha/tryVerifyCaptchaToken";
-import getTypeInfoForTypeName from "../utils/type/getTypeInfoForTypeName";
-import UserAccountBaseService from "../service/useraccount/UserAccountBaseService";
-import { ServiceMetadata } from "../metadata/types/ServiceMetadata";
-import tryValidateServiceFunctionArgument from "../validation/tryValidateServiceFunctionArgument";
-import tryValidateServiceFunctionReturnValue from "../validation/tryValidateServiceFunctionReturnValue";
-import defaultServiceMetrics from "../observability/metrics/defaultServiceMetrics";
-import createBackkErrorFromError from "../errors/createBackkErrorFromError";
-import log, { Severity } from "../observability/logging/log";
-import serviceFunctionAnnotationContainer
-  from "../decorators/service/function/serviceFunctionAnnotationContainer";
-import { HttpStatusCodes, MAX_INT_VALUE } from "../constants/constants";
-import getNamespacedServiceName from "../utils/getServiceNamespace";
-import AuditLoggingService from "../observability/logging/audit/AuditLoggingService";
-import createAuditLogEntry from "../observability/logging/audit/createAuditLogEntry";
-import executeMultipleServiceFunctions from "./executeMultipleServiceFunctions";
-import tryScheduleJobExecution from "../scheduling/tryScheduleJobExecution";
-import isExecuteMultipleRequest from "./isExecuteMultipleRequest";
-import createErrorFromErrorCodeMessageAndStatus from "../errors/createErrorFromErrorCodeMessageAndStatus";
-import { BackkError } from "../types/BackkError";
-import createBackkErrorFromErrorCodeMessageAndStatus
-  from "../errors/createBackkErrorFromErrorCodeMessageAndStatus";
-import { BACKK_ERRORS } from "../errors/backkErrors";
-import emptyError from "../errors/emptyError";
-import fetchFromRemoteServices from "./fetchFromRemoteServices";
-import isBackkError from "../errors/isBackkError";
-import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
+import { HttpException } from '@nestjs/common';
+import { plainToClass } from 'class-transformer';
+import _ from 'lodash';
+import Redis from 'ioredis';
+import tryAuthorize from '../authorization/tryAuthorize';
+import BaseService from '../service/BaseService';
+import tryVerifyCaptchaToken from '../captcha/tryVerifyCaptchaToken';
+import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
+import UserAccountBaseService from '../service/useraccount/UserAccountBaseService';
+import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
+import tryValidateServiceFunctionArgument from '../validation/tryValidateServiceFunctionArgument';
+import tryValidateServiceFunctionReturnValue from '../validation/tryValidateServiceFunctionReturnValue';
+import defaultServiceMetrics from '../observability/metrics/defaultServiceMetrics';
+import createBackkErrorFromError from '../errors/createBackkErrorFromError';
+import log, { Severity } from '../observability/logging/log';
+import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
+import { HttpStatusCodes, MAX_INT_VALUE } from '../constants/constants';
+import getNamespacedServiceName from '../utils/getServiceNamespace';
+import AuditLoggingService from '../observability/logging/audit/AuditLoggingService';
+import createAuditLogEntry from '../observability/logging/audit/createAuditLogEntry';
+import executeMultipleServiceFunctions from './executeMultipleServiceFunctions';
+import tryScheduleJobExecution from '../scheduling/tryScheduleJobExecution';
+import isExecuteMultipleRequest from './isExecuteMultipleRequest';
+import createErrorFromErrorCodeMessageAndStatus from '../errors/createErrorFromErrorCodeMessageAndStatus';
+import { BackkError } from '../types/BackkError';
+import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
+import { BACKK_ERRORS } from '../errors/backkErrors';
+import emptyError from '../errors/emptyError';
+import fetchFromRemoteServices from './fetchFromRemoteServices';
+import isBackkError from '../errors/isBackkError';
+import getClsNamespace from '../continuationlocalstorage/getClsNamespace';
 
-export interface ExecuteServiceFunctionOptions {
-  httpMethod?: 'POST' | 'GET';
+export interface ServiceFunctionExecutionOptions {
   allowedServiceFunctionsRegExpForHttpGetMethod?: RegExp;
   deniedServiceFunctionsForForHttpGetMethod?: string[];
   isMetadataServiceEnabled?: boolean;
@@ -44,12 +41,13 @@ export interface ExecuteServiceFunctionOptions {
 }
 
 export default async function tryExecuteServiceMethod(
-  controller: any,
+  microservice: any,
   serviceFunctionName: string,
   serviceFunctionArgument: any,
-  headers: { [key: string]: string },
-  resp?: any,
-  options?: ExecuteServiceFunctionOptions,
+  headers: { [key: string]: string | string[] | undefined },
+  httpMethod: string,
+  resp: any,
+  options?: ServiceFunctionExecutionOptions,
   shouldCreateClsNamespace = true
 ): Promise<void | object> {
   let storedError;
@@ -80,7 +78,7 @@ export default async function tryExecuteServiceMethod(
         return await executeMultipleServiceFunctions(
           true,
           false,
-          controller,
+          microservice,
           serviceFunctionArgument,
           headers,
           resp,
@@ -90,7 +88,7 @@ export default async function tryExecuteServiceMethod(
         return await executeMultipleServiceFunctions(
           false,
           false,
-          controller,
+          microservice,
           serviceFunctionArgument,
           headers,
           resp,
@@ -100,7 +98,7 @@ export default async function tryExecuteServiceMethod(
         return await executeMultipleServiceFunctions(
           true,
           true,
-          controller,
+          microservice,
           serviceFunctionArgument,
           headers,
           resp,
@@ -110,7 +108,7 @@ export default async function tryExecuteServiceMethod(
         return executeMultipleServiceFunctions(
           false,
           true,
-          controller,
+          microservice,
           serviceFunctionArgument,
           headers,
           resp,
@@ -125,10 +123,10 @@ export default async function tryExecuteServiceMethod(
     const serviceFunctionCallStartTimeInMillis = Date.now();
 
     if (serviceFunctionName === 'scheduleJobExecution') {
-      return await tryScheduleJobExecution(controller, serviceFunctionArgument, headers, resp);
+      return await tryScheduleJobExecution(microservice, serviceFunctionArgument, headers, resp);
     }
 
-    if (options?.httpMethod === 'GET') {
+    if (httpMethod === 'GET') {
       if (
         !serviceFunctionName.match(options?.allowedServiceFunctionsRegExpForHttpGetMethod ?? /^\w+\.get/) ||
         options?.deniedServiceFunctionsForForHttpGetMethod?.includes(serviceFunctionName)
@@ -138,6 +136,7 @@ export default async function tryExecuteServiceMethod(
 
       // noinspection AssignmentToFunctionParameterJS
       serviceFunctionArgument = decodeURIComponent(serviceFunctionArgument);
+
       try {
         // noinspection AssignmentToFunctionParameterJS
         serviceFunctionArgument = JSON.parse(serviceFunctionArgument);
@@ -153,7 +152,8 @@ export default async function tryExecuteServiceMethod(
 
     if (serviceFunctionName === 'metadataService.getServicesMetadata') {
       if (!options || options.isMetadataServiceEnabled === undefined || options.isMetadataServiceEnabled) {
-        resp?.send(controller.publicServicesMetadata);
+        resp.writeHead(200, { 'Content-Type': 'application/json' });
+        resp.end(microservice.publicServicesMetadata);
         return;
       } else {
         throw createBackkErrorFromErrorCodeMessageAndStatus({
@@ -162,18 +162,20 @@ export default async function tryExecuteServiceMethod(
         });
       }
     } else if (serviceFunctionName === 'livenessCheckService.isServiceAlive') {
-      resp?.send();
+      resp.writeHead(200);
+      resp.end();
       return;
     } else if (
       (serviceFunctionName === 'readinessCheckService.isServiceReady' ||
         serviceFunctionName === 'startupCheckService.isServiceStarted') &&
-      (!controller[serviceName] || !controller[serviceName][functionName])
+      (!microservice[serviceName] || !microservice[serviceName][functionName])
     ) {
-      resp?.send();
+      resp.writeHead(200);
+      resp.end();
       return;
     }
 
-    if (!controller[serviceName]) {
+    if (!microservice[serviceName]) {
       throw createBackkErrorFromErrorCodeMessageAndStatus({
         ...BACKK_ERRORS.UNKNOWN_SERVICE,
         message: BACKK_ERRORS.UNKNOWN_SERVICE.message + serviceName
@@ -181,9 +183,9 @@ export default async function tryExecuteServiceMethod(
     }
 
     const serviceFunctionResponseValueTypeName =
-      controller[`${serviceName}__BackkTypes__`].functionNameToReturnTypeNameMap[functionName];
+      microservice[`${serviceName}__BackkTypes__`].functionNameToReturnTypeNameMap[functionName];
 
-    if (!controller[serviceName][functionName] || !serviceFunctionResponseValueTypeName) {
+    if (!microservice[serviceName][functionName] || !serviceFunctionResponseValueTypeName) {
       throw createBackkErrorFromErrorCodeMessageAndStatus({
         ...BACKK_ERRORS.UNKNOWN_SERVICE_FUNCTION,
         message: BACKK_ERRORS.UNKNOWN_SERVICE_FUNCTION.message + serviceFunctionName
@@ -191,7 +193,7 @@ export default async function tryExecuteServiceMethod(
     }
 
     const serviceFunctionArgumentTypeName =
-      controller[`${serviceName}__BackkTypes__`].functionNameToParamTypeNameMap[functionName];
+      microservice[`${serviceName}__BackkTypes__`].functionNameToParamTypeNameMap[functionName];
 
     if (
       typeof serviceFunctionArgument !== 'object' ||
@@ -205,28 +207,28 @@ export default async function tryExecuteServiceMethod(
     }
 
     if (serviceFunctionArgument?.captchaToken) {
-      await tryVerifyCaptchaToken(controller, serviceFunctionArgument.captchaToken);
+      await tryVerifyCaptchaToken(microservice, serviceFunctionArgument.captchaToken);
     }
 
-    const usersService = Object.values(controller).find(
+    const usersService = Object.values(microservice).find(
       (service) => service instanceof UserAccountBaseService
     );
 
     userName = await tryAuthorize(
-      controller[serviceName],
+      microservice[serviceName],
       functionName,
       serviceFunctionArgument,
-      headers.Authorization,
-      controller['authorizationService'],
+      headers.authorization,
+      microservice['authorizationService'],
       usersService as UserAccountBaseService | undefined
     );
 
-    const dataStore = (controller[serviceName] as BaseService).getDataStore();
+    const dataStore = (microservice[serviceName] as BaseService).getDataStore();
 
     let instantiatedServiceFunctionArgument: any;
     if (serviceFunctionArgumentTypeName) {
       instantiatedServiceFunctionArgument = plainToClass(
-        controller[serviceName]['Types'][serviceFunctionArgumentTypeName],
+        microservice[serviceName]['Types'][serviceFunctionArgumentTypeName],
         serviceFunctionArgument
       );
 
@@ -234,7 +236,7 @@ export default async function tryExecuteServiceMethod(
         if (Array.isArray(propValue) && propValue.length > 0) {
           instantiatedServiceFunctionArgument[propName] = propValue.map((pv) => {
             if (_.isPlainObject(pv)) {
-              const serviceMetadata = controller.servicesMetadata.find(
+              const serviceMetadata = microservice.servicesMetadata.find(
                 (serviceMetadata: ServiceMetadata) => serviceMetadata.serviceName === serviceName
               );
 
@@ -242,13 +244,13 @@ export default async function tryExecuteServiceMethod(
                 serviceMetadata.types[serviceFunctionArgumentTypeName][propName]
               );
 
-              return plainToClass(controller[serviceName]['Types'][baseTypeName], pv);
+              return plainToClass(microservice[serviceName]['Types'][baseTypeName], pv);
             }
             return pv;
           });
         } else {
           if (_.isPlainObject(propValue)) {
-            const serviceMetadata = controller.servicesMetadata.find(
+            const serviceMetadata = microservice.servicesMetadata.find(
               (serviceMetadata: ServiceMetadata) => serviceMetadata.serviceName === serviceName
             );
 
@@ -257,7 +259,7 @@ export default async function tryExecuteServiceMethod(
             );
 
             instantiatedServiceFunctionArgument[propName] = plainToClass(
-              controller[serviceName]['Types'][baseTypeName],
+              microservice[serviceName]['Types'][baseTypeName],
               propValue
             );
           }
@@ -269,7 +271,7 @@ export default async function tryExecuteServiceMethod(
       }
 
       await tryValidateServiceFunctionArgument(
-        controller[serviceName].constructor,
+        microservice[serviceName].constructor,
         functionName,
         dataStore,
         instantiatedServiceFunctionArgument
@@ -277,8 +279,8 @@ export default async function tryExecuteServiceMethod(
     }
 
     if (
-      options?.httpMethod === 'GET' &&
-      controller?.responseCacheConfigService.shouldCacheServiceFunctionCallResponse(
+      httpMethod === 'GET' &&
+      microservice?.responseCacheConfigService.shouldCacheServiceFunctionCallResponse(
         serviceFunctionName,
         serviceFunctionArgument
       )
@@ -338,7 +340,7 @@ export default async function tryExecuteServiceMethod(
             await dataStore.tryReserveDbConnectionFromPool();
           }
 
-          [response, backkError] = await controller[serviceName][functionName](
+          [response, backkError] = await microservice[serviceName][functionName](
             instantiatedServiceFunctionArgument
           );
 
@@ -350,7 +352,7 @@ export default async function tryExecuteServiceMethod(
             clsNamespace.get('dbLocalTransactionCount') > 1 &&
             clsNamespace.get('remoteServiceCallCount') === 0 &&
             !serviceFunctionAnnotationContainer.isServiceFunctionNonTransactional(
-              controller[serviceName].constructor,
+              microservice[serviceName].constructor,
               functionName
             )
           ) {
@@ -363,7 +365,7 @@ export default async function tryExecuteServiceMethod(
             clsNamespace.get('dbLocalTransactionCount') >= 1 &&
             clsNamespace.get('remoteServiceCallCount') === 1 &&
             !serviceFunctionAnnotationContainer.isServiceFunctionNonTransactional(
-              controller[serviceName].constructor,
+              microservice[serviceName].constructor,
               functionName
             )
           ) {
@@ -376,7 +378,7 @@ export default async function tryExecuteServiceMethod(
             (clsNamespace.get('remoteServiceCallCount') > 1 ||
               clsNamespace.get('postHookRemoteServiceCallCount') > 1) &&
             !serviceFunctionAnnotationContainer.isServiceFunctionNonDistributedTransactional(
-              controller[serviceName].constructor,
+              microservice[serviceName].constructor,
               functionName
             )
           ) {
@@ -388,7 +390,7 @@ export default async function tryExecuteServiceMethod(
           } else if (
             clsNamespace.get('dataStoreOperationAfterRemoteServiceCall') &&
             !serviceFunctionAnnotationContainer.isServiceFunctionNonDistributedTransactional(
-              controller[serviceName].constructor,
+              microservice[serviceName].constructor,
               functionName
             )
           ) {
@@ -417,16 +419,17 @@ export default async function tryExecuteServiceMethod(
 
       if (response) {
         const { baseTypeName: serviceFunctionBaseReturnTypeName, isOneOf, isManyOf } = getTypeInfoForTypeName(
-          controller[`${serviceName}__BackkTypes__`].functionNameToReturnTypeNameMap[functionName]
+          microservice[`${serviceName}__BackkTypes__`].functionNameToReturnTypeNameMap[functionName]
         );
 
-        const ServiceFunctionReturnType = controller[serviceName]['Types'][serviceFunctionBaseReturnTypeName];
+        const ServiceFunctionReturnType =
+          microservice[serviceName]['Types'][serviceFunctionBaseReturnTypeName];
 
         const backkError = await fetchFromRemoteServices(
           ServiceFunctionReturnType,
           instantiatedServiceFunctionArgument,
           response,
-          controller[serviceName]['Types']
+          microservice[serviceName]['Types']
         );
 
         if (backkError) {
@@ -468,8 +471,8 @@ export default async function tryExecuteServiceMethod(
         }
 
         if (
-          options?.httpMethod === 'GET' &&
-          controller?.responseCacheConfigService.shouldCacheServiceFunctionCallResponse(
+          httpMethod === 'GET' &&
+          microservice?.responseCacheConfigService.shouldCacheServiceFunctionCallResponse(
             serviceFunctionName,
             serviceFunctionArgument
           )
@@ -497,7 +500,7 @@ export default async function tryExecuteServiceMethod(
             defaultServiceMetrics.incrementServiceFunctionCallCachedResponsesCounterByOne(serviceName);
 
             if (ttl < 0) {
-              ttl = controller?.responseCacheConfigService.getCachingDurationInSecs(
+              ttl = microservice?.responseCacheConfigService.getCachingDurationInSecs(
                 serviceFunctionName,
                 serviceFunctionArgument
               );
@@ -505,27 +508,20 @@ export default async function tryExecuteServiceMethod(
               await redis.expire(key, ttl);
             }
           } catch (error) {
-            log(
-              Severity.ERROR,
-              'Redis cache error message: ' + error.message,
-              error.stack,
-              {
-                redisUrl: process.env.REDIS_SERVER
-              }
-            );
+            log(Severity.ERROR, 'Redis cache error message: ' + error.message, error.stack, {
+              redisUrl: process.env.REDIS_SERVER
+            });
           }
         }
 
         if (response.data?.version) {
-          if (response.data.version === headers['If-None-Match']) {
-            response = null;
-            resp?.status(HttpStatusCodes.NOT_MODIFIED);
+          if (typeof resp.setHeader === 'function') {
+            resp.setHeader('ETag', response.data.version);
           }
 
-          if (typeof resp?.header === 'function') {
-            resp?.header('ETag', response.data.version);
-          } else if (typeof resp?.set === 'function') {
-            resp?.set('ETag', response.data.version);
+          if (response.data.version === headers['If-None-Match']) {
+            response = null;
+            resp.writeHead(HttpStatusCodes.NOT_MODIFIED);
           }
         }
       }
@@ -538,65 +534,56 @@ export default async function tryExecuteServiceMethod(
     );
 
     if (ttl) {
-      if (typeof resp?.header === 'function') {
-        resp?.header('Cache-Control', 'max-age=' + ttl);
-      } else if (typeof resp?.set === 'function') {
-        resp?.set('Cache-Control', 'max-age=' + ttl);
+      if (typeof resp.setHeader === 'function') {
+        resp.setHeader('Cache-Control', 'max-age=' + ttl);
       }
     }
 
-    if (typeof resp?.header === 'function') {
-      resp?.header('X-content-type-options', 'nosniff');
-      resp?.header('Strict-Transport-Security', 'max-age=' + MAX_INT_VALUE + '; includeSubDomains');
-    } else if (typeof resp?.set === 'function') {
-      resp?.set('X-content-type-options', 'nosniff');
-      resp?.set('Strict-Transport-Security', 'max-age=' + MAX_INT_VALUE + '; includeSubDomains');
+    if (typeof resp.setHeader === 'function') {
+      resp.setHeader('X-content-type-options', 'nosniff');
+      resp.setHeader('Strict-Transport-Security', 'max-age=' + MAX_INT_VALUE + '; includeSubDomains');
     }
 
     Object.entries(
       serviceFunctionAnnotationContainer.getResponseHeadersForServiceFunction(
-        controller[serviceName].constructor,
+        microservice[serviceName].constructor,
         functionName
       ) || {}
     ).forEach(([headerName, headerValueOrGenerator]) => {
       if (typeof headerValueOrGenerator === 'string') {
-        if (typeof resp?.header === 'function') {
-          resp.header(headerName, headerValueOrGenerator);
-        } else if (typeof resp?.set === 'function') {
-          resp.set(headerName, headerValueOrGenerator);
+        if (typeof resp.setHeader === 'function') {
+          resp.setHeader(headerName, headerValueOrGenerator);
         }
       } else if (typeof headerValueOrGenerator === 'function') {
         const headerValue = headerValueOrGenerator(serviceFunctionArgument, response);
         if (headerValue !== undefined) {
-          if (typeof resp?.header === 'function') {
-            resp.header(headerName, headerValue);
-          } else if (typeof resp?.set === 'function') {
-            resp.set(headerName, headerValue);
+          if (typeof resp.setHeader === 'function') {
+            resp.setHeader(headerName, headerValue);
           }
         }
       }
     });
 
     const responseStatusCode = serviceFunctionAnnotationContainer.getResponseStatusCodeForServiceFunction(
-      controller[serviceName].constructor,
+      microservice[serviceName].constructor,
       functionName
     );
 
-    resp?.status(
+    resp.writeHead(
       responseStatusCode && process.env.NODE_ENV !== 'development'
         ? responseStatusCode
-        : HttpStatusCodes.SUCCESS
+        : HttpStatusCodes.SUCCESS, { 'Content-Type': 'application/json' }
     );
 
-    resp?.send(response);
+    resp.end(response);
   } catch (errorOrBackkError) {
     storedError = errorOrBackkError;
     if (resp && errorOrBackkError instanceof HttpException) {
-      resp.status(errorOrBackkError.getStatus());
-      resp.send(errorOrBackkError.getResponse());
+      resp.writeHead(errorOrBackkError.getStatus(), { 'Content-Type': 'application/json' });
+      resp.end(errorOrBackkError.getResponse());
     } else if (resp && isBackkError(errorOrBackkError)) {
-      resp.status((errorOrBackkError as BackkError).statusCode);
-      resp.send(errorOrBackkError);
+      resp.writeHead((errorOrBackkError as BackkError).statusCode,  { 'Content-Type': 'application/json' });
+      resp.end(errorOrBackkError);
     } else {
       if (errorOrBackkError instanceof HttpException) {
         throw errorOrBackkError;
@@ -607,20 +594,20 @@ export default async function tryExecuteServiceMethod(
       throw errorOrBackkError;
     }
   } finally {
-    if (controller[serviceName] instanceof UserAccountBaseService || userName) {
+    if (microservice[serviceName] instanceof UserAccountBaseService || userName) {
       const auditLogEntry = createAuditLogEntry(
         userName ?? serviceFunctionArgument?.userName ?? '',
-        headers['X-Forwarded-For'] ?? '',
-        headers.Authorization,
-        controller[serviceName] instanceof UserAccountBaseService ? functionName : serviceFunctionName,
+        (headers['x-forwarded-for'] ?? '') as string,
+        (headers.authorization ?? '') as string,
+        microservice[serviceName] instanceof UserAccountBaseService ? functionName : serviceFunctionName,
         storedError ? 'failure' : 'success',
         storedError?.getStatus(),
         storedError?.getResponse().errorMessage,
-        controller[serviceName] instanceof UserAccountBaseService
+        microservice[serviceName] instanceof UserAccountBaseService
           ? serviceFunctionArgument
           : { _id: response?._id }
       );
-      await (controller?.auditLoggingService as AuditLoggingService).log(auditLogEntry);
+      await (microservice?.auditLoggingService as AuditLoggingService).log(auditLogEntry);
     }
   }
 }

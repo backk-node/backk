@@ -43,6 +43,7 @@ export async function scheduleCronJob(
                   serviceFunctionName,
                   serviceFunctionArgument ?? {},
                   {},
+                  'POST',
                   undefined,
                   undefined,
                   false

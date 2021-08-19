@@ -193,8 +193,6 @@ Bsrc/types/postqueryoperations/_IdsAndDefaultPostQueryOperations.ts,f/b/fb84f52
 
 .gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302
 f
-6src/observability/logging/audit/createAuditLogEntry.ts,9/3/93ee41cdce181e9e3b24f2cec0e1636fca8d4985
-f
 6src/observability/logging/audit/AuditLoggingService.ts,5/0/5094a81c71e92af423372d5e716a29f584c57805
 `
 0src/observability/logging/audit/AuditLogEntry.ts,5/6/56543d47b33540c49f8646fc49d968b70cba4a86
@@ -220,8 +218,6 @@ n
 >src/decorators/typeproperty/typePropertyAnnotationContainer.ts,c/8/c810282510d9ae8ef1f187c69f3bc3db0d6976fb
 a
 1src/decorators/typeproperty/IsStringOrObjectId.ts,3/d/3dcbdab0b32d613001d9e23af1a82e227482dadd
-Z
-*src/service/startup/StartupCheckService.ts,3/c/3c94b7ecf864ecb2fae8f2b6958fb46cc906661c
 X
 (src/scheduling/entities/JobScheduling.ts,9/b/9b9457714c11119b32f245c1df42a2d1000b2031
 O
@@ -276,9 +272,5 @@ _
 +src/observability/logging/logEnvironment.ts,e/2/e2977c9c028b7a5f9f113c1370453b46c7aab27a
 f
 6src/dbmanager/sql/operations/ddl/initializeDatabase.ts,f/8/f802b37e1e5afce5eb4583dec11c7c5d7a2d5810
-Y
-)src/authorization/AuthorizationService.ts,f/a/fae3431df4d47a5079edb7fc07ab1a3bb92361e7
 g
 7src/authorization/DefaultJwtAuthorizationServiceImpl.ts,2/3/237d28675ac2ec3407f0cac7ef7c2cce47b4d46c
-U
-%src/initialization/initializeBackk.ts,2/7/27dc3e06ba55e3fa65f9de7d7ddabaa6b3892cba

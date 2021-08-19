@@ -1,6 +1,6 @@
-import AbstractDataStore from "../datastore/AbstractDataStore";
 import consumeFromRedis from "../remote/messagequeue/redis/consumeFromRedis";
+import Microservice from "../microservice/Microservice";
 
-export default async function startRedisConsumer(appController: any) {
-  await consumeFromRedis(appController, process.env.REDIS_SERVER, 'notification-service.vitja');
+export default async function startRedisConsumer(microservice: Microservice) {
+  await consumeFromRedis(microservice, process.env.REDIS_SERVER, 'notification-service.vitja');
 }

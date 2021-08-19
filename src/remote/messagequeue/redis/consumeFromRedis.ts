@@ -40,6 +40,7 @@ export default async function consumeFromRedis(
         serviceFunctionName,
         serviceFunctionArgument,
         headers ?? {},
+        'POST',
         response
       );
 

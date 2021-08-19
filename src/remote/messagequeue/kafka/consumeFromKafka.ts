@@ -175,6 +175,7 @@ export default async function consumeFromKafka(
             serviceFunctionName,
             serviceFunctionArgument,
             (headers as any) ?? {},
+            'POST',
             response
           );
 

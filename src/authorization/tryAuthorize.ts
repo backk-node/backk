@@ -13,7 +13,7 @@ export default async function tryAuthorize(
   service: BaseService,
   functionName: string,
   serviceFunctionArgument: any,
-  authHeader: string | undefined,
+  authHeader: string | string[] | undefined,
   authorizationService: any,
   usersService: UserAccountBaseService | undefined
 ): Promise<void | string> {

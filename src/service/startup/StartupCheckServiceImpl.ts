@@ -19,7 +19,7 @@ export default class StartupCheckServiceImpl extends StartupCheckService {
   async isServiceStarted(): PromiseErrorOr<null> {
     if (
       !(await isDbInitialized(this.dataStore)) &&
-      !(await initializeDatabase(StartupCheckService.controller, this.dataStore))
+      !(await initializeDatabase(StartupCheckService.microservice, this.dataStore))
     ) {
       return [
         null,
@@ -30,7 +30,7 @@ export default class StartupCheckServiceImpl extends StartupCheckService {
       ];
     } else if (
       !scheduledJobs &&
-      !(await scheduleJobsForExecution(StartupCheckService.controller, this.dataStore))
+      !(await scheduleJobsForExecution(StartupCheckService.microservice, this.dataStore))
     ) {
       return [
         null,

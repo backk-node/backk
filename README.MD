@@ -12,7 +12,9 @@
 - [Features](#features)
 - [Install](#install)
 - [Sample Microservice](#sample-microservice)
-- [Usage Documentation](#usage)
+- [Usage Documentation](#usage-documentation)
+- [API Documentation](#api-documentation)
+  - [AbstractDataStore](#api-documentation-abstractdatastore)
 - [Feedback](#feedback)
 - [Contributing](#contributing)
 - [Contributors](#contributors)
@@ -66,7 +68,7 @@
 
 ## <a href="sample-microservice"></a> Sample Microservice
 
-## <a href="usage"></a> Usage Documentation
+## <a href="usage-documentation"></a> Usage Documentation
 
 ## <a href="feedback"></a> Feedback
 

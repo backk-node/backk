@@ -19,7 +19,7 @@ import { One } from "../datastore/AbstractDataStore";
 export default async function tryScheduleJobExecution(
   controller: any,
   scheduledExecutionArgument: any,
-  headers: { [key: string]: string },
+  headers: { [key: string]: string | string[] | undefined },
   resp?: any
 ) {
   const instantiatedScheduledExecutionArgument = plainToClass(JobScheduling, scheduledExecutionArgument);

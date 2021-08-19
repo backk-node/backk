@@ -9,8 +9,10 @@ import scheduleJobsForExecution from "../scheduling/scheduleJobsForExecution";
 import StartupCheckService from "../service/startup/StartupCheckService";
 import initializeCls from "../continuationlocalstorage/initializeCls";
 import Microservice from "../microservice/Microservice";
+import initializeController from "../controller/initializeController";
 
 export default async function initializeBackk(microservice: Microservice) {
+  initializeController(microservice, microservice.dataStore);
   initializeCls();
   StartupCheckService.microservice = microservice;
   logEnvironment();

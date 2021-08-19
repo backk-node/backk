@@ -272,5 +272,3 @@ _
 +src/observability/logging/logEnvironment.ts,e/2/e2977c9c028b7a5f9f113c1370453b46c7aab27a
 f
 6src/dbmanager/sql/operations/ddl/initializeDatabase.ts,f/8/f802b37e1e5afce5eb4583dec11c7c5d7a2d5810
-g
-7src/authorization/DefaultJwtAuthorizationServiceImpl.ts,2/3/237d28675ac2ec3407f0cac7ef7c2cce47b4d46c

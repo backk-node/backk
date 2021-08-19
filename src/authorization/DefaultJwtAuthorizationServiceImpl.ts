@@ -17,7 +17,7 @@ export default class DefaultJwtAuthorizationServiceImpl extends AuthorizationSer
   ) {
     super();
     if (!jwtSigningSecretOrPublicKeyFetchUrl) {
-      throw new Error('jwtSigningSecretOrPublicKeyFetchUrl cannot be undefined')
+      throw new Error('jwtSigningSecretOrPublicKeyFetchUrl cannot be undefined');
     }
     this.jwtSigningSecretOrPublicKeyFetchUrl = jwtSigningSecretOrPublicKeyFetchUrl;
   }
@@ -41,6 +41,7 @@ export default class DefaultJwtAuthorizationServiceImpl extends AuthorizationSer
 
   async hasUserRoleIn(roles: string[], authHeader: string): Promise<boolean> {
     const jwt = DefaultJwtAuthorizationServiceImpl.getJwtFromAuthHeader(authHeader);
+
     if (jwt) {
       if (!this.jwtSigningSecretOrPublicKey) {
         this.jwtSigningSecretOrPublicKey = await this.getJwtSigningSecretOrPublicKey();
@@ -54,12 +55,8 @@ export default class DefaultJwtAuthorizationServiceImpl extends AuthorizationSer
   }
 
   private static getJwtFromAuthHeader(authHeader: string): string {
-    const authHeaderParts = authHeader.split('Bearer ');
-    if (authHeaderParts[1]) {
-      return Base64.decode(authHeaderParts[1]);
-    }
-
-    return '';
+    const base64EncodedJwt = authHeader.split('Bearer ').pop();
+    return base64EncodedJwt ? Base64.decode(base64EncodedJwt) : '';
   }
 
   private isUrl(value: string): boolean {

@@ -21,5 +21,5 @@ export default async function initialize(microservice: Microservice) {
   scheduleCronJobsForExecution(microservice, microservice.dataStore);
   await scheduleJobsForExecution(microservice, microservice.dataStore);
   reloadLoggingConfigOnChange();
-  log(Severity.INFO, 'Service started', '');
+  log(Severity.INFO, 'Microservice initialized', '');
 }

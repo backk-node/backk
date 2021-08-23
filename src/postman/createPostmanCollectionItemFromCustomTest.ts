@@ -35,10 +35,10 @@ export default function createPostmanCollectionItemFromCustomTest({
               }
             },
       url: {
-        raw: 'http://localhost:3000/' + serviceFunctionName,
+        raw: `http://localhost:${process.env.port ?? 3000}/` + serviceFunctionName,
         protocol: 'http',
         host: ['localhost'],
-        port: '3000',
+        port: `${process.env.port ?? 3000}`,
         path: [serviceFunctionName]
       }
     },

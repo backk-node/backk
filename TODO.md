@@ -33,20 +33,13 @@ Split services to different microservices
 - Kafka sendTo integration tests, create topic name with uuid postfix, use that and delete topic at end of testing
 - Redis sendTo integeration tests, create db/topic name with uuid postfix, use that and delete topic at end of testing
 - mysql2 distributed tracing
-- Default loginService, signUpService, passwordReset service
-    - Login route, check Referer header exists and domain ending is correct, eg. https://<something>.domain.com
-    - User, add role field, joka voi olla createUserissa vain "user"
-    - userName should be capitalized when comparing existence
-    - userName should checked first that it does not exist (case-insensitive)
-    - loginService hook to perform eg. account validation email sending
-    - 2-factor authentication, browser fingerprinting
 - Optimoi sivutus, jos order by:tä ei ole annettu ja default order by on by _id:
     https://en.wikipedia.org/wiki/Select_(SQL)#Method_with_filter_(it_is_more_sophisticated_but_necessary_for_very_big_dataset)
 - Support for analytics aggregated queries, aggregations (function name, fieldname), group by, filters
     - Put analytics query inside its service and enabled for 'management' role for u
 - Add Avro schema generation and content type support (avro-js)
 
-- Backk-frontend automatically create a frontend for one or more backends
+- Backk-auto-frontend
   - backend metadata fetch urls are given in env variable as parameter
   
 - Create opentelemetry kafkajs plugin

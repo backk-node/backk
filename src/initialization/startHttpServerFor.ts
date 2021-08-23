@@ -1,8 +1,7 @@
-import { createServer } from 'http';
-import tryExecuteServiceMethod, {
-  ServiceFunctionExecutionOptions
-} from '../execution/tryExecuteServiceMethod';
-import Microservice from '../microservice/Microservice';
+import { createServer } from "http";
+import tryExecuteServiceMethod, { ServiceFunctionExecutionOptions } from "../execution/tryExecuteServiceMethod";
+import Microservice from "../microservice/Microservice";
+import log, { Severity } from "../observability/logging/log";
 
 export type HttpVersion = 1;
 
@@ -40,5 +39,7 @@ export default async function startHttpServerFor(
     });
   });
 
-  return server.listen(8000);
+  const port = process.env.port ?? 3000;
+  log(Severity.INFO, `HTTP server started, listening to port ${port}`, '')
+  return server.listen(port);
 }

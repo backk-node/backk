@@ -132,10 +132,10 @@ export default function createPostmanCollectionItem(
               }
             },
       url: {
-        raw: 'http://localhost:3000/' + serviceMetadata.serviceName + '.' + functionMetadata.functionName,
+        raw: `http://localhost:${process.env.port ?? 3000}/` + serviceMetadata.serviceName + '.' + functionMetadata.functionName,
         protocol: 'http',
         host: ['localhost'],
-        port: '3000',
+        port: `${process.env.port ?? 3000}`,
         path: [serviceMetadata.serviceName + '.' + functionMetadata.functionName]
       }
     },

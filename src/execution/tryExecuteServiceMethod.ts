@@ -1,34 +1,34 @@
-import { HttpException } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
-import _ from 'lodash';
-import Redis from 'ioredis';
-import tryAuthorize from '../authorization/tryAuthorize';
-import BaseService from '../service/BaseService';
-import tryVerifyCaptchaToken from '../captcha/tryVerifyCaptchaToken';
-import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
-import UserAccountBaseService from '../service/useraccount/UserAccountBaseService';
-import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
-import tryValidateServiceFunctionArgument from '../validation/tryValidateServiceFunctionArgument';
-import tryValidateServiceFunctionReturnValue from '../validation/tryValidateServiceFunctionReturnValue';
-import defaultServiceMetrics from '../observability/metrics/defaultServiceMetrics';
-import createBackkErrorFromError from '../errors/createBackkErrorFromError';
-import log, { Severity } from '../observability/logging/log';
-import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
-import { HttpStatusCodes, MAX_INT_VALUE } from '../constants/constants';
-import getNamespacedServiceName from '../utils/getServiceNamespace';
-import AuditLoggingService from '../observability/logging/audit/AuditLoggingService';
-import createAuditLogEntry from '../observability/logging/audit/createAuditLogEntry';
-import executeMultipleServiceFunctions from './executeMultipleServiceFunctions';
-import tryScheduleJobExecution from '../scheduling/tryScheduleJobExecution';
-import isExecuteMultipleRequest from './isExecuteMultipleRequest';
-import createErrorFromErrorCodeMessageAndStatus from '../errors/createErrorFromErrorCodeMessageAndStatus';
-import { BackkError } from '../types/BackkError';
-import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
-import { BACKK_ERRORS } from '../errors/backkErrors';
-import emptyError from '../errors/emptyError';
-import fetchFromRemoteServices from './fetchFromRemoteServices';
-import isBackkError from '../errors/isBackkError';
-import getClsNamespace from '../continuationlocalstorage/getClsNamespace';
+import { plainToClass } from "class-transformer";
+import _ from "lodash";
+import Redis from "ioredis";
+import tryAuthorize from "../authorization/tryAuthorize";
+import BaseService from "../service/BaseService";
+import tryVerifyCaptchaToken from "../captcha/tryVerifyCaptchaToken";
+import getTypeInfoForTypeName from "../utils/type/getTypeInfoForTypeName";
+import UserAccountBaseService from "../service/useraccount/UserAccountBaseService";
+import { ServiceMetadata } from "../metadata/types/ServiceMetadata";
+import tryValidateServiceFunctionArgument from "../validation/tryValidateServiceFunctionArgument";
+import tryValidateServiceFunctionReturnValue from "../validation/tryValidateServiceFunctionReturnValue";
+import defaultServiceMetrics from "../observability/metrics/defaultServiceMetrics";
+import createBackkErrorFromError from "../errors/createBackkErrorFromError";
+import log, { Severity } from "../observability/logging/log";
+import serviceFunctionAnnotationContainer
+  from "../decorators/service/function/serviceFunctionAnnotationContainer";
+import { HttpStatusCodes, MAX_INT_VALUE } from "../constants/constants";
+import getNamespacedServiceName from "../utils/getServiceNamespace";
+import AuditLoggingService from "../observability/logging/audit/AuditLoggingService";
+import createAuditLogEntry from "../observability/logging/audit/createAuditLogEntry";
+import executeMultipleServiceFunctions from "./executeMultipleServiceFunctions";
+import tryScheduleJobExecution from "../scheduling/tryScheduleJobExecution";
+import isExecuteMultipleRequest from "./isExecuteMultipleRequest";
+import createErrorFromErrorCodeMessageAndStatus from "../errors/createErrorFromErrorCodeMessageAndStatus";
+import { BackkError } from "../types/BackkError";
+import createBackkErrorFromErrorCodeMessageAndStatus
+  from "../errors/createBackkErrorFromErrorCodeMessageAndStatus";
+import { BACKK_ERRORS } from "../errors/backkErrors";
+import emptyError from "../errors/emptyError";
+import fetchFromRemoteServices from "./fetchFromRemoteServices";
+import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
 
 export interface ServiceFunctionExecutionOptions {
   allowedServiceFunctionsRegExpForHttpGetMethod?: RegExp;
@@ -414,7 +414,7 @@ export default async function tryExecuteServiceMethod(
           defaultServiceMetrics.incrementHttpClientErrorCounter(serviceFunctionName);
         }
         // noinspection ExceptionCaughtLocallyJS
-        throw new HttpException(backkError, backkError.statusCode);
+        throw backkError;
       }
 
       if (response) {
@@ -439,7 +439,7 @@ export default async function tryExecuteServiceMethod(
             defaultServiceMetrics.incrementHttpClientErrorCounter(serviceFunctionName);
           }
           // noinspection ExceptionCaughtLocallyJS
-          throw new HttpException(backkError, backkError.statusCode);
+          throw backkError;
         }
 
         if (Array.isArray(response) && response.length > 0 && typeof response[0] === 'object') {
@@ -572,27 +572,15 @@ export default async function tryExecuteServiceMethod(
     resp.writeHead(
       responseStatusCode && process.env.NODE_ENV !== 'development'
         ? responseStatusCode
-        : HttpStatusCodes.SUCCESS, { 'Content-Type': 'application/json' }
+        : HttpStatusCodes.SUCCESS,
+      { 'Content-Type': 'application/json' }
     );
 
     resp.end(response);
-  } catch (errorOrBackkError) {
-    storedError = errorOrBackkError;
-    if (resp && errorOrBackkError instanceof HttpException) {
-      resp.writeHead(errorOrBackkError.getStatus(), { 'Content-Type': 'application/json' });
-      resp.end(errorOrBackkError.getResponse());
-    } else if (resp && isBackkError(errorOrBackkError)) {
-      resp.writeHead((errorOrBackkError as BackkError).statusCode,  { 'Content-Type': 'application/json' });
-      resp.end(errorOrBackkError);
-    } else {
-      if (errorOrBackkError instanceof HttpException) {
-        throw errorOrBackkError;
-      } else if (isBackkError(errorOrBackkError)) {
-        throw new HttpException(errorOrBackkError, errorOrBackkError.statusCode);
-      }
-
-      throw errorOrBackkError;
-    }
+  } catch (backkError) {
+    storedError = backkError;
+    resp.writeHead((backkError as BackkError).statusCode, { 'Content-Type': 'application/json' });
+    resp.end(backkError);
   } finally {
     if (microservice[serviceName] instanceof UserAccountBaseService || userName) {
       const auditLogEntry = createAuditLogEntry(

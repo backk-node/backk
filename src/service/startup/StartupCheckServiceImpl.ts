@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import AbstractDataStore from '../../datastore/AbstractDataStore';
 import StartupCheckService from './StartupCheckService';
 import createBackkErrorFromErrorMessageAndStatusCode from '../../errors/createBackkErrorFromErrorMessageAndStatusCode';
@@ -8,7 +7,6 @@ import AllowForClusterInternalUse from '../../decorators/service/function/AllowF
 import scheduleJobsForExecution, { scheduledJobs } from '../../scheduling/scheduleJobsForExecution';
 import { PromiseErrorOr } from '../../types/PromiseErrorOr';
 
-@Injectable()
 export default class StartupCheckServiceImpl extends StartupCheckService {
   constructor(dataStore: AbstractDataStore) {
     super({}, dataStore);

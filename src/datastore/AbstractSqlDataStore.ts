@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import SqlExpression from './sql/expressions/SqlExpression';
 import AbstractDataStore, { Field, Many, One } from './AbstractDataStore';
 import createEntity from './sql/operations/dml/createEntity';
@@ -42,7 +41,6 @@ import updateEntityByFilters from './sql/operations/dml/updateEntityByFilters';
 import doesEntityArrayFieldContainValue from './sql/operations/dql/doesEntityArrayFieldContainValue';
 import EntityCountRequest from '../types/EntityCountRequest';
 
-@Injectable()
 export default abstract class AbstractSqlDataStore extends AbstractDataStore {
   getClient(): any {
     return undefined;

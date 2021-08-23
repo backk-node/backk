@@ -5,7 +5,6 @@ import { RecursivePartial } from '../types/RecursivePartial';
 import { PreHook } from './hooks/PreHook';
 import { BackkEntity } from '../types/entities/BackkEntity';
 import { PostQueryOperations } from '../types/postqueryoperations/PostQueryOperations';
-import { Injectable } from '@nestjs/common';
 import forEachAsyncParallel from '../utils/forEachAsyncParallel';
 import UserDefinedFilter from '../types/userdefinedfilters/UserDefinedFilter';
 import BaseService from '../service/BaseService';
@@ -40,7 +39,6 @@ export type One<T> = {
   data: T;
 };
 
-@Injectable()
 export default abstract class AbstractDataStore {
   private readonly services: BaseService[] = [];
   readonly schema: string;

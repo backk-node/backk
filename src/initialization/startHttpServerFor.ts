@@ -14,6 +14,8 @@ export default async function startHttpServerFor(
   const server = createServer((request, response) => {
     const requestBodyChunks: string[] = [];
 
+    request.setEncoding('utf8');
+
     request.on('data', (chunk) => {
       requestBodyChunks.push(chunk);
     });
@@ -24,7 +26,11 @@ export default async function startHttpServerFor(
       if (request.method === 'GET') {
         serviceFunctionArgument = request.url?.split('?arg=').pop();
       } else {
-        serviceFunctionArgument = JSON.parse(requestBodyChunks.join(''));
+        try {
+          serviceFunctionArgument = requestBodyChunks.length > 1 ? JSON.parse(requestBodyChunks.join('')) : null;
+        } catch(error) {
+          serviceFunctionArgument = null;
+        }
       }
 
       tryExecuteServiceMethod(

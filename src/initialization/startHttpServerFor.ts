@@ -27,7 +27,7 @@ export default async function startHttpServerFor(
         serviceFunctionArgument = request.url?.split('?arg=').pop();
       } else {
         try {
-          serviceFunctionArgument = requestBodyChunks.length > 1 ? JSON.parse(requestBodyChunks.join('')) : null;
+          serviceFunctionArgument = requestBodyChunks.length > 0 ? JSON.parse(requestBodyChunks.join('')) : null;
         } catch(error) {
           serviceFunctionArgument = null;
         }

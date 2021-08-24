@@ -153,7 +153,7 @@ export default async function tryExecuteServiceMethod(
     if (serviceFunctionName === 'metadataService.getServicesMetadata') {
       if (!options || options.isMetadataServiceEnabled === undefined || options.isMetadataServiceEnabled) {
         resp.writeHead(200, { 'Content-Type': 'application/json' });
-        resp.end(microservice.publicServicesMetadata);
+        resp.end(JSON.stringify(microservice.publicServicesMetadata));
         return;
       } else {
         throw createBackkErrorFromErrorCodeMessageAndStatus({
@@ -576,11 +576,11 @@ export default async function tryExecuteServiceMethod(
       { 'Content-Type': 'application/json' }
     );
 
-    resp.end(response);
+    resp.end(JSON.stringify(response));
   } catch (backkError) {
     storedError = backkError;
     resp.writeHead((backkError as BackkError).statusCode, { 'Content-Type': 'application/json' });
-    resp.end(backkError);
+    resp.end(JSON.stringify(backkError));
   } finally {
     if (microservice[serviceName] instanceof UserAccountBaseService || userName) {
       const auditLogEntry = createAuditLogEntry(

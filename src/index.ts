@@ -198,5 +198,7 @@ export { default as createBackkErrorFromErrorMessageAndStatusCode } from './erro
 export { One, Many } from './datastore/AbstractDataStore';
 export { default as EntityCountRequest } from './types/EntityCountRequest';
 
+export { default as throwException } from './utils/throwException';
+
 export * from 'class-validator';
 export * as argon2 from 'argon2';

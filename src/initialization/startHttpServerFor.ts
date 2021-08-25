@@ -49,8 +49,7 @@ export default async function startHttpServerFor(
   });
 
   function exit(signal: string) {
-    server.close((error?: Error) => {
-      console.log(error);
+    server.close(() => {
       log(Severity.INFO, `HTTP server terminated due to signal: ${signal}`, '');
     });
   }

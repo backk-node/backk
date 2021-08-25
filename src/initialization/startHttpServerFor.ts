@@ -1,7 +1,9 @@
-import { createServer } from "http";
-import tryExecuteServiceMethod, { ServiceFunctionExecutionOptions } from "../execution/tryExecuteServiceMethod";
-import Microservice from "../microservice/Microservice";
-import log, { Severity } from "../observability/logging/log";
+import { createServer } from 'http';
+import tryExecuteServiceMethod, {
+  ServiceFunctionExecutionOptions
+} from '../execution/tryExecuteServiceMethod';
+import Microservice from '../microservice/Microservice';
+import log, { Severity } from '../observability/logging/log';
 
 export type HttpVersion = 1;
 
@@ -27,8 +29,9 @@ export default async function startHttpServerFor(
         serviceFunctionArgument = request.url?.split('?arg=').pop();
       } else {
         try {
-          serviceFunctionArgument = requestBodyChunks.length > 0 ? JSON.parse(requestBodyChunks.join('')) : null;
-        } catch(error) {
+          serviceFunctionArgument =
+            requestBodyChunks.length > 0 ? JSON.parse(requestBodyChunks.join('')) : null;
+        } catch (error) {
           serviceFunctionArgument = null;
         }
       }
@@ -45,7 +48,20 @@ export default async function startHttpServerFor(
     });
   });
 
+  function exit(signal: string) {
+    server.close(() => {
+      setTimeout(() => {
+        log(Severity.INFO, 'Terminating microservice due to received signal: ' + signal, '');
+        process.exit(0)
+      }, 1000);
+    });
+  }
+
+  process.on('SIGINT', exit);
+  process.on('SIGQUIT', exit);
+  process.on('SIGTERM', exit);
+
   const port = process.env.port ?? 3000;
-  log(Severity.INFO, `HTTP server started, listening to port ${port}`, '')
+  log(Severity.INFO, `HTTP server started, listening to port ${port}`, '');
   return server.listen(port);
 }

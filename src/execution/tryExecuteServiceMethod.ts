@@ -589,8 +589,8 @@ export default async function tryExecuteServiceMethod(
         (headers.authorization ?? '') as string,
         microservice[serviceName] instanceof UserAccountBaseService ? functionName : serviceFunctionName,
         storedError ? 'failure' : 'success',
-        storedError?.getStatus(),
-        storedError?.getResponse().errorMessage,
+        storedError?.statusCode,
+        storedError?.message,
         microservice[serviceName] instanceof UserAccountBaseService
           ? serviceFunctionArgument
           : { _id: response?._id }

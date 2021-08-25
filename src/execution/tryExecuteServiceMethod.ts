@@ -328,7 +328,7 @@ export default async function tryExecuteServiceMethod(
       const clsNamespace = getClsNamespace('serviceFunctionExecution');
 
       [response, backkError] = await clsNamespace.runAndReturn(async () => {
-        clsNamespace.set('authHeader', headers.Authorization);
+        clsNamespace.set('authHeader', headers.authorization);
         clsNamespace.set('dbLocalTransactionCount', 0);
         clsNamespace.set('remoteServiceCallCount', 0);
         clsNamespace.set('postHookRemoteServiceCallCount', 0);

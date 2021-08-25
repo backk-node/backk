@@ -50,10 +50,7 @@ export default async function startHttpServerFor(
 
   function exit(signal: string) {
     server.close(() => {
-      setTimeout(() => {
-        log(Severity.INFO, 'Terminating microservice due to received signal: ' + signal, '');
-        process.exit(0)
-      }, 1000);
+      log(Severity.INFO, `HTTP server terminated due to signal: ${signal}`, '');
     });
   }
 

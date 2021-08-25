@@ -13,23 +13,23 @@ import AbstractDataStore from '../datastore/AbstractDataStore';
 import log, { Severity } from '../observability/logging/log';
 import { BACKK_ERRORS } from '../errors/backkErrors';
 
-export interface ControllerInitOptions {
+export interface MicroserviceInitOptions {
   generatePostmanTestFile?: boolean;
   generatePostmanApiFile?: boolean;
 }
 
-export default function initializeController(
-  controller: any,
+export default function initializeMicroservice(
+  microservice: any,
   dataStore: AbstractDataStore,
-  controllerInitOptions?: ControllerInitOptions,
+  microserviceInitOptions?: MicroserviceInitOptions,
   remoteServiceRootDir = ''
 ) {
-  const serviceNameToServiceEntries = Object.entries(controller).filter(
+  const serviceNameToServiceEntries = Object.entries(microservice).filter(
     ([, service]: [string, any]) => service instanceof BaseService || remoteServiceRootDir
   );
 
   if (serviceNameToServiceEntries.length === 0) {
-    throw new Error(controller.constructor + ': No services defined. Services must extend from BaseService.');
+    throw new Error(microservice.constructor + ': No services defined. Services must extend from BaseService.');
   }
 
   if (!remoteServiceRootDir) {
@@ -55,7 +55,7 @@ export default function initializeController(
       functionNameToReturnTypeNameMap,
       functionNameToDocumentationMap
     ] = parseServiceFunctionNameToArgAndReturnTypeNameMaps(
-      controller[serviceName].constructor,
+      microservice[serviceName].constructor,
       serviceName,
       getSrcFilePathNameForTypeName(
         serviceName.charAt(0).toUpperCase() + serviceName.slice(1),
@@ -64,7 +64,7 @@ export default function initializeController(
       remoteServiceRootDir
     );
 
-    controller[`${serviceName}__BackkTypes__`] = {
+    microservice[`${serviceName}__BackkTypes__`] = {
       serviceDocumentation,
       functionNameToParamTypeNameMap,
       functionNameToReturnTypeNameMap,
@@ -72,26 +72,26 @@ export default function initializeController(
     };
   });
 
-  generateTypesForServices(controller, remoteServiceRootDir);
+  generateTypesForServices(microservice, remoteServiceRootDir);
 
-  Object.entries(controller)
+  Object.entries(microservice)
     .filter(
       ([serviceName, service]: [string, any]) =>
         service instanceof BaseService || (remoteServiceRootDir && !serviceName.endsWith('__BackkTypes__'))
     )
     .forEach(([serviceName]: [string, any]) => {
       getNestedClasses(
-        Object.keys(controller[serviceName].Types ?? {}),
-        controller[serviceName].Types,
-        controller[serviceName].PublicTypes,
+        Object.keys(microservice[serviceName].Types ?? {}),
+        microservice[serviceName].Types,
+        microservice[serviceName].PublicTypes,
         remoteServiceRootDir
       );
 
-      Object.entries(controller[serviceName].Types ?? {}).forEach(([, typeClass]: [string, any]) => {
+      Object.entries(microservice[serviceName].Types ?? {}).forEach(([, typeClass]: [string, any]) => {
         setClassPropertyValidationDecorators(
           typeClass,
           serviceName,
-          controller[serviceName].Types,
+          microservice[serviceName].Types,
           remoteServiceRootDir
         );
 
@@ -99,11 +99,11 @@ export default function initializeController(
       }, {});
     });
 
-  const servicesMetadata = generateServicesMetadata(controller, dataStore, remoteServiceRootDir);
+  const servicesMetadata = generateServicesMetadata(microservice, dataStore, remoteServiceRootDir);
 
   if (!remoteServiceRootDir) {
-    controller.servicesMetadata = servicesMetadata;
-    controller.publicServicesMetadata = servicesMetadata.map((serviceMetadata) => {
+    microservice.servicesMetadata = servicesMetadata;
+    microservice.publicServicesMetadata = servicesMetadata.map((serviceMetadata) => {
       const {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         types, // NOSONAR
@@ -128,19 +128,19 @@ export default function initializeController(
       };
     });
 
-    controller.publicServicesMetadata = {
-      servicesMetadata: controller.publicServicesMetadata,
+    microservice.publicServicesMetadata = {
+      servicesMetadata: microservice.publicServicesMetadata,
       genericErrors: BACKK_ERRORS
     };
 
-    if (process.env.NODE_ENV === 'development' && (controllerInitOptions?.generatePostmanTestFile ?? true)) {
-      writeTestsPostmanCollectionExportFile(controller, servicesMetadata);
+    if (process.env.NODE_ENV === 'development' && (microserviceInitOptions?.generatePostmanTestFile ?? true)) {
+      writeTestsPostmanCollectionExportFile(microservice, servicesMetadata);
     }
-    if (process.env.NODE_ENV === 'development' && (controllerInitOptions?.generatePostmanApiFile ?? true)) {
-      writeApiPostmanCollectionExportFile(controller, servicesMetadata);
+    if (process.env.NODE_ENV === 'development' && (microserviceInitOptions?.generatePostmanApiFile ?? true)) {
+      writeApiPostmanCollectionExportFile(microservice, servicesMetadata);
     }
 
-    const serviceNames = Object.entries(controller)
+    const serviceNames = Object.entries(microservice)
       .filter(([, service]: [string, any]) => service instanceof BaseService)
       .map(([serviceName]) => serviceName)
       .join(', ');

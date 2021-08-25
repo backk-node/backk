@@ -3,7 +3,7 @@ export { default as ResponseCacheConfigService } from './cache/ResponseCacheConf
 export { default as CaptchaVerifyService } from './captcha/CaptchaVerifyService';
 export * from './constants/constants';
 export { default as getClsNamespace } from './continuationlocalstorage/getClsNamespace';
-export { ControllerInitOptions, default as initializeController } from './controller/initializeController';
+export { MicroserviceInitOptions, default as initializeController } from './microservice/initializeMicroservice';
 
 export { default as AbstractDataStore } from './datastore/AbstractDataStore';
 export { default as MongoDbDataStore } from './datastore/MongoDbDataStore';

@@ -3,7 +3,7 @@ import forEachAsyncSequential from "../../utils/forEachAsyncSequential";
 import parseRemoteServiceFunctionCallUrlParts from "./parseRemoteServiceFunctionCallUrlParts";
 import fs from "fs";
 import generateClassFromSrcFile from "../../typescript/generator/generateClassFromSrcFile";
-import initializeController from "../../controller/initializeController";
+import initializeMicroservice from "../../microservice/initializeMicroservice";
 import { plainToClass } from "class-transformer";
 import tryValidateServiceFunctionArgument from "../../validation/tryValidateServiceFunctionArgument";
 import NoOpDataStore from "../../datastore/NoOpDataStore";
@@ -44,7 +44,7 @@ export async function validateServiceFunctionArguments(sends: CallOrSendToSpec[]
         [serviceName]: serviceInstance
       };
 
-      initializeController(controller, noOpDataStore, undefined, remoteServiceRootDir);
+      initializeMicroservice(controller, noOpDataStore, undefined, remoteServiceRootDir);
       remoteServiceNameToControllerMap[`${topic}$/${serviceName}`] = controller;
     }
 

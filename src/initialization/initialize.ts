@@ -1,4 +1,3 @@
-import AbstractDataStore from "../datastore/AbstractDataStore";
 import logEnvironment from "../observability/logging/logEnvironment";
 import defaultSystemAndNodeJsMetrics from "../observability/metrics/defaultSystemAndNodeJsMetrics";
 import initializeDatabase from "../datastore/sql/operations/ddl/initializeDatabase";
@@ -9,10 +8,10 @@ import scheduleJobsForExecution from "../scheduling/scheduleJobsForExecution";
 import StartupCheckService from "../service/startup/StartupCheckService";
 import initializeCls from "../continuationlocalstorage/initializeCls";
 import Microservice from "../microservice/Microservice";
-import initializeController from "../controller/initializeController";
+import initializeMicroservice from "../microservice/initializeMicroservice";
 
 export default async function initialize(microservice: Microservice) {
-  initializeController(microservice, microservice.dataStore);
+  initializeMicroservice(microservice, microservice.dataStore);
   initializeCls();
   StartupCheckService.microservice = microservice;
   logEnvironment();

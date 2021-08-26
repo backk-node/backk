@@ -9,7 +9,7 @@ import tryValidateServiceFunctionArgument from "../../validation/tryValidateServ
 import NoOpDataStore from "../../datastore/NoOpDataStore";
 
 export const remoteServiceNameToControllerMap: { [key: string]: any } = {};
-const noOpDataStore = new NoOpDataStore('');
+const noOpDataStore = new NoOpDataStore();
 
 export async function validateServiceFunctionArguments(sends: CallOrSendToSpec[]) {
   await forEachAsyncSequential(sends, async ({ remoteServiceFunctionUrl, serviceFunctionArgument }) => {

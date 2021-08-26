@@ -9,6 +9,7 @@ export { default as AbstractDataStore } from './datastore/AbstractDataStore';
 export { default as MongoDbDataStore } from './datastore/MongoDbDataStore';
 export { default as MySqlDataStore } from './datastore/MySqlDataStore';
 export { default as PostgreSqlDataStore } from './datastore/PostgreSqlDataStore';
+export { default as NoOpDataStore } from './datastore/NoOpDataStore';
 export * from './datastore/hooks/EntitiesPostHook';
 export { EntityPreHook } from './datastore/hooks/EntityPreHook';
 export * from './datastore/hooks/PostHook';

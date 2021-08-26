@@ -5,7 +5,7 @@
 
 <h1 align="center">Backk<br/></h1>
 <h3 align="center">Node.js framework for creating secure cloud-native microservices for Kubernetes in Typescript</h3>
-<h4 align="center">A replacement for REST and GraphQL</h4>
+<h4 align="center">An RPC style replacement for REST and GraphQL</h4>
 <h5 align="center"><i>Backk is currently in alpha phase</i></h5>
 
 ## Table of Contents

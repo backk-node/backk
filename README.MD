@@ -22,7 +22,7 @@
 - [Sponsors](#sponsors)
 - [License](#license)
 
-## <a href="features"></a> Features
+## <a name="features"></a> Features
 * Create synchronous and asynchronous microservices using
   * HTTP
   * Apache Kafka
@@ -63,7 +63,7 @@
   * Cron jobs
 * Liveness, Readiness and Startup probes support
 
-## <a href="get-started"></a> Get Started
+## <a name="get-started"></a> Get Started
 Follow the below steps: (In the future, there will be [backk-cli](https://github.com/backk-node/backk-cli) available, which can be used to generate a Backk project based on a set of questions)
 
 1. Clone [Backk starter project](https://github.com/backk-node/backk-starter)
@@ -72,15 +72,30 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
    ```
 2. Complete all 3 TODOs in *src/main.ts* and *src/MyMicroservice.ts* files
 3. Remove unused data stores:
-   * If you are using MongoDB, remove *src/datastores/mySqlDataStore.ts* and *src/datastores/postgreSqlDataStore.ts* files
-   * If you are using MySQL/MariaDB or MySQL compatible database, remove *src/datastores/mongoDbDataStore.ts* and *src/datastores/postgreSqlDataStore.ts* files
-   * If you are using PostgreSQL or PostgreSQL compatible database, remove *src/datastores/mySqlDataStore.ts* and *src/datastores/mongoDbDataStore.ts* files
+   * If you are using MongoDB, remove
+     * *src/datastores/mySqlDataStore.ts*
+     * *src/datastores/postgreSqlDataStore.ts*
+   * If you are using MySQL/MariaDB or MySQL compatible database, remove
+     * *src/datastores/mongoDbDataStore.ts*
+     * *src/datastores/postgreSqlDataStore.ts*
+   * If you are using PostgreSQL or PostgreSQL compatible database, remove
+     * *src/datastores/mySqlDataStore.ts*
+     *  *src/datastores/mongoDbDataStore.ts*
 4. Check that the environment variable values in the *.env* file are correct for your development environment
-   * If you are using MongoDB, check MONGO_DB_URI
-   * If you are using MySQL/MariaDB or MySQL compatible database, check MYSQL_HOST, MYSQL_USER and MYSQL_PASSWORD
-   * If you are using PostgreSQL or PostgreSQL compatible database, check POSTGRESQL_HOST, POSTGRESQL_USER and POSTGRESQL_PASSWORD
-   * If you are using Kafka, check KAFKA_SERVER
-   * if you are using Redis, check REDIS_SERVER
+   * If you are using MongoDB, check
+     * MONGO_DB_URI
+   * If you are using MySQL/MariaDB or MySQL compatible database, check
+      * MYSQL_HOST 
+      * MYSQL_USER
+      * MYSQL_PASSWORD
+   * If you are using PostgreSQL or PostgreSQL compatible database, check
+      * POSTGRESQL_HOST 
+      * POSTGRESQL_USER
+      * POSTGRESQL_PASSWORD
+   * If you are using Kafka, check
+      * KAFKA_SERVER
+   * if you are using Redis, check
+      * REDIS_SERVER
 5. OPTIONAL STEP: Remove unnecessary dependencies from *package.json* file
    * If you are using MongoDB, remove following lines:
      ```
@@ -117,18 +132,18 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
      npm install
      ```
 
-## <a href="sample-microservice"></a> Sample Microservice
+## <a name="sample-microservice"></a> Sample Microservice
 If you want to dive right into the deep end, check out the sample Backk microservice [here](https://github.com/backk-node/backk-example-project)
 
-## <a href="usage-documentation"></a> Usage Documentation
+## <a name="usage-documentation"></a> Usage Documentation
 
-## <a href="feedback"></a> Feedback
+## <a name="feedback"></a> Feedback
 
-## <a href="contributing"></a> Contributing
+## <a name="contributing"></a> Contributing
 
-## <a href="contributors"></a> Contributors
+## <a name="contributors"></a> Contributors
 
-## <a href="license"></a>License
+## <a name="license"></a>License
 
 MIT License
 

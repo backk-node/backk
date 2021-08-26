@@ -10,7 +10,7 @@ export default class NoOpDataStore extends AbstractDataStore {
   constructor() {
     super('');
   }
-  
+
   updateEntityByFilters<T extends BackkEntity>(): PromiseErrorOr<null> {
     throw new Error('Not implemented');
   }

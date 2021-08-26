@@ -51,12 +51,17 @@ export default async function startHttpServerFor(
   function exit(signal: string) {
     server.close(() => {
       log(Severity.INFO, `HTTP server terminated due to signal: ${signal}`, '');
+      process.exitCode = 0;
     });
   }
 
-  process.on('SIGINT', exit);
-  process.on('SIGQUIT', exit);
-  process.on('SIGTERM', exit);
+  process.once('SIGINT', exit);
+  process.once('SIGQUIT', exit);
+  process.once('SIGTERM', exit);
+
+  process.on('uncaughtExceptionMonitor', () => {
+    server.close();
+  });
 
   const port = process.env.port ?? 3000;
   log(Severity.INFO, `HTTP server started, listening to port ${port}`, '');

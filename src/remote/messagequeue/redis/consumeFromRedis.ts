@@ -21,6 +21,24 @@ export default async function consumeFromRedis(
   const redis = new Redis(`redis://${server}`);
   let lastQueueLengthUpdateTimestamp = 0;
 
+  function exit(signal: string) {
+    redis.quit();
+    log(Severity.INFO, `Redis consumer terminated due to signal: ${signal}`, '');
+    process.exitCode = 0;
+  }
+
+  process.once('SIGINT', exit);
+  process.once('SIGQUIT', exit);
+  process.once('SIGTERM', exit);
+
+  process.on('uncaughtExceptionMonitor', () => {
+    try {
+      redis.quit();
+    } catch {
+      // No operation
+    }
+  });
+
   // noinspection InfiniteLoopJS
   while (true) {
     try {

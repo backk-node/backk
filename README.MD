@@ -6,12 +6,12 @@
 <h1 align="center">Backk<br/></h1>
 <h3 align="center">Node.js framework for creating secure cloud-native microservices for Kubernetes in Typescript</h3>
 <h4 align="center">A replacement for REST and GraphQL</h4>
-<h5 align="center">Backk is currently in alpha phase</h5>
+<h5 align="center"><i>Backk is currently in alpha phase</i></h5>
 
 ## Table of Contents
 
 - [Features](#features)
-- [Install](#install)
+- [Get Started](#get-started)
 - [Sample Microservice](#sample-microservice)
 - [Usage Documentation](#usage-documentation)
 - [API Documentation](#api-documentation)
@@ -22,7 +22,7 @@
 - [Sponsors](#sponsors)
 - [License](#license)
 
-## <a href="install"></a> Features
+## <a href="features"></a> Features
 * Create synchronous and asynchronous microservices using
   * HTTP
   * Apache Kafka
@@ -63,11 +63,12 @@
   * Cron jobs
 * Liveness, Readiness and Startup probes support
 
-## <a href="install"></a> Install
-
-    npm install --save backk
+## <a href="get-started"></a> Get Started
+1. Clone [Backk starter project](https://github.com/backk-node/backk-starter)
+2. 
 
 ## <a href="sample-microservice"></a> Sample Microservice
+If you want to dive right into the deep end, check out the sample Backk microservice [here](https://github.com/backk-node/backk-example-project)
 
 ## <a href="usage-documentation"></a> Usage Documentation
 

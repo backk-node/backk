@@ -1,4 +1,4 @@
-import { ITopicConfig, Kafka, logLevel } from 'kafkajs';
+import { ITopicConfig, Kafka } from 'kafkajs';
 import tryExecuteServiceMethod from '../../../execution/tryExecuteServiceMethod';
 import tracerProvider from '../../../observability/distributedtracinig/tracerProvider';
 import log, { Severity } from '../../../observability/logging/log';
@@ -56,8 +56,31 @@ export default async function consumeFromKafka(
   let fetchSpan: Span | undefined;
   let hasFetchError = false;
 
+  function exit(signal: string) {
+    try {
+      consumer.disconnect();
+    } catch {
+      // No operation
+    }
+
+    log(Severity.INFO, `Kafka consumer terminated due to signal: ${signal}`, '');
+    process.exitCode = 0;
+  }
+
+  process.once('SIGINT', exit);
+  process.once('SIGQUIT', exit);
+  process.once('SIGTERM', exit);
+
+  process.on('uncaughtExceptionMonitor', () => {
+    try {
+      consumer.disconnect();
+    } catch {
+      // No operation
+    }
+  });
+
   consumer.on(consumer.events.CRASH, ({ error, ...restOfEvent }) => {
-    log(Severity.ERROR, 'Kafka consumer error: crashed due to errorMessageOnPreHookFuncExecFailure', error, restOfEvent);
+    log(Severity.ERROR, 'Kafka consumer error: crashed due to error: ', error, restOfEvent);
     defaultServiceMetrics.incrementKafkaConsumerErrorsByOne();
     hasFetchError = true;
     fetchSpan?.setStatus({

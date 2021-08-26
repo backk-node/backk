@@ -83,7 +83,7 @@ export default function log(
       Resource: {
         'service.name': serviceName,
         'service.namespace': process.env.SERVICE_NAMESPACE ?? '',
-        'service.instance.id': process.env.SERVICE_INSTANCE_ID ?? '',
+        'service.instance.id': process.env.SERVICE_INSTANCE_ID ?? getServiceName() + '-87ffab3-xx567',
         'service.version': packageObj.version,
         'node.name': process.env.NODE_NAME ?? ''
       },

@@ -162,11 +162,11 @@ If you want to ask a question
 
 ## <a name="contributors"></a> Contributors
 
-<table>
-  <tr>
-    <td valign="middle"><a href="https://github.com/pksilen"><img style="vertical-align:middle" width="40px" src="https://github.com/pksilen.png" />&nbsp;Petri Silén</a><td>
-  </tr>
-</table>
+|  |    Name     |
+---------|--------------
+| <img style="vertical-align:middle" width="40px" src="https://github.com/pksilen.png" /> | <a href="https://github.com/pksilen">Petri Silen</a> |
+
+
 ## <a name="license"></a>License
 
 MIT License

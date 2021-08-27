@@ -17,6 +17,7 @@
 - [API Documentation](#api-documentation)
   - [AbstractDataStore](#api-documentation-abstractdatastore)
 - [Feedback](#feedback)
+  - [Bugs](#bugs)
 - [Contributing](#contributing)
 - [Contributors](#contributors)
 - [Sponsors](#sponsors)
@@ -133,14 +134,14 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
     npm install
     ```
 
-## <a name="sample-microservice"></a> Sample Microservice
-If you want to dive right into the deep end, check out the sample Backk microservice [here](https://github.com/backk-node/backk-example-project)
+## <a name="example-microservice"></a> Example Microservice
+If you want to dive right into the deep end, check out the Backk example microservice [here](https://github.com/backk-node/backk-example-project)
 
 ## <a name="usage-documentation"></a> Usage Documentation
 
 ## <a name="feedback"></a> Feedback
 
-### Bugs
+### <a name="bugs"></a> Bugs
 If you find a bug, please [create a new issue](https://github.com/backk-node/backk/issues/new) about that
 
 ## <a name="contributing"></a> Contributing

@@ -18,6 +18,7 @@
   - [AbstractDataStore](#api-documentation-abstractdatastore)
 - [Feedback](#feedback)
   - [Bugs](#bugs)
+  - [New Feature Requests](#new-feature-requests)
 - [Contributing](#contributing)
 - [Contributors](#contributors)
 - [Sponsors](#sponsors)
@@ -143,6 +144,9 @@ If you want to dive right into the deep end, check out the Backk example microse
 
 ### <a name="bugs"></a> Bugs
 If you find a bug, please [create a new issue](https://github.com/backk-node/backk/issues/new) about that
+
+### <a name="new-feature-requests"></a> New Feature Requests
+If you want to request a new feature, please [create a new issue](https://github.com/backk-node/backk/issues/new) about that
 
 ## <a name="contributing"></a> Contributing
 

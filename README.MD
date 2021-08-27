@@ -70,7 +70,7 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
    ```
    git clone git@github.com:backk-node/backk-starter.git <your-microservice-name>
    ```
-2. Complete all 3 TODOs in *src/main.ts* and *src/MyMicroservice.ts* files
+2. Complete all 4 TODOs in *src/main.ts* and *src/MyMicroservice.ts* files
 3. Update your microservice name to *package.json* and change the name *src/MyMicroservice.ts* to reflect your microservice name
 4. Remove unused data stores:
     * If you are using MongoDB, remove
@@ -139,6 +139,9 @@ If you want to dive right into the deep end, check out the sample Backk microser
 ## <a name="usage-documentation"></a> Usage Documentation
 
 ## <a name="feedback"></a> Feedback
+
+### Bugs
+If you find a bug, please [create a new issue](https://github.com/backk-node/backk/issues) about that
 
 ## <a name="contributing"></a> Contributing
 

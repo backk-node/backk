@@ -154,7 +154,9 @@ If you want to request a new feature, please [create a new issue](https://github
 If you want to request an improvement to documentation, please [create a new issue](https://github.com/backk-node/backk/issues/new/choose) about that
 
 ### <a name="ask-question"></a> Ask Question
-If you want to ask a question, please submit your question to [Stack Overflow](https://stackoverflow.com/questions/ask) and remember to use tag *'backk'* or [create a new issue](https://github.com/backk-node/backk/issues/new/choose) for your question
+If you want to ask a question
+ * Submit your question to [Stack Overflow](https://stackoverflow.com/questions/ask) and remember to use tag *'backk'*
+ * [create a new issue](https://github.com/backk-node/backk/issues/new/choose) for your question
 
 ## <a name="contributing"></a> Contributing
 

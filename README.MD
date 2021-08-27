@@ -141,7 +141,7 @@ If you want to dive right into the deep end, check out the sample Backk microser
 ## <a name="feedback"></a> Feedback
 
 ### Bugs
-If you find a bug, please [create a new issue](https://github.com/backk-node/backk/issues) about that
+If you find a bug, please [create a new issue](https://github.com/backk-node/backk/issues/new) about that
 
 ## <a name="contributing"></a> Contributing
 

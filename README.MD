@@ -17,8 +17,10 @@
 - [API Documentation](#api-documentation)
   - [AbstractDataStore](#api-documentation-abstractdatastore)
 - [Feedback](#feedback)
-  - [Bugs](#bugs)
-  - [New Feature Requests](#new-feature-requests)
+  - [Bug Report](#bug-report)
+  - [New Feature Request](#new-feature-request)
+  - [Documentation Improvement Request](#documentation-improvement-request)
+  - [Ask Question](#ask-question)
 - [Contributing](#contributing)
 - [Contributors](#contributors)
 - [Sponsors](#sponsors)
@@ -142,11 +144,17 @@ If you want to dive right into the deep end, check out the Backk example microse
 
 ## <a name="feedback"></a> Feedback
 
-### <a name="bugs"></a> Bugs
-If you find a bug, please [create a new issue](https://github.com/backk-node/backk/issues/new) about that
+### <a name="bug-report"></a> Bug Report
+If you find a bug, please [create a new issue](https://github.com/backk-node/backk/issues/new/choose) about that
 
-### <a name="new-feature-requests"></a> New Feature Requests
-If you want to request a new feature, please [create a new issue](https://github.com/backk-node/backk/issues/new) about that
+### <a name="new-feature-request"></a> New Feature Request
+If you want to request a new feature, please [create a new issue](https://github.com/backk-node/backk/issues/new/choose) about that
+
+### <a name="documentation-improvement-request"></a> Documentation Improvement Request
+If you want to request an improvement to documentation, please [create a new issue](https://github.com/backk-node/backk/issues/new/choose) about that
+
+### <a name="ask-question"></a> Ask Question
+If you want to ask a question, please submit your question to [Stack Overflow](https://stackoverflow.com/questions/ask) and remember to use tag *backk* or [create a new issue](https://github.com/backk-node/backk/issues/new/choose) for your question
 
 ## <a name="contributing"></a> Contributing
 

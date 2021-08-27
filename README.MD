@@ -155,12 +155,14 @@ If you want to request an improvement to documentation, please [create a new iss
 
 ### <a name="ask-question"></a> Ask Question
 If you want to ask a question
- * Submit your question to [Stack Overflow](https://stackoverflow.com/questions/ask) and remember to use tag *'backk'*
+ * submit your question to [Stack Overflow](https://stackoverflow.com/questions/ask) and remember to use tag *'backk'*
  * [create a new issue](https://github.com/backk-node/backk/issues/new/choose) for your question
 
 ## <a name="contributing"></a> Contributing
 
 ## <a name="contributors"></a> Contributors
+
+<a href="https://github.com/pksilen"><img style="vertical-align:middle" width="40px" src="https://github.com/pksilen.png" />&nbsp;Petri Silén</a>
 
 ## <a name="license"></a>License
 

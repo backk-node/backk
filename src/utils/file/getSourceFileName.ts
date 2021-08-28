@@ -1,3 +1,3 @@
-export default function getSourceFileName(fileName: string, distFolderName = 'dist'): string {
+export default function getSourceFileName(fileName: string, distFolderName = 'build'): string {
   return fileName.replace(distFolderName, 'src');
 }

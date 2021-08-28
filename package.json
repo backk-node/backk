@@ -22,10 +22,12 @@
     "url": "https://github.com/backk-node/backk/issues"
   },
   "keywords": [
+    "node",
+    "microservice",
+    "framework",
     "orm",
     "typescript",
-    "microservice",
-    "backend",
+    "cloud-native",
     "http",
     "kafka",
     "redis",
@@ -33,12 +35,10 @@
     "postgresql",
     "mariadb",
     "mysql",
-    "mongodb",
-    "nest",
-    "framework"
+    "mongodb"
   ],
   "scripts": {
-    "prebuild": "rimraf build && copyfiles -f \"./src/types/**/*.ts\" lib/src && copyfiles -f \"./src/service/**/*Service.ts\" lib/src",
+    "prebuild": "rimraf lib && copyfiles -f \"./src/types/**/*.ts\" lib/src && copyfiles -f \"./src/service/**/*Service.ts\" lib/src",
     "build": "tsc -p tsconfig.json",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint . --ext .ts",

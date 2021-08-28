@@ -31,7 +31,7 @@ export default function generateClassFromSrcFile(typeName: string, remoteService
     /require\("\.{2}\//g,
     'require("../../../../..' +
       (remoteServiceRootDir ? '/' + remoteServiceRootDir : '') +
-      '/dist' +
+      '/build' +
       srcDirectory +
       '/../'
   );
@@ -40,7 +40,7 @@ export default function generateClassFromSrcFile(typeName: string, remoteService
     /require\("\.\//g,
     'require("../../../../..' +
       (remoteServiceRootDir ? '/' + remoteServiceRootDir : '') +
-      '/dist' +
+      '/build' +
       srcDirectory +
       '/'
   );

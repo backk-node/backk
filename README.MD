@@ -159,9 +159,13 @@ If you want to ask a question
  * [create a new issue](https://github.com/backk-node/backk/issues/new/choose) for your question
 
 ## <a name="contributing"></a> Contributing
+You can contribute to this open-source project in following ways:
+  * Fixing open bugs
+    * [List of open bugs](https://github.com/backk-node/backk/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
+  * 
+
 
 ## <a name="contributors"></a> Contributors
-
 |  |    Name     |
 ---------|--------------
 | <img style="vertical-align:middle" width="40px" src="https://github.com/pksilen.png" /> | <a href="https://github.com/pksilen">Petri Silen</a> |

@@ -23,7 +23,6 @@
   - [Documentation Improvement Request](#documentation-improvement-request)
   - [Ask Question](#ask-question)
 - [Contributing](#contributing)
-- [Contributors](#contributors)
 - [Sponsors](#sponsors)
 - [License](#license)
 
@@ -70,7 +69,7 @@
 
 ## <a name="prerequisites"></a> Prerequisites
 1. [Node.js](https://nodejs.org/en/download/) >= 12.19
-2. If you are using a database, you need to install a local instance of the database or have a remote instance available, for example a cloud database
+2. If you are using a database, you need to install a local instance of the database or have a remote instance available, for example a cloud database. For local installations:
    * [Download PostgreSQL](https://www.postgresql.org/download/)
    * [Download MySQL](https://www.mysql.com/downloads/)
    * [Download MariaDB](https://mariadb.org/download/)
@@ -186,14 +185,9 @@ If you want to ask a question
 ## <a name="contributing"></a> Contributing
 You can contribute to this open-source project in following ways:
   * Fixing open bugs
-    * [List of open bugs](https://github.com/backk-node/backk/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
+    * [List of all open bugs](https://github.com/backk-node/backk/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
+    * [Lst of open bugs that are good first issues](https://github.com/backk-node/backk/issues?q=is%3Aopen+is%3Aissue+label%3Abug+label%3A%22good+first+issue%22)
   * 
-
-
-## <a name="contributors"></a> Contributors
-|  |    Name     |
----------|--------------
-| <img style="vertical-align:middle" width="40px" src="https://github.com/pksilen.png" /> | <a href="https://github.com/pksilen">Petri Silen</a> |
 
 
 ## <a name="license"></a>License

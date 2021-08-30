@@ -1,10 +1,40 @@
+export * from './constants/constants';
+
+// Initialize
+export { default as initialize } from './initialization/initialize';
+export { default as startHttpServerFor } from './initialization/startHttpServerFor';
+export { default as startKafkaConsumerFor } from './initialization/startKafkaConsumerFor';
+export { default as startRedisConsumerFor } from './initialization/startRedisConsumerFor';
+
+// Microservice
+export { default as Microservice } from './microservice/Microservice';
+export { MicroserviceInitOptions } from './microservice/initializeMicroservice';
+
+// Base services
 export { default as AuthorizationService } from './authorization/AuthorizationService';
 export { default as ResponseCacheConfigService } from './cache/ResponseCacheConfigService';
 export { default as CaptchaVerifyService } from './captcha/CaptchaVerifyService';
-export * from './constants/constants';
-export { default as getClsNamespace } from './continuationlocalstorage/getClsNamespace';
-export { MicroserviceInitOptions, default as initializeController } from './microservice/initializeMicroservice';
+export { default as CrudEntityService } from './service/crudentity/CrudEntityService';
+export { default as StartupCheckService } from './service/startup/StartupCheckService';
+export { default as UserAccountBaseService } from './service/useraccount/UserAccountBaseService';
+export { default as BaseService } from './service/BaseService';
+export { default as LivenessCheckService } from './service/LivenessCheckService';
+export { default as ReadinessCheckService } from './service/ReadinessCheckService';
+export { default as AuditLoggingService } from './observability/logging/audit/AuditLoggingService';
+export { default as StartupCheckServiceImpl } from './service/startup/StartupCheckServiceImpl';
+export { default as DefaultJwtAuthorizationServiceImpl } from './authorization/DefaultJwtAuthorizationServiceImpl';
+export {
+  UserOperation,
+  UserOperationResult,
+  AuditLogEntry
+} from './observability/logging/audit/AuditLogEntry';
 
+// Service function API
+export { ErrorDefinition } from './types/ErrorDefinition';
+export { ErrorOr } from './types/ErrorOr';
+export { PromiseErrorOr } from './types/PromiseErrorOr';
+
+// Data store
 export { default as AbstractDataStore } from './datastore/AbstractDataStore';
 export { default as MongoDbDataStore } from './datastore/MongoDbDataStore';
 export { default as MySqlDataStore } from './datastore/MySqlDataStore';
@@ -14,15 +44,31 @@ export * from './datastore/hooks/EntitiesPostHook';
 export { EntityPreHook } from './datastore/hooks/EntityPreHook';
 export * from './datastore/hooks/PostHook';
 export * from './datastore/hooks/PreHook';
+export { default as SqlEquals } from './datastore/sql/expressions/SqlEquals';
+export { default as SqlExpression } from './datastore/sql/expressions/SqlExpression';
+export { default as SqlInExpression } from './datastore/sql/expressions/SqlInExpression';
+export { default as SqlNotInExpression } from './datastore/sql/expressions/SqlNotInExpression';
+export { default as MongoDbQuery } from './datastore/mongodb/MongoDbQuery';
+export { default as DbTableVersion } from './types/DbTableVersion';
+export { default as OrFilter } from './types/userdefinedfilters/OrFilter';
+export { default as UserDefinedFilter } from './types/userdefinedfilters/UserDefinedFilter';
+export { default as EntityCountRequest } from './types/EntityCountRequest';
+export { One, Many } from './datastore/AbstractDataStore';
 
 // Decorators
+
+// Entity decorators
 export { default as CompositeIndex } from './decorators/entity/CompositeIndex';
 export { default as Entity } from './decorators/entity/Entity';
 export { default as UniqueCompositeIndex } from './decorators/entity/UniqueCompositeIndex';
+
+// Service decorators
 export { default as AllowServiceForClusterInternalUse } from './decorators/service/AllowServiceForClusterInternalUse';
 export { default as AllowServiceForEveryUser } from './decorators/service/AllowServiceForEveryUser';
 export { default as AllowServiceForUserRoles } from './decorators/service/AllowServiceForUserRoles';
 export { default as NoServiceAutoTests } from './decorators/service/NoServiceAutoTests';
+
+// Service function decorators
 export { default as AllowForClusterInternalUse } from './decorators/service/function/AllowForClusterInternalUse';
 export { default as AllowForEveryUser } from './decorators/service/function/AllowForEveryUser';
 export { default as AllowForSelf } from './decorators/service/function/AllowForSelf';
@@ -47,6 +93,8 @@ export {
 
 export { default as ResponseStatusCode } from './decorators/service/function/ResponseStatusCode';
 export { UpdateType, default as Update } from './decorators/service/function/Update';
+
+// Entity property decorators
 export { default as ArrayNotUnique } from './decorators/typeproperty/ArrayNotUnique';
 export { default as Encrypted } from './decorators/typeproperty/Encrypted';
 export { default as TestValue } from './decorators/typeproperty/testing/TestValue';
@@ -82,23 +130,24 @@ export { UiProps, default as UiProperties } from './decorators/typeproperty/UiPr
 export { default as Unique } from './decorators/typeproperty/Unique';
 export { default as NotUnique } from './decorators/typeproperty/NotUnique';
 export { default as ReadWrite } from './decorators/typeproperty/ReadWrite';
+
+// Register custom decorator
 export { default as registerCustomDecorator } from './decorators/registerCustomDecorator';
 
+// CSV, text, JSON and XML file parsing
+export { Name } from './types/Name';
 export { default as tryGetObjectsFromCsvFile } from './file/tryGetObjectsFromCsvFile';
 export { default as tryGetSeparatedValuesFromTextFile } from './file/tryGetSeparatedValuesFromTextFile';
 export { default as tryGetSeparatedNumericValuesFromTextFile } from './file/tryGetSeparatedNumericValuesFromTextFile';
 export { default as tryGetValuesByJsonPathFromJsonFile } from './file/tryGetValuesByJsonPathFromJsonFile';
 export { default as tryGetValuesByXPathFromXmlFile } from './file/tryGetValuesByXPathFromXmlFile';
 
-export { default as initialize } from './initialization/initialize';
-export { default as startHttpServerFor } from './initialization/startHttpServerFor';
-export { default as startKafkaConsumerFor } from './initialization/startKafkaConsumerFor';
-export { default as startRedisConsumerFor } from './initialization/startRedisConsumerFor';
-
+// Observability
 export { default as initializeDefaultJaegerTracing } from './observability/distributedtracinig/initializeDefaultJaegerTracing';
 export { Severity, default as log } from './observability/logging/log';
 export { default as defaultPrometheusMeter } from './observability/metrics/defaultPrometheusMeter';
 
+// Access remote services
 export { HttpRequestOptions, default as callRemoteService } from './remote/http/callRemoteService';
 export { default as makeHttpRequest } from './remote/http/makeHttpRequest';
 export { SendToOptions, default as sendToRemoteService } from './remote/messagequeue/sendToRemoteService';
@@ -109,13 +158,9 @@ export {
 
 export { default as defaultRetryIntervals } from './scheduling/defaultRetryIntervals';
 
-export { default as CrudEntityService } from './service/crudentity/CrudEntityService';
-export { default as StartupCheckService } from './service/startup/StartupCheckService';
-export { default as UserAccountBaseService } from './service/useraccount/UserAccountBaseService';
-export { default as BaseService } from './service/BaseService';
-export { default as LivenessCheckService } from './service/LivenessCheckService';
-export { default as ReadinessCheckService } from './service/ReadinessCheckService';
-
+// Root entity base classes
+export { default as Captcha } from './types/Captcha';
+export { default as Version } from './types/Version';
 export { default as _Id } from './types/id/_Id';
 export { default as _IdAndCaptcha } from './types/id/_IdAndCaptcha';
 export { default as _IdAndCaptchaAndCreatedAtTimestamp } from './types/id/_IdAndCaptchaAndCreatedAtTimestamp';
@@ -140,8 +185,10 @@ export { default as _IdAndVersionAndCreatedAtTimestampAndUserAccountId } from '.
 export { default as _IdAndVersionAndLastModifiedTimestamp } from './types/id/_IdAndVersionAndLastModifiedTimestamp';
 export { default as _IdAndVersionAndLastModifiedTimestampAndUserAccountId } from './types/id/_IdAndVersionAndLastModifiedTimestampAndUserAccountId';
 export { default as _IdAndVersionAndUserAccountId } from './types/id/_IdAndVersionAndUserAccountId';
+
 export { default as Id } from './types/id/Id';
 
+// PostQueryOperations
 export { default as _IdAndDefaultPostQueryOperations } from './types/postqueryoperations/_IdAndDefaultPostQueryOperations';
 export { default as _IdsAndDefaultPostQueryOperations } from './types/postqueryoperations/_IdsAndDefaultPostQueryOperations';
 export { default as DefaultPagination } from './types/postqueryoperations/DefaultPagination';
@@ -155,51 +202,19 @@ export { default as SortBy } from './types/postqueryoperations/SortBy';
 export { SortBys } from './types/postqueryoperations/SortBys';
 export { default as UserNameAndDefaultPostQueryOperations } from './types/postqueryoperations/UserNameAndDefaultPostQueryOperations';
 
+// User account base entity
 export { default as BaseUserAccount } from './types/useraccount/BaseUserAccount';
 export { default as UserAccountId } from './types/useraccount/UserAccountId';
 export { default as UserName } from './types/useraccount/UserName';
 
-export { default as OrFilter } from './types/userdefinedfilters/OrFilter';
-export { default as UserDefinedFilter } from './types/userdefinedfilters/UserDefinedFilter';
-
+// Generate error
+export { default as createBackkErrorFromErrorMessageAndStatusCode } from './errors/createBackkErrorFromErrorMessageAndStatusCode';
 export { BackkError } from './types/BackkError';
-export { default as Captcha } from './types/Captcha';
-export { ErrorDefinition } from './types/ErrorDefinition';
-export { ErrorOr } from './types/ErrorOr';
-export { Name } from './types/Name';
-export { PromiseErrorOr } from './types/PromiseErrorOr';
-export { default as Version } from './types/Version';
 
-export { default as executeForAll } from './utils/executeForAll';
-export { default as tryExecuteServiceMethod } from './execution/tryExecuteServiceMethod';
-
-export {
-  UserOperation,
-  UserOperationResult,
-  AuditLogEntry
-} from './observability/logging/audit/AuditLogEntry';
-
-export { default as AuditLoggingService } from './observability/logging/audit/AuditLoggingService';
-export { default as StartupCheckServiceImpl } from './service/startup/StartupCheckServiceImpl';
-export { default as DefaultJwtAuthorizationServiceImpl } from './authorization/DefaultJwtAuthorizationServiceImpl';
-
-export { default as SqlEquals } from './datastore/sql/expressions/SqlEquals';
-export { default as SqlExpression } from './datastore/sql/expressions/SqlExpression';
-export { default as SqlInExpression } from './datastore/sql/expressions/SqlInExpression';
-export { default as SqlNotInExpression } from './datastore/sql/expressions/SqlNotInExpression';
-
+// Utils
 export { default as getServiceName } from './utils/getServiceName';
 export { default as getServiceNamespace } from './utils/getServiceNamespace';
-
-export { default as MongoDbQuery } from './datastore/mongodb/MongoDbQuery';
-export { default as DbTableVersion } from './types/DbTableVersion';
-
-export { default as createBackkErrorFromErrorMessageAndStatusCode } from './errors/createBackkErrorFromErrorMessageAndStatusCode';
-
-export { One, Many } from './datastore/AbstractDataStore';
-export { default as EntityCountRequest } from './types/EntityCountRequest';
-
-export { default as Microservice } from './microservice/Microservice';
+export { default as executeForAll } from './utils/executeForAll';
 export { default as throwException } from './utils/throwException';
 
 export * from 'class-validator';

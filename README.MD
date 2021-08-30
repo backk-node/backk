@@ -24,7 +24,7 @@
   - [Documentation Improvement Request](#documentation-improvement-request)
   - [Ask Question](#ask-question)
 - [Contributing](#contributing)
-- [Sponsors](#sponsors)
+- [Sponsor](#sponsor)
 - [License](#license)
 
 ## <a name="features"></a> Features
@@ -167,6 +167,9 @@ If you want to dive right into the deep end, check out the Backk example microse
 
 ## <a name="usage-documentation"></a> Usage Documentation
 
+## <a name="api-documentation"></a> API Documentation
+
+
 ## <a name="feedback"></a> Feedback
 
 ### <a name="bug-report"></a> Bug Report
@@ -191,6 +194,7 @@ If you are first time contributing to any open source project, you can check the
   * [first-contributions](https://github.com/firstcontributions/first-contributions)
   * [Step-by-step guide to contributing on GitHub](https://www.dataschool.io/how-to-contribute-on-github/)
 
+
 You can contribute to Backk open-source project in following ways:
   * Fixing open bugs
     * [List of all open bugs](https://github.com/backk-node/backk/issues?q=is%3Aopen+is%3Aissue+label%3Abug)
@@ -204,7 +208,9 @@ You can contribute to Backk open-source project in following ways:
     * [List of unanswered questions](https://github.com/backk-node/backk/issues?q=is%3Aopen+is%3Aissue+label%3Aquestion)
 
 You can request to assign a certain issue to yourself by [creating an issue assignment request](https://github.com/backk-node/backk/issues/new/choose)
-  
+
+## <a name="sponsor"></a>Sponsor
+
 ## <a name="license"></a>License
 
 MIT License

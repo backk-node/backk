@@ -1,19 +1,16 @@
-import entityContainer from './entityAnnotationContainer';
-import types from '../../types/types';
+import entityContainer from "./entityAnnotationContainer";
 
 export default function Entity(
   referenceToEntity?: string,
   additionalSqlCreateTableStatementOptions?: string
 ) {
   return function(EntityClass: Function) {
-    const foundInternalEntityClass = Object.values(types ?? {}).find((type) => type === EntityClass);
     if (
-      !foundInternalEntityClass &&
       !EntityClass.name.startsWith('__Backk') &&
-      !EntityClass.name.match(/^[a-zA-Z][a-zA-Z0-9]*$/)
+      !EntityClass.name.match(/^[A-Z][a-zA-Z0-9]*$/)
     ) {
       throw new Error(
-        EntityClass.name + ': entity class name must match regular expression: /^[a-zA-Z][a-zA-Z0-9]*$/'
+        EntityClass.name + ': entity class name must match regular expression: /^[A-Z][a-zA-Z0-9]*$/'
       );
     }
 

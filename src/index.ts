@@ -1,5 +1,39 @@
 export * from './constants/constants';
 
+// Initialize
+export { default as initialize } from './initialization/initialize';
+export { default as startHttpServerFor } from './initialization/startHttpServerFor';
+export { default as startKafkaConsumerFor } from './initialization/startKafkaConsumerFor';
+export { default as startRedisConsumerFor } from './initialization/startRedisConsumerFor';
+
+// Microservice
+export { default as Microservice } from './microservice/Microservice';
+export { MicroserviceInitOptions } from './microservice/initializeMicroservice';
+
+// Base services
+export { default as AuthorizationService } from './authorization/AuthorizationService';
+export { default as ResponseCacheConfigService } from './cache/ResponseCacheConfigService';
+export { default as CaptchaVerifyService } from './captcha/CaptchaVerifyService';
+export { default as CrudEntityService } from './service/crudentity/CrudEntityService';
+export { default as StartupCheckService } from './service/startup/StartupCheckService';
+export { default as UserAccountBaseService } from './service/useraccount/UserAccountBaseService';
+export { default as BaseService } from './service/BaseService';
+export { default as LivenessCheckService } from './service/LivenessCheckService';
+export { default as ReadinessCheckService } from './service/ReadinessCheckService';
+export { default as AuditLoggingService } from './observability/logging/audit/AuditLoggingService';
+export { default as StartupCheckServiceImpl } from './service/startup/StartupCheckServiceImpl';
+export { default as DefaultJwtAuthorizationServiceImpl } from './authorization/DefaultJwtAuthorizationServiceImpl';
+export {
+  UserOperation,
+  UserOperationResult,
+  AuditLogEntry
+} from './observability/logging/audit/AuditLogEntry';
+
+// Service function API
+export { ErrorDefinition } from './types/ErrorDefinition';
+export { ErrorOr } from './types/ErrorOr';
+export { PromiseErrorOr } from './types/PromiseErrorOr';
+
 // Decorators
 
 // Entity decorators
@@ -78,40 +112,6 @@ export { default as ReadWrite } from './decorators/typeproperty/ReadWrite';
 
 // Register custom decorator
 export { default as registerCustomDecorator } from './decorators/registerCustomDecorator';
-
-// Initialize
-export { default as initialize } from './initialization/initialize';
-export { default as startHttpServerFor } from './initialization/startHttpServerFor';
-export { default as startKafkaConsumerFor } from './initialization/startKafkaConsumerFor';
-export { default as startRedisConsumerFor } from './initialization/startRedisConsumerFor';
-
-// Microservice
-export { default as Microservice } from './microservice/Microservice';
-export { MicroserviceInitOptions } from './microservice/initializeMicroservice';
-
-// Base services
-export { default as AuthorizationService } from './authorization/AuthorizationService';
-export { default as ResponseCacheConfigService } from './cache/ResponseCacheConfigService';
-export { default as CaptchaVerifyService } from './captcha/CaptchaVerifyService';
-export { default as CrudEntityService } from './service/crudentity/CrudEntityService';
-export { default as StartupCheckService } from './service/startup/StartupCheckService';
-export { default as UserAccountBaseService } from './service/useraccount/UserAccountBaseService';
-export { default as BaseService } from './service/BaseService';
-export { default as LivenessCheckService } from './service/LivenessCheckService';
-export { default as ReadinessCheckService } from './service/ReadinessCheckService';
-export { default as AuditLoggingService } from './observability/logging/audit/AuditLoggingService';
-export { default as StartupCheckServiceImpl } from './service/startup/StartupCheckServiceImpl';
-export { default as DefaultJwtAuthorizationServiceImpl } from './authorization/DefaultJwtAuthorizationServiceImpl';
-export {
-  UserOperation,
-  UserOperationResult,
-  AuditLogEntry
-} from './observability/logging/audit/AuditLogEntry';
-
-// Service function API
-export { ErrorDefinition } from './types/ErrorDefinition';
-export { ErrorOr } from './types/ErrorOr';
-export { PromiseErrorOr } from './types/PromiseErrorOr';
 
 // Data store
 export { default as AbstractDataStore } from './datastore/AbstractDataStore';

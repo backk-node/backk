@@ -189,7 +189,7 @@ If you want to ask a question
 ## <a name="contributing"></a> Contributing
 If you are first time contributing to any open source project, you can check these tutorials:
   * [first-contributions](https://github.com/firstcontributions/first-contributions)
-  * [Step-by-step guide to contributing on GitHub] (https://www.dataschool.io/how-to-contribute-on-github/)
+  * [Step-by-step guide to contributing on GitHub](https://www.dataschool.io/how-to-contribute-on-github/)
 
 You can contribute to Backk open-source project in following ways:
   * Fixing open bugs

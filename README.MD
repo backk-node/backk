@@ -160,7 +160,7 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
     ```
 8. You can test your microservice API using [Postman](https://www.postman.com/downloads/)
     1. Launch Postman
-    2. Choose Import and then choose file *postman*/<your-microservice-name>_api_postman_collection.json
+    2. Choose Import and then choose file *postman/<your-microservice-name>_api_postman_collection.json*
 
 ## <a name="example-microservice"></a> Example Microservice
 If you want to dive right into the deep end, check out the Backk example microservice [here](https://github.com/backk-node/backk-example-project)

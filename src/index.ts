@@ -49,7 +49,6 @@ export { default as SqlExpression } from './datastore/sql/expressions/SqlExpress
 export { default as SqlInExpression } from './datastore/sql/expressions/SqlInExpression';
 export { default as SqlNotInExpression } from './datastore/sql/expressions/SqlNotInExpression';
 export { default as MongoDbQuery } from './datastore/mongodb/MongoDbQuery';
-export { default as DbTableVersion } from './types/DbTableVersion';
 export { default as OrFilter } from './types/userdefinedfilters/OrFilter';
 export { default as UserDefinedFilter } from './types/userdefinedfilters/UserDefinedFilter';
 export { default as EntityCountRequest } from './types/EntityCountRequest';
@@ -216,6 +215,8 @@ export { default as getServiceName } from './utils/getServiceName';
 export { default as getServiceNamespace } from './utils/getServiceNamespace';
 export { default as executeForAll } from './utils/executeForAll';
 export { default as throwException } from './utils/throwException';
+
+export { default as DbTableVersion } from './types/DbTableVersion';
 
 export * from 'class-validator';
 export * as argon2 from 'argon2';

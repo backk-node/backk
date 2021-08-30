@@ -24,6 +24,7 @@ export default async function tryAuthorize(
   }
 
   // TODO check that X-Original-Uri is not set to public URI for this microservice
+  // TODO if authHeader is missing and X-Original-Uri is set, return 401 Unauthorized
   if (authHeader === undefined) {
     if (
       serviceAnnotationContainer.isServiceAllowedForClusterInternalUse(ServiceClass) ||

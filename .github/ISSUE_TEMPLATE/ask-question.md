@@ -1,7 +1,7 @@
 ---
 name: Ask question
 about: Further information request
-title: ''
+title: 'QUESTION: '
 labels: question
 assignees: ''
 

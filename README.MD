@@ -177,6 +177,7 @@ Adds your services that comprises the microservice as private readonly members o
 
 ```ts
 import { Microservice } from 'backk';
+import { mySqlDataStore } from './datastores/mySqlDataStore';
 
 const dataStore = mySqlDataStore;
 

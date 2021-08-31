@@ -173,7 +173,7 @@ If you want to dive right into the deep end, check out the Backk example microse
 
 ### <a name="api-documentation-microservice"></a> Microservice
 Create a new microservice class by extending the class `Microservice`.
-Adds your services that comprises the microservice as private readonly members of the class.
+Add your one or more service(s) that comprise the microservice as private readonly members of the class.
 
 ```ts
 import { Microservice } from 'backk';
@@ -181,7 +181,7 @@ import { mySqlDataStore } from './datastores/mySqlDataStore';
 
 const dataStore = mySqlDataStore;
 
-export default class MyMicroservice extends Microservice {
+export default class UserAccountMicroservice extends Microservice {
   private readonly userAccountService = new UserAccountServiceImpl(dataStore);
 
   constructor() {
@@ -190,6 +190,15 @@ export default class MyMicroservice extends Microservice {
 }
 ```
 
+In the example above, there is one service `userAccountService` which can be accessed over HTTP like this:
+```
+POST http://localhost:3000/userAccountService
+```
+
+If the `userAccountService` has method `createUser`, it can be accessed over HTTP like this:
+```
+POST http://localhost:3000/userAccountService.createUser
+```
 
 ### <a name="api-documentation-initialization"></a> Initialization
 #### initialize

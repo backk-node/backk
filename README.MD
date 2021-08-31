@@ -195,10 +195,12 @@ In the example above, there is one service `userAccountService` in the `UserAcco
 POST http://<user-account-microservice-host>:<port>/userAccountService
 ```
 
-If the `userAccountService` has method `createUser`, it can be accessed over HTTP like this:
+If the `userAccountService` has function `createUser`, it can be accessed over HTTP like this:
 ```
 POST http://<user-account-microservice-host>:<port>/userAccountService.createUser
 ```
+
+The argument for the service function call `userAccountService.createUser` is sent in the HTTP POST request message body encoded in JSON
 
 ### <a name="api-documentation-initialization"></a> Initialization
 #### initialize

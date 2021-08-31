@@ -172,24 +172,6 @@ If you want to dive right into the deep end, check out the Backk example microse
 
 ## <a name="api-documentation"></a> API Documentation
 
-### <a name="api-documentation-base-services"></a> Base Services
-
-#### AuthorizationService
-```ts
-export default abstract class AuthorizationService {
-  abstract hasUserRoleIn(roles: string[], authHeader: string | string[] | undefined): Promise<boolean>;
-  abstract areSameIdentities(
-    userName: string | undefined,
-    authHeader: string | string[] | undefined
-  ): Promise<boolean>;
-}
-```
-Implement a class that extends the `AuthorizationService` class and provide implementations for functions:
-* hasUserRoleIn
-* areSameIdentities
-
-Then, instantiate your AuthorizationService class and store it as `authorizationService` member in your Microservice class.
-
 ### <a name="api-documentation-microservice"></a> Microservice
 Create a new microservice class by extending the class `Microservice`.
 Add your one or more service(s) that comprise the microservice as private readonly members of the class.
@@ -282,6 +264,25 @@ Starts a Redis consumer for the microservice.
 Redis host is defined in environment variable REDIS_SERVER. If the environment variable is not defined, an exception will be thrown.
 Redis consumer is reading a list with a key named: `<service-name>.<service-namespace>`, e.g. my-service.default or notification-service.platform
 `initialize(microservice)` must be called before starting Redis consumer.
+
+### <a name="api-documentation-base-services"></a> Base Services
+
+#### AuthorizationService
+```ts
+export default abstract class AuthorizationService {
+  abstract hasUserRoleIn(roles: string[], authHeader: string | string[] | undefined): Promise<boolean>;
+  abstract areSameIdentities(
+    userName: string | undefined,
+    authHeader: string | string[] | undefined
+  ): Promise<boolean>;
+}
+```
+Implement a class that extends the `AuthorizationService` class and provide implementations for functions:
+* hasUserRoleIn
+* areSameIdentities
+
+Then, instantiate your AuthorizationService class and store it as `authorizationService` member in your Microservice class.
+
 
 ## <a name="feedback"></a> Feedback
 

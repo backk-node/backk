@@ -281,8 +281,8 @@ Implement a class that extends the `AuthorizationService` class and provide impl
 * hasUserRoleIn
 * areSameIdentities
 
+`authHeader` argument contains Authorization header content, e.g. `Bearer vF9dft4qmT`
 Then, instantiate your AuthorizationService class and store it as `authorizationService` member in your Microservice class.
-
 
 ## <a name="feedback"></a> Feedback
 

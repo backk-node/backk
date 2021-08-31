@@ -16,6 +16,7 @@
 - [Sample Microservice](#sample-microservice)
 - [Usage Documentation](#usage-documentation)
 - [API Documentation](#api-documentation)
+  - [Initialization](#api-documentation-initialization)
   - [AbstractDataStore](#api-documentation-abstractdatastore)
 - [Feedback](#feedback)
   - [Bug Report](#bug-report)
@@ -168,6 +169,35 @@ If you want to dive right into the deep end, check out the Backk example microse
 ## <a name="usage-documentation"></a> Usage Documentation
 
 ## <a name="api-documentation"></a> API Documentation
+### <a name="api-documentation-initialization"></a> Initialization
+
+#### initialize
+```ts
+async function initialize(microservice: Microservice)
+```
+Initializes the microservice.
+
+#### startHttpServerFor
+```ts
+async function startHttpServerFor(
+  microservice: Microservice,
+  options?: ServiceFunctionExecutionOptions,
+  httpVersion: HttpVersion = 1
+)
+
+interface ServiceFunctionExecutionOptions {
+  allowedServiceFunctionsRegExpForHttpGetMethod?: RegExp;
+  deniedServiceFunctionsForForHttpGetMethod?: string[];
+  isMetadataServiceEnabled?: boolean;
+  areMultipleServiceFunctionExecutionsAllowed?: boolean;
+  maxServiceFunctionCountInMultipleServiceFunctionExecution?: number;
+  shouldAllowTemplatesInMultipleServiceFunctionExecution?: boolean;
+  allowedServiceFunctionsRegExpForRemoteServiceCalls?: RegExp;
+}
+
+type HttpVersion = 1;
+```
+Starts an HTTP server for the microservice. Currently, only HTTP/1.1 is support (HTTP/2 support is coming)
 
 ## <a name="feedback"></a> Feedback
 

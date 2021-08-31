@@ -366,10 +366,6 @@ a
 1src/microservice/getMicroserviceServiceByClass.ts,6/8/68069830f2b90d07344758886b3df31d269667d2
 Z
 *src/microservice/initializeMicroservice.ts,1/1/1162f5fb3b946952726e351e5b6fcea12aed21a8
-X
-(src/initialization/startHttpServerFor.ts,e/1/e11cea5463788a01b778bc66472ff1fa166aeb06
-P
- src/initialization/initialize.ts,c/7/c7341d070a67a1a3d1c6ff90302db1cb5090555d
 [
 +src/initialization/startRedisConsumerFor.ts,0/d/0db9646b75edb8fd79b3c3c7ea7cd453cba78cbe
 [
@@ -394,8 +390,6 @@ P
  src/utils/getServiceNamespace.ts,a/5/a5b2d40174ef43fed1e01e457bb40278c235c2f3
 K
 src/utils/getServiceName.ts,f/8/f8b34a1623d11285672e629e9a6ce369b0f9190e
-X
-(src/execution/tryExecuteServiceMethod.ts,a/3/a3a819ae1b09ff11116e6c75731dfd3ccfee00ec
 7
 TODO.md,b/5/b5b096f958319b1c7782c800c78c4c358a58d709
 =

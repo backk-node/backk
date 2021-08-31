@@ -176,6 +176,8 @@ Create a new microservice class by extending the class `Microservice`.
 Adds your services that comprises the microservice as private readonly members of the class.
 
 ```ts
+import { Microservice } from 'backk';
+
 const dataStore = mySqlDataStore;
 
 export default class MyMicroservice extends Microservice {

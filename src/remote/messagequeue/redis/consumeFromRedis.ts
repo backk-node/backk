@@ -15,7 +15,9 @@ export default async function consumeFromRedis(
   topic = getNamespacedServiceName()
 ) {
   if (!server) {
-    throw new Error('Redis server not defined');
+    throw new Error(
+      'Redis server not defined. Redis server must be defined in REDIS_SERVER environment variable in the form <host>:<port>'
+    );
   }
 
   const redis = new Redis(`redis://${server}`);

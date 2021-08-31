@@ -21,7 +21,7 @@ export default async function consumeFromKafka(
   additionalTopics?: string[]
 ) {
   if (!server) {
-    throw new Error('Kafka server not defined');
+    throw new Error('Kafka server not defined. Kafka server must be defined in environment variable KAFKA_SERVER in the form <host>:<port>');
   }
 
   const replicationFactor =

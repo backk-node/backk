@@ -16,6 +16,7 @@
 - [Sample Microservice](#sample-microservice)
 - [Usage Documentation](#usage-documentation)
 - [API Documentation](#api-documentation)
+  - [Microservice](#api-documentation-microservice) 
   - [Initialization](#api-documentation-initialization)
   - [AbstractDataStore](#api-documentation-abstractdatastore)
 - [Feedback](#feedback)
@@ -164,13 +165,30 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
     2. Choose Import and then choose file `postman/<your-microservice-name>_api_postman_collection.json`
 
 ## <a name="example-microservice"></a> Example Microservice
-If you want to dive right into the deep end, check out the Backk example microservice [here](https://github.com/backk-node/backk-example-project)
+If you want to dive right into the deep end, check out the Backk example microservice [here.](https://github.com/backk-node/backk-example-project)
 
 ## <a name="usage-documentation"></a> Usage Documentation
 
 ## <a name="api-documentation"></a> API Documentation
-### <a name="api-documentation-initialization"></a> Initialization
 
+### <a name="api-documentation-microservice"></a> Microservice
+Create a new microservice class by extending the class `Microservice`.
+Adds your services that comprises the microservice as private readonly members of the class.
+
+```ts
+const dataStore = mySqlDataStore;
+
+export default class MyMicroservice extends Microservice {
+  private readonly userAccountService = new UserAccountServiceImpl(dataStore);
+
+  constructor() {
+    super(dataStore);
+  }
+}
+```
+
+
+### <a name="api-documentation-initialization"></a> Initialization
 #### initialize
 ```ts
 async function initialize(microservice: Microservice)

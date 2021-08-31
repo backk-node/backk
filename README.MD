@@ -220,7 +220,7 @@ interface ITopicConfig {
 ```
 Starts a Kafka consumer for the microservice.
 Kafka host is defined in environment variable KAFKA_SERVER. If environment variable is not defined, an exception will be thrown.
-Consumer is listening to topic named: <service-name>.<service-namespace>, e.g. my-service.default or notification-service.platform
+Consumer is listening to topic named: `<service-name>.<service-namespace>`, e.g. my-service.default or notification-service.platform
 *initialize(microservice)* must be called before starting Kafka consumer.
 
 #### startRedisConsumerFor
@@ -229,7 +229,7 @@ async function startRedisConsumerFor(microservice: Microservice)
 ```
 Starts a Redis consumer for the microservice.
 Redis host is defined in environment variable REDIS_SERVER. If the environment variable is not defined, an exception will be thrown.
-Redis consumer is reading a list with a key named: <service-name>.<service-namespace>, e.g. my-service.default or notification-service.platform
+Redis consumer is reading a list with a key named: `<service-name>.<service-namespace>`, e.g. my-service.default or notification-service.platform
 *initialize(microservice)* must be called before starting Redis consumer.
 
 ## <a name="feedback"></a> Feedback

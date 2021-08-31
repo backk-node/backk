@@ -18,6 +18,7 @@
 - [API Documentation](#api-documentation)
   - [Microservice](#api-documentation-microservice) 
   - [Initialization](#api-documentation-initialization)
+  - [Base Services](#api-documentation-base-services)
   - [AbstractDataStore](#api-documentation-abstractdatastore)
 - [Feedback](#feedback)
   - [Bug Report](#bug-report)
@@ -170,6 +171,24 @@ If you want to dive right into the deep end, check out the Backk example microse
 ## <a name="usage-documentation"></a> Usage Documentation
 
 ## <a name="api-documentation"></a> API Documentation
+
+### <a name="api-documentation-base-services"></a> Base Services
+
+#### AuthorizationService
+```ts
+export default abstract class AuthorizationService {
+  abstract hasUserRoleIn(roles: string[], authHeader: string | string[] | undefined): Promise<boolean>;
+  abstract areSameIdentities(
+    userName: string | undefined,
+    authHeader: string | string[] | undefined
+  ): Promise<boolean>;
+}
+```
+Implement a class that extends the `AuthorizationService` class and provide implementations for functions:
+* hasUserRoleIn
+* areSameIdentities
+
+Then, instantiate your AuthorizationService class and store it as `authorizationService` member in your Microservice class.
 
 ### <a name="api-documentation-microservice"></a> Microservice
 Create a new microservice class by extending the class `Microservice`.

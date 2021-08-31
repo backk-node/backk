@@ -86,35 +86,35 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
    ```
    git clone git@github.com:backk-node/backk-starter.git <your-microservice-name>
    ```
-2. Complete all 4 TODOs in *src/main.ts* and *src/MyMicroservice.ts* files
-3. Update your microservice name to *package.json* and change the name *src/MyMicroservice.ts* to reflect your microservice name
+2. Complete all 4 TODOs in `src/main.ts` and `src/MyMicroservice.ts` files
+3. Update your microservice name to `package.json` and change the name `src/MyMicroservice.ts` to reflect your microservice name
 4. Remove unused data stores:
     * If you are using MongoDB, remove
-        * *src/datastores/mySqlDataStore.ts*
-        * *src/datastores/postgreSqlDataStore.ts*
+        * `src/datastores/mySqlDataStore.ts`
+        * `src/datastores/postgreSqlDataStore.ts`
     * If you are using MySQL/MariaDB or MySQL compatible database, remove
-        * *src/datastores/mongoDbDataStore.ts*
-        * *src/datastores/postgreSqlDataStore.ts*
+        * `src/datastores/mongoDbDataStore.ts`
+        * `src/datastores/postgreSqlDataStore.ts`
     * If you are using PostgreSQL or PostgreSQL compatible database, remove
-        * *src/datastores/mySqlDataStore.ts*
-        * *src/datastores/mongoDbDataStore.ts*
-    * If you are **NOT** using any database, remove the *src/datastores* directory
-5. Check that the environment variable values in the *.env* file are correct for your development environment
+        * `src/datastores/mySqlDataStore.ts`
+        * `src/datastores/mongoDbDataStore.ts`
+    * If you are **NOT** using any database, remove the `src/datastores` directory
+5. Check that the environment variable values in the `.env` file are correct for your development environment
     * If you are using MongoDB, check
-        * MONGO_DB_URI
+        * `MONGO_DB_URI`
     * If you are using MySQL/MariaDB or MySQL compatible database, check
-        * MYSQL_HOST
-        * MYSQL_USER
-        * MYSQL_PASSWORD
+        * `MYSQL_HOST`
+        * `MYSQL_USER`
+        * `MYSQL_PASSWORD`
     * If you are using PostgreSQL or PostgreSQL compatible database, check
-        * POSTGRESQL_HOST
-        * POSTGRESQL_USER
-        * POSTGRESQL_PASSWORD
+        * `POSTGRESQL_HOST`
+        * `POSTGRESQL_USER`
+        * `POSTGRESQL_PASSWORD`
     * If you are using Kafka, check
-        * KAFKA_SERVER
+        * `KAFKA_SERVER`
     * if you are using Redis, check
-        * REDIS_SERVER
-6. OPTIONAL STEP: Remove unnecessary dependencies from *package.json* file
+        * `REDIS_SERVER`
+6. OPTIONAL STEP: Remove unnecessary dependencies from `package.json`file
     * If you are using MongoDB, remove following lines:
       ```
       "@opentelemetry/plugin-mysql": "0.11.0",
@@ -161,7 +161,7 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
     ```
 8. You can test your microservice API using [Postman](https://www.postman.com/downloads/)
     1. Launch Postman
-    2. Choose Import and then choose file *postman/<your-microservice-name>_api_postman_collection.json*
+    2. Choose Import and then choose file `postman/<your-microservice-name>_api_postman_collection.json`
 
 ## <a name="example-microservice"></a> Example Microservice
 If you want to dive right into the deep end, check out the Backk example microservice [here](https://github.com/backk-node/backk-example-project)
@@ -221,7 +221,7 @@ interface ITopicConfig {
 Starts a Kafka consumer for the microservice.
 Kafka host is defined in environment variable KAFKA_SERVER. If environment variable is not defined, an exception will be thrown.
 Consumer is listening to topic named: `<service-name>.<service-namespace>`, e.g. my-service.default or notification-service.platform
-*initialize(microservice)* must be called before starting Kafka consumer.
+`initialize(microservice)` must be called before starting Kafka consumer.
 
 #### startRedisConsumerFor
 ```ts
@@ -230,7 +230,7 @@ async function startRedisConsumerFor(microservice: Microservice)
 Starts a Redis consumer for the microservice.
 Redis host is defined in environment variable REDIS_SERVER. If the environment variable is not defined, an exception will be thrown.
 Redis consumer is reading a list with a key named: `<service-name>.<service-namespace>`, e.g. my-service.default or notification-service.platform
-*initialize(microservice)* must be called before starting Redis consumer.
+`initialize(microservice)` must be called before starting Redis consumer.
 
 ## <a name="feedback"></a> Feedback
 

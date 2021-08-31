@@ -368,10 +368,6 @@ Z
 *src/microservice/initializeMicroservice.ts,1/1/1162f5fb3b946952726e351e5b6fcea12aed21a8
 [
 +src/initialization/startRedisConsumerFor.ts,0/d/0db9646b75edb8fd79b3c3c7ea7cd453cba78cbe
-[
-+src/initialization/startKafkaConsumerFor.ts,a/6/a6790e1ac5b1a86b85de2129e1093e8426a9be37
-a
-1src/remote/messagequeue/kafka/consumeFromKafka.ts,e/2/e236cb3878b06d9ac3d16895a3fe2c553382926c
 a
 1src/remote/messagequeue/redis/consumeFromRedis.ts,9/5/9541c525ce91b27a824e0fc5c6ebbac210511c63
 R
@@ -386,8 +382,6 @@ u
 Esrc/datastore/sql/operations/dql/transformresults/createResultMaps.ts,3/f/3fbbd19c688e2dbe02eb791de6d6556f1b977204
 g
 7src/authorization/DefaultJwtAuthorizationServiceImpl.ts,2/3/237d28675ac2ec3407f0cac7ef7c2cce47b4d46c
-P
- src/utils/getServiceNamespace.ts,a/5/a5b2d40174ef43fed1e01e457bb40278c235c2f3
 K
 src/utils/getServiceName.ts,f/8/f8b34a1623d11285672e629e9a6ce369b0f9190e
 7

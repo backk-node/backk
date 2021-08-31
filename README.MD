@@ -197,7 +197,31 @@ interface ServiceFunctionExecutionOptions {
 
 type HttpVersion = 1;
 ```
-Starts an HTTP server for the microservice. Currently, only HTTP/1.1 is support (HTTP/2 support is coming)
+Starts an HTTP server for the microservice. 
+Uses port defined in HTTP_SERVER_PORT environment variable or port 3000.
+Currently, only HTTP/1.1 is support (HTTP/2 support is coming).
+*initialize(microservice)* must be called before starting HTTP server.
+
+#### startKafkaConsumerFor
+```ts
+async function startKafkaConsumerFor(
+  microservice: Microservice,
+  defaultTopicConfig?: Omit<ITopicConfig, 'topic'>,
+  additionalTopics?: string[]
+)
+
+interface ITopicConfig {
+  topic: string
+  numPartitions?: number
+  replicationFactor?: number
+  replicaAssignment?: object[]
+  configEntries?: object[]
+}
+```
+Starts a Kafka consumer for Microservice.
+Kafka host is defined in environment variable KAFKA_SERVER. If environment variable is not defined, an exception will be thrown.
+Consumer is listening to topic named: <service-name>.<service-namespace>, e.g. my-service.default or notification-service.platform
+*initialize(microservice)* must be called before starting Kafka consumer.
 
 ## <a name="feedback"></a> Feedback
 

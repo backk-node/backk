@@ -63,7 +63,7 @@ export default async function startHttpServerFor(
     server.close();
   });
 
-  const port = process.env.port ?? 3000;
+  const port = process.env.HTTP_SERVER_PORT ?? 3000;
   log(Severity.INFO, `HTTP server started, listening to port ${port}`, '');
   return server.listen(port);
 }

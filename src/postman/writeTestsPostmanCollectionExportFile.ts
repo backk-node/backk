@@ -597,10 +597,10 @@ export default function writeTestsPostmanCollectionExportFile<T>(
         request: {
           method: 'POST',
           url: {
-            raw: `http://localhost:${process.env.port ?? 3000}/metadataService.getServicesMetadata`,
+            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/metadataService.getServicesMetadata`,
             protocol: 'http',
             host: ['localhost'],
-            port: `${process.env.port ?? 3000}`,
+            port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,
             path: ['metadataService.getServicesMetadata']
           }
         }

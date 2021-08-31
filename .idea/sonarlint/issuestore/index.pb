@@ -366,10 +366,6 @@ a
 1src/microservice/getMicroserviceServiceByClass.ts,6/8/68069830f2b90d07344758886b3df31d269667d2
 Z
 *src/microservice/initializeMicroservice.ts,1/1/1162f5fb3b946952726e351e5b6fcea12aed21a8
-[
-+src/initialization/startRedisConsumerFor.ts,0/d/0db9646b75edb8fd79b3c3c7ea7cd453cba78cbe
-a
-1src/remote/messagequeue/redis/consumeFromRedis.ts,9/5/9541c525ce91b27a824e0fc5c6ebbac210511c63
 R
 "src/datastore/AbstractDataStore.ts,f/4/f4558eca7b6689c835badee5ef621c5595dedca7
 N

@@ -190,14 +190,14 @@ export default class UserAccountMicroservice extends Microservice {
 }
 ```
 
-In the example above, there is one service `userAccountService` which can be accessed over HTTP like this:
+In the example above, there is one service `userAccountService` in the `UserAccountMicroservice` which can be accessed over HTTP like this:
 ```
-POST http://localhost:3000/userAccountService
+POST http://<user-account-microservice-host>:<port>/userAccountService
 ```
 
 If the `userAccountService` has method `createUser`, it can be accessed over HTTP like this:
 ```
-POST http://localhost:3000/userAccountService.createUser
+POST http://<user-account-microservice-host>:<port>/userAccountService.createUser
 ```
 
 ### <a name="api-documentation-initialization"></a> Initialization

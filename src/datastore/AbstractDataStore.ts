@@ -45,8 +45,9 @@ export default abstract class AbstractDataStore {
   readonly dbName?: string;
   protected firstDbOperationFailureTimeInMillis = 0;
 
-  constructor(schema: string) {
+  constructor(schema: string, dbName?: string) {
     this.schema = schema.toLowerCase();
+    this.dbName = dbName;
   }
 
   addService(service: BaseService) {

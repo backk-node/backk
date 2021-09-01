@@ -1,29 +1,31 @@
 import AbstractSqlDataStore from './AbstractSqlDataStore';
 import { Pool, types } from 'pg';
 import { pg } from 'yesql';
+import throwException from '../utils/throwException';
 
 export default class PostgreSqlDataStore extends AbstractSqlDataStore {
   private readonly pool: Pool;
+  private readonly host: string;
 
-  constructor(
-    private readonly host: string,
-    port: number,
-    user: string,
-    password: string,
-    database: string,
-    schema: string
-  ) {
-    super(schema);
+  constructor() {
+    super(process.env.DB_NAME ?? throwException('DB_NAME environment variable must be defined'));
 
     // noinspection MagicNumberJS
     types.setTypeParser(20, 'text', parseInt);
+    this.host =
+      process.env.POSTGRESQL_HOST ?? throwException('POSTGRESQL_HOST environment variable must be defined');
 
     this.pool = new Pool({
-      user,
-      host,
-      database,
-      password,
-      port
+      user:
+        process.env.POSTGRESQL_USER ?? throwException('POSTGRESQL_USER environment variable must be defined'),
+      host: this.host,
+      database: 'postgres',
+      password:
+        process.env.POSTGRESQL_USER ?? throwException('POSTGRESQL_USER environment variable must be defined'),
+      port: parseInt(
+        process.env.POSTGRESQL_PORT ?? throwException('POSTGRESQL_PORT environment variable must be defined'),
+        10
+      )
     });
   }
 
@@ -125,6 +127,6 @@ export default class PostgreSqlDataStore extends AbstractSqlDataStore {
   }
 
   castAsBigint(columnName: string): string {
-    return `CAST(${columnName} AS BIGINT)`
+    return `CAST(${columnName} AS BIGINT)`;
   }
 }

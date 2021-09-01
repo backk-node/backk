@@ -1,23 +1,29 @@
 import mysql, { Pool } from 'mysql2/promise';
 import AbstractSqlDataStore from './AbstractSqlDataStore';
+import throwException from '../utils/throwException';
 
 export default class MySqlDataStore extends AbstractSqlDataStore {
   private static readonly MAX_CHAR_TYPE_LENGTH = 16383;
   private readonly pool: Pool;
+  private readonly host: string;
+  private readonly port: string;
+  private readonly user: string;
+  private readonly password: string;
 
-  constructor(
-    private readonly host: string,
-    private readonly user: string,
-    private readonly password: string,
-    database: string
-  ) {
-    super(database);
+  constructor() {
+    super(process.env.DB_NAME ?? throwException('DB_NAME environment variable must be defined'));
+    this.host = process.env.MYSQL_HOST ?? throwException('MYSQL_HOST environment variable must be defined');
+    this.port = process.env.MYSQL_PORT ?? throwException('MYSQL_PORT environment variable must be defined');
+    this.user = process.env.MYSQL_USER ?? throwException('MYSQL_USER environment variable must be defined');
+    this.password =
+      process.env.MYSQL_PASSWORD ?? throwException('MYSQL_PASSWORD environment variable must be defined');
 
     this.pool = mysql.createPool({
-      host,
-      user,
-      password,
-      database,
+      host: this.host,
+      port: parseInt(this.port, 10),
+      user: this.user,
+      password: this.password,
+      database: this.schema,
       waitForConnections: true,
       connectionLimit: 10,
       queueLimit: 0
@@ -130,10 +136,10 @@ export default class MySqlDataStore extends AbstractSqlDataStore {
   }
 
   getUpdateForClause(): string {
-    return "FOR UPDATE";
+    return 'FOR UPDATE';
   }
 
   castAsBigint(columnName: string): string {
-    return `CAST(${columnName} AS UNSIGNED)`
+    return `CAST(${columnName} AS UNSIGNED)`;
   }
 }

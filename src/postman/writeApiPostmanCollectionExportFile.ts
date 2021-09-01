@@ -7,7 +7,8 @@ import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
 import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
 import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
-import getServiceFunctionExampleReturnValue from "./getServiceFunctionExampleReturnValue";
+import getServiceFunctionExampleReturnValue from './getServiceFunctionExampleReturnValue';
+import throwException from '../utils/throwException';
 
 export default function writeApiPostmanCollectionExportFile<T>(
   controller: T,
@@ -78,11 +79,15 @@ export default function writeApiPostmanCollectionExportFile<T>(
   const appName = cwd.split('/').reverse()[0];
 
   const jwt = sign(
-    // eslint-disable-next-line @typescript-eslint/camelcase
-    { preferred_username: 'abc', realm_access: {
-      roles: [process.env.TEST_USER_ROLE]
-      } },
-    process.env.JWT_SIGN_SECRET || 'abcdef'
+    {
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      preferred_username: 'abc',
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      realm_access: {
+        roles: [process.env.TEST_USER_ROLE]
+      }
+    },
+    process.env.JWT_SIGN_SECRET || throwException('Environment variable JWT_SIGN_SECRET must be defined')
   );
 
   const postmanMetadata = {
@@ -106,7 +111,8 @@ export default function writeApiPostmanCollectionExportFile<T>(
         request: {
           method: 'POST',
           url: {
-            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/metadataService.getServicesMetadata`,
+            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ??
+              3000}/metadataService.getServicesMetadata`,
             protocol: 'http',
             host: ['localhost'],
             port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,

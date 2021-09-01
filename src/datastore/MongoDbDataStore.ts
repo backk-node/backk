@@ -1,87 +1,87 @@
-import { FilterQuery, MongoClient, ObjectId } from "mongodb";
-import SqlExpression from "./sql/expressions/SqlExpression";
-import AbstractDataStore, { Field, Many, One } from "./AbstractDataStore";
-import { RecursivePartial } from "../types/RecursivePartial";
-import { PreHook } from "./hooks/PreHook";
-import { BackkEntity } from "../types/entities/BackkEntity";
-import { PostQueryOperations } from "../types/postqueryoperations/PostQueryOperations";
-import createBackkErrorFromError from "../errors/createBackkErrorFromError";
-import UserDefinedFilter from "../types/userdefinedfilters/UserDefinedFilter";
-import { SubEntity } from "../types/entities/SubEntity";
-import tryStartLocalTransactionIfNeeded from "./sql/operations/transaction/tryStartLocalTransactionIfNeeded";
-import tryExecutePreHooks from "./hooks/tryExecutePreHooks";
-import hashAndEncryptEntity from "../crypt/hashAndEncryptEntity";
-import cleanupLocalTransactionIfNeeded from "./sql/operations/transaction/cleanupLocalTransactionIfNeeded";
-import { getNamespace } from "cls-hooked";
-import defaultServiceMetrics from "../observability/metrics/defaultServiceMetrics";
-import createInternalServerError from "../errors/createInternalServerError";
-import getClassPropertyNameToPropertyTypeNameMap from "../metadata/getClassPropertyNameToPropertyTypeNameMap";
-import typePropertyAnnotationContainer from "../decorators/typeproperty/typePropertyAnnotationContainer";
-import isEntityTypeName from "../utils/type/isEntityTypeName";
-import getTypeInfoForTypeName from "../utils/type/getTypeInfoForTypeName";
-import forEachAsyncParallel from "../utils/forEachAsyncParallel";
-import forEachAsyncSequential from "../utils/forEachAsyncSequential";
-import startDbOperation from "./utils/startDbOperation";
-import recordDbOperationDuration from "./utils/recordDbOperationDuration";
-import { JSONPath } from "jsonpath-plus";
-import findParentEntityAndPropertyNameForSubEntity
-  from "../metadata/findParentEntityAndPropertyNameForSubEntity";
-import { getFromContainer, MetadataStorage } from "class-validator";
-import { ValidationMetadata } from "class-validator/metadata/ValidationMetadata";
-import performPostQueryOperations from "./mongodb/performPostQueryOperations";
-import tryFetchAndAssignSubEntitiesForManyToManyRelationships
-  from "./mongodb/tryFetchAndAssignSubEntitiesForManyToManyRelationships";
-import decryptEntities from "../crypt/decryptEntities";
-import updateDbLocalTransactionCount from "./sql/operations/dql/utils/updateDbLocalTransactionCount";
-import shouldUseRandomInitializationVector from "../crypt/shouldUseRandomInitializationVector";
-import shouldEncryptValue from "../crypt/shouldEncryptValue";
-import encrypt from "../crypt/encrypt";
-import removePrivateProperties from "./mongodb/removePrivateProperties";
-import replaceIdStringsWithObjectIds from "./mongodb/replaceIdStringsWithObjectIds";
-import removeSubEntities from "./mongodb/removeSubEntities";
-import getJoinPipelines from "./mongodb/getJoinPipelines";
-import convertUserDefinedFiltersToMatchExpression from "./mongodb/convertUserDefinedFiltersToMatchExpression";
-import MongoDbQuery from "./mongodb/MongoDbQuery";
-import getRootOperations from "./mongodb/getRootOperations";
-import convertMongoDbQueriesToMatchExpression from "./mongodb/convertMongoDbQueriesToMatchExpression";
-import paginateSubEntities from "./mongodb/paginateSubEntities";
-import convertFilterObjectToMongoDbQueries from "./mongodb/convertFilterObjectToMongoDbQueries";
-import { PostHook } from "./hooks/PostHook";
-import tryExecutePostHook from "./hooks/tryExecutePostHook";
-import getTableName from "./utils/getTableName";
-import getFieldOrdering from "./mongodb/getFieldOrdering";
-import createBackkErrorFromErrorCodeMessageAndStatus
-  from "../errors/createBackkErrorFromErrorCodeMessageAndStatus";
-import { BACKK_ERRORS } from "../errors/backkErrors";
-import { PromiseErrorOr } from "../types/PromiseErrorOr";
-import isBackkError from "../errors/isBackkError";
-import { ErrorOr } from "../types/ErrorOr";
-import { EntityPreHook } from "./hooks/EntityPreHook";
-import tryExecuteEntityPreHooks from "./hooks/tryExecuteEntityPreHooks";
-import handleNestedManyToManyRelations from "./mongodb/handleNestedManyToManyRelations";
-import handleNestedOneToManyRelations from "./mongodb/handleNestedOneToManyRelations";
-import addSimpleSubEntitiesOrValuesByEntityId from "./mongodb/addSimpleSubEntitiesOrValuesByEntityId";
-import removeSimpleSubEntityById from "./mongodb/removeSimpleSubEntityById";
-import removeSimpleSubEntityByIdFromEntityByFilters
-  from "./mongodb/removeSimpleSubEntityByIdFromEntityByFilters";
-import getEntitiesByFilters from "./mongodb/operations/dql/getEntitiesByFilters";
-import removeFieldValues from "./mongodb/removeFieldValues";
-import { HttpStatusCodes } from "../constants/constants";
-import { EntitiesPostHook } from "./hooks/EntitiesPostHook";
-import findSubEntityClass from "../utils/type/findSubEntityClass";
-import getEntityByFilters from "./mongodb/operations/dql/getEntityByFilters";
-import addSimpleSubEntitiesOrValuesByFilters from "./mongodb/addSimpleSubEntitiesOrValuesByFilters";
-import DefaultPostQueryOperations from "../types/postqueryoperations/DefaultPostQueryOperations";
-import createCurrentPageTokens from "./utils/createCurrentPageTokens";
-import tryEnsurePreviousOrNextPageIsRequested from "./utils/tryEnsurePreviousOrNextPageIsRequested";
-import EntityCountRequest from "../types/EntityCountRequest";
+import { FilterQuery, MongoClient, ObjectId } from 'mongodb';
+import SqlExpression from './sql/expressions/SqlExpression';
+import AbstractDataStore, { Field, Many, One } from './AbstractDataStore';
+import { RecursivePartial } from '../types/RecursivePartial';
+import { PreHook } from './hooks/PreHook';
+import { BackkEntity } from '../types/entities/BackkEntity';
+import { PostQueryOperations } from '../types/postqueryoperations/PostQueryOperations';
+import createBackkErrorFromError from '../errors/createBackkErrorFromError';
+import UserDefinedFilter from '../types/userdefinedfilters/UserDefinedFilter';
+import { SubEntity } from '../types/entities/SubEntity';
+import tryStartLocalTransactionIfNeeded from './sql/operations/transaction/tryStartLocalTransactionIfNeeded';
+import tryExecutePreHooks from './hooks/tryExecutePreHooks';
+import hashAndEncryptEntity from '../crypt/hashAndEncryptEntity';
+import cleanupLocalTransactionIfNeeded from './sql/operations/transaction/cleanupLocalTransactionIfNeeded';
+import { getNamespace } from 'cls-hooked';
+import defaultServiceMetrics from '../observability/metrics/defaultServiceMetrics';
+import createInternalServerError from '../errors/createInternalServerError';
+import getClassPropertyNameToPropertyTypeNameMap from '../metadata/getClassPropertyNameToPropertyTypeNameMap';
+import typePropertyAnnotationContainer from '../decorators/typeproperty/typePropertyAnnotationContainer';
+import isEntityTypeName from '../utils/type/isEntityTypeName';
+import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
+import forEachAsyncParallel from '../utils/forEachAsyncParallel';
+import forEachAsyncSequential from '../utils/forEachAsyncSequential';
+import startDbOperation from './utils/startDbOperation';
+import recordDbOperationDuration from './utils/recordDbOperationDuration';
+import { JSONPath } from 'jsonpath-plus';
+import findParentEntityAndPropertyNameForSubEntity from '../metadata/findParentEntityAndPropertyNameForSubEntity';
+import { getFromContainer, MetadataStorage } from 'class-validator';
+import { ValidationMetadata } from 'class-validator/metadata/ValidationMetadata';
+import performPostQueryOperations from './mongodb/performPostQueryOperations';
+import tryFetchAndAssignSubEntitiesForManyToManyRelationships from './mongodb/tryFetchAndAssignSubEntitiesForManyToManyRelationships';
+import decryptEntities from '../crypt/decryptEntities';
+import updateDbLocalTransactionCount from './sql/operations/dql/utils/updateDbLocalTransactionCount';
+import shouldUseRandomInitializationVector from '../crypt/shouldUseRandomInitializationVector';
+import shouldEncryptValue from '../crypt/shouldEncryptValue';
+import encrypt from '../crypt/encrypt';
+import removePrivateProperties from './mongodb/removePrivateProperties';
+import replaceIdStringsWithObjectIds from './mongodb/replaceIdStringsWithObjectIds';
+import removeSubEntities from './mongodb/removeSubEntities';
+import getJoinPipelines from './mongodb/getJoinPipelines';
+import convertUserDefinedFiltersToMatchExpression from './mongodb/convertUserDefinedFiltersToMatchExpression';
+import MongoDbQuery from './mongodb/MongoDbQuery';
+import getRootOperations from './mongodb/getRootOperations';
+import convertMongoDbQueriesToMatchExpression from './mongodb/convertMongoDbQueriesToMatchExpression';
+import paginateSubEntities from './mongodb/paginateSubEntities';
+import convertFilterObjectToMongoDbQueries from './mongodb/convertFilterObjectToMongoDbQueries';
+import { PostHook } from './hooks/PostHook';
+import tryExecutePostHook from './hooks/tryExecutePostHook';
+import getTableName from './utils/getTableName';
+import getFieldOrdering from './mongodb/getFieldOrdering';
+import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
+import { BACKK_ERRORS } from '../errors/backkErrors';
+import { PromiseErrorOr } from '../types/PromiseErrorOr';
+import isBackkError from '../errors/isBackkError';
+import { ErrorOr } from '../types/ErrorOr';
+import { EntityPreHook } from './hooks/EntityPreHook';
+import tryExecuteEntityPreHooks from './hooks/tryExecuteEntityPreHooks';
+import handleNestedManyToManyRelations from './mongodb/handleNestedManyToManyRelations';
+import handleNestedOneToManyRelations from './mongodb/handleNestedOneToManyRelations';
+import addSimpleSubEntitiesOrValuesByEntityId from './mongodb/addSimpleSubEntitiesOrValuesByEntityId';
+import removeSimpleSubEntityById from './mongodb/removeSimpleSubEntityById';
+import removeSimpleSubEntityByIdFromEntityByFilters from './mongodb/removeSimpleSubEntityByIdFromEntityByFilters';
+import getEntitiesByFilters from './mongodb/operations/dql/getEntitiesByFilters';
+import removeFieldValues from './mongodb/removeFieldValues';
+import { HttpStatusCodes } from '../constants/constants';
+import { EntitiesPostHook } from './hooks/EntitiesPostHook';
+import findSubEntityClass from '../utils/type/findSubEntityClass';
+import getEntityByFilters from './mongodb/operations/dql/getEntityByFilters';
+import addSimpleSubEntitiesOrValuesByFilters from './mongodb/addSimpleSubEntitiesOrValuesByFilters';
+import DefaultPostQueryOperations from '../types/postqueryoperations/DefaultPostQueryOperations';
+import createCurrentPageTokens from './utils/createCurrentPageTokens';
+import tryEnsurePreviousOrNextPageIsRequested from './utils/tryEnsurePreviousOrNextPageIsRequested';
+import EntityCountRequest from '../types/EntityCountRequest';
+import throwException from '../utils/throwException';
 
 export default class MongoDbDataStore extends AbstractDataStore {
+  private readonly uri: string;
   private mongoClient: MongoClient;
 
-  constructor(private readonly uri: string, public readonly dbName: string) {
-    super('');
-    this.mongoClient = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+  constructor() {
+    super('', process.env.DB_NAME ?? throwException('DB_NAME environment variable must be defined'));
+    this.uri =
+      process.env.MONGO_DB_URI ?? throwException('MONGO_DB_URI environment variable must be defined');
+    this.mongoClient = new MongoClient(this.uri, { useNewUrlParser: true, useUnifiedTopology: true });
   }
 
   getClient() {
@@ -962,10 +962,12 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
         const [rows, count] = await Promise.all([
           cursor.toArray(),
-          shouldReturnRootEntityCount ? client
-            .db(this.dbName)
-            .collection<T>(getTableName(EntityClass.name))
-            .countDocuments({ _id: new ObjectId(_id) } as object) : Promise.resolve(undefined)
+          shouldReturnRootEntityCount
+            ? client
+                .db(this.dbName)
+                .collection<T>(getTableName(EntityClass.name))
+                .countDocuments({ _id: new ObjectId(_id) } as object)
+            : Promise.resolve(undefined)
         ]);
 
         if (count !== undefined) {
@@ -1087,10 +1089,12 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
         const [rows, count] = await Promise.all([
           cursor.toArray(),
-          shouldReturnRootEntityCount ? client
-            .db(this.dbName)
-            .collection<T>(getTableName(EntityClass.name))
-            .countDocuments({ _id: { $in: _ids.map((_id: string) => new ObjectId(_id)) } } as object) : Promise.resolve(undefined)
+          shouldReturnRootEntityCount
+            ? client
+                .db(this.dbName)
+                .collection<T>(getTableName(EntityClass.name))
+                .countDocuments({ _id: { $in: _ids.map((_id: string) => new ObjectId(_id)) } } as object)
+            : Promise.resolve(undefined)
         ]);
 
         if (count !== undefined) {

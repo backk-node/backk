@@ -218,14 +218,18 @@ async function startHttpServerFor(
   httpVersion: HttpVersion = 1
 )
 
-interface ServiceFunctionExecutionOptions {
-  allowedServiceFunctionsRegExpForHttpGetMethod?: RegExp;
-  deniedServiceFunctionsForForHttpGetMethod?: string[];
+eexport interface ServiceFunctionExecutionOptions {
   isMetadataServiceEnabled?: boolean;
-  areMultipleServiceFunctionExecutionsAllowed?: boolean;
-  maxServiceFunctionCountInMultipleServiceFunctionExecution?: number;
-  shouldAllowTemplatesInMultipleServiceFunctionExecution?: boolean;
-  allowedServiceFunctionsRegExpForRemoteServiceCalls?: RegExp;
+  httpGetMethod?: {
+    regExpForAllowedServiceFunctionNames?: RegExp;
+    deniedServiceFunctionNames?: string[];
+  },
+  multipleServiceFunctionExecution?: {
+    isAllowed?: boolean;
+    maxServiceFunctionCount?: number;
+    shouldAllowTemplates?: boolean;
+    regExpForAllowedRemoteServiceFunctionCalls?: RegExp;
+  }
 }
 
 type HttpVersion = 1;
@@ -244,7 +248,6 @@ async function startKafkaConsumerFor(
 )
 
 interface ITopicConfig {
-  topic: string
   numPartitions?: number
   replicationFactor?: number
   replicaAssignment?: object[]
@@ -277,14 +280,18 @@ export default abstract class AuthorizationService {
   ): Promise<boolean>;
 }
 ```
-`authHeader` argument contains the Authorization header content, e.g. `Bearer vF9dft4qmT`.
+`authHeader` argument contains the Authorization header content, e.g. `Bearer vF9dft4qmT...`.
 
 Implement a class that extends the `AuthorizationService` class and provide implementations for functions:
 * hasUserRoleIn
 * areSameIdentities
 
-
 Then, instantiate your AuthorizationService class and store it as `authorizationService` member in your Microservice class.
+```ts
+export default class MyMicroservice extends Microservice {
+  private readonly authorizationService = new AuthorizationServiceImpl();
+}
+```
 
 ## <a name="feedback"></a> Feedback
 

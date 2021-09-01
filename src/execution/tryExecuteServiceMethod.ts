@@ -1,43 +1,45 @@
-import { plainToClass } from "class-transformer";
-import _ from "lodash";
-import Redis from "ioredis";
-import tryAuthorize from "../authorization/tryAuthorize";
-import BaseService from "../service/BaseService";
-import tryVerifyCaptchaToken from "../captcha/tryVerifyCaptchaToken";
-import getTypeInfoForTypeName from "../utils/type/getTypeInfoForTypeName";
-import UserAccountBaseService from "../service/useraccount/UserAccountBaseService";
-import { ServiceMetadata } from "../metadata/types/ServiceMetadata";
-import tryValidateServiceFunctionArgument from "../validation/tryValidateServiceFunctionArgument";
-import tryValidateServiceFunctionReturnValue from "../validation/tryValidateServiceFunctionReturnValue";
-import defaultServiceMetrics from "../observability/metrics/defaultServiceMetrics";
-import createBackkErrorFromError from "../errors/createBackkErrorFromError";
-import log, { Severity } from "../observability/logging/log";
-import serviceFunctionAnnotationContainer
-  from "../decorators/service/function/serviceFunctionAnnotationContainer";
-import { HttpStatusCodes, MAX_INT_VALUE } from "../constants/constants";
-import getNamespacedServiceName from "../utils/getServiceNamespace";
-import AuditLoggingService from "../observability/logging/audit/AuditLoggingService";
-import createAuditLogEntry from "../observability/logging/audit/createAuditLogEntry";
-import executeMultipleServiceFunctions from "./executeMultipleServiceFunctions";
-import tryScheduleJobExecution from "../scheduling/tryScheduleJobExecution";
-import isExecuteMultipleRequest from "./isExecuteMultipleRequest";
-import createErrorFromErrorCodeMessageAndStatus from "../errors/createErrorFromErrorCodeMessageAndStatus";
-import { BackkError } from "../types/BackkError";
-import createBackkErrorFromErrorCodeMessageAndStatus
-  from "../errors/createBackkErrorFromErrorCodeMessageAndStatus";
-import { BACKK_ERRORS } from "../errors/backkErrors";
-import emptyError from "../errors/emptyError";
-import fetchFromRemoteServices from "./fetchFromRemoteServices";
-import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
+import { plainToClass } from 'class-transformer';
+import _ from 'lodash';
+import Redis from 'ioredis';
+import tryAuthorize from '../authorization/tryAuthorize';
+import BaseService from '../service/BaseService';
+import tryVerifyCaptchaToken from '../captcha/tryVerifyCaptchaToken';
+import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
+import UserAccountBaseService from '../service/useraccount/UserAccountBaseService';
+import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
+import tryValidateServiceFunctionArgument from '../validation/tryValidateServiceFunctionArgument';
+import tryValidateServiceFunctionReturnValue from '../validation/tryValidateServiceFunctionReturnValue';
+import defaultServiceMetrics from '../observability/metrics/defaultServiceMetrics';
+import createBackkErrorFromError from '../errors/createBackkErrorFromError';
+import log, { Severity } from '../observability/logging/log';
+import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
+import { HttpStatusCodes, MAX_INT_VALUE } from '../constants/constants';
+import getNamespacedServiceName from '../utils/getServiceNamespace';
+import AuditLoggingService from '../observability/logging/audit/AuditLoggingService';
+import createAuditLogEntry from '../observability/logging/audit/createAuditLogEntry';
+import executeMultipleServiceFunctions from './executeMultipleServiceFunctions';
+import tryScheduleJobExecution from '../scheduling/tryScheduleJobExecution';
+import isExecuteMultipleRequest from './isExecuteMultipleRequest';
+import createErrorFromErrorCodeMessageAndStatus from '../errors/createErrorFromErrorCodeMessageAndStatus';
+import { BackkError } from '../types/BackkError';
+import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
+import { BACKK_ERRORS } from '../errors/backkErrors';
+import emptyError from '../errors/emptyError';
+import fetchFromRemoteServices from './fetchFromRemoteServices';
+import getClsNamespace from '../continuationlocalstorage/getClsNamespace';
 
 export interface ServiceFunctionExecutionOptions {
-  allowedServiceFunctionsRegExpForHttpGetMethod?: RegExp;
-  deniedServiceFunctionsForForHttpGetMethod?: string[];
   isMetadataServiceEnabled?: boolean;
-  areMultipleServiceFunctionExecutionsAllowed?: boolean;
-  maxServiceFunctionCountInMultipleServiceFunctionExecution?: number;
-  shouldAllowTemplatesInMultipleServiceFunctionExecution?: boolean;
-  allowedServiceFunctionsRegExpForRemoteServiceCalls?: RegExp;
+  httpGetMethod?: {
+    regExpForAllowedServiceFunctionNames?: RegExp;
+    deniedServiceFunctionNames?: string[];
+  };
+  multipleServiceFunctionExecution?: {
+    isAllowed?: boolean;
+    maxServiceFunctionCount?: number;
+    shouldAllowTemplates?: boolean;
+    regExpForAllowedRemoteServiceFunctionCalls?: RegExp;
+  };
 }
 
 export default async function tryExecuteServiceMethod(
@@ -57,13 +59,13 @@ export default async function tryExecuteServiceMethod(
 
   try {
     if (
-      options?.areMultipleServiceFunctionExecutionsAllowed &&
+      options?.multipleServiceFunctionExecution?.isAllowed &&
       isExecuteMultipleRequest(serviceFunctionName)
     ) {
-      if (options?.maxServiceFunctionCountInMultipleServiceFunctionExecution) {
+      if (options?.multipleServiceFunctionExecution.maxServiceFunctionCount) {
         if (
           Object.keys(serviceFunctionArgument).length >
-          options?.maxServiceFunctionCountInMultipleServiceFunctionExecution
+          options?.multipleServiceFunctionExecution.maxServiceFunctionCount
         ) {
           throw createBackkErrorFromErrorCodeMessageAndStatus({
             ...BACKK_ERRORS.INVALID_ARGUMENT,
@@ -128,8 +130,10 @@ export default async function tryExecuteServiceMethod(
 
     if (httpMethod === 'GET') {
       if (
-        !serviceFunctionName.match(options?.allowedServiceFunctionsRegExpForHttpGetMethod ?? /^\w+\.get/) ||
-        options?.deniedServiceFunctionsForForHttpGetMethod?.includes(serviceFunctionName)
+        !serviceFunctionName.match(
+          options?.httpGetMethod?.regExpForAllowedServiceFunctionNames ?? /^[a-z][A-Za-z0-9]*\.get/
+        ) ||
+        options?.httpGetMethod?.deniedServiceFunctionNames?.includes(serviceFunctionName)
       ) {
         throw createErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.HTTP_METHOD_MUST_BE_POST);
       }

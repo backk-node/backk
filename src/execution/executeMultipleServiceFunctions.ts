@@ -42,7 +42,7 @@ async function executeMultiple<T>(
       const response = new BackkResponse();
 
       let renderedServiceFunctionArgument = serviceFunctionArgument;
-      if ((options?.shouldAllowTemplatesInMultipleServiceFunctionExecution && !isConcurrent) ?? false) {
+      if ((options?.multipleServiceFunctionExecution?.shouldAllowTemplates && !isConcurrent) ?? false) {
         renderedServiceFunctionArgument = Mustache.render(
           JSON.stringify(serviceFunctionArgument),
           serviceFunctionCallIdToResponseMap
@@ -60,7 +60,7 @@ async function executeMultiple<T>(
           );
 
           response.status(HttpStatusCodes.BAD_REQUEST);
-        } else if (!options?.allowedServiceFunctionsRegExpForRemoteServiceCalls) {
+        } else if (!options?.multipleServiceFunctionExecution?.regExpForAllowedRemoteServiceFunctionCalls) {
           response.send(
             createBackkErrorFromErrorCodeMessageAndStatus(
               BACKK_ERRORS.ALLOWED_REMOTE_SERVICE_FUNCTIONS_REGEXP_PATTERN_NOT_DEFINED
@@ -69,7 +69,7 @@ async function executeMultiple<T>(
 
           response.status(HttpStatusCodes.BAD_REQUEST);
         } else if (
-          !localOrRemoteServiceFunctionName.match(options.allowedServiceFunctionsRegExpForRemoteServiceCalls)
+          !localOrRemoteServiceFunctionName.match(options?.multipleServiceFunctionExecution?.regExpForAllowedRemoteServiceFunctionCalls)
         ) {
           response.send(
             createBackkErrorFromErrorCodeMessageAndStatus(

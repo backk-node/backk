@@ -70,16 +70,18 @@ export default class DefaultJwtAuthorizationServiceImpl extends AuthorizationSer
     const jwt = DefaultJwtAuthorizationServiceImpl.getJwtFrom(authHeader);
 
     if (jwt) {
-      try {
-        this.signSecretOrPublicKey = await this.tryGetPublicKey();
-      } catch (error) {
-        log(
-          Severity.ERROR,
-          `Failed to fetch public key from Authorization Server: ${this.authServerPublicKeyUrl} with error: ` +
-          error.message,
-          error.stack
-        );
-        return false;
+      if (!this.signSecretOrPublicKey) {
+        try {
+          this.signSecretOrPublicKey = await this.tryGetPublicKey();
+        } catch (error) {
+          log(
+            Severity.ERROR,
+            `Failed to fetch public key from Authorization Server: ${this.authServerPublicKeyUrl} with error: ` +
+            error.message,
+            error.stack
+          );
+          return false;
+        }
       }
 
       const jwtClaims = verify(jwt, this.signSecretOrPublicKey);

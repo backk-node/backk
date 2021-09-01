@@ -11,9 +11,9 @@ export default class DefaultJwtAuthorizationServiceImpl extends AuthorizationSer
 
   constructor(
     jwtSigningSecretOrPublicKeyFetchUrl: string | undefined,
-    private readonly userNameClaimPath: string,
-    private readonly rolesClaimPath: string,
-    private readonly publicKeyPath?: string
+    private readonly userNameClaimPath: string = 'preferred_username',
+    private readonly rolesClaimPath: string = 'realm_access.roles',
+    private readonly publicKeyPath: string = 'public_key'
   ) {
     super();
     if (!jwtSigningSecretOrPublicKeyFetchUrl) {

@@ -78,7 +78,10 @@ export default function writeApiPostmanCollectionExportFile<T>(
   const appName = cwd.split('/').reverse()[0];
 
   const jwt = sign(
-    { userName: 'abc', roles: [process.env.TEST_USER_ROLE] },
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    { preferred_username: 'abc', realm_access: {
+      roles: [process.env.TEST_USER_ROLE]
+      } },
     process.env.JWT_SIGN_SECRET || 'abcdef'
   );
 

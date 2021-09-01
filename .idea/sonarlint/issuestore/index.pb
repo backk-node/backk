@@ -374,8 +374,6 @@ P
  src/observability/logging/log.ts,9/0/9060b5fd2ebac332af3b034c09f90effc59f95d2
 u
 Esrc/datastore/sql/operations/dql/transformresults/createResultMaps.ts,3/f/3fbbd19c688e2dbe02eb791de6d6556f1b977204
-g
-7src/authorization/DefaultJwtAuthorizationServiceImpl.ts,2/3/237d28675ac2ec3407f0cac7ef7c2cce47b4d46c
 K
 src/utils/getServiceName.ts,f/8/f8b34a1623d11285672e629e9a6ce369b0f9190e
 7

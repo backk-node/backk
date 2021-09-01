@@ -88,35 +88,26 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
    ```
    git clone git@github.com:backk-node/backk-starter.git <your-microservice-name>
    ```
-2. Complete all 4 TODOs in `src/main.ts` and `src/MyMicroservice.ts` files
+2. Complete all 3 TODOs in `src/main.ts` and `src/MyMicroservice.ts` files
 3. Update your microservice name to `package.json` and change the name `src/MyMicroservice.ts` to reflect your microservice name
-4. Remove unused data stores:
-    * If you are using MongoDB, remove
-        * `src/datastores/mySqlDataStore.ts`
-        * `src/datastores/postgreSqlDataStore.ts`
-    * If you are using MySQL/MariaDB or MySQL compatible database, remove
-        * `src/datastores/mongoDbDataStore.ts`
-        * `src/datastores/postgreSqlDataStore.ts`
-    * If you are using PostgreSQL or PostgreSQL compatible database, remove
-        * `src/datastores/mySqlDataStore.ts`
-        * `src/datastores/mongoDbDataStore.ts`
-    * If you are **NOT** using any database, remove the `src/datastores` directory
-5. Check that the environment variable values in the `.env` file are correct for your development environment
+4. Check that the environment variable values in the `.env` file are correct for your development environment
     * If you are using MongoDB, check
         * `MONGO_DB_URI`
     * If you are using MySQL/MariaDB or MySQL compatible database, check
         * `MYSQL_HOST`
+        * `MYSQL_PORT`
         * `MYSQL_USER`
         * `MYSQL_PASSWORD`
     * If you are using PostgreSQL or PostgreSQL compatible database, check
         * `POSTGRESQL_HOST`
+        * `POSTGRESQL_PORT`
         * `POSTGRESQL_USER`
         * `POSTGRESQL_PASSWORD`
     * If you are using Kafka, check
         * `KAFKA_SERVER`
     * if you are using Redis, check
         * `REDIS_SERVER`
-6. OPTIONAL STEP: Remove unnecessary dependencies from `package.json`file
+5. OPTIONAL STEP: Remove unnecessary dependencies from `package.json`file
     * If you are using MongoDB, remove following lines:
       ```
       "@opentelemetry/plugin-mysql": "0.11.0",
@@ -156,12 +147,12 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
       "@opentelemetry/plugin-ioredis": "0.11.0",
       "ioredis": "^4.19.2",
       ```
-7. Run
+6. Run
     ```
     npm install
     npm run start:dev
     ```
-8. You can test your microservice API using [Postman](https://www.postman.com/downloads/)
+7. You can test your microservice API using [Postman](https://www.postman.com/downloads/)
     1. Launch Postman
     2. Choose Import and then choose file `postman/<your-microservice-name>_api_postman_collection.json`
 

@@ -26,8 +26,8 @@ export default class DefaultJwtAuthorizationServiceImpl extends AuthorizationSer
       throwException('JWT_ROLES_CLAIM_PATH environment variable must be defined');
 
     this.publicKeyPath =
-      process.env.JWT_PUBLIC_KEY_PATH ??
-      throwException('JWT_PUBLIC_KEY_PATH environment variable must be defined');
+      process.env.PUBLIC_KEY_PATH ??
+      throwException('PUBLIC_KEY_PATH environment variable must be defined');
 
     if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'integration') {
       this.signSecretOrPublicKey = process.env.JWT_SIGN_SECRET ?? 'abcdef';

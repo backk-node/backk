@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { sign } from 'jsonwebtoken';
 import { Base64 } from 'js-base64';
+import _ from 'lodash';
 import getServiceFunctionTestArgument from './getServiceFunctionTestArgument';
 import createPostmanCollectionItem from './createPostmanCollectionItem';
 import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
@@ -20,7 +21,7 @@ export default function writeApiPostmanCollectionExportFile<T>(
     const functionItemGroups: any[] = [];
 
     serviceMetadata.functions.forEach((functionMetadata: FunctionMetadata) => {
-      let items: any[] = [];
+      const items: any[] = [];
 
       if (
         serviceFunctionAnnotationContainer.hasOnStartUp(
@@ -77,18 +78,23 @@ export default function writeApiPostmanCollectionExportFile<T>(
 
   const cwd = process.cwd();
   const appName = cwd.split('/').reverse()[0];
+  const payload = {};
 
-  const jwt = sign(
-    {
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      preferred_username: 'abc',
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      realm_access: {
-        roles: [process.env.TEST_USER_ROLE]
-      }
-    },
-    process.env.JWT_SIGN_SECRET || throwException('Environment variable JWT_SIGN_SECRET must be defined')
+  _.set(
+    payload,
+    process.env.JWT_USER_NAME_CLAIM_PATH ??
+      throwException('JWT_USER_NAME_CLAIM_PATH environment variable must be defined'),
+    'abc'
   );
+
+  _.set(
+    payload,
+    process.env.JWT_ROLES_CLAIM_PATH ??
+      throwException('JWT_ROLES_CLAIM_PATH environment variable must be defined'),
+    [process.env.TEST_USER_ROLE]
+  );
+
+  const jwt = sign(payload, process.env.JWT_SIGN_SECRET || 'abcdef');
 
   const postmanMetadata = {
     info: {

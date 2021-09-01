@@ -20,6 +20,7 @@ import { HttpStatusCodes } from '../constants/constants';
 import isCreateFunction from '../service/crudentity/utils/isCreateFunction';
 import CrudEntityService from '../service/crudentity/CrudEntityService';
 import path from 'path';
+import throwException from "../utils/throwException";
 
 export default function writeTestsPostmanCollectionExportFile<T>(
   controller: T,
@@ -570,11 +571,23 @@ export default function writeTestsPostmanCollectionExportFile<T>(
 
   const cwd = process.cwd();
   const appName = cwd.split('/').reverse()[0];
+  const payload = {};
 
-  const jwt = sign(
-    { userName: 'abc', roles: [process.env.TEST_USER_ROLE] },
-    process.env.JWT_SIGN_SECRET || 'abcdef'
+  _.set(
+    payload,
+    process.env.JWT_USER_NAME_CLAIM_PATH ??
+    throwException('JWT_USER_NAME_CLAIM_PATH environment variable must be defined'),
+    'abc'
   );
+
+  _.set(
+    payload,
+    process.env.JWT_ROLES_CLAIM_PATH ??
+    throwException('JWT_ROLES_CLAIM_PATH environment variable must be defined'),
+    [process.env.TEST_USER_ROLE]
+  );
+
+  const jwt = sign(payload, process.env.JWT_SIGN_SECRET || 'abcdef');
 
   const postmanMetadata = {
     info: {

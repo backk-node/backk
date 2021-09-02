@@ -169,12 +169,12 @@ export default async function tryExecuteServiceMethod(
           message: BACKK_ERRORS.UNKNOWN_SERVICE.message + serviceName
         });
       }
-    } else if (serviceFunctionName === 'livenessCheckService.isServiceAlive') {
+    } else if (serviceFunctionName === 'livenessCheckService.isMicroserviceAlive') {
       resp.writeHead(200);
       resp.end();
       return;
     } else if (
-      (serviceFunctionName === 'readinessCheckService.isServiceReady' ||
+      (serviceFunctionName === 'readinessCheckService.isMicroserviceReady' ||
         serviceFunctionName === 'startupCheckService.isServiceStarted') &&
       (!microservice[serviceName] || !microservice[serviceName][functionName])
     ) {

@@ -8,7 +8,7 @@ export default function changePackageJsonNameProperty() {
     const packageJsonObject = JSON.parse(packageJsonContents);
     if (packageJsonObject.name === 'my-microservice') {
       packageJsonObject.name = getServiceName();
-      writeFileSync('package.json', JSON.stringify(packageJsonObject), { encoding: 'UTF-8' });
+      writeFileSync('package.json', JSON.stringify(packageJsonObject, null, 2), { encoding: 'UTF-8' });
     }
   } catch {
     // No operation

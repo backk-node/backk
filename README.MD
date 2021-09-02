@@ -284,7 +284,7 @@ export default class MicroserviceImpl extends Microservice {
 
 #### DefaultJwtAuthorizationServiceImpl
 
-Default JWT authorization service which checks if user is authorized based JWT bearer token supplied in Authorization header
+Default JWT authorization service which checks if user is authorized based JWT bearer token supplied in Authorization header.
 This service requires following environment variables to be defined:
 * `AUTH_SERVER_PUBLIC_KEY_URL` defines the OAuth 2.0 Authorization Server URL where to fetch the JWT signing public key
 * `PUBLIC_KEY_PATH` path where public key is available in public key fetch response, for example: `public_key`

@@ -374,7 +374,7 @@ export default class MicroserviceImpl extends Microservice {
 ```
 
 #### LivenessCheckService
-This service is called by Kubernetes pod's liveness probe
+This service is called by Kubernetes pod's liveness probe to check if microservice is alive.
 
 ```typescript
 export default abstract class LivenessCheckService extends BaseService {
@@ -404,7 +404,7 @@ export default class MicroserviceImpl extends Microservice {
 ```
 
 #### ReadinessCheckService
-This service is called by Kubernetes pod's readiness probe to check if service is ready for handling requests
+This service is called by Kubernetes pod's readiness probe to check if microservice is ready for handling requests
 
 ```typescript
 export default abstract class ReadinessCheckService extends BaseService {

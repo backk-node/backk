@@ -89,8 +89,7 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
    git clone git@github.com:backk-node/backk-starter.git <your-microservice-name>
    ```
 2. Complete all 3 TODOs in `src/main.ts` and `src/MyMicroservice.ts` files
-3. Update your microservice name to `package.json` and change the name `src/MyMicroservice.ts` to reflect your microservice name
-4. Check that the environment variable values in the `.env` file are correct for your development environment
+3. Check that the environment variable values in the `.env` file are correct for your development environment
     * If you are using MongoDB, check
         * `MONGO_DB_URI`
     * If you are using MySQL/MariaDB or MySQL compatible database, check
@@ -107,7 +106,7 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
         * `KAFKA_SERVER`
     * if you are using Redis, check
         * `REDIS_SERVER`
-5. OPTIONAL STEP: Remove unnecessary dependencies from `package.json`file
+4. OPTIONAL STEP: Remove unnecessary dependencies from `package.json`file
     * If you are using MongoDB, remove following lines:
       ```
       "@opentelemetry/plugin-mysql": "0.11.0",
@@ -147,12 +146,12 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
       "@opentelemetry/plugin-ioredis": "0.11.0",
       "ioredis": "^4.19.2",
       ```
-6. Run
+5. Run
     ```
     npm install
     npm run start:dev
     ```
-7. You can test your microservice API using [Postman](https://www.postman.com/downloads/)
+6. You can test your microservice API using [Postman](https://www.postman.com/downloads/)
     1. Launch Postman
     2. Choose Import and then choose file `postman/<your-microservice-name>_api_postman_collection.json`
 
@@ -277,7 +276,7 @@ Implement a class that extends the `AuthorizationService` class and provide impl
 * hasUserRoleIn
 * areSameIdentities
 
-Then, instantiate your AuthorizationService class and store it as `authorizationService` member in your Microservice class.
+Then, instantiate your AuthorizationService class and store it as `authorizationService` member in your Microservice class:
 ```ts
 export default class MyMicroservice extends Microservice {
   private readonly authorizationService = new AuthorizationServiceImpl();

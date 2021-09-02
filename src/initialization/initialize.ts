@@ -19,6 +19,7 @@ export default async function initialize(microservice: Microservice) {
     log(Severity.ERROR, `Microservice crashed with exception: ${error.message}`, error.stack ?? '');
   });
 
+  changePackageJsonNameProperty();
   initializeMicroservice(microservice, microservice.dataStore);
   initializeCls();
   StartupCheckService.microservice = microservice;

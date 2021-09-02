@@ -1,3 +1,3 @@
-export default abstract class CaptchaVerifyService{
+export default abstract class CaptchaVerificationService {
   abstract verifyCaptcha(captchaToken: string): Promise<boolean>;
 }

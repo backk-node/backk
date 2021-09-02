@@ -170,7 +170,7 @@ If you want to dive right into the deep end, check out the Backk example microse
 Create a new `MicroserviceImpl` class by extending the class `Microservice`.
 Add your one or more service(s) that comprise the microservice as private readonly fields of the `MicroserviceImpl` class.
 
-```ts
+```typescript
 import { MySqlDataStore } from 'backk';
 
 const dataStore = new MySqlDataStore();
@@ -202,7 +202,7 @@ The argument for the service function call `userAccountService.createUser` is se
 
 #### initialize
 
-```ts
+```typescript
 async function initialize(microservice: Microservice);
 ```
 
@@ -210,7 +210,7 @@ Initializes the microservice.
 
 #### startHttpServerFor
 
-```ts
+```typescript
 async function startHttpServerFor(
   microservice: Microservice,
   options?: ServiceFunctionExecutionOptions,
@@ -241,7 +241,7 @@ Currently, only HTTP/1.1 is support (HTTP/2 support is coming).
 
 #### startKafkaConsumerFor
 
-```ts
+```typescript
 async function startKafkaConsumerFor(
   microservice: Microservice,
   defaultTopicConfig?: Omit<ITopicConfig, 'topic'>,
@@ -263,7 +263,7 @@ Consumer is listening to topic named: `<service-name>.<service-namespace>`, e.g.
 
 #### startRedisConsumerFor
 
-```ts
+```typescript
 async function startRedisConsumerFor(microservice: Microservice);
 ```
 
@@ -277,7 +277,7 @@ Redis consumer is reading a list with a key named: `<service-name>.<service-name
 #### AuthorizationService
 Authorizes client requests based on Auhtorization header
 
-```ts
+```typescript
 export default abstract class AuthorizationService {
   abstract hasUserRoleIn(roles: string[], authHeader: string | string[] | undefined): Promise<boolean>;
   abstract areSameIdentities(
@@ -294,7 +294,7 @@ Implement a class that extends the `AuthorizationService` class and provide impl
 - areSameIdentities
 
 Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
-```ts
+```typescript
 export default class MicroserviceImpl extends Microservice {
   private readonly authorizationService = new AuthorizationServiceImpl();
 }
@@ -312,17 +312,22 @@ This service requires following environment variables to be defined:
 
 To use Default JWT authorization service, instantiate DefaultJwtAuthorizationServiceImpl class and store it as a field in your `MicroserviceImpl` class:
 
-```ts
+```typescript
 export default class MicroserviceImpl extends Microservice {
   private readonly authorizationService = new DefaultJwtAuthorizationServiceImpl();
 }
 ```
 
 #### ResponseCacheConfigService
-
 Caches service function call responses in Redis for a defined period of time. Caching can be customized by service function name and its argument.
 Caching is performed only for HTTP requests with GET method. 
-```ts
+
+For security reasons, each microservice should have its own Redis cache instance with following requirements:
+* Redis authentication with password is required
+* Redis persistence is not used
+* Connection between microservice and Redis is secured (mTLS by a service mesh)
+
+```typescript
 export default abstract class ResponseCacheConfigService {
   abstract shouldCacheServiceFunctionCallResponse(serviceFunctionName: string, serviceFunctionArgument: object): boolean
   abstract getCachingDurationInSecs(serviceFunctionName: string, serviceFunctionArgument: object): number;
@@ -338,9 +343,33 @@ Implement a class that extends the `ResponseCacheConfigService` class and provid
 - getCachingDurationInSecs
 
 Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
-```ts
+```typescript
 export default class MicroserviceImpl extends Microservice {
   private readonly responseCacheConfigService = new ResponseCacheConfigServiceImpl();
+}
+```
+
+#### CaptchaVerificationService
+Verifies captcha send in service function call argument in `captchaToken` property:
+```json
+{
+  "captchaToken": "<captcha-token>"
+}
+```
+
+```typescript
+export default abstract class CaptchaVerificationService {
+  abstract verifyCaptcha(captchaToken: string): Promise<boolean>;
+}
+```
+
+Implement a class that extends the `CaptchaVerificationService` class and provide implementations for function:
+- verifyCaptcha
+
+Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
+```typescript
+export default class MicroserviceImpl extends Microservice {
+  private readonly captchaVerificationService = new CaptchaVerificationServiceImpl();
 }
 ```
 

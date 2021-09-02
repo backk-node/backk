@@ -306,7 +306,7 @@ export default class MicroserviceImpl extends Microservice {
 Default JWT authorization service which checks if user is authorized based JWT bearer token supplied in Authorization header.
 This service requires following environment variables to be defined:
 
-- `AUTH_SERVER_PUBLIC_KEY_URL` defines the OAuth 2.0 Authorization Server URL where to fetch the JWT signing public key, for example `https://keycloak.platform.svc.cluster.local:<port>/auth/realms/my-realm`
+- `AUTH_SERVER_PUBLIC_KEY_URL` defines the OAuth 2.0 Authorization Server URL where to fetch the JWT signing public key, for example `https://keycloak.platform.svc.cluster.local:<port>/auth/realms/<my-realm>`
 - `PUBLIC_KEY_PATH` path where public key is available in public key fetch response, for example: `public_key`
 - `JWT_USER_NAME_CLAIM_PATH` JWT path for username, for example `preferred_username`
 - `JWT_USER_NAME_CLAIM_PATH` JWT path where for user's roles, for example `realm_access.roles`

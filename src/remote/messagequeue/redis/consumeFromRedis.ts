@@ -20,7 +20,8 @@ export default async function consumeFromRedis(
     );
   }
 
-  const redis = new Redis(`redis://${server}`);
+  const password = process.env.REDIS_CACHE_PASSWORD ? `:${process.env.REDIS_CACHE_PASSWORD}@` : '';
+  const redis = new Redis(`redis://${password}${server}`);
   let lastQueueLengthUpdateTimestamp = 0;
 
   function exit(signal: string) {

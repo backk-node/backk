@@ -219,7 +219,7 @@ async function startHttpServerFor(
 
 eexport interface ServiceFunctionExecutionOptions {
   isMetadataServiceEnabled?: boolean;
-  httpGetMethod?: {
+  httpGetRequests?: {
     regExpForAllowedServiceFunctionNames?: RegExp;
     deniedServiceFunctionNames?: string[];
   },
@@ -275,6 +275,7 @@ Redis consumer is reading a list with a key named: `<service-name>.<service-name
 ### <a name="api-documentation-base-services"></a> Base Services
 
 #### AuthorizationService
+Authorizes client requests based on Auhtorization header
 
 ```ts
 export default abstract class AuthorizationService {
@@ -289,12 +290,10 @@ export default abstract class AuthorizationService {
 `authHeader` argument contains the Authorization header content, e.g. `Bearer vF9dft4qmT...`.
 
 Implement a class that extends the `AuthorizationService` class and provide implementations for functions:
-
 - hasUserRoleIn
 - areSameIdentities
 
-Then, instantiate your AuthorizationService class and store it as a field in your `MicroserviceImpl` class:
-
+Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
 ```ts
 export default class MicroserviceImpl extends Microservice {
   private readonly authorizationService = new AuthorizationServiceImpl();
@@ -309,13 +308,39 @@ This service requires following environment variables to be defined:
 - `AUTH_SERVER_PUBLIC_KEY_URL` defines the OAuth 2.0 Authorization Server URL where to fetch the JWT signing public key, for example `https://keycloak.platform.svc.cluster.local:<port>/auth/realms/<my-realm>`
 - `PUBLIC_KEY_PATH` path where public key is available in public key fetch response, for example: `public_key`
 - `JWT_USER_NAME_CLAIM_PATH` JWT path for username, for example `preferred_username`
-- `JWT_USER_NAME_CLAIM_PATH` JWT path where for user's roles, for example `realm_access.roles`
+- `JWT_ROLES_CLAIM_PATH` JWT path where for user's roles, for example `realm_access.roles`
 
 To use Default JWT authorization service, instantiate DefaultJwtAuthorizationServiceImpl class and store it as a field in your `MicroserviceImpl` class:
 
 ```ts
 export default class MicroserviceImpl extends Microservice {
   private readonly authorizationService = new DefaultJwtAuthorizationServiceImpl();
+}
+```
+
+#### ResponseCacheConfigService
+
+Caches service function call responses in Redis for a defined period of time. Caching can be customized by service function name and its argument.
+Caching is performed only for HTTP requests with GET method. 
+```ts
+export default abstract class ResponseCacheConfigService {
+  abstract shouldCacheServiceFunctionCallResponse(serviceFunctionName: string, serviceFunctionArgument: object): boolean
+  abstract getCachingDurationInSecs(serviceFunctionName: string, serviceFunctionArgument: object): number;
+}
+```
+
+This service requires following environment variables to be defined:
+* `REDIS_CACHE_SERVER` which denotes the Redis server in form <host>:<port> 
+* `REDIS_CACHE_PASSWORD` which denotes the Redis server password
+
+Implement a class that extends the `ResponseCacheConfigService` class and provide implementations for functions:
+- shouldCacheServiceFunctionCallResponse
+- getCachingDurationInSecs
+
+Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
+```ts
+export default class MicroserviceImpl extends Microservice {
+  private readonly responseCacheConfigService = new ResponseCacheConfigServiceImpl();
 }
 ```
 

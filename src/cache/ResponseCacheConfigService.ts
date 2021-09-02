@@ -1,4 +1,4 @@
 export default abstract class ResponseCacheConfigService {
-  abstract shouldCacheServiceFunctionCallResponse(serviceFunction: string, serviceFunctionArgument: object): boolean
-  abstract getCachingDurationInSecs(serviceFunction: string, serviceFunctionArgument: object): number;
+  abstract shouldCacheServiceFunctionCallResponse(serviceFunctionName: string, serviceFunctionArgument: object): boolean
+  abstract getCachingDurationInSecs(serviceFunctionName: string, serviceFunctionArgument: object): number;
 }

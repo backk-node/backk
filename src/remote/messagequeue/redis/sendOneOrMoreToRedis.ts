@@ -1,12 +1,12 @@
-import Redis from "ioredis";
-import { CallOrSendToSpec } from "../sendToRemoteServiceInsideTransaction";
-import parseRemoteServiceFunctionCallUrlParts from "../../utils/parseRemoteServiceFunctionCallUrlParts";
-import { getNamespace } from "cls-hooked";
-import forEachAsyncSequential from "../../../utils/forEachAsyncSequential";
-import log, { Severity } from "../../../observability/logging/log";
-import createBackkErrorFromError from "../../../errors/createBackkErrorFromError";
-import defaultServiceMetrics from "../../../observability/metrics/defaultServiceMetrics";
-import { PromiseErrorOr } from "../../../types/PromiseErrorOr";
+import Redis from 'ioredis';
+import { CallOrSendToSpec } from '../sendToRemoteServiceInsideTransaction';
+import parseRemoteServiceFunctionCallUrlParts from '../../utils/parseRemoteServiceFunctionCallUrlParts';
+import { getNamespace } from 'cls-hooked';
+import forEachAsyncSequential from '../../../utils/forEachAsyncSequential';
+import log, { Severity } from '../../../observability/logging/log';
+import createBackkErrorFromError from '../../../errors/createBackkErrorFromError';
+import defaultServiceMetrics from '../../../observability/metrics/defaultServiceMetrics';
+import { PromiseErrorOr } from '../../../types/PromiseErrorOr';
 
 export default async function sendOneOrMoreToRedis(
   sends: CallOrSendToSpec[],
@@ -14,7 +14,8 @@ export default async function sendOneOrMoreToRedis(
 ): PromiseErrorOr<null> {
   const remoteServiceUrl = sends[0].remoteServiceFunctionUrl;
   const { server, topic } = parseRemoteServiceFunctionCallUrlParts(remoteServiceUrl);
-  const redis = new Redis(server);
+  const password = process.env.REDIS_CACHE_PASSWORD ? `:${process.env.REDIS_CACHE_PASSWORD}@` : '';
+  const redis = new Redis(`redis://${password}${server}`);
   const authHeader = getNamespace('serviceFunctionExecution')?.get('authHeader');
 
   try {

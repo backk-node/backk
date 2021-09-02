@@ -27,12 +27,14 @@ import { BACKK_ERRORS } from '../errors/backkErrors';
 import emptyError from '../errors/emptyError';
 import fetchFromRemoteServices from './fetchFromRemoteServices';
 import getClsNamespace from '../continuationlocalstorage/getClsNamespace';
-import getMicroserviceServiceByClass from "../microservice/getMicroserviceServiceByClass";
-import AuthorizationService from "../authorization/AuthorizationService";
+import getMicroserviceServiceByClass from '../microservice/getMicroserviceServiceByClass';
+import AuthorizationService from '../authorization/AuthorizationService';
+import throwException from '../utils/throwException';
+import ResponseCacheConfigService from '../cache/ResponseCacheConfigService';
 
 export interface ServiceFunctionExecutionOptions {
   isMetadataServiceEnabled?: boolean;
-  httpGetMethod?: {
+  httpGetRequests?: {
     regExpForAllowedServiceFunctionNames?: RegExp;
     deniedServiceFunctionNames?: string[];
   };
@@ -133,9 +135,9 @@ export default async function tryExecuteServiceMethod(
     if (httpMethod === 'GET') {
       if (
         !serviceFunctionName.match(
-          options?.httpGetMethod?.regExpForAllowedServiceFunctionNames ?? /^[a-z][A-Za-z0-9]*\.get/
+          options?.httpGetRequests?.regExpForAllowedServiceFunctionNames ?? /^[a-z][A-Za-z0-9]*\.get/
         ) ||
-        options?.httpGetMethod?.deniedServiceFunctionNames?.includes(serviceFunctionName)
+        options?.httpGetRequests?.deniedServiceFunctionNames?.includes(serviceFunctionName)
       ) {
         throw createErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.HTTP_METHOD_MUST_BE_POST);
       }
@@ -286,7 +288,10 @@ export default async function tryExecuteServiceMethod(
 
     if (
       httpMethod === 'GET' &&
-      microservice?.responseCacheConfigService.shouldCacheServiceFunctionCallResponse(
+      getMicroserviceServiceByClass(
+        microservice,
+        ResponseCacheConfigService
+      )?.shouldCacheServiceFunctionCallResponse(
         serviceFunctionName,
         serviceFunctionArgument
       )
@@ -300,20 +305,26 @@ export default async function tryExecuteServiceMethod(
         ':' +
         JSON.stringify(serviceFunctionArgument);
 
-      const redis = new Redis(`redis://${process.env.REDIS_SERVER}`);
+      const redisCacheServer =
+        process.env.REDIS_CACHE_SERVER ??
+        throwException('REDIS_CACHE_SERVER environment variable must be defined');
+
+      const password = process.env.REDIS_CACHE_PASSWORD ? `:${process.env.REDIS_CACHE_PASSWORD}@` : '';
+      const redis = new Redis(`redis://${password}${redisCacheServer}`);
+
       let cachedResponseJson;
 
       try {
         cachedResponseJson = await redis.get(key);
       } catch (error) {
         log(Severity.ERROR, 'Redis cache error: ' + error.message, error.stack, {
-          redisServer: process.env.REDIS_SERVER
+          redisCacheServer
         });
       }
 
       if (cachedResponseJson) {
         log(Severity.DEBUG, 'Redis cache debug: fetched service function call response from cache', '', {
-          redisServer: process.env.REDIS_SERVER,
+          redisCacheServer,
           key
         });
 
@@ -478,12 +489,18 @@ export default async function tryExecuteServiceMethod(
 
         if (
           httpMethod === 'GET' &&
-          microservice?.responseCacheConfigService.shouldCacheServiceFunctionCallResponse(
-            serviceFunctionName,
-            serviceFunctionArgument
-          )
+          getMicroserviceServiceByClass(
+            microservice,
+            ResponseCacheConfigService
+          )?.shouldCacheServiceFunctionCallResponse(serviceFunctionName, serviceFunctionArgument)
         ) {
-          const redis = new Redis(`redis://${process.env.REDIS_SERVER}`);
+          const redisCacheServer =
+            process.env.REDIS_CACHE_SERVER ??
+            throwException('REDIS_CACHE_SERVER environment variable must be defined');
+
+          const password = process.env.REDIS_CACHE_PASSWORD ? `:${process.env.REDIS_CACHE_PASSWORD}@` : '';
+          const redis = new Redis(`redis://${password}${redisCacheServer}`);
+
           const responseJson = JSON.stringify(response);
           const key =
             'BackkResponseCache' +
@@ -499,14 +516,17 @@ export default async function tryExecuteServiceMethod(
             await redis.set(key, responseJson);
 
             log(Severity.DEBUG, 'Redis cache debug: stored service function call response to cache', '', {
-              redisUrl: process.env.REDIS_SERVER,
+              redisCacheServer,
               key
             });
 
             defaultServiceMetrics.incrementServiceFunctionCallCachedResponsesCounterByOne(serviceName);
 
             if (ttl < 0) {
-              ttl = microservice?.responseCacheConfigService.getCachingDurationInSecs(
+              ttl = getMicroserviceServiceByClass(
+                microservice,
+                ResponseCacheConfigService
+              )?.getCachingDurationInSecs(
                 serviceFunctionName,
                 serviceFunctionArgument
               );
@@ -515,7 +535,7 @@ export default async function tryExecuteServiceMethod(
             }
           } catch (error) {
             log(Severity.ERROR, 'Redis cache error message: ' + error.message, error.stack, {
-              redisUrl: process.env.REDIS_SERVER
+              redisCacheServer
             });
           }
         }

@@ -9,6 +9,7 @@ import StartupCheckService from '../service/startup/StartupCheckService';
 import initializeCls from '../continuationlocalstorage/initializeCls';
 import Microservice from '../microservice/Microservice';
 import initializeMicroservice from '../microservice/initializeMicroservice';
+import changePackageJsonNameProperty from "../utils/changePackageJsonNameProperty";
 
 export default async function initialize(microservice: Microservice) {
   process.on('exit', (code) => {

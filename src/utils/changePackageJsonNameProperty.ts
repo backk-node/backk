@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from 'fs';
-import getServiceName from '../utils/getServiceName';
+import getServiceName from './getServiceName';
 
 export default function changePackageJsonNameProperty() {
   try {

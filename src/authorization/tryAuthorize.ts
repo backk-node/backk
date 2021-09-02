@@ -19,8 +19,8 @@ export default async function tryAuthorize(
 ): Promise<void | string> {
   const ServiceClass = service.constructor;
 
-  if (!authorizationService || !(authorizationService instanceof AuthorizationService)) {
-    throw new Error('Authorization service missing');
+  if (!authorizationService) {
+    throw new Error('Authorization service missing. You must define an authorization service which is an instance of AuthorizationService in your MicroserviceImpl class ');
   }
 
   // TODO check that X-Original-Uri is not set to public URI for this microservice

@@ -1,6 +1,6 @@
-export default function getMicroserviceServiceByClass<T extends object>(
+export default function getMicroserviceServiceByClass(
   microservice: any,
-  ServiceClass: new () => T
+  ServiceClass: Function
 ): any {
   return Object.values(microservice).find((service) => service instanceof ServiceClass);
 }

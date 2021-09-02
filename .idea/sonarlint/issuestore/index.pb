@@ -356,8 +356,6 @@ K
 src/utils/throwException.ts,1/d/1d8a9025b55fc40ab21be2a6830c138e912263d4
 P
  src/microservice/Microservice.ts,b/2/b203b2517f9ead474bfd9ed8b4aa05bb628a6597
-a
-1src/microservice/getMicroserviceServiceByClass.ts,6/8/68069830f2b90d07344758886b3df31d269667d2
 Z
 *src/microservice/initializeMicroservice.ts,1/1/1162f5fb3b946952726e351e5b6fcea12aed21a8
 N
@@ -378,8 +376,6 @@ e
 5src/remote/messagequeue/kafka/sendOneOrMoreToKafka.ts,c/8/c85e63005baa112768508fc435ef3f685516a669
 d
 4src/typescript/generator/generateClassFromSrcFile.ts,e/d/edbef0467980c046ac9523e4666f2b29c01d50b0
-Q
-!src/authorization/tryAuthorize.ts,a/c/acee2d5666d8396aede63fb00bbb02229cbebd33
 J
 src/constants/constants.ts,4/2/42fd5820762b08c55fd142e832060c0b0c75e155
 K
@@ -416,13 +412,7 @@ O
 src/datastore/MySqlDataStore.ts,8/f/8f134bc4a4f1e8125d58c46d089a814d427d922b
 T
 $src/datastore/PostgreSqlDataStore.ts,1/9/19c7770c2a7dd99299bd1c49a5bffaf057af287d
-X
-(src/execution/tryExecuteServiceMethod.ts,a/3/a3a819ae1b09ff11116e6c75731dfd3ccfee00ec
 a
 1src/remote/messagequeue/redis/consumeFromRedis.ts,9/5/9541c525ce91b27a824e0fc5c6ebbac210511c63
-g
-7src/authorization/DefaultJwtAuthorizationServiceImpl.ts,2/3/237d28675ac2ec3407f0cac7ef7c2cce47b4d46c
-Y
-)src/authorization/AuthorizationService.ts,f/a/fae3431df4d47a5079edb7fc07ab1a3bb92361e7
 b
 2src/postman/writeApiPostmanCollectionExportFile.ts,9/0/908bd4a7adfc39fafc03b174f48b8c7556578f83

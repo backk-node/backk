@@ -23,7 +23,7 @@ export default class DefaultJwtAuthorizationServiceImpl extends AuthorizationSer
 
     this.rolesClaimPath =
       process.env.JWT_ROLES_CLAIM_PATH ??
-      throwException('JWT_ROLES_CLAIM_PATH environment variable must be defined');
+      throwException('`JWT_ROLES_CLAIM_PATH` environment variable must be defined');
 
     this.publicKeyPath =
       process.env.PUBLIC_KEY_PATH ??

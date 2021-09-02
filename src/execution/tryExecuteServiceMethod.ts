@@ -27,6 +27,8 @@ import { BACKK_ERRORS } from '../errors/backkErrors';
 import emptyError from '../errors/emptyError';
 import fetchFromRemoteServices from './fetchFromRemoteServices';
 import getClsNamespace from '../continuationlocalstorage/getClsNamespace';
+import getMicroserviceServiceByClass from "../microservice/getMicroserviceServiceByClass";
+import AuthorizationService from "../authorization/AuthorizationService";
 
 export interface ServiceFunctionExecutionOptions {
   isMetadataServiceEnabled?: boolean;
@@ -223,7 +225,7 @@ export default async function tryExecuteServiceMethod(
       functionName,
       serviceFunctionArgument,
       headers.authorization,
-      microservice['authorizationService'],
+      getMicroserviceServiceByClass(microservice, AuthorizationService),
       usersService as UserAccountBaseService | undefined
     );
 

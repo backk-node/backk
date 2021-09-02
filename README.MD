@@ -163,16 +163,15 @@ If you want to dive right into the deep end, check out the Backk example microse
 ## <a name="api-documentation"></a> API Documentation
 
 ### <a name="api-documentation-microservice"></a> Microservice
-Create a new microservice class by extending the class `Microservice`.
-Add your one or more service(s) that comprise the microservice as private readonly members of the class.
+Create a new `MicroserviceImpl` class by extending the class `Microservice`.
+Add your one or more service(s) that comprise the microservice as private readonly fields of the `MicroserviceImpl` class.
 
 ```ts
-import { Microservice } from 'backk';
-import { mySqlDataStore } from './datastores/mySqlDataStore';
+import { MySqlDataStore } from 'backk';
 
-const dataStore = mySqlDataStore;
+const dataStore = new MySqlDataStore();
 
-export default class UserAccountMicroservice extends Microservice {
+class MicroserviceImpl extends Microservice {
   private readonly userAccountService = new UserAccountServiceImpl(dataStore);
 
   constructor() {
@@ -181,7 +180,7 @@ export default class UserAccountMicroservice extends Microservice {
 }
 ```
 
-In the example above, there is one service `userAccountService` in the `UserAccountMicroservice` which can be accessed over HTTP like this:
+In the example above, there is one service `userAccountService` in the microservice which can be accessed over HTTP like this:
 ```
 POST http://<user-account-microservice-host>:<port>/userAccountService
 ```
@@ -227,7 +226,7 @@ type HttpVersion = 1;
 Starts an HTTP server for the microservice. 
 Uses port defined in HTTP_SERVER_PORT environment variable or port 3000.
 Currently, only HTTP/1.1 is support (HTTP/2 support is coming).
-*initialize(microservice)* must be called before starting HTTP server.
+`initialize(microservice)` must be called before starting HTTP server.
 
 #### startKafkaConsumerFor
 ```ts
@@ -276,10 +275,26 @@ Implement a class that extends the `AuthorizationService` class and provide impl
 * hasUserRoleIn
 * areSameIdentities
 
-Then, instantiate your AuthorizationService class and store it as `authorizationService` member in your Microservice class:
+Then, instantiate your AuthorizationService class and store it as a field in your `MicroserviceImpl` class:
 ```ts
-export default class MyMicroservice extends Microservice {
+export default class MicroserviceImpl extends Microservice {
   private readonly authorizationService = new AuthorizationServiceImpl();
+}
+```
+
+#### DefaultJwtAuthorizationServiceImpl
+
+Default JWT authorization service which checks if user is authorized based JWT bearer token supplied in Authorization header
+This service requires following environment variables to be defined:
+* `AUTH_SERVER_PUBLIC_KEY_URL` defines the OAuth 2.0 Authorization Server URL where to fetch the JWT signing public key
+* `PUBLIC_KEY_PATH` path where public key is available in public key fetch response, for example: `public_key`
+* `JWT_USER_NAME_CLAIM_PATH` JWT path for username, for example `preferred_username`
+* `JWT_USER_NAME_CLAIM_PATH` JWT path where for user's roles, for example `realm_access.roles`
+
+To use Default JWT authorization service, instantiate DefaultJwtAuthorizationServiceImpl class and store it as a field in your `MicroserviceImpl` class:
+```ts
+export default class MicroserviceImpl extends Microservice {
+  private readonly authorizationService = new DefaultJwtAuthorizationServiceImpl();
 }
 ```
 

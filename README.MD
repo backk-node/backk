@@ -373,6 +373,34 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
+#### LivenessCheckService
+This service is called by Kubernetes pod's liveness probe
+
+```typescript
+export default abstract class LivenessCheckService extends BaseService {
+  abstract isServiceAlive(): PromiseErrorOr<null>;
+}
+```
+
+Implement a class that extends the `LivenessCheckService` class and provide implementations for function:
+- isServiceAlive
+
+Simplest implementation for the function is to return promise of null:
+```typescript
+export default abstract class LivenessCheckServiceImpl extend LivenessCheckService
+{
+  isServiceAlive(): PromiseErrorOr < null > {
+    return Promise.resolve(null);
+  }
+}
+```
+Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
+```typescript
+export default class MicroserviceImpl extends Microservice {
+  private readonly livenessCheckService = new LivenessCheckServiceImpl();
+}
+```
+
 ## <a name="feedback"></a> Feedback
 
 ### <a name="bug-report"></a> Bug Report

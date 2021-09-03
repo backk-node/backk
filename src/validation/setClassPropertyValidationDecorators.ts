@@ -366,6 +366,8 @@ export default function setClassPropertyValidationDecorators(
               maxLength = 12;
             } else if (doesClassPropertyContainCustomValidation(Class, propertyName, 'isIBAN')) {
               maxLength = 42;
+            } else if (doesClassPropertyContainCustomValidation(Class, propertyName, 'isSubject')) {
+              maxLength = 255;
             } else if (doesPropertyContainValidation(Class, propertyName, ValidationTypes.IS_IP)) {
               let ipValidationConstraint = getValidationConstraint(
                 Class,

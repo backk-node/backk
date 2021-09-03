@@ -108,6 +108,7 @@ export { UiProps, default as UiProperties } from './decorators/typeproperty/UiPr
 export { default as Unique } from './decorators/typeproperty/Unique';
 export { default as NotUnique } from './decorators/typeproperty/NotUnique';
 export { default as ReadWrite } from './decorators/typeproperty/ReadWrite';
+export { default as IsSubject } from './decorators/typeproperty/IsSubject';
 
 // Register custom decorator
 export { default as registerCustomDecorator } from './decorators/registerCustomDecorator';

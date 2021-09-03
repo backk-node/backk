@@ -145,8 +145,6 @@ e
 5src/scheduling/entities/__Backk__CronJobScheduling.ts,1/5/1587a30d7ac309ada12826f83b3beb5f0642294f
 W
 'src/decorators/typeproperty/IsBigInt.ts,5/6/5601f6ce2117b68a95c31f6348a0615676cc09b3
-X
-(src/decorators/typeproperty/IsDataUri.ts,d/5/d50176ddbcb46054e825895fce075cf473b28333
 Z
 *src/decorators/typeproperty/IsUndefined.ts,2/3/2393943a28037385c06155101501a2e55573916e
 _
@@ -240,8 +238,6 @@ k
 ;src/types/postqueryoperations/DefaultPostQueryOperations.ts,8/7/8772a20276f7cad94f18c51c1ceeede8757a64b4
 b
 2src/datastore/sql/operations/dql/getSubEntities.ts,e/8/e86accd090a5bcb8a393e9f20601e1862e9f13c3
-f
-6src/validation/setClassPropertyValidationDecorators.ts,1/6/1695db580a3d226e4d4a006535a80da6c561053a
 t
 Dsrc/datastore/sql/operations/dql/utils/getSqlSelectStatementParts.ts,e/4/e404c3130e2a21eedadfd489b586591c6c3b3745
 l

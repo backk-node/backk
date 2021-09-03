@@ -392,12 +392,11 @@ export default class MicroserviceImpl extends Microservice {
 
 JWT authorization service which checks if user is authorized based JWT bearer token supplied in Authorization header.
 This service requires following environment variables to be defined:
-- `AUTH_SERVER_PUBLIC_KEY_URL` defines the Authorization Server URL where to fetch the JWT signing public key, for example `https://keycloak.platform.svc.cluster.local:<port>/auth/realms/<my-realm>` or `https://keycloak.platform.svc.cluster.local:<port>/auth/realms/<my-realm>/protocol/openid-connect/certs`
+- `AUTH_SERVER_PUBLIC_KEY_URL` defines the Authorization Server URL where to fetch the JWT signing public key. (Needed only in production environment), for example `https://keycloak.platform.svc.cluster.local:<port>/auth/realms/<my-realm>` or `https://keycloak.platform.svc.cluster.local:<port>/auth/realms/<my-realm>/protocol/openid-connect/certs`
 - `PUBLIC_KEY_PATH` path where public key is available in public key fetch response, for example: `public_key` or `keys[0].n`
-- `JWT_SUBJECT_CLAIM_PATH` JWT path for subject, for example `sub`
 - `JWT_ROLES_CLAIM_PATH` JWT path where for user's roles, for example `realm_access.roles`
 
-In non-production environments, Authorization server as defined by `AUTH_SERVER_PUBLIC_KEY_URL` environment variable, is not contacted, but signing secret defined in `JWT_SIGN_SECRET` in used in JWT signing/verifying.
+In non-production environments, Authorization server as defined by `AUTH_SERVER_PUBLIC_KEY_URL` environment variable, is not contacted, but signing secret defined in `JWT_SIGN_SECRET` in used to sign/verify JWT.
 
 To use JWT authorization service, instantiate JwtAuthorizationServiceImpl class and store it as a field in your `MicroserviceImpl` class:
 

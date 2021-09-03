@@ -10,16 +10,11 @@ import log, { Severity } from '../observability/logging/log';
 export default class JwtAuthorizationServiceImpl extends AuthorizationService {
   private signSecretOrPublicKey: string | undefined;
   private readonly authServerPublicKeyUrl: string;
-  private readonly subjectClaimPath: string;
   private readonly rolesClaimPath: string;
   private readonly publicKeyPath: string;
 
   constructor() {
     super();
-
-    this.subjectClaimPath =
-      process.env.JWT_ROLES_CLAIM_PATH ??
-      throwException('`JWT_SUBJECT_CLAIM_PATH` environment variable must be defined');
 
     this.rolesClaimPath =
       process.env.JWT_ROLES_CLAIM_PATH ??
@@ -60,7 +55,7 @@ export default class JwtAuthorizationServiceImpl extends AuthorizationService {
       }
 
       const jwtClaims = verify(jwt, this.signSecretOrPublicKey);
-      return _.get(jwtClaims, this.subjectClaimPath) === subject;
+      return _.get(jwtClaims, 'sub') === subject;
     }
 
     return false;

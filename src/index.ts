@@ -13,7 +13,7 @@ export { MicroserviceInitOptions } from './microservice/initializeMicroservice';
 // Base services
 export { default as AuthorizationService } from './authorization/AuthorizationService';
 export { default as ResponseCacheConfigService } from './cache/ResponseCacheConfigService';
-export { default as CaptchaVerifyService } from './captcha/CaptchaVerifyService';
+export { default as CaptchaVerificationService } from './captcha/CaptchaVerificationService';
 export { default as CrudEntityService } from './service/crudentity/CrudEntityService';
 export { default as StartupCheckService } from './service/startup/StartupCheckService';
 export { default as UserAccountBaseService } from './service/useraccount/UserAccountBaseService';
@@ -22,7 +22,7 @@ export { default as LivenessCheckService } from './service/LivenessCheckService'
 export { default as ReadinessCheckService } from './service/ReadinessCheckService';
 export { default as AuditLoggingService } from './observability/logging/audit/AuditLoggingService';
 export { default as StartupCheckServiceImpl } from './service/startup/StartupCheckServiceImpl';
-export { default as DefaultJwtAuthorizationServiceImpl } from './authorization/DefaultJwtAuthorizationServiceImpl';
+export { default as JwtAuthorizationServiceImpl } from './authorization/JwtAuthorizationServiceImpl';
 export {
   UserOperation,
   UserOperationResult,

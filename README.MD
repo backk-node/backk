@@ -86,9 +86,10 @@
 
 Follow the below steps: (In the future, there will be [backk-cli](https://github.com/backk-node/backk-cli) available, which can be used to generate a Backk project based on a set of questions)
 
-1. Clone [Backk starter project](https://github.com/backk-node/backk-starter)
+1. Clone [Backk starter project](https://github.com/backk-node/backk-starter) to a directory named after your microservice
    ```
    git clone git@github.com:backk-node/backk-starter.git <your-microservice-name>
+   cd <your-microservice-name>
    ```
 2. Complete all 3 TODOs in `src/main.ts` and `src/MyMicroservice.ts` files
 3. Check that the environment variable values in the `.env` file are correct for your development environment
@@ -199,8 +200,12 @@ POST http://<user-account-microservice-host>:<port>/userAccountService.createUse
 The argument for the service function call `userAccountService.createUser` is sent in the HTTP POST request message body encoded in JSON
 
 ### <a name="api-documentation-initialization"></a> Initialization
+- [initialize](#initialize)
+- [startHttpServerFor](#startHttpServerFor)
+- [startKafkaConsumerFor](#startKafkaConsumerFor)
+- [startRedisConsumerFor](#startRedisConsumerFor)
 
-#### initialize
+#### <a name="initialize"></a> initialize
 
 ```typescript
 async function initialize(microservice: Microservice);
@@ -208,7 +213,7 @@ async function initialize(microservice: Microservice);
 
 Initializes the microservice.
 
-#### startHttpServerFor
+#### <a name="startHttpServerFor"></a> startHttpServerFor
 
 ```typescript
 async function startHttpServerFor(
@@ -239,7 +244,7 @@ Uses port defined in HTTP_SERVER_PORT environment variable or port 3000.
 Currently, only HTTP/1.1 is support (HTTP/2 support is coming).
 `initialize(microservice)` must be called before starting HTTP server.
 
-#### startKafkaConsumerFor
+#### <a name="startKafkaConsumerFor"></a> startKafkaConsumerFor
 
 ```typescript
 async function startKafkaConsumerFor(
@@ -261,7 +266,7 @@ Kafka host is defined in environment variable KAFKA_SERVER. If environment varia
 Consumer is listening to topic named: `<service-name>.<service-namespace>`, e.g. my-service.default or notification-service.platform
 `initialize(microservice)` must be called before starting Kafka consumer.
 
-#### startRedisConsumerFor
+#### <a name="startRedisConsumerFor"></a> startRedisConsumerFor
 
 ```typescript
 async function startRedisConsumerFor(microservice: Microservice);
@@ -300,9 +305,9 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-#### DefaultJwtAuthorizationServiceImpl
+#### JwtAuthorizationServiceImpl
 
-Default JWT authorization service which checks if user is authorized based JWT bearer token supplied in Authorization header.
+JWT authorization service which checks if user is authorized based JWT bearer token supplied in Authorization header.
 This service requires following environment variables to be defined:
 
 - `AUTH_SERVER_PUBLIC_KEY_URL` defines the OAuth 2.0 Authorization Server URL where to fetch the JWT signing public key, for example `https://keycloak.platform.svc.cluster.local:<port>/auth/realms/<my-realm>`
@@ -310,17 +315,17 @@ This service requires following environment variables to be defined:
 - `JWT_USER_NAME_CLAIM_PATH` JWT path for username, for example `preferred_username`
 - `JWT_ROLES_CLAIM_PATH` JWT path where for user's roles, for example `realm_access.roles`
 
-To use Default JWT authorization service, instantiate DefaultJwtAuthorizationServiceImpl class and store it as a field in your `MicroserviceImpl` class:
+To use Default JWT authorization service, instantiate JwtAuthorizationServiceImpl class and store it as a field in your `MicroserviceImpl` class:
 
 ```typescript
 export default class MicroserviceImpl extends Microservice {
-  private readonly authorizationService = new DefaultJwtAuthorizationServiceImpl();
+  private readonly authorizationService = new JwtAuthorizationServiceImpl();
 }
 ```
 
 #### ResponseCacheConfigService
 Caches service function call responses in Redis for a defined period of time. Caching can be customized by service function name and its argument.
-Caching is performed only for HTTP requests with GET method. 
+Caching is performed only for HTTP requests with GET method.
 
 For security reasons, each microservice should have its own Redis cache instance with following requirements:
 * Redis authentication with password is required
@@ -378,19 +383,19 @@ This service is called by Kubernetes pod's liveness probe to check if microservi
 
 ```typescript
 export default abstract class LivenessCheckService extends BaseService {
-  abstract isServiceAlive(): PromiseErrorOr<null>;
+  abstract isMicroserviceAlive(): PromiseErrorOr<null>;
 }
 ```
 
 Implement a class that extends the `LivenessCheckService` class and provide implementations for function:
-- isServiceAlive
+- isMicroserviceAlive
 
 Simplest implementation for the function is:
 ```typescript
 import { LivenessCheckService, PromiseErrorOr } from 'backk';
 
 export default class LivenessCheckServiceImpl extends LivenessCheckService {
-  isServiceAlive(): PromiseErrorOr<null> {
+  isMicroserviceAlive(): PromiseErrorOr<null> {
     return Promise.resolve([null, null]);
   }
 }
@@ -408,12 +413,29 @@ This service is called by Kubernetes pod's readiness probe to check if microserv
 
 ```typescript
 export default abstract class ReadinessCheckService extends BaseService {
-  abstract isServiceReady(): PromiseErrorOr<null>;
+  abstract isMicroserviceReady(): PromiseErrorOr<null>;
 }
 ```
 
 Implement a class that extends the `ReadinessCheckService` class and provide implementations for function:
-- isServiceReady
+- isMicroserviceReady
+
+Example implementation, where you need to implement the `isReady` function by yourself:
+
+```typescript
+import { HttpStatusCodes, createBackkErrorFromErrorMessageAndStatusCode } from "backk";
+
+export default class ReadinessCheckServiceImpl extends ReadinessCheckService {
+  async isMicroserviceReady(): PromiseErrorOr<null> {
+    if (await isReady()) {
+      return [null, null];
+    }
+
+    const error = createBackkErrorFromErrorMessageAndStatusCode('Microservice is not ready', HttpStatusCodes.SERVICE_UNAVAILABLE);
+    return [null, error];
+  }
+}
+```
 
 Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
 ```typescript
@@ -421,6 +443,27 @@ export default class MicroserviceImpl extends Microservice {
   private readonly readinessCheckService = new ReadinessCheckServiceImpl();
 }
 ```
+
+#### StartupCheckService and StartupCheckServiceImpl
+This service is called by Kubernetes pod's startup probe to check if microservice is started successfully.
+
+```typescript
+export default abstract class StartupCheckService extends BaseService {
+  abstract isMicroserviceStarted(): PromiseErrorOr<null>;
+}
+```
+
+`StartupCheckServiceImpl` is the default implementation that checks if database is initialized and jobs are scheduled.
+If you need to make additional checks, implement a class that extends the `StartupCheckServiceImpl` class and provide implementations for function `isMicroserviceStarted`.
+Your implementation for the function should first call the base class method and then execute additional checks.
+
+Instantiate `StartupCheckServiceImpl` or your own class and store it as a field in your `MicroserviceImpl` class:
+```typescript
+export default class MicroserviceImpl extends Microservice {
+  private readonly startupCheckService = new StartupCheckServiceImpl();
+}
+```
+
 ## <a name="feedback"></a> Feedback
 
 ### <a name="bug-report"></a> Bug Report

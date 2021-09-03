@@ -175,7 +175,7 @@ export default async function tryExecuteServiceMethod(
       return;
     } else if (
       (serviceFunctionName === 'readinessCheckService.isMicroserviceReady' ||
-        serviceFunctionName === 'startupCheckService.isServiceStarted') &&
+        serviceFunctionName === 'startupCheckService.isMicroserviceStarted') &&
       (!microservice[serviceName] || !microservice[serviceName][functionName])
     ) {
       resp.writeHead(200);

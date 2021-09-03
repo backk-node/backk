@@ -14,7 +14,7 @@ export default class StartupCheckServiceImpl extends StartupCheckService {
 
   // noinspection FunctionWithMoreThanThreeNegationsJS
   @AllowForClusterInternalUse()
-  async isServiceStarted(): PromiseErrorOr<null> {
+  async isMicroserviceStarted(): PromiseErrorOr<null> {
     if (
       !(await isDbInitialized(this.dataStore)) &&
       !(await initializeDatabase(StartupCheckService.microservice, this.dataStore))

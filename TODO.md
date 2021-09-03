@@ -1,7 +1,7 @@
 # Vitja service
 
 TODO:
-- 
+- HELM RANDOM PASSWORD: https://stackoverflow.com/questions/56170052/how-not-to-overwrite-randomly-generated-secrets-in-helm-templates
 - add/remove subentities should read all entities for given path
 - test error cases
 - remove extra deletes from deleteXXX funcs

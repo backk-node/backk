@@ -7,7 +7,7 @@ import AuthorizationService from './AuthorizationService';
 import throwException from '../utils/throwException';
 import log, { Severity } from '../observability/logging/log';
 
-export default class DefaultJwtAuthorizationServiceImpl extends AuthorizationService {
+export default class JwtAuthorizationServiceImpl extends AuthorizationService {
   private signSecretOrPublicKey: string | undefined;
   private readonly authServerPublicKeyUrl: string;
   private readonly userNameClaimPath: string;
@@ -42,7 +42,7 @@ export default class DefaultJwtAuthorizationServiceImpl extends AuthorizationSer
       return false;
     }
 
-    const jwt = DefaultJwtAuthorizationServiceImpl.getJwtFrom(authHeader);
+    const jwt = JwtAuthorizationServiceImpl.getJwtFrom(authHeader);
 
     if (jwt) {
       if (!this.signSecretOrPublicKey) {
@@ -67,7 +67,7 @@ export default class DefaultJwtAuthorizationServiceImpl extends AuthorizationSer
   }
 
   async hasUserRoleIn(roles: string[], authHeader: string): Promise<boolean> {
-    const jwt = DefaultJwtAuthorizationServiceImpl.getJwtFrom(authHeader);
+    const jwt = JwtAuthorizationServiceImpl.getJwtFrom(authHeader);
 
     if (jwt) {
       if (!this.signSecretOrPublicKey) {

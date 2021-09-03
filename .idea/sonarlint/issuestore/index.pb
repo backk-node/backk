@@ -304,16 +304,12 @@ d
 4src/datastore/sql/operations/dql/getEntitiesCount.ts,7/1/715d63f1d24d446c03f69380250c9f2414c2c935
 Z
 *src/datastore/sql/expressions/SqlEquals.ts,f/2/f24a89cae6d0bbc5642c44b39b182d9a833d9ccd
-f
-6src/datastore/sql/operations/ddl/initializeDatabase.ts,0/e/0ea45dd67226acec248fa09323994e71c3fb19b3
 `
 0src/datastore/sql/operations/dml/createEntity.ts,5/e/5ef41390bfb0e700418cdd08ce9f36a0dd37aa7a
 Y
 )src/scheduling/tryScheduleJobExecution.ts,2/3/23fcc302ed066feb49193824bdbb201ea215a4c6
 f
 6src/observability/logging/audit/createAuditLogEntry.ts,9/3/93ee41cdce181e9e3b24f2cec0e1636fca8d4985
-Z
-*src/service/startup/StartupCheckService.ts,3/c/3c94b7ecf864ecb2fae8f2b6958fb46cc906661c
 ^
 .src/scheduling/scheduleCronJobsForExecution.ts,0/7/07d0700ee09268cdb174c1505e3f60caf50c2b30
 Q

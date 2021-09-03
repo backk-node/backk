@@ -10,6 +10,7 @@ export default class BaseUserAccount extends _IdAndCaptcha  {
   @IsUndefined({ groups: ['__backk_update__'] })
   @Unique()
   @IsString()
+  @MaxLength(255)
   @IsSubject()
   @ReadWrite()
   @Private()

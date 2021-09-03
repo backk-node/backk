@@ -45,8 +45,6 @@ export default function initializeMicroservice(
   serviceNameToServiceEntries.forEach(([serviceName]: [string, any]) => {
     if (serviceName === 'metadataService') {
       throw new Error('metadataService is a reserved internal service name.');
-    } else if (serviceName === 'livenessCheckService') {
-      throw new Error('livenessCheckService is a reserved internal service name.');
     }
 
     const [

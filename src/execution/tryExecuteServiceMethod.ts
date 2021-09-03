@@ -27,10 +27,14 @@ import { BACKK_ERRORS } from '../errors/backkErrors';
 import emptyError from '../errors/emptyError';
 import fetchFromRemoteServices from './fetchFromRemoteServices';
 import getClsNamespace from '../continuationlocalstorage/getClsNamespace';
-import getMicroserviceServiceByClass from '../microservice/getMicroserviceServiceByClass';
+import getMicroserviceServiceByServiceClass from '../microservice/getMicroserviceServiceByServiceClass';
 import AuthorizationService from '../authorization/AuthorizationService';
 import throwException from '../utils/throwException';
 import ResponseCacheConfigService from '../cache/ResponseCacheConfigService';
+import LivenessCheckService from '../service/LivenessCheckService';
+import getMicroserviceServiceNameByServiceClass from '../microservice/getMicroserviceServiceNameByServiceClass';
+import ReadinessCheckService from "../service/ReadinessCheckService";
+import StartupCheckService from "../service/startup/StartupCheckService";
 
 export interface ServiceFunctionExecutionOptions {
   isMetadataServiceEnabled?: boolean;
@@ -53,13 +57,13 @@ export default async function tryExecuteServiceMethod(
   headers: { [key: string]: string | string[] | undefined },
   httpMethod: string,
   resp: any,
-  options?: ServiceFunctionExecutionOptions,
-  shouldCreateClsNamespace = true
+  options?: ServiceFunctionExecutionOptions
 ): Promise<void | object> {
   let storedError;
   let subject;
   let response: any;
-  const [serviceName, functionName] = serviceFunctionName.split('.');
+  // eslint-disable-next-line prefer-const
+  let [serviceName, functionName] = serviceFunctionName.split('.');
 
   try {
     if (
@@ -169,19 +173,36 @@ export default async function tryExecuteServiceMethod(
           message: BACKK_ERRORS.UNKNOWN_SERVICE.message + serviceName
         });
       }
-    } else if (serviceFunctionName === 'livenessCheckService.isMicroserviceAlive' &&
-      (!microservice[serviceName] || !microservice[serviceName][functionName])) {
-      resp.writeHead(200);
-      resp.end();
-      return;
-    } else if (
-      (serviceFunctionName === 'readinessCheckService.isMicroserviceReady' ||
-        serviceFunctionName === 'startupCheckService.isMicroserviceStarted') &&
-      (!microservice[serviceName] || !microservice[serviceName][functionName])
-    ) {
-      resp.writeHead(200);
-      resp.end();
-      return;
+    } else if (serviceFunctionName === 'livenessCheckService.isMicroserviceAlive') {
+      if (getMicroserviceServiceByServiceClass(microservice, LivenessCheckService)) {
+        serviceName = getMicroserviceServiceNameByServiceClass(microservice, LivenessCheckService);
+        // noinspection AssignmentToFunctionParameterJS
+        serviceFunctionName = serviceName + '.' + 'isMicroserviceAlive';
+      } else {
+        resp.writeHead(HttpStatusCodes.SUCCESS);
+        resp.end();
+        return;
+      }
+    } else if (serviceFunctionName === 'readinessCheckService.isMicroserviceReady') {
+      if (getMicroserviceServiceByServiceClass(microservice, ReadinessCheckService)) {
+        serviceName = getMicroserviceServiceNameByServiceClass(microservice, ReadinessCheckService);
+        // noinspection AssignmentToFunctionParameterJS
+        serviceFunctionName = serviceName + '.' + 'isMicroserviceReady';
+      } else {
+        resp.writeHead(HttpStatusCodes.SUCCESS);
+        resp.end();
+        return;
+      }
+    } else if (serviceFunctionName === 'startupCheckService.isMicroserviceStarted') {
+      if (getMicroserviceServiceByServiceClass(microservice, StartupCheckService)) {
+        serviceName = getMicroserviceServiceNameByServiceClass(microservice, StartupCheckService);
+        // noinspection AssignmentToFunctionParameterJS
+        serviceFunctionName = serviceName + '.' + 'isMicroserviceStarted';
+      } else {
+        resp.writeHead(HttpStatusCodes.SUCCESS);
+        resp.end();
+        return;
+      }
     }
 
     if (!microservice[serviceName]) {
@@ -224,8 +245,8 @@ export default async function tryExecuteServiceMethod(
       functionName,
       serviceFunctionArgument,
       headers.authorization,
-      getMicroserviceServiceByClass(microservice, AuthorizationService),
-      getMicroserviceServiceByClass(microservice, UserAccountBaseService)
+      getMicroserviceServiceByServiceClass(microservice, AuthorizationService),
+      getMicroserviceServiceByServiceClass(microservice, UserAccountBaseService)
     );
 
     const dataStore = (microservice[serviceName] as BaseService).getDataStore();
@@ -285,13 +306,10 @@ export default async function tryExecuteServiceMethod(
 
     if (
       httpMethod === 'GET' &&
-      getMicroserviceServiceByClass(
+      getMicroserviceServiceByServiceClass(
         microservice,
         ResponseCacheConfigService
-      )?.shouldCacheServiceFunctionCallResponse(
-        serviceFunctionName,
-        serviceFunctionArgument
-      )
+      )?.shouldCacheServiceFunctionCallResponse(serviceFunctionName, serviceFunctionArgument)
     ) {
       const key =
         'BackkResponseCache' +
@@ -486,7 +504,7 @@ export default async function tryExecuteServiceMethod(
 
         if (
           httpMethod === 'GET' &&
-          getMicroserviceServiceByClass(
+          getMicroserviceServiceByServiceClass(
             microservice,
             ResponseCacheConfigService
           )?.shouldCacheServiceFunctionCallResponse(serviceFunctionName, serviceFunctionArgument)
@@ -520,13 +538,10 @@ export default async function tryExecuteServiceMethod(
             defaultServiceMetrics.incrementServiceFunctionCallCachedResponsesCounterByOne(serviceName);
 
             if (ttl < 0) {
-              ttl = getMicroserviceServiceByClass(
+              ttl = getMicroserviceServiceByServiceClass(
                 microservice,
                 ResponseCacheConfigService
-              )?.getCachingDurationInSecs(
-                serviceFunctionName,
-                serviceFunctionArgument
-              );
+              )?.getCachingDurationInSecs(serviceFunctionName, serviceFunctionArgument);
 
               await redis.expire(key, ttl);
             }
@@ -618,7 +633,7 @@ export default async function tryExecuteServiceMethod(
           ? serviceFunctionArgument
           : { _id: response?._id }
       );
-      await getMicroserviceServiceByClass(microservice, AuditLoggingService)?.log(auditLogEntry);
+      await getMicroserviceServiceByServiceClass(microservice, AuditLoggingService)?.log(auditLogEntry);
     }
   }
 }

@@ -1,4 +1,4 @@
-export default function getMicroserviceServiceByClass(
+export default function getMicroserviceServiceByServiceClass(
   microservice: any,
   ServiceClass: Function
 ): any  {

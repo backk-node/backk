@@ -96,8 +96,7 @@ async function executeMultiple<T>(
           headers,
           'POST',
           response,
-          options,
-          false
+          options
         );
       }
 

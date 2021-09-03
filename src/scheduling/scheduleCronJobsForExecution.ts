@@ -73,8 +73,7 @@ export default function scheduleCronJobsForExecution(controller: any, dataStore:
                     {},
                     'POST',
                     response,
-                    undefined,
-                    false
+                    undefined
                   );
 
                   return [null, response.getErrorResponse()];

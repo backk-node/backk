@@ -1,10 +1,10 @@
 import createErrorFromErrorMessageAndThrowError from '../errors/createErrorFromErrorMessageAndThrowError';
 import createErrorMessageWithStatusCode from '../errors/createErrorMessageWithStatusCode';
-import getMicroserviceServiceByClass from '../microservice/getMicroserviceServiceByClass';
+import getMicroserviceServiceByServiceClass from '../microservice/getMicroserviceServiceByServiceClass';
 import CaptchaVerificationService from './CaptchaVerificationService';
 
 export default async function tryVerifyCaptchaToken(microservice: any, captchaToken: string) {
-  const captchaService = getMicroserviceServiceByClass(microservice, CaptchaVerificationService);
+  const captchaService = getMicroserviceServiceByServiceClass(microservice, CaptchaVerificationService);
 
   if (captchaService?.verifyCaptcha) {
     const isCaptchaVerified = await captchaService.verifyCaptcha(captchaToken);

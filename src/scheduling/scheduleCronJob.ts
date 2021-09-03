@@ -45,8 +45,7 @@ export async function scheduleCronJob(
                   {},
                   'POST',
                   undefined,
-                  undefined,
-                  false
+                  undefined
                 )
               );
             });

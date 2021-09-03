@@ -45,8 +45,8 @@ import _IdAndVersionAndCreatedAtTimestampAndUserAccountId
 import _IdAndVersionAndLastModifiedTimestampAndUserAccountId
   from "./id/_IdAndVersionAndLastModifiedTimestampAndUserAccountId";
 import _IdAndDefaultPostQueryOperations from "./postqueryoperations/_IdAndDefaultPostQueryOperations";
-import UserNameAndDefaultPostQueryOperations
-  from "./postqueryoperations/UserNameAndDefaultPostQueryOperations";
+import SubjectAndDefaultPostQueryOperations
+  from "./postqueryoperations/SubjectAndDefaultPostQueryOperations";
 import DbTableVersion from "./DbTableVersion";
 import CurrentPageToken from "./postqueryoperations/CurrentPageToken";
 import EntityCountRequest from "./EntityCountRequest";
@@ -80,7 +80,7 @@ const types = {
   Name,
   Version,
   BaseUserAccount,
-  UserName: Subject,
+  Subject,
   UserAccountId,
   _IdAndCreatedAtTimestampAndUserAccountId,
   _IdAndVersionAndCreatedAtTimestampAndLastModifiedTimestampAndUserAccountId,
@@ -90,7 +90,7 @@ const types = {
   _IdAndVersionAndCreatedAtTimestampAndUserAccountId,
   _IdAndVersionAndLastModifiedTimestampAndUserAccountId,
   _IdAndDefaultPostQueryOperations,
-  UserNameAndDefaultPostQueryOperations,
+  SubjectAndDefaultPostQueryOperations,
   DbTableVersion,
   CurrentPageToken,
   EntityCountRequest

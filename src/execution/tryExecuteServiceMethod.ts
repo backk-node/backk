@@ -622,7 +622,7 @@ export default async function tryExecuteServiceMethod(
   } finally {
     if (microservice[serviceName] instanceof UserAccountBaseService || subject) {
       const auditLogEntry = createAuditLogEntry(
-        subject ?? serviceFunctionArgument?.userName ?? '',
+        subject ?? serviceFunctionArgument?.subject ?? '',
         (headers['x-forwarded-for'] ?? '') as string,
         (headers.authorization ?? '') as string,
         microservice[serviceName] instanceof UserAccountBaseService ? functionName : serviceFunctionName,

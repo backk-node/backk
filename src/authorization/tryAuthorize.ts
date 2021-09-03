@@ -77,7 +77,7 @@ export default async function tryAuthorize(
           ServiceClass.name +
             '.' +
             functionName +
-            ': must have userId or userName property present in function argument'
+            ': must have userAccountId or subject property present in function argument'
         );
       }
 

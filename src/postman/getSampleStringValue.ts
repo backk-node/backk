@@ -67,6 +67,12 @@ export default function getSampleStringValue(
       : 'data:image/png;base64,SGVsbG8sIFdvcmxkIQ==';
   }
 
+  const subjectValidation = doesClassPropertyContainCustomValidation(Class, propertyName, 'isSubject');
+
+  if (subjectValidation) {
+    sampleStringValue = 'fbdb4e4a-6e93-4b08-a1e7-0b7bd08520a6';
+  }
+
   const dateStringValidation = getPropertyValidationOfType(Class, propertyName, 'isDateString');
 
   if (dateStringValidation) {

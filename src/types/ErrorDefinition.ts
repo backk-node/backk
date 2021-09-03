@@ -4,4 +4,4 @@ export type ErrorDefinition = {
   readonly statusCode?: number;
 };
 
-export type ErrorDefinitions = { [key: string]: ErrorDefinition };
+export type ErrorNameToErrorDefinitionMap = { [errorName: string]: ErrorDefinition };

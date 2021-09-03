@@ -57,13 +57,13 @@ export default async function tryAuthorize(
       serviceFunctionAnnotationContainer.isServiceFunctionAllowedForSelf(ServiceClass, functionName) &&
       serviceFunctionArgument
     ) {
-      let userName = serviceFunctionArgument.userName;
+      let subject = serviceFunctionArgument.subject;
 
-      const userId =
-        serviceFunctionArgument.userId ||
+      const userAccountId =
+        serviceFunctionArgument.userAccountId ||
         (service.isUsersService() ? serviceFunctionArgument._id : undefined);
 
-      if (!userId && !userName) {
+      if (!userAccountId && !subject) {
         throw new Error(
           ServiceClass.name +
             '.' +
@@ -72,16 +72,20 @@ export default async function tryAuthorize(
         );
       }
 
-      if (!userName && userId && usersService) {
-        const [userAccount] = await usersService.getUserNameById(userId);
+      if (!subject && userAccountId) {
+        if (!usersService) {
+          throw new Error('User account service is missing. You must implement a captcha verification service class that extends UserAccountBaseService and instantiate your class and store in a field in MicroserviceImpl class')
+        }
+
+        const [userAccount] = await usersService.getSubjectById(userAccountId);
 
         if (userAccount) {
-          userName = userAccount.data.userName;
+          subject = userAccount.data.subject;
         }
       }
 
-      if (await authorizationService.areSameIdentities(userName, authHeader)) {
-        return userName;
+      if (await authorizationService.areSameIdentities(subject, authHeader)) {
+        return subject;
       }
     }
   }

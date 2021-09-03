@@ -1,6 +1,6 @@
 import { Service } from './Service';
 import AbstractDataStore from '../datastore/AbstractDataStore';
-import { ErrorDefinitions } from '../types/ErrorDefinition';
+import { ErrorNameToErrorDefinitionMap } from '../types/ErrorDefinition';
 
 export default class BaseService implements Service {
   /** @internal */
@@ -10,7 +10,10 @@ export default class BaseService implements Service {
   readonly PublicTypes: object;
 
   /** @internal */
-  constructor(private readonly errors: ErrorDefinitions, protected readonly dataStore: AbstractDataStore) {
+  constructor(
+    private readonly errorNameToErrorDefinitionMap: ErrorNameToErrorDefinitionMap,
+    protected readonly dataStore: AbstractDataStore
+  ) {
     this.Types = {};
     this.PublicTypes = {};
 
@@ -18,17 +21,20 @@ export default class BaseService implements Service {
       dataStore.addService(this);
     }
 
-    const hasUniqueErrors = Object.values(errors).reduce((hasUniqueErrors, errorDef) => {
-      const errorsWithErrorCodeLength = Object.values(errors).filter(
-        (otherErrorDef) => errorDef.errorCode === otherErrorDef.errorCode
-      ).length;
+    const hasUniqueErrors = Object.values(errorNameToErrorDefinitionMap).reduce(
+      (hasUniqueErrors, errorDef) => {
+        const errorsWithErrorCodeLength = Object.values(errorNameToErrorDefinitionMap).filter(
+          (otherErrorDef) => errorDef.errorCode === otherErrorDef.errorCode
+        ).length;
 
-      const errorsWithErrorMessageLength = Object.values(errors).filter(
-        (otherErrorDef) => errorDef.message === otherErrorDef.message
-      ).length;
+        const errorsWithErrorMessageLength = Object.values(errorNameToErrorDefinitionMap).filter(
+          (otherErrorDef) => errorDef.message === otherErrorDef.message
+        ).length;
 
-      return hasUniqueErrors && errorsWithErrorCodeLength === 1 && errorsWithErrorMessageLength === 1;
-    }, true);
+        return hasUniqueErrors && errorsWithErrorCodeLength === 1 && errorsWithErrorMessageLength === 1;
+      },
+      true
+    );
 
     if (!hasUniqueErrors) {
       throw new Error(

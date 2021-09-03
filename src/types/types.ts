@@ -30,7 +30,7 @@ import OrFilter from "./userdefinedfilters/OrFilter";
 import { Name } from "./Name";
 import Version from "./Version";
 import BaseUserAccount from "./useraccount/BaseUserAccount";
-import UserName from "./useraccount/UserName";
+import Subject from "./useraccount/Subject";
 import UserAccountId from "./useraccount/UserAccountId";
 import _IdAndUserAccountId from "./id/_IdAndUserAccountId";
 import _IdAndCreatedAtTimestampAndUserAccountId from "./id/_IdAndCreatedAtTimestampAndUserAccountId";
@@ -80,7 +80,7 @@ const types = {
   Name,
   Version,
   BaseUserAccount,
-  UserName,
+  UserName: Subject,
   UserAccountId,
   _IdAndCreatedAtTimestampAndUserAccountId,
   _IdAndVersionAndCreatedAtTimestampAndLastModifiedTimestampAndUserAccountId,

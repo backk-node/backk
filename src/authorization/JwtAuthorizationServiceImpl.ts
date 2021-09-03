@@ -10,16 +10,16 @@ import log, { Severity } from '../observability/logging/log';
 export default class JwtAuthorizationServiceImpl extends AuthorizationService {
   private signSecretOrPublicKey: string | undefined;
   private readonly authServerPublicKeyUrl: string;
-  private readonly userNameClaimPath: string;
+  private readonly subjectClaimPath: string;
   private readonly rolesClaimPath: string;
   private readonly publicKeyPath: string;
 
   constructor() {
     super();
 
-    this.userNameClaimPath =
-      process.env.JWT_USER_NAME_CLAIM_PATH ??
-      throwException('JWT_USER_NAME_CLAIM_PATH environment variable must be defined');
+    this.subjectClaimPath =
+      process.env.JWT_ROLES_CLAIM_PATH ??
+      throwException('`JWT_SUBJECT_CLAIM_PATH` environment variable must be defined');
 
     this.rolesClaimPath =
       process.env.JWT_ROLES_CLAIM_PATH ??
@@ -37,8 +37,8 @@ export default class JwtAuthorizationServiceImpl extends AuthorizationService {
     }
   }
 
-  async areSameIdentities(userName: string | undefined, authHeader: string): Promise<boolean> {
-    if (userName === undefined) {
+  async areSameIdentities(subject: string | undefined, authHeader: string): Promise<boolean> {
+    if (subject === undefined) {
       return false;
     }
 
@@ -60,7 +60,7 @@ export default class JwtAuthorizationServiceImpl extends AuthorizationService {
       }
 
       const jwtClaims = verify(jwt, this.signSecretOrPublicKey);
-      return _.get(jwtClaims, this.userNameClaimPath) === userName;
+      return _.get(jwtClaims, this.subjectClaimPath) === subject;
     }
 
     return false;

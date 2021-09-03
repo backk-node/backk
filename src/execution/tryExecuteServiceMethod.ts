@@ -57,7 +57,7 @@ export default async function tryExecuteServiceMethod(
   shouldCreateClsNamespace = true
 ): Promise<void | object> {
   let storedError;
-  let userName;
+  let subject;
   let response: any;
   const [serviceName, functionName] = serviceFunctionName.split('.');
 
@@ -169,7 +169,8 @@ export default async function tryExecuteServiceMethod(
           message: BACKK_ERRORS.UNKNOWN_SERVICE.message + serviceName
         });
       }
-    } else if (serviceFunctionName === 'livenessCheckService.isMicroserviceAlive') {
+    } else if (serviceFunctionName === 'livenessCheckService.isMicroserviceAlive' &&
+      (!microservice[serviceName] || !microservice[serviceName][functionName])) {
       resp.writeHead(200);
       resp.end();
       return;
@@ -218,17 +219,13 @@ export default async function tryExecuteServiceMethod(
       await tryVerifyCaptchaToken(microservice, serviceFunctionArgument.captchaToken);
     }
 
-    const usersService = Object.values(microservice).find(
-      (service) => service instanceof UserAccountBaseService
-    );
-
-    userName = await tryAuthorize(
+    subject = await tryAuthorize(
       microservice[serviceName],
       functionName,
       serviceFunctionArgument,
       headers.authorization,
       getMicroserviceServiceByClass(microservice, AuthorizationService),
-      usersService as UserAccountBaseService | undefined
+      getMicroserviceServiceByClass(microservice, UserAccountBaseService)
     );
 
     const dataStore = (microservice[serviceName] as BaseService).getDataStore();
@@ -608,9 +605,9 @@ export default async function tryExecuteServiceMethod(
     resp.writeHead((backkError as BackkError).statusCode, { 'Content-Type': 'application/json' });
     resp.end(JSON.stringify(backkError));
   } finally {
-    if (microservice[serviceName] instanceof UserAccountBaseService || userName) {
+    if (microservice[serviceName] instanceof UserAccountBaseService || subject) {
       const auditLogEntry = createAuditLogEntry(
-        userName ?? serviceFunctionArgument?.userName ?? '',
+        subject ?? serviceFunctionArgument?.userName ?? '',
         (headers['x-forwarded-for'] ?? '') as string,
         (headers.authorization ?? '') as string,
         microservice[serviceName] instanceof UserAccountBaseService ? functionName : serviceFunctionName,
@@ -621,7 +618,7 @@ export default async function tryExecuteServiceMethod(
           ? serviceFunctionArgument
           : { _id: response?._id }
       );
-      await (microservice?.auditLoggingService as AuditLoggingService).log(auditLogEntry);
+      await getMicroserviceServiceByClass(microservice, AuditLoggingService)?.log(auditLogEntry);
     }
   }
 }

@@ -11,7 +11,7 @@ import assertFunctionNamesAreValidForCrudEntityService from '../service/crudenti
 import AbstractDataStore from '../datastore/AbstractDataStore';
 import entityAnnotationContainer from '../decorators/entity/entityAnnotationContainer';
 import isCreateFunction from '../service/crudentity/utils/isCreateFunction';
-import { ErrorDefinitions } from "../types/ErrorDefinition";
+import { ErrorNameToErrorDefinitionMap } from "../types/ErrorDefinition";
 
 export default function generateServicesMetadata<T>(
   controller: T,
@@ -111,7 +111,7 @@ export default function generateServicesMetadata<T>(
             .functionNameToReturnTypeNameMap[functionName];
 
           const functionStr = service[functionName].toString();
-          const errors = Object.entries(service.errors as ErrorDefinitions ?? [])
+          const errors = Object.entries(service.errors as ErrorNameToErrorDefinitionMap ?? [])
             .filter(([errorName]) => functionStr.includes(errorName))
             .map(([, errorDefinition]) => errorDefinition);
 

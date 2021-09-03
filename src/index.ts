@@ -24,7 +24,6 @@ export { default as AuditLoggingService } from './observability/logging/audit/Au
 export { default as StartupCheckServiceImpl } from './service/startup/StartupCheckServiceImpl';
 export { default as JwtAuthorizationServiceImpl } from './authorization/JwtAuthorizationServiceImpl';
 export {
-  UserOperation,
   UserOperationResult,
   AuditLogEntry
 } from './observability/logging/audit/AuditLogEntry';
@@ -206,7 +205,7 @@ export { default as DbTableVersion } from './types/DbTableVersion';
 // User account base entity
 export { default as BaseUserAccount } from './types/useraccount/BaseUserAccount';
 export { default as UserAccountId } from './types/useraccount/UserAccountId';
-export { default as UserName } from './types/useraccount/UserName';
+export { default as UserName } from './types/useraccount/Subject';
 
 // Generate error
 export { default as createBackkErrorFromErrorMessageAndStatusCode } from './errors/createBackkErrorFromErrorMessageAndStatusCode';

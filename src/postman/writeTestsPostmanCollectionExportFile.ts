@@ -575,8 +575,8 @@ export default function writeTestsPostmanCollectionExportFile<T>(
 
   _.set(
     payload,
-    process.env.JWT_USER_NAME_CLAIM_PATH ??
-    throwException('JWT_USER_NAME_CLAIM_PATH environment variable must be defined'),
+    process.env.JWT_SUBJECT_CLAIM_PATH ??
+    throwException('JWT_SUBJECT_CLAIM_PATH environment variable must be defined'),
     'abc'
   );
 

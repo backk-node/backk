@@ -278,15 +278,98 @@ Redis consumer is reading a list with a key named: `<service-name>.<service-name
 `initialize(microservice)` must be called before starting Redis consumer.
 
 ### <a name="api-documentation-base-services"></a> Base Services
+- [BaseService](#baseservice)
+- [CrudEntityService](#crudentityservice)
+- [UserAccountBaseService](#useraccountbaseservice)
+- [AuthorizationService](#authorizationservice)
+- [JwtAuhtorizationServiceImpl](#jwtauthorizationserviceimpl)
+- [ResponseCacheConfigService](#responsecacheconfigservice)
+- [CaptchaVerificationService](#captchaverificationservice)
+- [LivenessCheckService](#livenesscheckservice)
+- [ReadinessCheckService](#readinesscheckservice)
+- [StartupCheckService and StartupCheckServiceImpl](#startupcheckservice)
 
-#### AuthorizationService
+#### <a name="baseservice"></a> BaseService
+A base class for your own services.
+
+```ts
+export default class BaseService implements Service {
+  constructor(
+    private readonly errorNameToErrorDefinitionMap: ErrorNameToErrorDefinitionMap,
+    protected readonly dataStore: AbstractDataStore
+  ) {
+  }
+}
+
+export type ErrorDefinition = {
+  readonly errorCode: string;
+  readonly message: string;
+  readonly statusCode?: number;
+};
+
+export type ErrorNameToErrorDefinitionMap = { [errorName: string]: ErrorDefinition };
+```
+
+Implement your own service class by extending `BaseService` class.
+When calling base class constructor, you must provide:
+- error definitions for your service (or empty object, if your service does not raise any errors)
+- data store used by your service (if you are not using a data store, provide an instance of `NoOpDataStore`)
+
+Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
+```typescript
+export default class MicroserviceImpl extends Microservice {
+  private readonly myService = new MyServiceImpl();
+}
+```
+
+#### <a name="crudentityservice"></a> CrudEntityService
+A base class for your own resource-based services for creating, reading, updating and deleting entities.
+
+Functions in `CrudEntityService` based services must follow the following rules:
+- Create function names must start with *create* or *insert* or function must be annotated with `@Create()`
+- Read function names must start with *get*, *read*, *find*, *fetch*, *retrieve* or *obtain* or function must be annotated with `@Read()`
+- Update function names must start with *update*, *modify*, *change* or *patch* or function must be annotated with `@Update()` 
+- Delete function names must start with *delete*, *erase* or *destroy* or function must be annotated with `@Delete()`
+
+Using above naming conventions or annotations, Backk is able to generate automatic integration tests.
+If the above rules are not followed, an exception will be thrown.
+
+Implement your own service class by extending `CrudEntityService` class.
+
+When calling base class constructor, you must provide:
+- error definitions for your service (or empty object, if your service does not raise any errors)
+- data store used by your service (if you are not using a data store, provide an instance of `NoOpDataStore`)
+
+Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
+```typescript
+export default class MicroserviceImpl extends Microservice {
+  private readonly myService = new MyServiceImpl();
+}
+```
+
+#### <a name="useraccountbaseservice"></a> UserAccountBaseService
+Each microservice which has one or more service functions that have annotation `@AllowForSelf()` 
+must implement a service extending `UserAccountBaseService`. Otherwise, an exception is thrown upon authorization.
+
+Implement your own service class by extending `UserAccountBaseService` class and
+implement following function:
+- getUserNameById
+
+Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
+```typescript
+export default class MicroserviceImpl extends Microservice {
+  private readonly myService = new MyServiceImpl();
+}
+```
+
+#### <a name="authorizationservice"></a>AuthorizationService
 Authorizes client requests based on Auhtorization header
 
 ```typescript
 export default abstract class AuthorizationService {
   abstract hasUserRoleIn(roles: string[], authHeader: string | string[] | undefined): Promise<boolean>;
   abstract areSameIdentities(
-    userName: string | undefined,
+    subject: string | undefined,
     authHeader: string | string[] | undefined
   ): Promise<boolean>;
 }
@@ -305,17 +388,18 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-#### JwtAuthorizationServiceImpl
+#### <a name="jwtauthorizationserviceimpl"></a> JwtAuthorizationServiceImpl
 
 JWT authorization service which checks if user is authorized based JWT bearer token supplied in Authorization header.
 This service requires following environment variables to be defined:
-
-- `AUTH_SERVER_PUBLIC_KEY_URL` defines the OAuth 2.0 Authorization Server URL where to fetch the JWT signing public key, for example `https://keycloak.platform.svc.cluster.local:<port>/auth/realms/<my-realm>`
-- `PUBLIC_KEY_PATH` path where public key is available in public key fetch response, for example: `public_key`
-- `JWT_USER_NAME_CLAIM_PATH` JWT path for username, for example `preferred_username`
+- `AUTH_SERVER_PUBLIC_KEY_URL` defines the Authorization Server URL where to fetch the JWT signing public key, for example `https://keycloak.platform.svc.cluster.local:<port>/auth/realms/<my-realm>` or `https://keycloak.platform.svc.cluster.local:<port>/auth/realms/<my-realm>/protocol/openid-connect/certs`
+- `PUBLIC_KEY_PATH` path where public key is available in public key fetch response, for example: `public_key` or `keys[0].n`
+- `JWT_SUBJECT_CLAIM_PATH` JWT path for subject, for example `sub`
 - `JWT_ROLES_CLAIM_PATH` JWT path where for user's roles, for example `realm_access.roles`
 
-To use Default JWT authorization service, instantiate JwtAuthorizationServiceImpl class and store it as a field in your `MicroserviceImpl` class:
+In non-production environments, Authorization server as defined by `AUTH_SERVER_PUBLIC_KEY_URL` environment variable, is not contacted, but signing secret defined in `JWT_SIGN_SECRET` in used in JWT signing/verifying.
+
+To use JWT authorization service, instantiate JwtAuthorizationServiceImpl class and store it as a field in your `MicroserviceImpl` class:
 
 ```typescript
 export default class MicroserviceImpl extends Microservice {
@@ -323,7 +407,7 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-#### ResponseCacheConfigService
+#### <a name="responsecacheconfigservice"></a> ResponseCacheConfigService
 Caches service function call responses in Redis for a defined period of time. Caching can be customized by service function name and its argument.
 Caching is performed only for HTTP requests with GET method.
 
@@ -354,7 +438,7 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-#### CaptchaVerificationService
+#### <a name="captchaverificationservice"></a> CaptchaVerificationService
 Verifies captcha send in service function call argument in `captchaToken` property:
 ```json
 {
@@ -378,7 +462,7 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-#### LivenessCheckService
+#### <a name="livenesscheckservice"></a> LivenessCheckService
 This service is called by Kubernetes pod's liveness probe to check if microservice is alive.
 
 ```typescript
@@ -408,7 +492,7 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-#### ReadinessCheckService
+#### <a name="readinesscheckservice"></a> ReadinessCheckService
 This service is called by Kubernetes pod's readiness probe to check if microservice is ready for handling requests
 
 ```typescript
@@ -444,7 +528,7 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-#### StartupCheckService and StartupCheckServiceImpl
+#### <a name="startupcheckservice"></a> StartupCheckService and StartupCheckServiceImpl
 This service is called by Kubernetes pod's startup probe to check if microservice is started successfully.
 
 ```typescript
@@ -461,6 +545,43 @@ Instantiate `StartupCheckServiceImpl` or your own class and store it as a field 
 ```typescript
 export default class MicroserviceImpl extends Microservice {
   private readonly startupCheckService = new StartupCheckServiceImpl();
+}
+```
+
+#### AuditLoggingService
+This service is called to log requests made to the microservice.
+
+```typescript
+export default abstract class AuditLoggingService {
+  abstract async log(auditLogEntry: AuditLogEntry): Promise<void>;
+}
+
+export type UserOperationResult = 'success' | 'failure'
+
+export interface AuditLogEntry {
+  Timestamp: string;
+  TraceId?: string;
+  SpanId?: string;
+  TraceFlags?: number;
+  subject: string;
+  clientIp: string;
+  authorizationHeader: string;
+  userOperation: string;
+  userOperationResult: UserOperationResult;
+  userOperationHttpStatusCode: number;
+  userOperationErrorMessage: string;
+  Resource: Resource;
+  Attributes?: { [key: string]: string | number | boolean | undefined };
+}
+```
+
+Implement a class that extends the `AuditLoggingService` class and provide implementations for function:
+- log
+
+Instantiate your class and store it as a field in your `MicroserviceImpl` class:
+```typescript
+export default class MicroserviceImpl extends Microservice {
+  private readonly auditLogService = new AuditLogServiceImpl();
 }
 ```
 

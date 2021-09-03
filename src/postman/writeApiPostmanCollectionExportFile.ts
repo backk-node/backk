@@ -83,7 +83,7 @@ export default function writeApiPostmanCollectionExportFile<T>(
   _.set(
     payload,
     'sub',
-    'abc'
+    'fbdb4e4a-6e93-4b08-a1e7-0b7bd08520a6'
   );
 
   _.set(

@@ -20,10 +20,10 @@
   - [Base Services](#api-documentation-base-services)
   - [AbstractDataStore](#api-documentation-abstractdatastore)
 - [Feedback](#feedback)
-  - [Bug Report](#bug-report)
-  - [Security Vulnerability](#security-vulnerability)
-  - [New Feature Request](#new-feature-request)
-  - [Documentation Improvement Request](#documentation-improvement-request)
+  - [Report Bug](#report-bug)
+  - [Report Security Vulnerability](#report-security-vulnerability)
+  - [Request New Feature](#request-new-feature)
+  - [Request Documentation Improvement](#request-documentation-improvement)
   - [Ask Question](#ask-question)
 - [Contributing](#contributing)
 - [Sponsor](#sponsor)
@@ -74,7 +74,7 @@
 ## <a name="prerequisites"></a> Prerequisites
 
 1. [Node.js](https://nodejs.org/en/download/) >= 12.19
-2. If you are using a database, you need to install a local instance of the database or have a remote instance available, for example a cloud database.
+2. If your microservice is using a database, you need to install a local instance of the database or have a remote instance available, for example a cloud database.
    You can also run database in a container. For running a container in Mac or Windows, you need to install [Docker Desktop](https://www.docker.com/products/docker-desktop). For local installations:
    - [Download and install PostgreSQL](https://www.postgresql.org/download/) or [run PostgreSQL in a container](https://hub.docker.com/_/postgres)
    - [Download and install MySQL](https://www.mysql.com/downloads/) or [run MySQL in a container](https://hub.docker.com/_/mysql)
@@ -607,19 +607,19 @@ export default class MicroserviceImpl extends Microservice {
 
 ## <a name="feedback"></a> Feedback
 
-### <a name="bug-report"></a> Bug Report
+### <a name="report-bug"></a> Report Bug
 
 If you find a bug, please [create a new bug report](https://github.com/backk-node/backk/issues/new/choose) about that
 
-### <a name="security-vulnerability"></a> Security Vulnerability
+### <a name="report-security-vulnerability"></a> Report Security Vulnerability
 
 If you find a security vulnerability, please [create a new bug report](https://github.com/backk-node/backk/issues/new/choose) about that
 
-### <a name="new-feature-request"></a> New Feature Request
+### <a name="request-new-feature"></a> Request New Feature
 
 If you want to request a new feature or enhancement, please [create a new feature request](https://github.com/backk-node/backk/issues/new/choose) about that
 
-### <a name="documentation-improvement-request"></a> Documentation Improvement Request
+### <a name="request-documentation-improvement"></a> Request Documentation Improvement
 
 If you want to request an improvement to documentation, please [create a new documentation improvement request](https://github.com/backk-node/backk/issues/new/choose) about that
 

@@ -4,6 +4,7 @@ import forEachAsyncSequential from "../utils/forEachAsyncSequential";
 import serviceFunctionAnnotationContainer
   from "../decorators/service/function/serviceFunctionAnnotationContainer";
 import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
+import throwIf from "../utils/exception/throwIf";
 
 export default async function tryExecuteOnStartUpTasks(controller: any, dataStore: AbstractDataStore) {
   const clsNamespace = getClsNamespace('serviceFunctionExecution');
@@ -22,10 +23,7 @@ export default async function tryExecuteOnStartUpTasks(controller: any, dataStor
             async (functionName: string) => {
               if (serviceFunctionAnnotationContainer.hasOnStartUp(service.constructor, functionName)) {
                 const [, error] = await service[functionName]();
-
-                if (error) {
-                  throw error;
-                }
+                throwIf(error);
               }
             }
           );

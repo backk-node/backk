@@ -4,7 +4,7 @@ import fetch from 'node-fetch';
 import _ from 'lodash';
 import https from 'https';
 import AuthorizationService from './AuthorizationService';
-import throwException from '../utils/throwException';
+import throwException from '../utils/exception/throwException';
 import log, { Severity } from '../observability/logging/log';
 
 export default class JwtAuthorizationServiceImpl extends AuthorizationService {

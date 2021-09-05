@@ -33,6 +33,7 @@ import { PreHook } from "../../../hooks/PreHook";
 import tryExecutePreHooks from "../../../hooks/tryExecutePreHooks";
 import { One } from "../../../AbstractDataStore";
 import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
+import throwIf from "../../../../utils/exception/throwIf";
 
 // noinspection FunctionWithMoreThanThreeNegationsJS,FunctionWithMoreThanThreeNegationsJS,OverlyComplexFunctionJS,FunctionTooLongJS
 export default async function updateEntity<T extends BackkEntity>(
@@ -164,10 +165,7 @@ export default async function updateEntity<T extends BackkEntity>(
                   );
                 } else {
                   const [, error] = await deleteEntityById(dataStore, subEntity.id, SubEntityClass);
-
-                  if (error) {
-                    throw error;
-                  }
+                  throwIf(error);
                 }
               })
             );
@@ -198,9 +196,7 @@ export default async function updateEntity<T extends BackkEntity>(
                     false
                   );
 
-                  if (error) {
-                    throw error;
-                  }
+                  throwIf(error);
                 }
               })
             );
@@ -225,9 +221,7 @@ export default async function updateEntity<T extends BackkEntity>(
                   true
                 );
 
-                if (error) {
-                  throw error;
-                }
+                throwIf(error);
               })
             );
           }
@@ -245,9 +239,7 @@ export default async function updateEntity<T extends BackkEntity>(
             true
           );
 
-          if (error) {
-            throw error;
-          }
+          throwIf(error);
         } else if (isArrayType) {
           const numericId = parseInt(_id, 10);
           if (isNaN(numericId)) {

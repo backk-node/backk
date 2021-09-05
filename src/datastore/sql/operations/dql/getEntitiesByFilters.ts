@@ -24,6 +24,9 @@ import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from "../../../utils/tryEnsurePreviousOrNextPageIsRequested";
 import EntityCountRequest from "../../../../types/EntityCountRequest";
+import getRequiredUserAccountIdFieldNameAndValue
+  from "../../../utils/getRrequiredUserAccountIdFieldNameAndValue";
+import SqlEquals from "../../expressions/SqlEquals";
 
 export default async function getEntitiesByFilters<T extends BackkEntity>(
   dataStore: AbstractSqlDataStore,
@@ -55,6 +58,11 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
   try {
     if (options?.preHooks || options?.postHook) {
       didStartTransaction = await tryStartLocalTransactionIfNeeded(dataStore);
+    }
+
+    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+    if (userAccountIdFieldName && userAccountId) {
+      (filters as any).push(new SqlEquals({ [userAccountIdFieldName]: userAccountId }));
     }
 
     updateDbLocalTransactionCount(dataStore);

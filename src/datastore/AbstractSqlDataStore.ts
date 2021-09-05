@@ -19,7 +19,6 @@ import log, { Severity } from '../observability/logging/log';
 import addSubEntities from './sql/operations/dml/addSubEntities';
 import startDbOperation from './utils/startDbOperation';
 import recordDbOperationDuration from './utils/recordDbOperationDuration';
-import deleteEntitiesWhere from './sql/operations/dml/deleteEntitiesWhere';
 import { getNamespace } from 'cls-hooked';
 import UserDefinedFilter from '../types/userdefinedfilters/UserDefinedFilter';
 import getAllEntities from './sql/operations/dql/getAllEntities';
@@ -720,17 +719,6 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
       options?.postHook,
       options?.postQueryOperations
     );
-    recordDbOperationDuration(this, dbOperationStartTimeInMillis);
-    return response;
-  }
-
-  async deleteEntitiesByField<T extends object>(
-    EntityClass: { new (): T },
-    fieldName: keyof T & string,
-    fieldValue: T[keyof T] | string
-  ): PromiseErrorOr<null> {
-    const dbOperationStartTimeInMillis = startDbOperation(this, 'deleteEntitiesByField');
-    const response = await deleteEntitiesWhere(this, fieldName, fieldValue, EntityClass);
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
     return response;
   }

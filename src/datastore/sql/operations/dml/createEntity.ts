@@ -32,6 +32,7 @@ import { One } from "../../../AbstractDataStore";
 import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
 import getRequiredUserAccountIdFieldNameAndValue
   from "../../../utils/getRrequiredUserAccountIdFieldNameAndValue";
+import throwIf from "../../../../utils/exception/throwIf";
 
 export default async function createEntity<T extends BackkEntity>(
   dataStore: AbstractSqlDbManager,
@@ -197,9 +198,7 @@ export default async function createEntity<T extends BackkEntity>(
                 false
               );
 
-              if (error) {
-                throw error;
-              }
+              throwIf(error);
             }
           });
         } else if (isEntityTypeName(baseTypeName) && subEntityOrEntities !== null) {
@@ -217,9 +216,7 @@ export default async function createEntity<T extends BackkEntity>(
             false
           );
 
-          if (error) {
-            throw error;
-          }
+          throwIf(error);
         } else if (isArrayType) {
           await forEachAsyncParallel(
             (entity as any)[fieldName] ?? [],

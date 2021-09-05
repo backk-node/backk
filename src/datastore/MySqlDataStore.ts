@@ -1,6 +1,6 @@
 import mysql, { Pool } from 'mysql2/promise';
 import AbstractSqlDataStore from './AbstractSqlDataStore';
-import throwException from '../utils/throwException';
+import throwException from '../utils/exception/throwException';
 
 export default class MySqlDataStore extends AbstractSqlDataStore {
   private static readonly MAX_CHAR_TYPE_LENGTH = 16383;

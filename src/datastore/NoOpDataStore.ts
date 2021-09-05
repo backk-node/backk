@@ -42,10 +42,6 @@ export default class NoOpDataStore extends AbstractDataStore {
     throw new Error('Not implemented');
   }
 
-  deleteEntitiesByField<T extends object>(): PromiseErrorOr<null> {
-    throw new Error('Not implemented');
-  }
-
   deleteEntityById<T extends object>(): PromiseErrorOr<null> {
     throw new Error('Not implemented');
   }
@@ -130,10 +126,6 @@ export default class NoOpDataStore extends AbstractDataStore {
     throw new Error('Not implemented');
   }
 
-  updateEntityByField<T extends BackkEntity>(): PromiseErrorOr<null> {
-    throw new Error('Not implemented');
-  }
-
   cleanupTransaction(): void {
     // No operation
   }
@@ -175,10 +167,6 @@ export default class NoOpDataStore extends AbstractDataStore {
   }
 
   getBooleanType(): string {
-    throw new Error('Not implemented');
-  }
-
-  deleteEntityByField<T extends BackkEntity>(): PromiseErrorOr<null> {
     throw new Error('Not implemented');
   }
 

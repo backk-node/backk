@@ -20,7 +20,7 @@ import { HttpStatusCodes } from '../constants/constants';
 import isCreateFunction from '../service/crudentity/utils/isCreateFunction';
 import CrudEntityService from '../service/crudentity/CrudEntityService';
 import path from 'path';
-import throwException from "../utils/throwException";
+import throwException from "../utils/exception/throwException";
 
 export default function writeTestsPostmanCollectionExportFile<T>(
   controller: T,

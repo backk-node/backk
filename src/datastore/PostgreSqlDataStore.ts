@@ -1,7 +1,7 @@
 import AbstractSqlDataStore from './AbstractSqlDataStore';
 import { Pool, types } from 'pg';
 import { pg } from 'yesql';
-import throwException from '../utils/throwException';
+import throwException from '../utils/exception/throwException';
 
 export default class PostgreSqlDataStore extends AbstractSqlDataStore {
   private readonly pool: Pool;

@@ -36,6 +36,8 @@ import { One } from '../../../AbstractDataStore';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from '../../../utils/tryEnsurePreviousOrNextPageIsRequested';
 import EntityCountRequest from '../../../../types/EntityCountRequest';
+import getRequiredUserAccountIdFieldNameAndValue
+  from "../../../utils/getRrequiredUserAccountIdFieldNameAndValue";
 
 export default async function getEntityByFilters<T extends BackkEntity>(
   dataStore: MongoDbDataStore,
@@ -100,6 +102,11 @@ export default async function getEntityByFilters<T extends BackkEntity>(
   try {
     if (options?.preHooks || options?.postHook || options?.ifEntityNotFoundReturn) {
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(dataStore);
+    }
+
+    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+    if (userAccountIdFieldName && userAccountId) {
+      matchExpression[userAccountIdFieldName] = userAccountId;
     }
 
     updateDbLocalTransactionCount(dataStore);

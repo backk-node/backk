@@ -26,6 +26,7 @@ import isBackkError from "../../../../errors/isBackkError";
 import { EntityPreHook } from "../../../hooks/EntityPreHook";
 import tryExecuteEntityPreHooks from "../../../hooks/tryExecuteEntityPreHooks";
 import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
+import throwIf from "../../../../utils/exception/throwIf";
 
 export default async function removeSubEntities<T extends BackkEntity, U extends object>(
   dataStore: AbstractSqlDataStore,
@@ -96,10 +97,7 @@ export default async function removeSubEntities<T extends BackkEntity, U extends
         );
       } else {
         const [, error] = await deleteEntityById(dataStore, subEntity._id, subEntity.constructor);
-
-        if (error) {
-          throw error;
-        }
+        throwIf(error);
       }
     });
 

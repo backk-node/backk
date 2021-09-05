@@ -32,6 +32,7 @@ import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedF
 import getEntityByFilters from '../dql/getEntityByFilters';
 import { One } from '../../../AbstractDataStore';
 import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
+import throwIf from "../../../../utils/exception/throwIf";
 
 // noinspection OverlyComplexFunctionJS,FunctionTooLongJS
 export default async function addSubEntitiesByFilters<T extends BackkEntity, U extends SubEntity>(
@@ -172,10 +173,7 @@ export default async function addSubEntitiesByFilters<T extends BackkEntity, U e
           undefined
         );
 
-        if (error) {
-          // noinspection ExceptionCaughtLocallyJS
-          throw error;
-        }
+        throwIf(error);
       }
     });
 

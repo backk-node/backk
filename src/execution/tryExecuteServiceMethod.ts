@@ -29,7 +29,7 @@ import fetchFromRemoteServices from './fetchFromRemoteServices';
 import getClsNamespace from '../continuationlocalstorage/getClsNamespace';
 import getMicroserviceServiceByServiceClass from '../microservice/getMicroserviceServiceByServiceClass';
 import AuthorizationService from '../authorization/AuthorizationService';
-import throwException from '../utils/throwException';
+import throwException from '../utils/exception/throwException';
 import ResponseCacheConfigService from '../cache/ResponseCacheConfigService';
 import LivenessCheckService from '../service/LivenessCheckService';
 import getMicroserviceServiceNameByServiceClass from '../microservice/getMicroserviceServiceNameByServiceClass';
@@ -39,6 +39,7 @@ import NodeCache from 'node-cache';
 import createErrorFromErrorMessageAndThrowError from '../errors/createErrorFromErrorMessageAndThrowError';
 import createErrorMessageWithStatusCode from '../errors/createErrorMessageWithStatusCode';
 import createBackkErrorFromErrorMessageAndStatusCode from '../errors/createBackkErrorFromErrorMessageAndStatusCode';
+import throwIf from "../utils/exception/throwIf";
 
 export interface ServiceFunctionExecutionOptions {
   isMetadataServiceEnabled?: boolean;
@@ -408,9 +409,7 @@ export default async function tryExecuteServiceMethod(
           } else {
             let error;
             [userAccountId, error] = await userService.getIdBySubject(subject);
-            if (error) {
-              throw error;
-            }
+            throwIf(error);
             try {
               subjectCache.set(subject, userAccountId);
             } catch {

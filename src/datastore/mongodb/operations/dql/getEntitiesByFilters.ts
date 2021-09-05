@@ -34,6 +34,8 @@ import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from "../../../utils/tryEnsurePreviousOrNextPageIsRequested";
 import EntityCountRequest from "../../../../types/EntityCountRequest";
+import getRequiredUserAccountIdFieldNameAndValue
+  from "../../../utils/getRrequiredUserAccountIdFieldNameAndValue";
 
 export default async function getEntitiesByFilters<T extends BackkEntity>(
   dataStore: MongoDbDataStore,
@@ -94,6 +96,11 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
   try {
     if (options?.preHooks || options?.postHook) {
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(dataStore);
+    }
+
+    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+    if (userAccountIdFieldName && userAccountId) {
+      matchExpression[userAccountIdFieldName] = userAccountId;
     }
 
     if (!isRecursive) {

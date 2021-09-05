@@ -7,6 +7,11 @@ import isBackkError from "../../../../errors/isBackkError";
 import createBackkErrorFromError from "../../../../errors/createBackkErrorFromError";
 import AbstractSqlDataStore from "../../../AbstractSqlDataStore";
 import getTableName from "../../../utils/getTableName";
+import getEntityById from "./getEntityById";
+import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
+import getRequiredUserAccountIdFieldNameAndValue
+  from "../../../utils/getRrequiredUserAccountIdFieldNameAndValue";
+import throwIf from "../../../../utils/exception/throwIf";
 
 export default async function doesEntityArrayFieldContainValue<T extends BackkEntity>(
   dataStore: AbstractSqlDataStore,
@@ -22,6 +27,20 @@ export default async function doesEntityArrayFieldContainValue<T extends BackkEn
   EntityClass = dataStore.getType(EntityClass);
 
   try {
+    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+
+    if (userAccountIdFieldName && userAccountId) {
+      const [, error] = await getEntityById(
+        dataStore,
+        _id,
+        EntityClass,
+        new DefaultPostQueryOperations(),
+        false
+      );
+
+      throwIf(error);
+    }
+
     const foreignIdFieldName = EntityClass.name.charAt(0).toLowerCase() + EntityClass.name.slice(1) + 'Id';
     const numericId = parseInt(_id, 10);
     if (isNaN(numericId)) {

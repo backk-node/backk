@@ -71,7 +71,7 @@ import DefaultPostQueryOperations from '../types/postqueryoperations/DefaultPost
 import createCurrentPageTokens from './utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from './utils/tryEnsurePreviousOrNextPageIsRequested';
 import EntityCountRequest from '../types/EntityCountRequest';
-import throwException from '../utils/throwException';
+import throwException from '../utils/exception/throwException';
 import getRequiredUserAccountIdFieldNameAndValue from './utils/getRrequiredUserAccountIdFieldNameAndValue';
 import SqlEquals from './sql/expressions/SqlEquals';
 
@@ -700,6 +700,10 @@ export default class MongoDbDataStore extends AbstractDataStore {
         isSelectForUpdate = true;
       }
 
+      const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+      const filter =
+        userAccountIdFieldName && userAccountId ? { [userAccountIdFieldName]: userAccountId } : {};
+
       const entities = await this.tryExecute(false, async (client) => {
         if (isSelectForUpdate) {
           await client
@@ -714,7 +718,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
           .db(this.dbName)
           .collection<T>(getTableName(EntityClass.name))
           .aggregate([...joinPipelines, getFieldOrdering(EntityClass)])
-          .match({});
+          .match(filter);
 
         performPostQueryOperations(cursor, postQueryOperations, EntityClass, this.getTypes());
 
@@ -870,6 +874,11 @@ export default class MongoDbDataStore extends AbstractDataStore {
     // noinspection AssignmentToFunctionParameterJS
     EntityClass = this.getType(EntityClass);
 
+    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+    if (userAccountIdFieldName && userAccountId) {
+      matchExpression[userAccountIdFieldName] = userAccountId;
+    }
+
     try {
       const entityCount = await this.tryExecute(false, async (client) => {
         return client
@@ -942,12 +951,19 @@ export default class MongoDbDataStore extends AbstractDataStore {
         isSelectForUpdate = true;
       }
 
+      const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+
+      let filter = { _id: new ObjectId(_id) };
+      if (userAccountIdFieldName && userAccountId) {
+        filter = { ...filter, [userAccountIdFieldName]: userAccountId };
+      }
+
       const entities = await this.tryExecute(shouldUseTransaction, async (client) => {
         if (isSelectForUpdate) {
           await client
             .db(this.dbName)
             .collection(EntityClass.name.toLowerCase())
-            .findOneAndUpdate({ _id: new ObjectId(_id) }, { $set: { _backkLock: new ObjectId() } });
+            .findOneAndUpdate(filter, { $set: { _backkLock: new ObjectId() } });
         }
 
         if (options?.preHooks) {
@@ -960,7 +976,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
           .db(this.dbName)
           .collection<T>(getTableName(EntityClass.name))
           .aggregate([...joinPipelines, getFieldOrdering(EntityClass)])
-          .match({ _id: new ObjectId(_id) });
+          .match(filter);
 
         performPostQueryOperations(cursor, postQueryOperations, EntityClass, this.getTypes());
 
@@ -1071,15 +1087,19 @@ export default class MongoDbDataStore extends AbstractDataStore {
         isSelectForUpdate = true;
       }
 
+      const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+
+      let filter = { _id: { $in: _ids.map((_id: string) => new ObjectId(_id)) } };
+      if (userAccountIdFieldName && userAccountId) {
+        filter = { ...filter, [userAccountIdFieldName]: userAccountId };
+      }
+
       const entities = await this.tryExecute(false, async (client) => {
         if (isSelectForUpdate) {
           await client
             .db(this.dbName)
             .collection(EntityClass.name.toLowerCase())
-            .updateMany(
-              { _id: { $in: _ids.map((_id: string) => new ObjectId(_id)) } },
-              { $set: { _backkLock: new ObjectId() } }
-            );
+            .updateMany(filter, { $set: { _backkLock: new ObjectId() } });
         }
 
         const joinPipelines = getJoinPipelines(EntityClass, this.getTypes());
@@ -1087,7 +1107,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
           .db(this.dbName)
           .collection<T>(getTableName(EntityClass.name))
           .aggregate([...joinPipelines, getFieldOrdering(EntityClass)])
-          .match({ _id: { $in: _ids.map((_id: string) => new ObjectId(_id)) } });
+          .match(filter);
 
         performPostQueryOperations(cursor, postQueryOperations, EntityClass, this.getTypes());
 
@@ -1502,7 +1522,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       await this.tryExecute(shouldUseTransaction, async (client) => {
         const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
 
-        if (options?.entityPreHooks || userAccountIdFieldName && userAccountId) {
+        if (options?.entityPreHooks || (userAccountIdFieldName && userAccountId)) {
           const [currentEntity, error] = await this.getEntityById(
             EntityClass,
             _id,
@@ -1594,7 +1614,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       await this.tryExecute(shouldUseTransaction, async (client) => {
         const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
 
-        if (options?.entityPreHooks || userAccountIdFieldName && userAccountId) {
+        if (options?.entityPreHooks || (userAccountIdFieldName && userAccountId)) {
           const [currentEntity, error] = await this.getEntityByFilters(
             EntityClass,
             filters,
@@ -1999,6 +2019,13 @@ export default class MongoDbDataStore extends AbstractDataStore {
         isSelectForUpdate = true;
       }
 
+      const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+
+      let filter = { _id: new ObjectId(_id), [fieldName]: fieldValue };
+      if (userAccountIdFieldName && userAccountId) {
+        filter = { ...filter, [userAccountIdFieldName]: userAccountId };
+      }
+
       return await this.tryExecute(false, async (client) => {
         if (isSelectForUpdate) {
           await client
@@ -2010,7 +2037,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
         const cursor = client
           .db(this.dbName)
           .collection(getTableName(EntityClass.name))
-          .find({ _id: new ObjectId(_id), [fieldName]: fieldValue });
+          .find(filter);
 
         const rows = await cursor.toArray();
 

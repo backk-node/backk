@@ -218,7 +218,7 @@ export { BackkError } from './types/BackkError';
 export { default as getServiceName } from './utils/getServiceName';
 export { default as getServiceNamespace } from './utils/getServiceNamespace';
 export { default as executeForAll } from './utils/executeForAll';
-export { default as throwException } from './utils/throwException';
+export { default as throwException } from './utils/exception/throwException';
 
 export * from 'class-validator';
 export * as argon2 from 'argon2';

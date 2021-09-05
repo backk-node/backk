@@ -1,7 +1,7 @@
 import CurrentPageToken from '../../types/postqueryoperations/CurrentPageToken';
 import Pagination from '../../types/postqueryoperations/Pagination';
 import { createHmac } from 'crypto';
-import { getDefaultOrThrowExceptionInProduction } from '../../utils/getDefaultOrThrowExceptionInProduction';
+import { getDefaultOrThrowExceptionInProduction } from '../../utils/exception/getDefaultOrThrowExceptionInProduction';
 import createBackkErrorFromErrorMessageAndStatusCode from '../../errors/createBackkErrorFromErrorMessageAndStatusCode';
 import { HttpStatusCodes } from '../../constants/constants';
 

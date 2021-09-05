@@ -29,6 +29,7 @@ import { HttpStatusCodes } from '../../../../constants/constants';
 import findSubEntityClass from '../../../../utils/type/findSubEntityClass';
 import { One } from '../../../AbstractDataStore';
 import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
+import throwIf from "../../../../utils/exception/throwIf";
 
 // noinspection OverlyComplexFunctionJS,FunctionTooLongJS
 export default async function addSubEntities<T extends BackkEntity, U extends SubEntity>(
@@ -170,10 +171,7 @@ export default async function addSubEntities<T extends BackkEntity, U extends Su
           undefined
         );
 
-        if (error) {
-          // noinspection ExceptionCaughtLocallyJS
-          throw error;
-        }
+        throwIf(error);
       }
     });
 

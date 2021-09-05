@@ -1,6 +1,6 @@
 import { createHmac } from 'crypto';
 import Pagination from '../../types/postqueryoperations/Pagination';
-import { getDefaultOrThrowExceptionInProduction } from '../../utils/getDefaultOrThrowExceptionInProduction';
+import { getDefaultOrThrowExceptionInProduction } from '../../utils/exception/getDefaultOrThrowExceptionInProduction';
 
 export default function createCurrentPageTokens(paginations: Pagination[] | undefined) {
   return paginations?.map(({ subEntityPath, pageNumber }) => ({

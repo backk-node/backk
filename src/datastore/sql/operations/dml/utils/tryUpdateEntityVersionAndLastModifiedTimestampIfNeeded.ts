@@ -1,5 +1,6 @@
 import AbstractDataStore, { One } from "../../../../AbstractDataStore";
 import { BackkEntity } from "../../../../../types/entities/BackkEntity";
+import throwIf from "../../../../../utils/exception/throwIf";
 
 export default async function tryUpdateEntityVersionAndLastModifiedTimestampIfNeeded<T extends BackkEntity>(
   dataStore: AbstractDataStore,
@@ -11,8 +12,6 @@ export default async function tryUpdateEntityVersionAndLastModifiedTimestampIfNe
       _id: currentEntity.data._id
     } as any);
 
-    if (error) {
-      throw error;
-    }
+    throwIf(error);
   }
 }

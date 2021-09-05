@@ -1,7 +1,7 @@
 import tryEnsurePreviousOrNextPageIsRequested from './tryEnsurePreviousOrNextPageIsRequested';
 import CurrentPageToken from '../../types/postqueryoperations/CurrentPageToken';
 import { createHmac } from 'crypto';
-import { getDefaultOrThrowExceptionInProduction } from '../../utils/getDefaultOrThrowExceptionInProduction';
+import { getDefaultOrThrowExceptionInProduction } from '../../utils/exception/getDefaultOrThrowExceptionInProduction';
 import Pagination from '../../types/postqueryoperations/Pagination';
 
 describe('tryEnsurePreviousOrNextPageIsRequested', () => {

@@ -24,6 +24,7 @@ import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from '../../../utils/tryEnsurePreviousOrNextPageIsRequested';
 import EntityCountRequest from '../../../../types/EntityCountRequest';
+import getRequiredUserAccountIdFieldNameAndValue from '../../../utils/getRrequiredUserAccountIdFieldNameAndValue';
 
 // noinspection OverlyComplexFunctionJS,FunctionTooLongJS
 export default async function getEntityById<T extends BackkEntity>(
@@ -105,11 +106,21 @@ export default async function getEntityById<T extends BackkEntity>(
         entityCountRequest.subEntityPath === '' || entityCountRequest.subEntityPath === '*'
     );
 
+    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+    const additionalWhereExpression =
+      userAccountIdFieldName && userAccountId
+        ? ` AND ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()}.${userAccountIdFieldName} = ${dataStore.getValuePlaceholder(
+            2
+          )}`
+        : '';
+
     const selectStatement = [
       `SELECT ${columns} FROM (SELECT *${
-          shouldReturnRootEntityCount ? ', COUNT(*) OVER() AS _count' : ''
-        } FROM ${dataStore.schema}.${tableName}`,
-      `WHERE ${idFieldName} = ${dataStore.getValuePlaceholder(1)} LIMIT 1) AS ${tableAlias}`,
+        shouldReturnRootEntityCount ? ', COUNT(*) OVER() AS _count' : ''
+      } FROM ${dataStore.schema}.${tableName}`,
+      `WHERE ${idFieldName} = ${dataStore.getValuePlaceholder(
+        1
+      )}${additionalWhereExpression} LIMIT 1) AS ${tableAlias}`,
       joinClauses,
       outerSortClause,
       isSelectForUpdate ? dataStore.getUpdateForClause(tableAlias) : undefined
@@ -117,7 +128,7 @@ export default async function getEntityById<T extends BackkEntity>(
       .filter((sqlPart) => sqlPart)
       .join(' ');
 
-    const result = await dataStore.tryExecuteQuery(selectStatement, [numericId]);
+    const result = await dataStore.tryExecuteQuery(selectStatement, [numericId, userAccountId]);
 
     let entity;
     let error = null;

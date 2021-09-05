@@ -29,6 +29,7 @@ import SqlExpression from "../../expressions/SqlExpression";
 import UserDefinedFilter from "../../../../types/userdefinedfilters/UserDefinedFilter";
 import getEntityByFilters from "../dql/getEntityByFilters";
 import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
+import throwIf from "../../../../utils/exception/throwIf";
 
 export default async function removeSubEntitiesByFilters<T extends BackkEntity, U extends object>(
   dataStore: AbstractSqlDataStore,
@@ -96,10 +97,7 @@ export default async function removeSubEntitiesByFilters<T extends BackkEntity, 
           );
         } else {
           const [, error] = await deleteEntityById(dataStore, subEntity._id, subEntity.constructor);
-
-          if (error) {
-            throw error;
-          }
+          throwIf(error);
         }
       });
     }

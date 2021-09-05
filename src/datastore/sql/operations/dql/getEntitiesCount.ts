@@ -9,6 +9,9 @@ import MongoDbQuery from "../../../mongodb/MongoDbQuery";
 import convertFilterObjectToSqlEquals from "./utils/convertFilterObjectToSqlEquals";
 import getTableName from "../../../utils/getTableName";
 import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
+import getRequiredUserAccountIdFieldNameAndValue
+  from "../../../utils/getRrequiredUserAccountIdFieldNameAndValue";
+import SqlEquals from "../../expressions/SqlEquals";
 
 export default async function getEntitiesCount<T>(
   dataStore: AbstractSqlDataStore,
@@ -27,6 +30,11 @@ export default async function getEntitiesCount<T>(
   EntityClass = dataStore.getType(EntityClass);
 
   try {
+    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+    if (userAccountIdFieldName && userAccountId) {
+      (filters as any).push(new SqlEquals({ [userAccountIdFieldName]: userAccountId }));
+    }
+
     const { rootWhereClause, filterValues } = getSqlSelectStatementParts(
       dataStore,
       new DefaultPostQueryOperations(),

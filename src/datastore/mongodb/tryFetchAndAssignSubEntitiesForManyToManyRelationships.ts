@@ -15,6 +15,7 @@ import getRootProjection from './getRootProjection';
 import getEntitiesByFilters from './operations/dql/getEntitiesByFilters';
 import MongoDbDataStore from '../MongoDbDataStore';
 import EntityCountRequest from '../../types/EntityCountRequest';
+import throwIf from "../../utils/exception/throwIf";
 
 export default async function tryFetchAndAssignSubEntitiesForManyToManyRelationships<T>(
   dataStore: MongoDbDataStore,
@@ -117,9 +118,7 @@ export default async function tryFetchAndAssignSubEntitiesForManyToManyRelations
             isInternalCall
           );
 
-          if (error) {
-            throw error;
-          }
+          throwIf(error);
 
           const [subEntitiesParent] = JSONPath({ json: row, path: propertyJsonPath + propertyName + '^' });
           if (subEntitiesParent) {

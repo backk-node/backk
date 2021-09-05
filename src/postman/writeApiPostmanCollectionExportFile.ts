@@ -9,7 +9,7 @@ import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
 import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
 import getServiceFunctionExampleReturnValue from './getServiceFunctionExampleReturnValue';
-import throwException from '../utils/throwException';
+import throwException from '../utils/exception/throwException';
 
 export default function writeApiPostmanCollectionExportFile<T>(
   controller: T,

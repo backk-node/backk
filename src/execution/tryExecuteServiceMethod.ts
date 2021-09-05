@@ -411,7 +411,7 @@ export default async function tryExecuteServiceMethod(
             [userAccountId, error] = await userService.getIdBySubject(subject);
             throwIf(error);
             try {
-              subjectCache.set(subject, userAccountId);
+              subjectCache.set(subject, userAccountId.data._id);
             } catch {
               // No operation
             }

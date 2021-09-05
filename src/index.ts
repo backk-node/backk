@@ -44,7 +44,7 @@ export { default as NoServiceAutoTests } from './decorators/service/NoServiceAut
 // Service function decorators
 export { default as AllowForClusterInternalUse } from './decorators/service/function/AllowForClusterInternalUse';
 export { default as AllowForEveryUser } from './decorators/service/function/AllowForEveryUser';
-export { default as AllowForSelf } from './decorators/service/function/AllowForEveryUserForOwnResources';
+export { default as AllowForEveryUserForOwnResources } from './decorators/service/function/AllowForEveryUserForOwnResources';
 export { default as AllowForServiceInternalUse } from './decorators/service/function/AllowForServiceInternalUse';
 export { default as AllowForTests } from './decorators/service/function/AllowForTests';
 export { default as AllowForUserRoles } from './decorators/service/function/AllowForUserRoles';

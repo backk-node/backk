@@ -3,6 +3,7 @@ import CrudEntityService from "../crudentity/CrudEntityService";
 import AllowForServiceInternalUse from "../../decorators/service/function/AllowForServiceInternalUse";
 import { PromiseErrorOr } from "../../types/PromiseErrorOr";
 import { One } from "../../datastore/AbstractDataStore";
+import Subject from "../../types/useraccount/Subject";
 
 export default class UserAccountBaseService extends CrudEntityService {
   isUsersService(): boolean {
@@ -11,7 +12,7 @@ export default class UserAccountBaseService extends CrudEntityService {
 
   @AllowForServiceInternalUse()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getIdBySubject(subject: string): PromiseErrorOr<One<_Id>> {
+  getIdBySubject(subject: Subject): PromiseErrorOr<One<_Id>> {
     throw new Error('Not implemented')
   }
 }

@@ -39,7 +39,7 @@ import NodeCache from 'node-cache';
 import createErrorFromErrorMessageAndThrowError from '../errors/createErrorFromErrorMessageAndThrowError';
 import createErrorMessageWithStatusCode from '../errors/createErrorMessageWithStatusCode';
 import createBackkErrorFromErrorMessageAndStatusCode from '../errors/createBackkErrorFromErrorMessageAndStatusCode';
-import throwIf from "../utils/exception/throwIf";
+import throwIf from '../utils/exception/throwIf';
 
 export interface ServiceFunctionExecutionOptions {
   isMetadataServiceEnabled?: boolean;
@@ -408,8 +408,17 @@ export default async function tryExecuteServiceMethod(
             userAccountId = subjectCache.get(subject);
           } else {
             let error;
-            [userAccountId, error] = await userService.getIdBySubject(subject);
+
+            if (microservice[serviceName] instanceof UserAccountBaseService) {
+              [userAccountId, error] = [serviceFunctionArgument._id, null];
+            }
+
+            if (!userAccountId) {
+              [userAccountId, error] = await userService.getIdBySubject({ subject });
+            }
+
             throwIf(error);
+
             try {
               subjectCache.set(subject, userAccountId.data._id);
             } catch {
@@ -418,7 +427,7 @@ export default async function tryExecuteServiceMethod(
           }
 
           clsNamespace.set(
-            'userAccoundIdFieldName',
+            'userAccountIdFieldName',
             serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUserForOwnResources(
               ServiceClass,
               functionName

@@ -413,7 +413,7 @@ export default async function tryExecuteServiceMethod(
               [userAccountId, error] = [serviceFunctionArgument._id, null];
             }
 
-            if (!userAccountId) {
+            if (userAccountId === undefined) {
               [userAccountId, error] = await userService.getIdBySubject({ subject });
             }
 

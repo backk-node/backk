@@ -201,7 +201,6 @@ export { PostQueryOperations } from './types/postqueryoperations/PostQueryOperat
 export { Projection } from './types/postqueryoperations/Projection';
 export { default as SortBy } from './types/postqueryoperations/SortBy';
 export { SortBys } from './types/postqueryoperations/SortBys';
-export { default as SubjectAndDefaultPostQueryOperations } from './types/postqueryoperations/SubjectAndDefaultPostQueryOperations';
 
 export { default as DbTableVersion } from './types/DbTableVersion';
 

@@ -74,27 +74,39 @@
 ## <a name="prerequisites"></a> Prerequisites
 
 1. [Node.js](https://nodejs.org/en/download/) >= 12.19
-2. If you are using a database, you need to install a local instance of the database or have a remote instance available, for example a cloud database. For local installations:
-   - [Download PostgreSQL](https://www.postgresql.org/download/)
-   - [Download MySQL](https://www.mysql.com/downloads/)
-   - [Download MariaDB](https://mariadb.org/download/)
-   - [Download MongoDB](https://www.mongodb.com/try/download/community)
-   - [Download CockroachDB](https://www.cockroachlabs.com/docs/stable/install-cockroachdb.html)
-   - [Download YugabyteDB](https://download.yugabyte.com/)
+2. If you are using a database, you need to install a local instance of the database or have a remote instance available, for example a cloud database.
+   You can also run database in a container. For running a container in Mac or Windows, you need to install [Docker Desktop](https://www.docker.com/products/docker-desktop). For local installations:
+   - [Download and install PostgreSQL](https://www.postgresql.org/download/) or [run PostgreSQL in a container](https://hub.docker.com/_/postgres)
+   - [Download and install MySQL](https://www.mysql.com/downloads/) or [run MySQL in a container](https://hub.docker.com/_/mysql)
+   - [Download and install MariaDB](https://mariadb.org/download/) or [run MariaDB in a container](https://hub.docker.com/_/mariadb)
+   - [Download and install MongoDB](https://www.mongodb.com/try/download/community) or [run MongoDB in a container](https://hub.docker.com/_/mongo)
+   - [Download and install Vitess](https://vitess.io/docs/get-started/local/) or [run Vitess in a container](https://vitess.io/docs/get-started/local-docker)
+   - [Download and install CockroachDB](https://www.cockroachlabs.com/docs/stable/install-cockroachdb.html) or [run CockroachDB in a container](https://hub.docker.com/r/cockroachdb/cockroach)
+   - [Download and install YugabyteDB](https://download.yugabyte.com/) or [run YugabyteDB in a container](https://hub.docker.com/r/yugabytedb/yugabyte)
 
 ## <a name="get-started"></a> Get Started
+ - [Development environment](#development-environment)
+ - [Integration testing in development environment](#integration-testing-in-development-environment)
+ - [CI/CD](#cicd)
+
+### <a name="development-environment"></a> Development environment
 
 Follow the below steps: (In the future, there will be [backk-cli](https://github.com/backk-node/backk-cli) available, which can be used to generate a Backk project based on a set of questions)
 
 1. Clone [Backk starter project](https://github.com/backk-node/backk-starter) to a directory named after your microservice
-   ```
+   ```bash
+   # Using SSH
    git clone git@github.com:backk-node/backk-starter.git <your-microservice-name>
+   # or using HTTPS:  git clone https://github.com/backk-node/backk-starter.git <your-microservice-name>
    cd <your-microservice-name>
    ```
 2. Complete all 3 TODOs in `src/main.ts` and `src/MyMicroservice.ts` files
-3. Check that the environment variable values in the `.env` file are correct for your development environment
+3. Check that the environment variable values in the `.env.dev` file are correct for your development environment
    - If you are using MongoDB, check
-     - `MONGO_DB_URI`
+     - `MONGODB_HOST`
+     - `MONGODB_PORT`
+     - `MONGODB_USER`
+     - `MONGODB_PASSWORD`
    - If you are using MySQL/MariaDB or MySQL compatible database, check
      - `MYSQL_HOST`
      - `MYSQL_PORT`
@@ -150,15 +162,22 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
      "ioredis": "^4.19.2",
      ```
 5. Run
-   ```
+   ```bash
    npm install
    npm run start:dev
+   
+   # to run unit tests
+   npm test
    ```
    There is one example service in `src/services/example` directory that you can use as a basis for your own service(s).
    If/When you don't need that example service anymore, just delete the `src/services/example` directory and remove example service from `MicroserviceImpl` class.
 6. You can test your microservice API using [Postman](https://www.postman.com/downloads/)
    1. Launch Postman
    2. Choose Import and then choose file `postman/<your-microservice-name>_api_postman_collection.json`
+
+### <a name="integration-testing-in-development-environment"></a> Integration testing in development environment
+
+### <a name="cicd"></a> CI/CD
 
 ## <a name="example-microservice"></a> Example Microservice
 

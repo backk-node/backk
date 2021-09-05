@@ -45,8 +45,6 @@ import _IdAndVersionAndCreatedAtTimestampAndUserAccountId
 import _IdAndVersionAndLastModifiedTimestampAndUserAccountId
   from "./id/_IdAndVersionAndLastModifiedTimestampAndUserAccountId";
 import _IdAndDefaultPostQueryOperations from "./postqueryoperations/_IdAndDefaultPostQueryOperations";
-import SubjectAndDefaultPostQueryOperations
-  from "./postqueryoperations/SubjectAndDefaultPostQueryOperations";
 import DbTableVersion from "./DbTableVersion";
 import CurrentPageToken from "./postqueryoperations/CurrentPageToken";
 import EntityCountRequest from "./EntityCountRequest";
@@ -90,7 +88,6 @@ const types = {
   _IdAndVersionAndCreatedAtTimestampAndUserAccountId,
   _IdAndVersionAndLastModifiedTimestampAndUserAccountId,
   _IdAndDefaultPostQueryOperations,
-  SubjectAndDefaultPostQueryOperations,
   DbTableVersion,
   CurrentPageToken,
   EntityCountRequest

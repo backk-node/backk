@@ -31,9 +31,6 @@ import performPostQueryOperations from './mongodb/performPostQueryOperations';
 import tryFetchAndAssignSubEntitiesForManyToManyRelationships from './mongodb/tryFetchAndAssignSubEntitiesForManyToManyRelationships';
 import decryptEntities from '../crypt/decryptEntities';
 import updateDbLocalTransactionCount from './sql/operations/dql/utils/updateDbLocalTransactionCount';
-import shouldUseRandomInitializationVector from '../crypt/shouldUseRandomInitializationVector';
-import shouldEncryptValue from '../crypt/shouldEncryptValue';
-import encrypt from '../crypt/encrypt';
 import removePrivateProperties from './mongodb/removePrivateProperties';
 import replaceIdStringsWithObjectIds from './mongodb/replaceIdStringsWithObjectIds';
 import removeSubEntities from './mongodb/removeSubEntities';
@@ -73,7 +70,6 @@ import tryEnsurePreviousOrNextPageIsRequested from './utils/tryEnsurePreviousOrN
 import EntityCountRequest from '../types/EntityCountRequest';
 import throwException from '../utils/exception/throwException';
 import getRequiredUserAccountIdFieldNameAndValue from './utils/getRrequiredUserAccountIdFieldNameAndValue';
-import SqlEquals from './sql/expressions/SqlEquals';
 
 export default class MongoDbDataStore extends AbstractDataStore {
   private readonly uri: string;
@@ -81,8 +77,20 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
   constructor() {
     super('', process.env.DB_NAME ?? throwException('DB_NAME environment variable must be defined'));
-    this.uri =
-      process.env.MONGO_DB_URI ?? throwException('MONGO_DB_URI environment variable must be defined');
+
+    const MONGODB_HOST =
+      process.env.MONGODB_HOST ?? throwException('MONGODB_HOST environment variable must be defined');
+
+    const MONGODB_PORT =
+      process.env.MONGODB_PORT ?? throwException('MONGODB_PORT environment variable must be defined');
+
+    const MONGODB_USER =
+      process.env.MONGODB_USER ?? throwException('MONGODB_USER environment variable must be defined');
+
+    const MONGODB_PASSWORD =
+      process.env.MONGODB_PASSWORD ?? throwException('MONGODB_USER environment variable must be defined');
+
+    this.uri = `mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}`;
     this.mongoClient = new MongoClient(this.uri, { useNewUrlParser: true, useUnifiedTopology: true });
   }
 

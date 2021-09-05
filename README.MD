@@ -75,7 +75,7 @@
 
 1. [Node.js](https://nodejs.org/en/download/) >= 12.19
 2. If your microservice is using a database, you need to install a local instance of the database or have a remote instance available, for example a cloud database.
-   You can also run database in a container. For running a container in Mac or Windows, you need to install [Docker Desktop](https://www.docker.com/products/docker-desktop). For local installations:
+   You can also run a database in a container. For running a container in Mac or Windows, you need to install [Docker Desktop](https://www.docker.com/products/docker-desktop). For local installations:
    - [Download and install PostgreSQL](https://www.postgresql.org/download/) or [run PostgreSQL in a container](https://hub.docker.com/_/postgres)
    - [Download and install MySQL](https://www.mysql.com/downloads/) or [run MySQL in a container](https://hub.docker.com/_/mysql)
    - [Download and install MariaDB](https://mariadb.org/download/) or [run MariaDB in a container](https://hub.docker.com/_/mariadb)
@@ -97,7 +97,9 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
    ```bash
    # Using SSH
    git clone git@github.com:backk-node/backk-starter.git <your-microservice-name>
-   # or using HTTPS: git clone https://github.com/backk-node/backk-starter.git <your-microservice-name>
+   # Or using HTTPS
+   git clone https://github.com/backk-node/backk-starter.git <your-microservice-name>
+   
    cd <your-microservice-name>
    ```
 2. Complete all 3 TODOs in `src/main.ts` and `src/MyMicroservice.ts` files

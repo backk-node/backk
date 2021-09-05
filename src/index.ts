@@ -35,11 +35,6 @@ export { PromiseErrorOr } from './types/PromiseErrorOr';
 
 // Decorators
 
-// Entity decorators
-export { default as CompositeIndex } from './decorators/entity/CompositeIndex';
-export { default as Entity } from './decorators/entity/Entity';
-export { default as UniqueCompositeIndex } from './decorators/entity/UniqueCompositeIndex';
-
 // Service decorators
 export { default as AllowServiceForClusterInternalUse } from './decorators/service/AllowServiceForClusterInternalUse';
 export { default as AllowServiceForEveryUser } from './decorators/service/AllowServiceForEveryUser';
@@ -49,7 +44,7 @@ export { default as NoServiceAutoTests } from './decorators/service/NoServiceAut
 // Service function decorators
 export { default as AllowForClusterInternalUse } from './decorators/service/function/AllowForClusterInternalUse';
 export { default as AllowForEveryUser } from './decorators/service/function/AllowForEveryUser';
-export { default as AllowForSelf } from './decorators/service/function/AllowForSelf';
+export { default as AllowForSelf } from './decorators/service/function/AllowForEveryUserForOwnResources';
 export { default as AllowForServiceInternalUse } from './decorators/service/function/AllowForServiceInternalUse';
 export { default as AllowForTests } from './decorators/service/function/AllowForTests';
 export { default as AllowForUserRoles } from './decorators/service/function/AllowForUserRoles';
@@ -72,13 +67,13 @@ export {
 export { default as ResponseStatusCode } from './decorators/service/function/ResponseStatusCode';
 export { UpdateType, default as Update } from './decorators/service/function/Update';
 
-// Entity property decorators
+// Entity decorators
+export { default as CompositeIndex } from './decorators/entity/CompositeIndex';
+export { default as Entity } from './decorators/entity/Entity';
+export { default as UniqueCompositeIndex } from './decorators/entity/UniqueCompositeIndex';
+
+// Entity property validation decorators
 export { default as ArrayNotUnique } from './decorators/typeproperty/ArrayNotUnique';
-export { default as Encrypted } from './decorators/typeproperty/Encrypted';
-export { default as TestValue } from './decorators/typeproperty/testing/TestValue';
-export { default as FetchFromRemoteService } from './decorators/typeproperty/FetchFromRemoteService';
-export { default as Hashed } from './decorators/typeproperty/Hashed';
-export { SortOrder, default as Index } from './decorators/typeproperty/Index';
 export { default as IsAnyString } from './decorators/typeproperty/IsAnyString';
 export { default as IsBigInt } from './decorators/typeproperty/IsBigInt';
 export { default as IsCreditCardVerificationCode } from './decorators/typeproperty/IsCreditCardVerificationCode';
@@ -94,21 +89,28 @@ export { default as IsStrongPassword } from './decorators/typeproperty/IsStrongP
 export { default as IsUndefined } from './decorators/typeproperty/IsUndefined';
 export { default as LengthAndMatches } from './decorators/typeproperty/LengthAndMatches';
 export { default as LengthAndMatchesAll } from './decorators/typeproperty/LengthAndMatchesAll';
-export { default as ManyToMany } from './decorators/typeproperty/ManyToMany';
 export { default as MaxLengthAndMatches } from './decorators/typeproperty/MaxLengthAndMatches';
 export { default as MaxLengthAndMatchesAll } from './decorators/typeproperty/MaxLengthAndMatchesAll';
 export { default as MinMax } from './decorators/typeproperty/MinMax';
+export { default as ShouldBeTrueForEntity } from './decorators/typeproperty/ShouldBeTrueForEntity';
+export { default as Unique } from './decorators/typeproperty/Unique';
+export { default as NotUnique } from './decorators/typeproperty/NotUnique';
+export { default as IsSubject } from './decorators/typeproperty/IsSubject';
+
+// Entity property decorators
+export { default as Encrypted } from './decorators/typeproperty/Encrypted';
+export { default as TestValue } from './decorators/typeproperty/testing/TestValue';
+export { default as FetchFromRemoteService } from './decorators/typeproperty/FetchFromRemoteService';
+export { default as Hashed } from './decorators/typeproperty/Hashed';
+export { SortOrder, default as Index } from './decorators/typeproperty/Index';
+export { default as ManyToMany } from './decorators/typeproperty/ManyToMany';
 export { default as NotEncrypted } from './decorators/typeproperty/NotEncrypted';
 export { default as NotHashed } from './decorators/typeproperty/NotHashed';
 export { default as OneToMany } from './decorators/typeproperty/OneToMany';
 export { default as Private } from './decorators/typeproperty/Private';
-export { default as ShouldBeTrueForEntity } from './decorators/typeproperty/ShouldBeTrueForEntity';
 export { default as Transient } from './decorators/typeproperty/Transient';
 export { UiProps, default as UiProperties } from './decorators/typeproperty/UiProperties';
-export { default as Unique } from './decorators/typeproperty/Unique';
-export { default as NotUnique } from './decorators/typeproperty/NotUnique';
 export { default as ReadWrite } from './decorators/typeproperty/ReadWrite';
-export { default as IsSubject } from './decorators/typeproperty/IsSubject';
 
 // Register custom decorator
 export { default as registerCustomDecorator } from './decorators/registerCustomDecorator';

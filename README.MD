@@ -154,6 +154,8 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
    npm install
    npm run start:dev
    ```
+   There is one example service in `src/services/example` directory that you can use as a basis for your own service(s).
+   If/When you don't need that example service anymore, just delete the `src/services/example` directory and remove example service from `MicroserviceImpl` class.
 6. You can test your microservice API using [Postman](https://www.postman.com/downloads/)
    1. Launch Postman
    2. Choose Import and then choose file `postman/<your-microservice-name>_api_postman_collection.json`
@@ -324,6 +326,7 @@ export default class MicroserviceImpl extends Microservice {
 
 #### <a name="crudentityservice"></a> CrudEntityService
 A base class for your own resource-based services for creating, reading, updating and deleting entities.
+NOTE! It is not mandatory to use CrudEntityService as base class for you resource-based services, you can also use just `BaseService` as a base class.
 
 Functions in `CrudEntityService` based services must follow the following rules:
 - Create function names must start with *create* or *insert* or function must be annotated with `@Create()`
@@ -368,18 +371,17 @@ Authorizes client requests based on Auhtorization header
 ```typescript
 export default abstract class AuthorizationService {
   abstract hasUserRoleIn(roles: string[], authHeader: string | string[] | undefined): Promise<boolean>;
-  abstract areSameIdentities(
-    subject: string | undefined,
+  abstract getSubject(
     authHeader: string | string[] | undefined
-  ): Promise<boolean>;
+  ): Promise<string | undefined>;
 }
 ```
 
 `authHeader` argument contains the Authorization header content, e.g. `Bearer vF9dft4qmT...`.
 
-Implement a class that extends the `AuthorizationService` class and provide implementations for functions:
+Implement a class that extends the `AuthorizationService` class and provide implementations for function:
 - hasUserRoleIn
-- areSameIdentities
+- getSubject
 
 Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
 ```typescript

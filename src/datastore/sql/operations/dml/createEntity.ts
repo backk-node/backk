@@ -30,6 +30,8 @@ import tryExecutePreHooks from "../../../hooks/tryExecutePreHooks";
 import { plainToClass } from "class-transformer";
 import { One } from "../../../AbstractDataStore";
 import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
+import getRequiredUserAccountIdFieldNameAndValue
+  from "../../../utils/getRrequiredUserAccountIdFieldNameAndValue";
 
 export default async function createEntity<T extends BackkEntity>(
   dataStore: AbstractSqlDbManager,
@@ -54,10 +56,17 @@ export default async function createEntity<T extends BackkEntity>(
     const Types = dataStore.getTypes();
 
     if (!isRecursiveCall) {
-      await hashAndEncryptEntity(entity, EntityClass, Types);
+      await hashAndEncryptEntity(entity, EntityClass, Types)
     }
 
     didStartTransaction = await tryStartLocalTransactionIfNeeded(dataStore);
+
+    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+    if (userAccountIdFieldName && userAccountId && entity[userAccountIdFieldName] !== userAccountId) {
+      throw createBackkErrorFromErrorCodeMessageAndStatus(
+        BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED
+      );
+    }
 
     if (!isRecursiveCall) {
       await tryExecutePreHooks(preHooks ?? []);

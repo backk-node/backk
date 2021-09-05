@@ -1,26 +1,28 @@
-import forEachAsyncParallel from "../../../../utils/forEachAsyncParallel";
-import entityContainer, { EntityJoinSpec } from "../../../../decorators/entity/entityAnnotationContainer";
-import AbstractSqlDataStore from "../../../AbstractSqlDataStore";
-import createBackkErrorFromError from "../../../../errors/createBackkErrorFromError";
-import tryStartLocalTransactionIfNeeded from "../transaction/tryStartLocalTransactionIfNeeded";
-import tryCommitLocalTransactionIfNeeded from "../transaction/tryCommitLocalTransactionIfNeeded";
-import tryRollbackLocalTransactionIfNeeded from "../transaction/tryRollbackLocalTransactionIfNeeded";
-import cleanupLocalTransactionIfNeeded from "../transaction/cleanupLocalTransactionIfNeeded";
-import SqlExpression from "../../expressions/SqlExpression";
-import UserDefinedFilter from "../../../../types/userdefinedfilters/UserDefinedFilter";
-import tryGetWhereClause from "../dql/clauses/tryGetWhereClause";
-import getFilterValues from "../dql/utils/getFilterValues";
-import MongoDbQuery from "../../../mongodb/MongoDbQuery";
-import convertFilterObjectToSqlEquals from "../dql/utils/convertFilterObjectToSqlEquals";
-import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
-import isBackkError from "../../../../errors/isBackkError";
-import { EntityPreHook } from "../../../hooks/EntityPreHook";
-import { PostQueryOperations } from "../../../../types/postqueryoperations/PostQueryOperations";
-import { PostHook } from "../../../hooks/PostHook";
-import tryExecuteEntityPreHooks from "../../../hooks/tryExecuteEntityPreHooks";
-import getEntityByFilters from "../dql/getEntityByFilters";
-import tryExecutePostHook from "../../../hooks/tryExecutePostHook";
-import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
+import forEachAsyncParallel from '../../../../utils/forEachAsyncParallel';
+import entityContainer, { EntityJoinSpec } from '../../../../decorators/entity/entityAnnotationContainer';
+import AbstractSqlDataStore from '../../../AbstractSqlDataStore';
+import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
+import tryStartLocalTransactionIfNeeded from '../transaction/tryStartLocalTransactionIfNeeded';
+import tryCommitLocalTransactionIfNeeded from '../transaction/tryCommitLocalTransactionIfNeeded';
+import tryRollbackLocalTransactionIfNeeded from '../transaction/tryRollbackLocalTransactionIfNeeded';
+import cleanupLocalTransactionIfNeeded from '../transaction/cleanupLocalTransactionIfNeeded';
+import SqlExpression from '../../expressions/SqlExpression';
+import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
+import tryGetWhereClause from '../dql/clauses/tryGetWhereClause';
+import getFilterValues from '../dql/utils/getFilterValues';
+import MongoDbQuery from '../../../mongodb/MongoDbQuery';
+import convertFilterObjectToSqlEquals from '../dql/utils/convertFilterObjectToSqlEquals';
+import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
+import isBackkError from '../../../../errors/isBackkError';
+import { EntityPreHook } from '../../../hooks/EntityPreHook';
+import { PostQueryOperations } from '../../../../types/postqueryoperations/PostQueryOperations';
+import { PostHook } from '../../../hooks/PostHook';
+import tryExecuteEntityPreHooks from '../../../hooks/tryExecuteEntityPreHooks';
+import getEntityByFilters from '../dql/getEntityByFilters';
+import tryExecutePostHook from '../../../hooks/tryExecutePostHook';
+import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
+import getRequiredUserAccountIdFieldNameAndValue from '../../../utils/getRrequiredUserAccountIdFieldNameAndValue';
+import SqlEquals from '../../expressions/SqlEquals';
 
 export default async function deleteEntityByFilters<T extends object>(
   dataStore: AbstractSqlDataStore,
@@ -55,11 +57,12 @@ export default async function deleteEntityByFilters<T extends object>(
     didStartTransaction = await tryStartLocalTransactionIfNeeded(dataStore);
 
     let currentEntity, error;
+    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
 
-    if (options?.entityPreHooks) {
+    if (options?.entityPreHooks || (userAccountIdFieldName && userAccountId)) {
       [currentEntity, error] = await getEntityByFilters(
         dataStore,
-       filters,
+        filters,
         EntityClass,
         options?.postQueryOperations ?? new DefaultPostQueryOperations(),
         false,
@@ -72,7 +75,9 @@ export default async function deleteEntityByFilters<T extends object>(
         throw error;
       }
 
-      await tryExecuteEntityPreHooks(options?.entityPreHooks, currentEntity);
+      if (options?.entityPreHooks) {
+        await tryExecuteEntityPreHooks(options?.entityPreHooks, currentEntity);
+      }
     }
 
     const whereClause = tryGetWhereClause(dataStore, '', filters as any);
@@ -115,7 +120,10 @@ export default async function deleteEntityByFilters<T extends object>(
     return [null, null];
   } catch (errorOrBackkError) {
     await tryRollbackLocalTransactionIfNeeded(didStartTransaction, dataStore);
-    return [null, isBackkError(errorOrBackkError) ? errorOrBackkError : createBackkErrorFromError(errorOrBackkError)];
+    return [
+      null,
+      isBackkError(errorOrBackkError) ? errorOrBackkError : createBackkErrorFromError(errorOrBackkError)
+    ];
   } finally {
     cleanupLocalTransactionIfNeeded(didStartTransaction, dataStore);
   }

@@ -34,8 +34,13 @@ export default function writeTestsPostmanCollectionExportFile<T>(
     testFilePathNames.map((testFilePathName) => {
       const testFileContents = readFileSync(testFilePathName, { encoding: 'UTF-8' });
       const fileType = testFilePathName.endsWith('json') ? 'json' : 'yaml';
-      const writtenTestsInFile =
-        fileType === 'json' ? JSON.parse(testFileContents) : YAML.parse(testFileContents);
+      let writtenTestsInFile;
+      try {
+        writtenTestsInFile =
+          fileType === 'json' ? JSON.parse(testFileContents) : YAML.parse(testFileContents);
+      } catch(error) {
+        throw new Error('Failed to parse file: ' + testFilePathName);
+      }
       return Array.isArray(writtenTestsInFile)
         ? writtenTestsInFile.map((writtenTest: any) => ({
             ...writtenTest,

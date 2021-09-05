@@ -72,6 +72,8 @@ import createCurrentPageTokens from './utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from './utils/tryEnsurePreviousOrNextPageIsRequested';
 import EntityCountRequest from '../types/EntityCountRequest';
 import throwException from '../utils/throwException';
+import getRequiredUserAccountIdFieldNameAndValue from './utils/getRrequiredUserAccountIdFieldNameAndValue';
+import SqlEquals from './sql/expressions/SqlEquals';
 
 export default class MongoDbDataStore extends AbstractDataStore {
   private readonly uri: string;
@@ -259,6 +261,13 @@ export default class MongoDbDataStore extends AbstractDataStore {
     try {
       await hashAndEncryptEntity(entity, EntityClass, Types);
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(this);
+
+      const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+      if (userAccountIdFieldName && userAccountId && entity[userAccountIdFieldName] !== userAccountId) {
+        throw createBackkErrorFromErrorCodeMessageAndStatus(
+          BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED
+        );
+      }
 
       return await this.tryExecute(shouldUseTransaction, async (client) => {
         const entityMetadata = getClassPropertyNameToPropertyTypeNameMap(EntityClass as any);
@@ -1432,6 +1441,11 @@ export default class MongoDbDataStore extends AbstractDataStore {
     try {
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(this);
 
+      const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+      if (userAccountIdFieldName && userAccountId) {
+        matchExpression[userAccountIdFieldName] = userAccountId;
+      }
+
       const entityPropertyNameToPropertyTypeNameMap = getClassPropertyNameToPropertyTypeNameMap(EntityClass);
       let versionUpdate = {};
       if (entityPropertyNameToPropertyTypeNameMap.version) {
@@ -1486,7 +1500,9 @@ export default class MongoDbDataStore extends AbstractDataStore {
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(this);
 
       await this.tryExecute(shouldUseTransaction, async (client) => {
-        if (options?.entityPreHooks) {
+        const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+
+        if (options?.entityPreHooks || userAccountIdFieldName && userAccountId) {
           const [currentEntity, error] = await this.getEntityById(
             EntityClass,
             _id,
@@ -1501,7 +1517,9 @@ export default class MongoDbDataStore extends AbstractDataStore {
             return [null, error];
           }
 
-          await tryExecuteEntityPreHooks(options?.entityPreHooks, currentEntity);
+          if (options?.entityPreHooks) {
+            await tryExecuteEntityPreHooks(options?.entityPreHooks, currentEntity);
+          }
         }
 
         await client
@@ -1525,43 +1543,6 @@ export default class MongoDbDataStore extends AbstractDataStore {
     }
   }
 
-  async deleteEntitiesByField<T extends object>(
-    EntityClass: { new (): T },
-    fieldName: keyof T & string,
-    fieldValue: T[keyof T] | string
-  ): PromiseErrorOr<null> {
-    const dbOperationStartTimeInMillis = startDbOperation(this, 'deleteEntitiesByField');
-    // noinspection AssignmentToFunctionParameterJS
-    EntityClass = this.getType(EntityClass);
-    let shouldUseTransaction = false;
-
-    try {
-      shouldUseTransaction = await tryStartLocalTransactionIfNeeded(this);
-
-      const lastFieldNamePart = fieldName.slice(fieldName.lastIndexOf('.') + 1);
-      if (!shouldUseRandomInitializationVector(lastFieldNamePart) && shouldEncryptValue(lastFieldNamePart)) {
-        // noinspection AssignmentToFunctionParameterJS
-        fieldValue = encrypt(fieldValue as any, false);
-      }
-
-      await this.tryExecute(shouldUseTransaction, async (client) => {
-        await client
-          .db(this.dbName)
-          .collection(EntityClass.name.toLowerCase())
-          .deleteOne({ [fieldName]: fieldValue });
-      });
-
-      return [null, null];
-    } catch (errorOrBackkError) {
-      return isBackkError(errorOrBackkError)
-        ? [null, errorOrBackkError]
-        : [null, createBackkErrorFromError(errorOrBackkError)];
-    } finally {
-      cleanupLocalTransactionIfNeeded(shouldUseTransaction, this);
-      recordDbOperationDuration(this, dbOperationStartTimeInMillis);
-    }
-  }
-
   async deleteEntityByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
     filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
@@ -1571,7 +1552,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       postHook?: PostHook<T>;
     }
   ): PromiseErrorOr<null> {
-    const dbOperationStartTimeInMillis = startDbOperation(this, 'deleteEntitiesByFilters');
+    const dbOperationStartTimeInMillis = startDbOperation(this, 'deleteEntityByFilters');
     // noinspection AssignmentToFunctionParameterJS
     EntityClass = this.getType(EntityClass);
     let shouldUseTransaction = false;
@@ -1611,7 +1592,9 @@ export default class MongoDbDataStore extends AbstractDataStore {
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(this);
 
       await this.tryExecute(shouldUseTransaction, async (client) => {
-        if (options?.entityPreHooks) {
+        const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+
+        if (options?.entityPreHooks || userAccountIdFieldName && userAccountId) {
           const [currentEntity, error] = await this.getEntityByFilters(
             EntityClass,
             filters,
@@ -1626,7 +1609,9 @@ export default class MongoDbDataStore extends AbstractDataStore {
             return [null, error];
           }
 
-          await tryExecuteEntityPreHooks(options?.entityPreHooks, currentEntity);
+          if (options?.entityPreHooks) {
+            await tryExecuteEntityPreHooks(options?.entityPreHooks, currentEntity);
+          }
         }
 
         await client
@@ -1692,6 +1677,11 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
     try {
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(this);
+
+      const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+      if (userAccountIdFieldName && userAccountId) {
+        matchExpression[userAccountIdFieldName] = userAccountId;
+      }
 
       await this.tryExecute(shouldUseTransaction, async (client) => {
         await client
@@ -1815,11 +1805,15 @@ export default class MongoDbDataStore extends AbstractDataStore {
     try {
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(this);
 
+      const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+      const filter =
+        userAccountIdFieldName && userAccountId ? { [userAccountIdFieldName]: userAccountId } : {};
+
       await this.tryExecute(shouldUseTransaction, async (client) => {
         await client
           .db(this.dbName)
           .collection(EntityClass.name.toLowerCase())
-          .deleteMany({});
+          .deleteMany(filter);
       });
 
       return [null, null];

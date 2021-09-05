@@ -11,6 +11,9 @@ import getClassPropertyNameToPropertyTypeNameMap from '../../../../metadata/getC
 import forEachAsyncSequential from '../../../../utils/forEachAsyncSequential';
 import getTypeInfoForTypeName from '../../../../utils/type/getTypeInfoForTypeName';
 import isEntityTypeName from '../../../../utils/type/isEntityTypeName';
+import getRequiredUserAccountIdFieldNameAndValue from '../../../utils/getRrequiredUserAccountIdFieldNameAndValue';
+import createBackkErrorFromErrorCodeMessageAndStatus from '../../../../errors/createBackkErrorFromErrorCodeMessageAndStatus';
+import { BACKK_ERRORS } from '../../../../errors/backkErrors';
 
 export default async function deleteAllEntities<T>(
   dataStore: AbstractSqlDataStore,
@@ -26,16 +29,21 @@ export default async function deleteAllEntities<T>(
     const Types = dataStore.getTypes();
     const entityMetadata = getClassPropertyNameToPropertyTypeNameMap(EntityClass as any);
 
-    await forEachAsyncSequential(
-      Object.entries(entityMetadata),
-      async ([, fieldTypeName]: [any, any]) => {
-        const { baseTypeName } = getTypeInfoForTypeName(fieldTypeName);
+    await forEachAsyncSequential(Object.entries(entityMetadata), async ([, fieldTypeName]: [any, any]) => {
+      const { baseTypeName } = getTypeInfoForTypeName(fieldTypeName);
 
-        if (isEntityTypeName(baseTypeName)) {
-          await deleteAllEntities(dataStore, (Types as any)[baseTypeName], true)
-        }
+      if (isEntityTypeName(baseTypeName)) {
+        await deleteAllEntities(dataStore, (Types as any)[baseTypeName], true);
       }
-    );
+    });
+
+    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+    const whereClause =
+      userAccountIdFieldName && userAccountId
+        ? ` WHERE ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()}.${userAccountIdFieldName} = ${dataStore.getValuePlaceholder(
+            1
+          )}`
+        : '';
 
     await Promise.all([
       forEachAsyncParallel(
@@ -55,9 +63,12 @@ export default async function deleteAllEntities<T>(
           );
         }
       }),
-      isRecursive ? Promise.resolve(undefined) : dataStore.tryExecuteSql(
-        `DELETE FROM ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()}`
-      )
+      isRecursive
+        ? Promise.resolve(undefined)
+        : dataStore.tryExecuteSql(
+            `DELETE FROM ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()}${whereClause}`,
+            [userAccountId]
+          )
     ]);
 
     await tryCommitLocalTransactionIfNeeded(didStartTransaction, dataStore);

@@ -32,11 +32,7 @@ export default class JwtAuthorizationServiceImpl extends AuthorizationService {
     }
   }
 
-  async areSameIdentities(subject: string | undefined, authHeader: string): Promise<boolean> {
-    if (subject === undefined) {
-      return false;
-    }
-
+  async getSubject(authHeader: string): Promise<string | undefined> {
     const jwt = JwtAuthorizationServiceImpl.getJwtFrom(authHeader);
 
     if (jwt) {
@@ -50,15 +46,15 @@ export default class JwtAuthorizationServiceImpl extends AuthorizationService {
               error.message,
             error.stack
           );
-          return false;
+          return undefined
         }
       }
 
       const jwtClaims = verify(jwt, this.signSecretOrPublicKey);
-      return _.get(jwtClaims, 'sub') === subject;
+      return _.get(jwtClaims, 'sub');
     }
 
-    return false;
+    return undefined;
   }
 
   async hasUserRoleIn(roles: string[], authHeader: string): Promise<boolean> {

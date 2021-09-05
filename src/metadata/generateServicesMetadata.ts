@@ -64,7 +64,7 @@ export default function generateServicesMetadata<T>(
         .map((functionName: string) => {
           if (
             !remoteServiceRootDir &&
-            !serviceFunctionAnnotationContainer.isServiceFunctionAllowedForSelf(ServiceClass, functionName) &&
+            !serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUserForOwnResources(ServiceClass, functionName) &&
             !serviceFunctionAnnotationContainer.isServiceFunctionAllowedForClusterInternalUse(
               ServiceClass,
               functionName

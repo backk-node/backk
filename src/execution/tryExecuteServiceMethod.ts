@@ -33,8 +33,12 @@ import throwException from '../utils/throwException';
 import ResponseCacheConfigService from '../cache/ResponseCacheConfigService';
 import LivenessCheckService from '../service/LivenessCheckService';
 import getMicroserviceServiceNameByServiceClass from '../microservice/getMicroserviceServiceNameByServiceClass';
-import ReadinessCheckService from "../service/ReadinessCheckService";
-import StartupCheckService from "../service/startup/StartupCheckService";
+import ReadinessCheckService from '../service/ReadinessCheckService';
+import StartupCheckService from '../service/startup/StartupCheckService';
+import NodeCache from 'node-cache';
+import createErrorFromErrorMessageAndThrowError from '../errors/createErrorFromErrorMessageAndThrowError';
+import createErrorMessageWithStatusCode from '../errors/createErrorMessageWithStatusCode';
+import createBackkErrorFromErrorMessageAndStatusCode from '../errors/createBackkErrorFromErrorMessageAndStatusCode';
 
 export interface ServiceFunctionExecutionOptions {
   isMetadataServiceEnabled?: boolean;
@@ -49,6 +53,13 @@ export interface ServiceFunctionExecutionOptions {
     regExpForAllowedRemoteServiceFunctionCalls?: RegExp;
   };
 }
+
+const subjectCache = new NodeCache({
+  useClones: false,
+  checkperiod: 5 * 60,
+  stdTTL: 30 * 60,
+  maxKeys: 100000
+});
 
 export default async function tryExecuteServiceMethod(
   microservice: any,
@@ -240,15 +251,20 @@ export default async function tryExecuteServiceMethod(
       await tryVerifyCaptchaToken(microservice, serviceFunctionArgument.captchaToken);
     }
 
+    const userService = getMicroserviceServiceByServiceClass(microservice, UserAccountBaseService);
+    const authorizationService = getMicroserviceServiceByServiceClass(microservice, AuthorizationService);
+    const authHeader = headers.authorization;
+
     subject = await tryAuthorize(
       microservice[serviceName],
       functionName,
       serviceFunctionArgument,
-      headers.authorization,
-      getMicroserviceServiceByServiceClass(microservice, AuthorizationService),
-      getMicroserviceServiceByServiceClass(microservice, UserAccountBaseService)
+      authHeader,
+      authorizationService,
+      userService
     );
 
+    const ServiceClass = microservice[serviceName].constructor;
     const dataStore = (microservice[serviceName] as BaseService).getDataStore();
 
     let instantiatedServiceFunctionArgument: any;
@@ -365,6 +381,53 @@ export default async function tryExecuteServiceMethod(
         clsNamespace.set('remoteServiceCallCount', 0);
         clsNamespace.set('postHookRemoteServiceCallCount', 0);
         clsNamespace.set('dataStoreOperationAfterRemoteServiceCall', false);
+
+        if (
+          serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUserForOwnResources(
+            ServiceClass,
+            functionName
+          )
+        ) {
+          if (!userService) {
+            throw new Error(
+              'User account service is missing. You must implement a captcha verification service class that extends UserAccountBaseService and instantiate your class and store in a field in MicroserviceImpl class'
+            );
+          }
+
+          const subject: string | undefined = await authorizationService.getSubject(authHeader);
+          if (!subject) {
+            throw createBackkErrorFromErrorCodeMessageAndStatus(
+              BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED
+            );
+          }
+
+          let userAccountId;
+
+          if (subjectCache.has(subject)) {
+            userAccountId = subjectCache.get(subject);
+          } else {
+            let error;
+            [userAccountId, error] = await userService.getIdBySubject(subject);
+            if (error) {
+              throw error;
+            }
+            try {
+              subjectCache.set(subject, userAccountId);
+            } catch {
+              // No operation
+            }
+          }
+
+          clsNamespace.set(
+            'userAccoundIdFieldName',
+            serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUserForOwnResources(
+              ServiceClass,
+              functionName
+            )
+          );
+
+          clsNamespace.set('userAccountId', userAccountId);
+        }
 
         // noinspection ExceptionCaughtLocallyJS
         try {

@@ -15,6 +15,9 @@ import getFilterValues from "../dql/utils/getFilterValues";
 import getClassPropertyNameToPropertyTypeNameMap
   from "../../../../metadata/getClassPropertyNameToPropertyTypeNameMap";
 import { BackkEntity } from "../../../../types/entities/BackkEntity";
+import getRequiredUserAccountIdFieldNameAndValue
+  from "../../../utils/getRrequiredUserAccountIdFieldNameAndValue";
+import SqlEquals from "../../expressions/SqlEquals";
 
 // noinspection DuplicatedCode
 export default async function updateEntitiesByFilters<T extends BackkEntity>(
@@ -44,6 +47,12 @@ export default async function updateEntitiesByFilters<T extends BackkEntity>(
 
   try {
     didStartTransaction = await tryStartLocalTransactionIfNeeded(dataStore);
+
+    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+    if (userAccountIdFieldName && userAccountId) {
+      (filters as any).push(new SqlEquals({ [userAccountIdFieldName]: userAccountId }));
+    }
+
     const whereClause = tryGetWhereClause(dataStore, '', filters as any);
     const filterValues = getFilterValues(filters as any);
 

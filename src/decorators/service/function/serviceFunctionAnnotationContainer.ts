@@ -8,7 +8,7 @@ class ServiceFunctionAnnotationContainer {
   private readonly serviceFunctionNameToHasNoCaptchaAnnotationMap: { [key: string]: boolean } = {};
   private readonly serviceFunctionNameToIsAllowedForEveryUserMap: { [key: string]: boolean } = {};
   private readonly serviceFunctionNameToIsAllowedForClusterInternalUseMap: { [key: string]: boolean } = {};
-  private readonly serviceFunctionNameToIsAllowedForSelfMap: { [key: string]: boolean } = {};
+  private readonly serviceFunctionNameToUserAccountIdFieldName: { [key: string]: string } = {};
   private readonly serviceFunctionNameToIsAllowedForServicePrivateUseMap: { [key: string]: boolean } = {};
   private readonly serviceFunctionNameToAllowedUserRolesMap: { [key: string]: string[] } = {};
   private readonly serviceFunctionNameToDocStringMap: { [key: string]: string } = {};
@@ -53,8 +53,8 @@ class ServiceFunctionAnnotationContainer {
     this.serviceFunctionNameToIsAllowedForClusterInternalUseMap[`${serviceClass.name}${functionName}`] = true;
   }
 
-  addServiceFunctionAllowedForSelf(serviceClass: Function, functionName: string) {
-    this.serviceFunctionNameToIsAllowedForSelfMap[`${serviceClass.name}${functionName}`] = true;
+  addServiceFunctionAllowedForEveryUserForOwnResources(serviceClass: Function, functionName: string, userAccountIdFieldName: string) {
+    this.serviceFunctionNameToUserAccountIdFieldName[`${serviceClass.name}${functionName}`] = userAccountIdFieldName;
   }
 
   addServiceFunctionAllowedForServiceInternalUse(serviceClass: Function, functionName: string) {
@@ -207,19 +207,19 @@ class ServiceFunctionAnnotationContainer {
     return false;
   }
 
-  isServiceFunctionAllowedForSelf(serviceClass: Function, functionName: string) {
+  isServiceFunctionAllowedForEveryUserForOwnResources(serviceClass: Function, functionName: string) {
     let proto = Object.getPrototypeOf(new (serviceClass as new () => any)());
     while (proto !== Object.prototype) {
       if (
-        this.serviceFunctionNameToIsAllowedForSelfMap[`${proto.constructor.name}${functionName}`] !==
+        this.serviceFunctionNameToUserAccountIdFieldName[`${proto.constructor.name}${functionName}`] !==
         undefined
       ) {
-        return true;
+        return this.serviceFunctionNameToUserAccountIdFieldName[`${proto.constructor.name}${functionName}`];
       }
       proto = Object.getPrototypeOf(proto);
     }
 
-    return false;
+    return undefined;
   }
 
   isServiceFunctionAllowedForServiceInternalUse(serviceClass: Function, functionName: string) {

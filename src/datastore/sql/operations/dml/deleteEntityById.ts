@@ -1,24 +1,24 @@
-import forEachAsyncParallel from "../../../../utils/forEachAsyncParallel";
-import entityContainer, { EntityJoinSpec } from "../../../../decorators/entity/entityAnnotationContainer";
-import AbstractSqlDataStore from "../../../AbstractSqlDataStore";
-import getEntityById from "../dql/getEntityById";
-import createBackkErrorFromError from "../../../../errors/createBackkErrorFromError";
-import tryStartLocalTransactionIfNeeded from "../transaction/tryStartLocalTransactionIfNeeded";
-import tryCommitLocalTransactionIfNeeded from "../transaction/tryCommitLocalTransactionIfNeeded";
-import tryRollbackLocalTransactionIfNeeded from "../transaction/tryRollbackLocalTransactionIfNeeded";
-import cleanupLocalTransactionIfNeeded from "../transaction/cleanupLocalTransactionIfNeeded";
-import { PostHook } from "../../../hooks/PostHook";
-import tryExecutePostHook from "../../../hooks/tryExecutePostHook";
-import createErrorFromErrorCodeMessageAndStatus
-  from "../../../../errors/createErrorFromErrorCodeMessageAndStatus";
-import { BACKK_ERRORS } from "../../../../errors/backkErrors";
-import { BackkEntity } from "../../../../types/entities/BackkEntity";
-import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
-import isBackkError from "../../../../errors/isBackkError";
-import { PostQueryOperations } from "../../../../types/postqueryoperations/PostQueryOperations";
-import { EntityPreHook } from "../../../hooks/EntityPreHook";
-import tryExecuteEntityPreHooks from "../../../hooks/tryExecuteEntityPreHooks";
-import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
+import forEachAsyncParallel from '../../../../utils/forEachAsyncParallel';
+import entityContainer, { EntityJoinSpec } from '../../../../decorators/entity/entityAnnotationContainer';
+import AbstractSqlDataStore from '../../../AbstractSqlDataStore';
+import getEntityById from '../dql/getEntityById';
+import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
+import tryStartLocalTransactionIfNeeded from '../transaction/tryStartLocalTransactionIfNeeded';
+import tryCommitLocalTransactionIfNeeded from '../transaction/tryCommitLocalTransactionIfNeeded';
+import tryRollbackLocalTransactionIfNeeded from '../transaction/tryRollbackLocalTransactionIfNeeded';
+import cleanupLocalTransactionIfNeeded from '../transaction/cleanupLocalTransactionIfNeeded';
+import { PostHook } from '../../../hooks/PostHook';
+import tryExecutePostHook from '../../../hooks/tryExecutePostHook';
+import createErrorFromErrorCodeMessageAndStatus from '../../../../errors/createErrorFromErrorCodeMessageAndStatus';
+import { BACKK_ERRORS } from '../../../../errors/backkErrors';
+import { BackkEntity } from '../../../../types/entities/BackkEntity';
+import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
+import isBackkError from '../../../../errors/isBackkError';
+import { PostQueryOperations } from '../../../../types/postqueryoperations/PostQueryOperations';
+import { EntityPreHook } from '../../../hooks/EntityPreHook';
+import tryExecuteEntityPreHooks from '../../../hooks/tryExecuteEntityPreHooks';
+import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
+import getRequiredUserAccountIdFieldNameAndValue from '../../../utils/getRrequiredUserAccountIdFieldNameAndValue';
 
 export default async function deleteEntityById<T extends BackkEntity>(
   dataStore: AbstractSqlDataStore,
@@ -36,8 +36,9 @@ export default async function deleteEntityById<T extends BackkEntity>(
   try {
     didStartTransaction = await tryStartLocalTransactionIfNeeded(dataStore);
     let currentEntity, error;
+    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
 
-    if (entityPreHooks) {
+    if (entityPreHooks || (userAccountIdFieldName && userAccountId)) {
       [currentEntity, error] = await getEntityById(
         dataStore,
         _id,
@@ -53,7 +54,9 @@ export default async function deleteEntityById<T extends BackkEntity>(
         throw error;
       }
 
-      await tryExecuteEntityPreHooks(entityPreHooks, currentEntity);
+      if (entityPreHooks) {
+        await tryExecuteEntityPreHooks(entityPreHooks, currentEntity);
+      }
     }
 
     const numericId = parseInt(_id, 10);
@@ -90,12 +93,14 @@ export default async function deleteEntityById<T extends BackkEntity>(
           }
         }
       ),
-      isRecursive ? Promise.resolve(undefined) : dataStore.tryExecuteSql(
-        `DELETE FROM ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()} WHERE ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()}._id = ${dataStore.getValuePlaceholder(
-          1
-        )}`,
-        [numericId]
-      )
+      isRecursive
+        ? Promise.resolve(undefined)
+        : dataStore.tryExecuteSql(
+            `DELETE FROM ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()} WHERE ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()}._id = ${dataStore.getValuePlaceholder(
+              1
+            )}`,
+            [numericId]
+          )
     ]);
 
     if (postHook) {

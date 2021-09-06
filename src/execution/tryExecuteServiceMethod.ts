@@ -392,64 +392,64 @@ export default async function tryExecuteServiceMethod(
         clsNamespace.set('postHookRemoteServiceCallCount', 0);
         clsNamespace.set('dataStoreOperationAfterRemoteServiceCall', false);
 
-        if (
-          serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUserForOwnResources(
-            ServiceClass,
-            functionName
-          )
-        ) {
-          if (!userService) {
-            throw new Error(
-              'User account service is missing. You must implement a captcha verification service class that extends UserAccountBaseService and instantiate your class and store in a field in MicroserviceImpl class'
-            );
-          }
-
-          const subject: string | undefined = await authorizationService.getSubject(authHeader);
-          if (!subject) {
-            throw createBackkErrorFromErrorCodeMessageAndStatus(
-              BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED
-            );
-          }
-
-          let userAccountId;
-
-          if (subjectCache.has(subject)) {
-            userAccountId = subjectCache.get(subject);
-          } else {
-            let error;
-
-            if (microservice[serviceName] instanceof UserAccountBaseService) {
-              [userAccountId, error] = [serviceFunctionArgument._id, null];
-            }
-
-            if (userAccountId === undefined) {
-              [userAccountId, error] = await userService.getIdBySubject({ subject });
-            }
-
-            throwIf(error);
-
-            try {
-              subjectCache.set(subject, userAccountId.data._id);
-            } catch {
-              // No operation
-            }
-          }
-
-          clsNamespace.set(
-            'userAccountIdFieldName',
-            serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUserForOwnResources(
-              ServiceClass,
-              functionName
-            )
-          );
-
-          clsNamespace.set('userAccountId', userAccountId);
-        }
-
         // noinspection ExceptionCaughtLocallyJS
         try {
           if (dataStore) {
             await dataStore.tryReserveDbConnectionFromPool();
+          }
+
+          if (
+            serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUserForOwnResources(
+              ServiceClass,
+              functionName
+            )
+          ) {
+            if (!userService) {
+              throw new Error(
+                'User account service is missing. You must implement a captcha verification service class that extends UserAccountBaseService and instantiate your class and store in a field in MicroserviceImpl class'
+              );
+            }
+
+            const subject: string | undefined = await authorizationService.getSubject(authHeader);
+            if (!subject) {
+              throw createBackkErrorFromErrorCodeMessageAndStatus(
+                BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED
+              );
+            }
+
+            let userAccountId;
+
+            if (subjectCache.has(subject)) {
+              userAccountId = subjectCache.get(subject);
+            } else {
+              let error;
+
+              if (microservice[serviceName] instanceof UserAccountBaseService) {
+                [userAccountId, error] = [serviceFunctionArgument._id, null];
+              }
+
+              if (userAccountId === undefined) {
+                [userAccountId, error] = await userService.getIdBySubject({ subject });
+              }
+
+              throwIf(error);
+
+              try {
+                subjectCache.set(subject, userAccountId.data._id);
+              } catch {
+                // No operation
+              }
+            }
+
+            clsNamespace.set(
+              'userAccountIdFieldName',
+              serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUserForOwnResources(
+                ServiceClass,
+                functionName
+              )
+            );
+
+            clsNamespace.set('userAccountId', userAccountId);
           }
 
           [response, backkError] = await microservice[serviceName][functionName](

@@ -55,14 +55,14 @@ export async function isDbInitialized(dataStore: AbstractDataStore) {
 }
 
 export default async function initializeDatabase(
-  controller: any | undefined,
+  microservice: any | undefined,
   dataStore: AbstractDataStore
 ): Promise<boolean> {
   if (!(await dataStore.isDbReady())) {
     return false;
   }
 
-  if (!controller) {
+  if (!microservice) {
     return false;
   }
 
@@ -213,7 +213,7 @@ export default async function initializeDatabase(
       log(Severity.INFO, 'Database initialized', '');
     }
 
-    await tryExecuteOnStartUpTasks(controller, dataStore);
+    await tryExecuteOnStartUpTasks(microservice, dataStore);
     await tryInitializeCronJobSchedulingTable(dataStore);
   } catch (error) {
     logError(error);

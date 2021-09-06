@@ -2,7 +2,7 @@ import AbstractSqlDataStore from './AbstractSqlDataStore';
 import { Pool, types } from 'pg';
 import { pg } from 'yesql';
 import throwException from '../utils/exception/throwException';
-import getDbNameFromServiceName from "../utils/getDbNameFromServiceName";
+import getDbNameFromServiceName from '../utils/getDbNameFromServiceName';
 
 export default class PostgreSqlDataStore extends AbstractSqlDataStore {
   private readonly pool: Pool;
@@ -28,6 +28,19 @@ export default class PostgreSqlDataStore extends AbstractSqlDataStore {
         10
       )
     });
+  }
+
+  async isDbReady(): Promise<boolean> {
+    try {
+      await this.tryExecuteSqlWithoutCls(
+        `CREATE SCHEMA IF NOT EXISTS ${this.schema.toLowerCase()}`,
+        undefined,
+        false
+      );
+      return super.isDbReady();
+    } catch (error) {
+      return false;
+    }
   }
 
   getDataStoreType(): string {

@@ -33,13 +33,22 @@ export default class PostgreSqlDataStore extends AbstractSqlDataStore {
   async isDbReady(): Promise<boolean> {
     try {
       await this.tryExecuteSqlWithoutCls(
-        `CREATE SCHEMA IF NOT EXISTS ${this.schema.toLowerCase()}`,
+        `SELECT * FROM ${this.schema.toLowerCase()}.__backk_db_initialization`,
         undefined,
         false
       );
       return super.isDbReady();
-    } catch (error) {
-      return false;
+    } catch {
+      try {
+        await this.tryExecuteSqlWithoutCls(
+          `CREATE SCHEMA IF NOT EXISTS ${this.schema.toLowerCase()}`,
+          undefined,
+          false
+        );
+        return super.isDbReady();
+      } catch {
+        return false;
+      }
     }
   }
 

@@ -631,7 +631,7 @@ export default function writeTestsPostmanCollectionExportFile<T>(
   }
 
   writeFileSync(
-    process.cwd() + '/postman/' + appName.replace(/-/g, '_') + '_tests_postman_collection.json',
+    process.cwd() + '/postman/integration_tests_collection.json',
     JSON.stringify(postmanMetadata, null, 4)
   );
 }

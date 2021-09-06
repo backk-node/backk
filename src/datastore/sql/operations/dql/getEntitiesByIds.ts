@@ -13,10 +13,9 @@ import getClassPropertyNameToPropertyTypeNameMap from '../../../../metadata/getC
 import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
 import { Many } from '../../../AbstractDataStore';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
-import tryEnsurePreviousOrNextPageIsRequested from "../../../utils/tryEnsurePreviousOrNextPageIsRequested";
-import EntityCountRequest from "../../../../types/EntityCountRequest";
-import getRequiredUserAccountIdFieldNameAndValue
-  from "../../../utils/getRrequiredUserAccountIdFieldNameAndValue";
+import tryEnsurePreviousOrNextPageIsRequested from '../../../utils/tryEnsurePreviousOrNextPageIsRequested';
+import EntityCountRequest from '../../../../types/EntityCountRequest';
+import getRequiredUserAccountIdFieldNameAndValue from '../../../utils/getRrequiredUserAccountIdFieldNameAndValue';
 
 export default async function getEntitiesByIds<T>(
   dataStore: AbstractSqlDataStore,
@@ -28,7 +27,10 @@ export default async function getEntitiesByIds<T>(
 ): PromiseErrorOr<Many<T>> {
   try {
     if (allowFetchingOnlyPreviousOrNextPage) {
-      tryEnsurePreviousOrNextPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+      tryEnsurePreviousOrNextPageIsRequested(
+        postQueryOperations.currentPageTokens,
+        postQueryOperations.paginations
+      );
     }
 
     updateDbLocalTransactionCount(dataStore);
@@ -85,14 +87,14 @@ export default async function getEntitiesByIds<T>(
     const additionalWhereExpression =
       userAccountIdFieldName && userAccountId
         ? ` AND ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()}.${userAccountIdFieldName} = ${dataStore.getValuePlaceholder(
-          numericIds.length + 1
-        )}`
+            numericIds.length + 1
+          )}`
         : '';
 
     const selectStatement = [
       `SELECT ${columns} FROM (SELECT *${
-          shouldReturnRootEntityCount ? ', COUNT(*) OVER() AS _count' : ''
-        } FROM ${dataStore.schema}.${tableName}`,
+        shouldReturnRootEntityCount ? ', COUNT(*) OVER() AS _count' : ''
+      } FROM ${dataStore.schema}.${tableName}`,
       `WHERE ${idFieldName} IN (${idPlaceholders}${additionalWhereExpression}`,
       rootSortClause,
       rootPaginationClause,
@@ -104,7 +106,10 @@ export default async function getEntitiesByIds<T>(
       .filter((sqlPart) => sqlPart)
       .join(' ');
 
-    const result = await dataStore.tryExecuteQuery(selectStatement, [...numericIds, userAccountId]);
+    const result = await dataStore.tryExecuteQuery(selectStatement, [
+      ...numericIds,
+      ...(additionalWhereExpression ? [userAccountId] : [])
+    ]);
 
     if (dataStore.getResultRows(result).length === 0) {
       return [

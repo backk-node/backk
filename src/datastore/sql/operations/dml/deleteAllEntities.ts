@@ -67,7 +67,7 @@ export default async function deleteAllEntities<T>(
         ? Promise.resolve(undefined)
         : dataStore.tryExecuteSql(
             `DELETE FROM ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()}${whereClause}`,
-            [userAccountId]
+            whereClause ? [userAccountId] : undefined
           )
     ]);
 

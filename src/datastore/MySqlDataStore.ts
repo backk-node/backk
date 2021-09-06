@@ -1,6 +1,7 @@
 import mysql, { Pool } from 'mysql2/promise';
 import AbstractSqlDataStore from './AbstractSqlDataStore';
 import throwException from '../utils/exception/throwException';
+import getDbNameFromServiceName from "../utils/getDbNameFromServiceName";
 
 export default class MySqlDataStore extends AbstractSqlDataStore {
   private static readonly MAX_CHAR_TYPE_LENGTH = 16383;
@@ -11,7 +12,7 @@ export default class MySqlDataStore extends AbstractSqlDataStore {
   private readonly password: string;
 
   constructor() {
-    super(process.env.DB_NAME ?? throwException('DB_NAME environment variable must be defined'));
+    super(getDbNameFromServiceName());
     this.host = process.env.MYSQL_HOST ?? throwException('MYSQL_HOST environment variable must be defined');
     this.port = process.env.MYSQL_PORT ?? throwException('MYSQL_PORT environment variable must be defined');
     this.user = process.env.MYSQL_USER ?? throwException('MYSQL_USER environment variable must be defined');

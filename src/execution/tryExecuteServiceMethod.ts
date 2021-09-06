@@ -14,7 +14,7 @@ import createBackkErrorFromError from '../errors/createBackkErrorFromError';
 import log, { Severity } from '../observability/logging/log';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
 import { HttpStatusCodes, MAX_INT_VALUE } from '../constants/constants';
-import getNamespacedServiceName from '../utils/getServiceNamespace';
+import getNamespacedServiceName from '../utils/getNamespacedServiceName';
 import AuditLoggingService from '../observability/logging/audit/AuditLoggingService';
 import createAuditLogEntry from '../observability/logging/audit/createAuditLogEntry';
 import executeMultipleServiceFunctions from './executeMultipleServiceFunctions';
@@ -36,10 +36,8 @@ import getMicroserviceServiceNameByServiceClass from '../microservice/getMicrose
 import ReadinessCheckService from '../service/ReadinessCheckService';
 import StartupCheckService from '../service/startup/StartupCheckService';
 import NodeCache from 'node-cache';
-import createErrorFromErrorMessageAndThrowError from '../errors/createErrorFromErrorMessageAndThrowError';
-import createErrorMessageWithStatusCode from '../errors/createErrorMessageWithStatusCode';
-import createBackkErrorFromErrorMessageAndStatusCode from '../errors/createBackkErrorFromErrorMessageAndStatusCode';
 import throwIf from '../utils/exception/throwIf';
+import { getDefaultOrThrowExceptionInProduction } from '../utils/exception/getDefaultOrThrowExceptionInProduction';
 
 export interface ServiceFunctionExecutionOptions {
   isMetadataServiceEnabled?: boolean;
@@ -337,12 +335,23 @@ export default async function tryExecuteServiceMethod(
         ':' +
         JSON.stringify(serviceFunctionArgument);
 
-      const redisCacheServer =
-        process.env.REDIS_CACHE_SERVER ??
-        throwException('REDIS_CACHE_SERVER environment variable must be defined');
+      const redisCacheHost =
+        process.env.REDIS_CACHE_HOST ??
+        throwException('REDIS_CACHE_HOST environment variable must be defined');
 
-      const password = process.env.REDIS_CACHE_PASSWORD ? `:${process.env.REDIS_CACHE_PASSWORD}@` : '';
-      const redis = new Redis(`redis://${password}${redisCacheServer}`);
+      const redisCachePort =
+        process.env.REDIS_CACHE_PORT ??
+        throwException('REDIS_CACHE_PORT environment variable must be defined');
+
+      const password = process.env.REDIS_CACHE_PASSWORD
+        ? `:${process.env.REDIS_CACHE_PASSWORD}@`
+        : getDefaultOrThrowExceptionInProduction(
+          'REDIS_CACHE_PORT environment variable must be defined',
+          ''
+        );
+
+      const redisCacheServer = `redis://${password}${redisCacheHost}:${redisCachePort}`
+      const redis = new Redis(redisCacheServer);
 
       let cachedResponseJson;
 
@@ -580,12 +589,23 @@ export default async function tryExecuteServiceMethod(
             ResponseCacheConfigService
           )?.shouldCacheServiceFunctionCallResponse(serviceFunctionName, serviceFunctionArgument)
         ) {
-          const redisCacheServer =
-            process.env.REDIS_CACHE_SERVER ??
-            throwException('REDIS_CACHE_SERVER environment variable must be defined');
+          const redisCacheHost =
+            process.env.REDIS_CACHE_HOST ??
+            throwException('REDIS_CACHE_HOST environment variable must be defined');
 
-          const password = process.env.REDIS_CACHE_PASSWORD ? `:${process.env.REDIS_CACHE_PASSWORD}@` : '';
-          const redis = new Redis(`redis://${password}${redisCacheServer}`);
+          const redisCachePort =
+            process.env.REDIS_CACHE_PORT ??
+            throwException('REDIS_CACHE_PORT environment variable must be defined');
+
+          const password = process.env.REDIS_CACHE_PASSWORD
+            ? `:${process.env.REDIS_CACHE_PASSWORD}@`
+            : getDefaultOrThrowExceptionInProduction(
+                'REDIS_CACHE_PORT environment variable must be defined',
+                ''
+              );
+
+          const redisCacheServer = `redis://${password}${redisCacheHost}:${redisCachePort}`
+          const redis = new Redis(redisCacheServer);
 
           const responseJson = JSON.stringify(response);
           const key =

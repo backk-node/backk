@@ -7,7 +7,7 @@ import defaultServiceMetrics from '../../../observability/metrics/defaultService
 import forEachAsyncParallel from '../../../utils/forEachAsyncParallel';
 import { HttpStatusCodes } from '../../../constants/constants';
 import sendToRemoteService from '../sendToRemoteService';
-import getNamespacedServiceName from '../../../utils/getServiceNamespace';
+import getNamespacedServiceName from '../../../utils/getNamespacedServiceName';
 import BackkResponse from '../../../execution/BackkResponse';
 import wait from '../../../utils/wait';
 import minimumLoggingSeverityToKafkaLoggingLevelMap from './minimumLoggingSeverityToKafkaLoggingLevelMap';
@@ -15,14 +15,21 @@ import logCreator from './logCreator';
 
 export default async function consumeFromKafka(
   controller: any,
-  server: string | undefined,
+  host: string | undefined,
+  port: string |undefined,
   defaultTopic: string = getNamespacedServiceName(),
   defaultTopicConfig?: Omit<ITopicConfig, 'topic'>,
   additionalTopics?: string[]
 ) {
-  if (!server) {
-    throw new Error('Kafka server not defined. Kafka server must be defined in environment variable KAFKA_SERVER in the form <host>:<port>');
+  if (!host) {
+    throw new Error('KAFKA_HOST environment value must be defined');
   }
+
+  if (!port) {
+    throw new Error('KAFKA_PORT environment value must be defined');
+  }
+
+  const server = `${host}:${port}`;
 
   const replicationFactor =
     process.env.NODE_ENV === 'development'

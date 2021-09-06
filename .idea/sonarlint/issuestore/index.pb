@@ -264,8 +264,6 @@ Z
 *src/postman/createPostmanCollectionItem.ts,0/4/04b6ca3341973e79516b19b840e72f5d46010297
 G
 src/types/BackkError.ts,0/f/0ff54873c02da10e848e21977cfe0d78b02e4abe
-^
-.src/remote/messagequeue/sendToRemoteService.ts,2/8/2898217950f733fa6c67c737e453b9d25969b79f
 [
 +src/observability/logging/logEnvironment.ts,e/2/e2977c9c028b7a5f9f113c1370453b46c7aab27a
 m
@@ -288,12 +286,8 @@ P
  src/observability/logging/log.ts,9/0/9060b5fd2ebac332af3b034c09f90effc59f95d2
 u
 Esrc/datastore/sql/operations/dql/transformresults/createResultMaps.ts,3/f/3fbbd19c688e2dbe02eb791de6d6556f1b977204
-K
-src/utils/getServiceName.ts,f/8/f8b34a1623d11285672e629e9a6ce369b0f9190e
 =
 tsconfig.json,6/1/61ebb9fd6e8cf9082658121d5d81e297791dacd0
-e
-5src/remote/messagequeue/kafka/sendOneOrMoreToKafka.ts,c/8/c85e63005baa112768508fc435ef3f685516a669
 d
 4src/typescript/generator/generateClassFromSrcFile.ts,e/d/edbef0467980c046ac9523e4666f2b29c01d50b0
 K
@@ -304,15 +298,7 @@ D
 src/types/Captcha.ts,e/2/e29f58c763658f82d833d0443b3a8c7904a7d139
 O
 src/decorators/entity/Entity.ts,d/0/d07e73e8f0c7baf16e6131aa8fc28c57eaf1a87d
-P
- src/utils/getServiceNamespace.ts,a/5/a5b2d40174ef43fed1e01e457bb40278c235c2f3
-a
-1src/remote/messagequeue/kafka/consumeFromKafka.ts,e/2/e236cb3878b06d9ac3d16895a3fe2c553382926c
-[
-+src/initialization/startKafkaConsumerFor.ts,a/6/a6790e1ac5b1a86b85de2129e1093e8426a9be37
 O
 src/datastore/MySqlDataStore.ts,8/f/8f134bc4a4f1e8125d58c46d089a814d427d922b
-T
-$src/datastore/PostgreSqlDataStore.ts,1/9/19c7770c2a7dd99299bd1c49a5bffaf057af287d
 b
 2src/postman/writeApiPostmanCollectionExportFile.ts,9/0/908bd4a7adfc39fafc03b174f48b8c7556578f83

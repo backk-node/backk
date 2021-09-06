@@ -70,13 +70,14 @@ import tryEnsurePreviousOrNextPageIsRequested from './utils/tryEnsurePreviousOrN
 import EntityCountRequest from '../types/EntityCountRequest';
 import throwException from '../utils/exception/throwException';
 import getRequiredUserAccountIdFieldNameAndValue from './utils/getRrequiredUserAccountIdFieldNameAndValue';
+import getDbNameFromServiceName from "../utils/getDbNameFromServiceName";
 
 export default class MongoDbDataStore extends AbstractDataStore {
   private readonly uri: string;
   private mongoClient: MongoClient;
 
   constructor() {
-    super('', process.env.DB_NAME ?? throwException('DB_NAME environment variable must be defined'));
+    super('', getDbNameFromServiceName());
 
     const MONGODB_HOST =
       process.env.MONGODB_HOST ?? throwException('MONGODB_HOST environment variable must be defined');

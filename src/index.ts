@@ -215,7 +215,7 @@ export { BackkError } from './types/BackkError';
 
 // Utils
 export { default as getServiceName } from './utils/getServiceName';
-export { default as getServiceNamespace } from './utils/getServiceNamespace';
+export { default as getNamespacedServiceName } from './utils/getNamespacedServiceName';
 export { default as executeForAll } from './utils/executeForAll';
 export { default as throwException } from './utils/exception/throwException';
 

@@ -128,7 +128,10 @@ export default async function getEntityById<T extends BackkEntity>(
       .filter((sqlPart) => sqlPart)
       .join(' ');
 
-    const result = await dataStore.tryExecuteQuery(selectStatement, [numericId, userAccountId]);
+    const result = await dataStore.tryExecuteQuery(selectStatement, [
+      numericId,
+      ...(additionalWhereExpression ? [userAccountId] : [])
+    ]);
 
     let entity;
     let error = null;

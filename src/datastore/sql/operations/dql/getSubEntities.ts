@@ -28,6 +28,7 @@ export default async function getSubEntities<T extends BackkEntity, U extends ob
       postQueryOperations ?? new DefaultPostQueryOperations(),
       false
     );
+
     const subItems: U[] = JSONPath({ json: entity?.data ?? null, path: subEntityPath });
     return responseMode === 'first' ? [[subItems[0]], error] : [subItems, error];
   } catch (error) {

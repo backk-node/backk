@@ -2,13 +2,14 @@ import AbstractSqlDataStore from './AbstractSqlDataStore';
 import { Pool, types } from 'pg';
 import { pg } from 'yesql';
 import throwException from '../utils/exception/throwException';
+import getDbNameFromServiceName from "../utils/getDbNameFromServiceName";
 
 export default class PostgreSqlDataStore extends AbstractSqlDataStore {
   private readonly pool: Pool;
   private readonly host: string;
 
   constructor() {
-    super(process.env.DB_NAME ?? throwException('DB_NAME environment variable must be defined'));
+    super(getDbNameFromServiceName());
 
     // noinspection MagicNumberJS
     types.setTypeParser(20, 'text', parseInt);

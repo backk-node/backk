@@ -10,7 +10,7 @@ import parseRemoteServiceFunctionCallUrlParts from "../../utils/parseRemoteServi
 import minimumLoggingSeverityToKafkaLoggingLevelMap from "./minimumLoggingSeverityToKafkaLoggingLevelMap";
 import logCreator from "./logCreator";
 import defaultServiceMetrics from "../../../observability/metrics/defaultServiceMetrics";
-import getNamespacedServiceName from "../../../utils/getServiceNamespace";
+import getNamespacedServiceName from "../../../utils/getNamespacedServiceName";
 import { PromiseErrorOr } from "../../../types/PromiseErrorOr";
 
 const kafkaServerToKafkaClientMap: { [key: string]: Kafka } = {};

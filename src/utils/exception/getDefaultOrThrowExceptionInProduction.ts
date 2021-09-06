@@ -1,11 +1,14 @@
-export const getDefaultOrThrowExceptionInProduction = (error: string | Error): string | never => {
+export const getDefaultOrThrowExceptionInProduction = (
+  errorOrErrorMessage: string | Error,
+  defaultValue = 'ABCDEFGH'
+): string | never => {
   if (process.env.NODE_ENV !== 'production') {
-    return 'ABCDEFGH';
+    return defaultValue;
   }
 
-  if (typeof error === 'string') {
-    throw new Error(error);
+  if (typeof errorOrErrorMessage === 'string') {
+    throw new Error(errorOrErrorMessage);
   }
 
-  throw error;
+  throw errorOrErrorMessage;
 };

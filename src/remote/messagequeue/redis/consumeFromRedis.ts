@@ -5,20 +5,25 @@ import { HttpStatusCodes } from '../../../constants/constants';
 import sendToRemoteService from '../sendToRemoteService';
 import log, { Severity } from '../../../observability/logging/log';
 import defaultServiceMetrics from '../../../observability/metrics/defaultServiceMetrics';
-import getNamespacedServiceName from '../../../utils/getServiceNamespace';
+import getNamespacedServiceName from '../../../utils/getNamespacedServiceName';
 import BackkResponse from '../../../execution/BackkResponse';
 import wait from '../../../utils/wait';
 
 export default async function consumeFromRedis(
   controller: any,
-  server: string | undefined,
+  host: string | undefined,
+  port: string | undefined,
   topic = getNamespacedServiceName()
 ) {
-  if (!server) {
-    throw new Error(
-      'Redis server not defined. Redis server must be defined in REDIS_SERVER environment variable in the form <host>:<port>'
-    );
+  if (!host) {
+    throw new Error('REDIS_HOST environment variable must be defined');
   }
+
+  if (!port) {
+    throw new Error('REDIS_PORT environment variable must be defined');
+  }
+
+  const server = `${host}:${port}`;
 
   const password = process.env.REDIS_CACHE_PASSWORD ? `:${process.env.REDIS_CACHE_PASSWORD}@` : '';
   const redis = new Redis(`redis://${password}${server}`);

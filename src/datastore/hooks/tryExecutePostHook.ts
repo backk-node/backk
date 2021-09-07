@@ -11,6 +11,8 @@ export default async function tryExecutePostHook<T extends BackkEntity | SubEnti
   entity: One<T> | null | undefined
 ) {
   const clsNamespace = getNamespace('serviceFunctionExecution');
+  const userAccountId = clsNamespace?.get('userAccountId');
+  clsNamespace?.set('userAccountId', undefined);
   clsNamespace?.set('isInsidePostHook', true);
   const postHookFunc =
     typeof postHook === 'function' ? postHook : postHook.shouldSucceedOrBeTrue;
@@ -31,6 +33,7 @@ export default async function tryExecutePostHook<T extends BackkEntity | SubEnti
   }
 
   clsNamespace?.set('isInsidePostHook', false);
+  clsNamespace?.set('userAccountId', userAccountId);
 
   if (Array.isArray(hookCallResult) && hookCallResult[1]) {
     throw hookCallResult[1];

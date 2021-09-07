@@ -9,9 +9,18 @@ import StartupCheckService from '../service/startup/StartupCheckService';
 import initializeCls from '../continuationlocalstorage/initializeCls';
 import Microservice from '../microservice/Microservice';
 import initializeMicroservice from '../microservice/initializeMicroservice';
-import changePackageJsonNameProperty from "../utils/changePackageJsonNameProperty";
+import changePackageJsonNameProperty from '../utils/changePackageJsonNameProperty';
 
 export default async function initialize(microservice: Microservice) {
+  if (
+    process.env.NODE_ENV !== 'development' &&
+    process.env.NODE_ENV !== 'integration' &&
+    process.env.NODE_ENV !== 'production'
+  ) {
+    throw new Error(
+      'NODE_ENV environment variable must be defined and have one of following values: development, integration or production'
+    );
+  }
   process.on('exit', (code) => {
     log(Severity.INFO, `Microservice terminated with exit code: ${code}`, '');
   });

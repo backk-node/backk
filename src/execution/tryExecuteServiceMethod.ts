@@ -345,12 +345,9 @@ export default async function tryExecuteServiceMethod(
 
       const password = process.env.REDIS_CACHE_PASSWORD
         ? `:${process.env.REDIS_CACHE_PASSWORD}@`
-        : getDefaultOrThrowExceptionInProduction(
-          'REDIS_CACHE_PORT environment variable must be defined',
-          ''
-        );
+        : getDefaultOrThrowExceptionInProduction('REDIS_CACHE_PORT environment variable must be defined', '');
 
-      const redisCacheServer = `redis://${password}${redisCacheHost}:${redisCachePort}`
+      const redisCacheServer = `redis://${password}${redisCacheHost}:${redisCachePort}`;
       const redis = new Redis(redisCacheServer);
 
       let cachedResponseJson;
@@ -418,28 +415,29 @@ export default async function tryExecuteServiceMethod(
             }
 
             let userAccountId;
+            let error;
 
-            if (subjectCache.has(subject)) {
-              userAccountId = subjectCache.get(subject);
-            } else {
-              let error;
-
-              if (microservice[serviceName] instanceof UserAccountBaseService) {
-                [userAccountId, error] = [serviceFunctionArgument._id ?? subject, null];
-              }
-
-              if (userAccountId === undefined) {
-                [userAccountId, error] = await userService.getIdBySubject({ subject });
-                try {
-                  subjectCache.set(subject, userAccountId.data._id);
-                } catch {
-                  // No operation
-                }
-                clsNamespace.set('dbLocalTransactionCount', 0);
-              }
-
-              throwIf(error);
+            if (microservice[serviceName] instanceof UserAccountBaseService) {
+              [userAccountId, error] = [serviceFunctionArgument._id ?? subject, null];
             }
+
+            if (userAccountId === undefined) {
+              if (subjectCache.has(subject)) {
+                userAccountId = subjectCache.get(subject);
+              }
+
+              [userAccountId, error] = await userService.getIdBySubject({ subject });
+              try {
+
+                subjectCache.set(subject, userAccountId.data._id);
+              } catch {
+                // No operation
+              }
+
+              clsNamespace.set('dbLocalTransactionCount', 0);
+            }
+
+            throwIf(error);
 
             clsNamespace.set(
               'userAccountIdFieldName',
@@ -604,7 +602,7 @@ export default async function tryExecuteServiceMethod(
                 ''
               );
 
-          const redisCacheServer = `redis://${password}${redisCacheHost}:${redisCachePort}`
+          const redisCacheServer = `redis://${password}${redisCacheHost}:${redisCachePort}`;
           const redis = new Redis(redisCacheServer);
 
           const responseJson = JSON.stringify(response);

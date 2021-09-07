@@ -27,6 +27,7 @@ import { EntityPreHook } from "../../../hooks/EntityPreHook";
 import tryExecuteEntityPreHooks from "../../../hooks/tryExecuteEntityPreHooks";
 import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
 import throwIf from "../../../../utils/exception/throwIf";
+import { getNamespace } from "cls-hooked";
 
 export default async function removeSubEntities<T extends BackkEntity, U extends object>(
   dataStore: AbstractSqlDataStore,
@@ -64,6 +65,10 @@ export default async function removeSubEntities<T extends BackkEntity, U extends
     const currentEntityInstance = plainToClass(EntityClass, currentEntity.data);
     const subEntities = JSONPath({ json: currentEntityInstance, path: subEntitiesJsonPath });
 
+    const clsNamespace = getNamespace('serviceFunctionExecution');
+    const userAccountId = clsNamespace?.get('userAccountId');
+    clsNamespace?.set('userAccountId', undefined);
+
     await forEachAsyncParallel(subEntities, async (subEntity: any) => {
       const parentEntityClassAndPropertyNameForSubEntity = findParentEntityAndPropertyNameForSubEntity(
         EntityClass,
@@ -100,6 +105,8 @@ export default async function removeSubEntities<T extends BackkEntity, U extends
         throwIf(error);
       }
     });
+
+    clsNamespace?.set('userAccountId', userAccountId);
 
     if (postHook) {
       await tryExecutePostHook(postHook, null);

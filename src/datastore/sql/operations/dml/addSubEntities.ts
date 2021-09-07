@@ -30,6 +30,7 @@ import findSubEntityClass from '../../../../utils/type/findSubEntityClass';
 import { One } from '../../../AbstractDataStore';
 import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
 import throwIf from "../../../../utils/exception/throwIf";
+import { getNamespace } from "cls-hooked";
 
 // noinspection OverlyComplexFunctionJS,FunctionTooLongJS
 export default async function addSubEntities<T extends BackkEntity, U extends SubEntity>(
@@ -123,6 +124,10 @@ export default async function addSubEntities<T extends BackkEntity, U extends Su
       }
     }
 
+    const clsNamespace = getNamespace('serviceFunctionExecution');
+    const userAccountId = clsNamespace?.get('userAccountId');
+    clsNamespace?.set('userAccountId', undefined);
+
     await forEachAsyncParallel(newSubEntities, async (newSubEntity, index) => {
       if (
         parentEntityClassAndPropertyNameForSubEntity &&
@@ -168,12 +173,15 @@ export default async function addSubEntities<T extends BackkEntity, U extends Su
             [foreignIdFieldName]: currentEntity?.data._id,
             id: (maxSubItemId + 1 + index).toString()
           } as any,
-          undefined
+          undefined,
+          false
         );
 
         throwIf(error);
       }
     });
+
+    clsNamespace?.set('userAccountId', userAccountId);
 
     if (options?.postHook) {
       await tryExecutePostHook(options?.postHook, null);

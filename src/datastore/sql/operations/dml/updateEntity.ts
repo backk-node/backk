@@ -34,6 +34,7 @@ import tryExecutePreHooks from "../../../hooks/tryExecutePreHooks";
 import { One } from "../../../AbstractDataStore";
 import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
 import throwIf from "../../../../utils/exception/throwIf";
+import { getNamespace } from "cls-hooked";
 
 // noinspection FunctionWithMoreThanThreeNegationsJS,FunctionWithMoreThanThreeNegationsJS,OverlyComplexFunctionJS,FunctionTooLongJS
 export default async function updateEntity<T extends BackkEntity>(
@@ -110,6 +111,10 @@ export default async function updateEntity<T extends BackkEntity>(
     const columns: any = [];
     const values: any = [];
     const promises: Array<Promise<any>> = [];
+
+    const clsNamespace = getNamespace('serviceFunctionExecution');
+    const userAccountId = clsNamespace?.get('userAccountId');
+    clsNamespace?.set('userAccountId', undefined);
 
     // noinspection FunctionWithMoreThanThreeNegationsJS,FunctionWithMoreThanThreeNegationsJS,OverlyComplexFunctionJS,FunctionTooLongJS
     await forEachAsyncSequential(
@@ -323,6 +328,7 @@ export default async function updateEntity<T extends BackkEntity>(
     }
 
     await Promise.all(promises);
+    clsNamespace?.set('userAccountId', userAccountId);
 
     if (postHook) {
       await tryExecutePostHook(postHook, null);

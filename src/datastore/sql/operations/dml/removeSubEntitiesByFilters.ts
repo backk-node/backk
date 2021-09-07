@@ -30,6 +30,7 @@ import UserDefinedFilter from "../../../../types/userdefinedfilters/UserDefinedF
 import getEntityByFilters from "../dql/getEntityByFilters";
 import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
 import throwIf from "../../../../utils/exception/throwIf";
+import { getNamespace } from "cls-hooked";
 
 export default async function removeSubEntitiesByFilters<T extends BackkEntity, U extends object>(
   dataStore: AbstractSqlDataStore,
@@ -63,6 +64,10 @@ export default async function removeSubEntitiesByFilters<T extends BackkEntity, 
       await tryUpdateEntityVersionAndLastModifiedTimestampIfNeeded(dataStore, currentEntity, EntityClass);
       const currentEntityInstance = plainToClass(EntityClass, currentEntity.data);
       const subEntities = JSONPath({ json: currentEntityInstance, path: subEntitiesJsonPath });
+
+      const clsNamespace = getNamespace('serviceFunctionExecution');
+      const userAccountId = clsNamespace?.get('userAccountId');
+      clsNamespace?.set('userAccountId', undefined);
 
       await forEachAsyncParallel(subEntities, async (subEntity: any) => {
         const parentEntityClassAndPropertyNameForSubEntity = findParentEntityAndPropertyNameForSubEntity(
@@ -100,6 +105,8 @@ export default async function removeSubEntitiesByFilters<T extends BackkEntity, 
           throwIf(error);
         }
       });
+
+      clsNamespace?.set('userAccountId', userAccountId);
     }
 
     if (postHook) {

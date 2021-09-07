@@ -69,7 +69,7 @@ export default async function getAllEntities<T extends BackkEntity>(
 
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
     const whereClause =
-      userAccountIdFieldName && userAccountId
+      userAccountIdFieldName && userAccountId !== undefined
         ? ` WHERE ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()}.${userAccountIdFieldName} = ${dataStore.getValuePlaceholder(
           1
         )}`

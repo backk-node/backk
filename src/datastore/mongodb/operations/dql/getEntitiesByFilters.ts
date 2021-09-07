@@ -99,7 +99,7 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
     }
 
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
-    if (userAccountIdFieldName && userAccountId) {
+    if (userAccountIdFieldName && userAccountId !== undefined) {
       matchExpression[userAccountIdFieldName] = userAccountId;
     }
 

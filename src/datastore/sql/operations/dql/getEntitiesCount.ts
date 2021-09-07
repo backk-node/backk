@@ -30,7 +30,7 @@ export default async function getEntitiesCount<T>(
 
   try {
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
-    if (userAccountIdFieldName && userAccountId) {
+    if (userAccountIdFieldName && userAccountId !== undefined) {
       (filters as any).push(new SqlEquals({ [userAccountIdFieldName]: userAccountId }));
     }
 

@@ -59,7 +59,7 @@ export default async function deleteEntityByFilters<T extends object>(
     let currentEntity, error;
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
 
-    if (options?.entityPreHooks || (userAccountIdFieldName && userAccountId)) {
+    if (options?.entityPreHooks || (userAccountIdFieldName && userAccountId !== undefined)) {
       [currentEntity, error] = await getEntityByFilters(
         dataStore,
         filters,

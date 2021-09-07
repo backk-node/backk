@@ -58,7 +58,7 @@ export default async function createEntity<T extends BackkEntity>(
     didStartTransaction = await tryStartLocalTransactionIfNeeded(dataStore);
 
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
-    if (!isRecursiveCall && userAccountIdFieldName && userAccountId && entity[userAccountIdFieldName] !== userAccountId) {
+    if (!isRecursiveCall && userAccountIdFieldName  && userAccountId !== undefined && entity[userAccountIdFieldName] !== userAccountId) {
       throw createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED);
     }
 

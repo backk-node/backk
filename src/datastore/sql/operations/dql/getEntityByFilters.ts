@@ -67,7 +67,7 @@ export default async function getEntityByFilters<T>(
     }
 
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
-    if (userAccountIdFieldName && userAccountId) {
+    if (userAccountIdFieldName && userAccountId !== undefined) {
       (filters as any).push(new SqlEquals({ [userAccountIdFieldName]: userAccountId }));
     }
 

@@ -272,7 +272,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(this);
 
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
-      if (userAccountIdFieldName && userAccountId && entity[userAccountIdFieldName] !== userAccountId) {
+      if (userAccountIdFieldName && userAccountId !== undefined && entity[userAccountIdFieldName] !== userAccountId) {
         throw createBackkErrorFromErrorCodeMessageAndStatus(
           BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED
         );
@@ -711,7 +711,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
       const filter =
-        userAccountIdFieldName && userAccountId ? { [userAccountIdFieldName]: userAccountId } : {};
+        userAccountIdFieldName && userAccountId !== undefined ? { [userAccountIdFieldName]: userAccountId } : {};
 
       const entities = await this.tryExecute(false, async (client) => {
         if (isSelectForUpdate) {
@@ -884,7 +884,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
     EntityClass = this.getType(EntityClass);
 
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
-    if (userAccountIdFieldName && userAccountId) {
+    if (userAccountIdFieldName && userAccountId !== undefined) {
       (matchExpression as any)[userAccountIdFieldName] = userAccountId;
     }
 
@@ -963,7 +963,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
 
       let filter = { _id: new ObjectId(_id) };
-      if (userAccountIdFieldName && userAccountId) {
+      if (userAccountIdFieldName && userAccountId !== undefined) {
         filter = { ...filter, [userAccountIdFieldName]: userAccountId };
       }
 
@@ -1099,7 +1099,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
 
       let filter = { _id: { $in: _ids.map((_id: string) => new ObjectId(_id)) } };
-      if (userAccountIdFieldName && userAccountId) {
+      if (userAccountIdFieldName && userAccountId !== undefined) {
         filter = { ...filter, [userAccountIdFieldName]: userAccountId };
       }
 
@@ -1471,7 +1471,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(this);
 
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
-      if (userAccountIdFieldName && userAccountId) {
+      if (userAccountIdFieldName && userAccountId !== undefined) {
         matchExpression[userAccountIdFieldName] = userAccountId;
       }
 
@@ -1531,7 +1531,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       await this.tryExecute(shouldUseTransaction, async (client) => {
         const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
 
-        if (options?.entityPreHooks || (userAccountIdFieldName && userAccountId)) {
+        if (options?.entityPreHooks || (userAccountIdFieldName && userAccountId !== undefined)) {
           const [currentEntity, error] = await this.getEntityById(
             EntityClass,
             _id,
@@ -1623,7 +1623,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       await this.tryExecute(shouldUseTransaction, async (client) => {
         const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
 
-        if (options?.entityPreHooks || (userAccountIdFieldName && userAccountId)) {
+        if (options?.entityPreHooks || (userAccountIdFieldName && userAccountId !== undefined)) {
           const [currentEntity, error] = await this.getEntityByFilters(
             EntityClass,
             filters,
@@ -1708,7 +1708,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(this);
 
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
-      if (userAccountIdFieldName && userAccountId) {
+      if (userAccountIdFieldName && userAccountId !== undefined) {
         matchExpression[userAccountIdFieldName] = userAccountId;
       }
 
@@ -1836,7 +1836,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
       const filter =
-        userAccountIdFieldName && userAccountId ? { [userAccountIdFieldName]: userAccountId } : {};
+        userAccountIdFieldName && userAccountId !== undefined ? { [userAccountIdFieldName]: userAccountId } : {};
 
       await this.tryExecute(shouldUseTransaction, async (client) => {
         await client
@@ -2031,7 +2031,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
 
       let filter = { _id: new ObjectId(_id), [fieldName]: fieldValue };
-      if (userAccountIdFieldName && userAccountId) {
+      if (userAccountIdFieldName && userAccountId !== undefined) {
         filter = { ...filter, [userAccountIdFieldName]: userAccountId };
       }
 

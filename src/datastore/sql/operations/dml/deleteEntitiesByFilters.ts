@@ -45,7 +45,7 @@ export default async function deleteEntitiesByFilters<T extends object>(
     didStartTransaction = await tryStartLocalTransactionIfNeeded(dataStore);
 
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
-    if (userAccountIdFieldName && userAccountId) {
+    if (userAccountIdFieldName && userAccountId !== undefined) {
       (filters as any).push(new SqlEquals({ [userAccountIdFieldName]: userAccountId }));
     }
 

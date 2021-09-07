@@ -27,7 +27,7 @@ export default async function doesEntityArrayFieldContainValue<T extends BackkEn
   try {
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
 
-    if (userAccountIdFieldName && userAccountId) {
+    if (userAccountIdFieldName && userAccountId !== undefined) {
       const [, error] = await getEntityById(
         dataStore,
         _id,

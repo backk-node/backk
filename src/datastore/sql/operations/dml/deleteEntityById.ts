@@ -38,7 +38,7 @@ export default async function deleteEntityById<T extends BackkEntity>(
     let currentEntity, error;
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
 
-    if (entityPreHooks || (userAccountIdFieldName && userAccountId)) {
+    if (entityPreHooks || (userAccountIdFieldName && userAccountId !== undefined)) {
       [currentEntity, error] = await getEntityById(
         dataStore,
         _id,

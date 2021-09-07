@@ -1,23 +1,21 @@
-import MongoDbQuery from "../../../mongodb/MongoDbQuery";
-import SqlExpression from "../../expressions/SqlExpression";
-import UserDefinedFilter from "../../../../types/userdefinedfilters/UserDefinedFilter";
-import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
-import convertFilterObjectToSqlEquals from "../dql/utils/convertFilterObjectToSqlEquals";
-import tryStartLocalTransactionIfNeeded from "../transaction/tryStartLocalTransactionIfNeeded";
-import tryGetWhereClause from "../dql/clauses/tryGetWhereClause";
-import tryCommitLocalTransactionIfNeeded from "../transaction/tryCommitLocalTransactionIfNeeded";
-import tryRollbackLocalTransactionIfNeeded from "../transaction/tryRollbackLocalTransactionIfNeeded";
-import isBackkError from "../../../../errors/isBackkError";
-import createBackkErrorFromError from "../../../../errors/createBackkErrorFromError";
-import cleanupLocalTransactionIfNeeded from "../transaction/cleanupLocalTransactionIfNeeded";
-import AbstractSqlDataStore from "../../../AbstractSqlDataStore";
-import getFilterValues from "../dql/utils/getFilterValues";
-import getClassPropertyNameToPropertyTypeNameMap
-  from "../../../../metadata/getClassPropertyNameToPropertyTypeNameMap";
-import { BackkEntity } from "../../../../types/entities/BackkEntity";
-import getRequiredUserAccountIdFieldNameAndValue
-  from "../../../utils/getRrequiredUserAccountIdFieldNameAndValue";
-import SqlEquals from "../../expressions/SqlEquals";
+import MongoDbQuery from '../../../mongodb/MongoDbQuery';
+import SqlExpression from '../../expressions/SqlExpression';
+import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
+import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
+import convertFilterObjectToSqlEquals from '../dql/utils/convertFilterObjectToSqlEquals';
+import tryStartLocalTransactionIfNeeded from '../transaction/tryStartLocalTransactionIfNeeded';
+import tryGetWhereClause from '../dql/clauses/tryGetWhereClause';
+import tryCommitLocalTransactionIfNeeded from '../transaction/tryCommitLocalTransactionIfNeeded';
+import tryRollbackLocalTransactionIfNeeded from '../transaction/tryRollbackLocalTransactionIfNeeded';
+import isBackkError from '../../../../errors/isBackkError';
+import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
+import cleanupLocalTransactionIfNeeded from '../transaction/cleanupLocalTransactionIfNeeded';
+import AbstractSqlDataStore from '../../../AbstractSqlDataStore';
+import getFilterValues from '../dql/utils/getFilterValues';
+import getClassPropertyNameToPropertyTypeNameMap from '../../../../metadata/getClassPropertyNameToPropertyTypeNameMap';
+import { BackkEntity } from '../../../../types/entities/BackkEntity';
+import getUserAccountIdFieldNameAndRequiredValue from '../../../utils/getUserAccountIdFieldNameAndRequiredValue';
+import SqlEquals from '../../expressions/SqlEquals';
 
 // noinspection DuplicatedCode
 export default async function updateEntitiesByFilters<T extends BackkEntity>(
@@ -48,7 +46,7 @@ export default async function updateEntitiesByFilters<T extends BackkEntity>(
   try {
     didStartTransaction = await tryStartLocalTransactionIfNeeded(dataStore);
 
-    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+    const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
     if (userAccountIdFieldName && userAccountId) {
       (filters as any).push(new SqlEquals({ [userAccountIdFieldName]: userAccountId }));
     }
@@ -56,8 +54,9 @@ export default async function updateEntitiesByFilters<T extends BackkEntity>(
     const whereClause = tryGetWhereClause(dataStore, '', filters as any);
     const filterValues = getFilterValues(filters as any);
 
-    const setStatements = Object.keys(update)
-      .map((fieldName: string) => fieldName.toLowerCase() + ' = :yy' + fieldName);
+    const setStatements = Object.keys(update).map(
+      (fieldName: string) => fieldName.toLowerCase() + ' = :yy' + fieldName
+    );
 
     const updateValues = Object.entries(update).reduce(
       (updateValues, [fieldName, fieldValue]) => ({
@@ -69,12 +68,12 @@ export default async function updateEntitiesByFilters<T extends BackkEntity>(
 
     const entityMetadata = getClassPropertyNameToPropertyTypeNameMap(EntityClass);
 
-    if (Object.keys(entityMetadata).find(fieldName => fieldName === 'version')) {
-      setStatements.push('version = version + 1')
+    if (Object.keys(entityMetadata).find((fieldName) => fieldName === 'version')) {
+      setStatements.push('version = version + 1');
     }
 
-    if (Object.keys(entityMetadata).find(fieldName => fieldName === 'lastModifiedTimestamp')) {
-      setStatements.push('lastmodifiedtimestamp = current_timestamp')
+    if (Object.keys(entityMetadata).find((fieldName) => fieldName === 'lastModifiedTimestamp')) {
+      setStatements.push('lastmodifiedtimestamp = current_timestamp');
     }
 
     const setStatement = setStatements.join(', ');

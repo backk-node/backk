@@ -18,7 +18,7 @@ import { PostQueryOperations } from '../../../../types/postqueryoperations/PostQ
 import { EntityPreHook } from '../../../hooks/EntityPreHook';
 import tryExecuteEntityPreHooks from '../../../hooks/tryExecuteEntityPreHooks';
 import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
-import getRequiredUserAccountIdFieldNameAndValue from '../../../utils/getRrequiredUserAccountIdFieldNameAndValue';
+import getUserAccountIdFieldNameAndRequiredValue from '../../../utils/getUserAccountIdFieldNameAndRequiredValue';
 
 export default async function deleteEntityById<T extends BackkEntity>(
   dataStore: AbstractSqlDataStore,
@@ -36,7 +36,7 @@ export default async function deleteEntityById<T extends BackkEntity>(
   try {
     didStartTransaction = await tryStartLocalTransactionIfNeeded(dataStore);
     let currentEntity, error;
-    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+    const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
 
     if (entityPreHooks || (userAccountIdFieldName && userAccountId)) {
       [currentEntity, error] = await getEntityById(

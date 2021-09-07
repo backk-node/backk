@@ -12,8 +12,8 @@ import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from '../../../utils/tryEnsurePreviousOrNextPageIsRequested';
 import EntityCountRequest from '../../../../types/EntityCountRequest';
-import getRequiredUserAccountIdFieldNameAndValue
-  from "../../../utils/getRrequiredUserAccountIdFieldNameAndValue";
+import getUserAccountIdFieldNameAndRequiredValue
+  from "../../../utils/getUserAccountIdFieldNameAndRequiredValue";
 
 export default async function getAllEntities<T extends BackkEntity>(
   dataStore: AbstractSqlDataStore,
@@ -67,7 +67,7 @@ export default async function getAllEntities<T extends BackkEntity>(
         entityCountRequest.subEntityPath === '' || entityCountRequest.subEntityPath === '*'
     );
 
-    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+    const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
     const whereClause =
       userAccountIdFieldName && userAccountId
         ? ` WHERE ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()}.${userAccountIdFieldName} = ${dataStore.getValuePlaceholder(

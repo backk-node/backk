@@ -1,19 +1,19 @@
-import forEachAsyncParallel from '../../../../utils/forEachAsyncParallel';
-import entityContainer, { EntityJoinSpec } from '../../../../decorators/entity/entityAnnotationContainer';
-import AbstractSqlDataStore from '../../../AbstractSqlDataStore';
-import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
-import tryStartLocalTransactionIfNeeded from '../transaction/tryStartLocalTransactionIfNeeded';
-import tryCommitLocalTransactionIfNeeded from '../transaction/tryCommitLocalTransactionIfNeeded';
-import tryRollbackLocalTransactionIfNeeded from '../transaction/tryRollbackLocalTransactionIfNeeded';
-import cleanupLocalTransactionIfNeeded from '../transaction/cleanupLocalTransactionIfNeeded';
-import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
-import getClassPropertyNameToPropertyTypeNameMap from '../../../../metadata/getClassPropertyNameToPropertyTypeNameMap';
-import forEachAsyncSequential from '../../../../utils/forEachAsyncSequential';
-import getTypeInfoForTypeName from '../../../../utils/type/getTypeInfoForTypeName';
-import isEntityTypeName from '../../../../utils/type/isEntityTypeName';
-import getRequiredUserAccountIdFieldNameAndValue from '../../../utils/getRrequiredUserAccountIdFieldNameAndValue';
-import createBackkErrorFromErrorCodeMessageAndStatus from '../../../../errors/createBackkErrorFromErrorCodeMessageAndStatus';
-import { BACKK_ERRORS } from '../../../../errors/backkErrors';
+import forEachAsyncParallel from "../../../../utils/forEachAsyncParallel";
+import entityContainer, { EntityJoinSpec } from "../../../../decorators/entity/entityAnnotationContainer";
+import AbstractSqlDataStore from "../../../AbstractSqlDataStore";
+import createBackkErrorFromError from "../../../../errors/createBackkErrorFromError";
+import tryStartLocalTransactionIfNeeded from "../transaction/tryStartLocalTransactionIfNeeded";
+import tryCommitLocalTransactionIfNeeded from "../transaction/tryCommitLocalTransactionIfNeeded";
+import tryRollbackLocalTransactionIfNeeded from "../transaction/tryRollbackLocalTransactionIfNeeded";
+import cleanupLocalTransactionIfNeeded from "../transaction/cleanupLocalTransactionIfNeeded";
+import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
+import getClassPropertyNameToPropertyTypeNameMap
+  from "../../../../metadata/getClassPropertyNameToPropertyTypeNameMap";
+import forEachAsyncSequential from "../../../../utils/forEachAsyncSequential";
+import getTypeInfoForTypeName from "../../../../utils/type/getTypeInfoForTypeName";
+import isEntityTypeName from "../../../../utils/type/isEntityTypeName";
+import getUserAccountIdFieldNameAndRequiredValue
+  from "../../../utils/getUserAccountIdFieldNameAndRequiredValue";
 
 export default async function deleteAllEntities<T>(
   dataStore: AbstractSqlDataStore,
@@ -37,7 +37,7 @@ export default async function deleteAllEntities<T>(
       }
     });
 
-    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+    const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
     const whereClause =
       userAccountIdFieldName && userAccountId
         ? ` WHERE ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()}.${userAccountIdFieldName} = ${dataStore.getValuePlaceholder(

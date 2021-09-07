@@ -69,7 +69,7 @@ import createCurrentPageTokens from './utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from './utils/tryEnsurePreviousOrNextPageIsRequested';
 import EntityCountRequest from '../types/EntityCountRequest';
 import throwException from '../utils/exception/throwException';
-import getRequiredUserAccountIdFieldNameAndValue from './utils/getRrequiredUserAccountIdFieldNameAndValue';
+import getUserAccountIdFieldNameAndRequiredValue from './utils/getUserAccountIdFieldNameAndRequiredValue';
 import getDbNameFromServiceName from "../utils/getDbNameFromServiceName";
 
 export default class MongoDbDataStore extends AbstractDataStore {
@@ -271,7 +271,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       await hashAndEncryptEntity(entity, EntityClass, Types);
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(this);
 
-      const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+      const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
       if (userAccountIdFieldName && userAccountId && entity[userAccountIdFieldName] !== userAccountId) {
         throw createBackkErrorFromErrorCodeMessageAndStatus(
           BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED
@@ -709,7 +709,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
         isSelectForUpdate = true;
       }
 
-      const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+      const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
       const filter =
         userAccountIdFieldName && userAccountId ? { [userAccountIdFieldName]: userAccountId } : {};
 
@@ -883,9 +883,9 @@ export default class MongoDbDataStore extends AbstractDataStore {
     // noinspection AssignmentToFunctionParameterJS
     EntityClass = this.getType(EntityClass);
 
-    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+    const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
     if (userAccountIdFieldName && userAccountId) {
-      matchExpression[userAccountIdFieldName] = userAccountId;
+      (matchExpression as any)[userAccountIdFieldName] = userAccountId;
     }
 
     try {
@@ -960,7 +960,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
         isSelectForUpdate = true;
       }
 
-      const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+      const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
 
       let filter = { _id: new ObjectId(_id) };
       if (userAccountIdFieldName && userAccountId) {
@@ -1096,7 +1096,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
         isSelectForUpdate = true;
       }
 
-      const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+      const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
 
       let filter = { _id: { $in: _ids.map((_id: string) => new ObjectId(_id)) } };
       if (userAccountIdFieldName && userAccountId) {
@@ -1470,7 +1470,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
     try {
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(this);
 
-      const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+      const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
       if (userAccountIdFieldName && userAccountId) {
         matchExpression[userAccountIdFieldName] = userAccountId;
       }
@@ -1529,7 +1529,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(this);
 
       await this.tryExecute(shouldUseTransaction, async (client) => {
-        const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+        const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
 
         if (options?.entityPreHooks || (userAccountIdFieldName && userAccountId)) {
           const [currentEntity, error] = await this.getEntityById(
@@ -1621,7 +1621,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(this);
 
       await this.tryExecute(shouldUseTransaction, async (client) => {
-        const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+        const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
 
         if (options?.entityPreHooks || (userAccountIdFieldName && userAccountId)) {
           const [currentEntity, error] = await this.getEntityByFilters(
@@ -1707,7 +1707,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
     try {
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(this);
 
-      const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+      const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
       if (userAccountIdFieldName && userAccountId) {
         matchExpression[userAccountIdFieldName] = userAccountId;
       }
@@ -1834,7 +1834,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
     try {
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(this);
 
-      const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+      const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
       const filter =
         userAccountIdFieldName && userAccountId ? { [userAccountIdFieldName]: userAccountId } : {};
 
@@ -2028,7 +2028,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
         isSelectForUpdate = true;
       }
 
-      const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(this);
+      const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
 
       let filter = { _id: new ObjectId(_id), [fieldName]: fieldValue };
       if (userAccountIdFieldName && userAccountId) {

@@ -34,8 +34,8 @@ import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from "../../../utils/tryEnsurePreviousOrNextPageIsRequested";
 import EntityCountRequest from "../../../../types/EntityCountRequest";
-import getRequiredUserAccountIdFieldNameAndValue
-  from "../../../utils/getRrequiredUserAccountIdFieldNameAndValue";
+import getUserAccountIdFieldNameAndRequiredValue
+  from "../../../utils/getUserAccountIdFieldNameAndRequiredValue";
 
 export default async function getEntitiesByFilters<T extends BackkEntity>(
   dataStore: MongoDbDataStore,
@@ -98,7 +98,7 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(dataStore);
     }
 
-    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+    const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
     if (userAccountIdFieldName && userAccountId) {
       matchExpression[userAccountIdFieldName] = userAccountId;
     }

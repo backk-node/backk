@@ -1,17 +1,16 @@
-import SqlExpression from "../../expressions/SqlExpression";
-import AbstractSqlDataStore from "../../../AbstractSqlDataStore";
-import createBackkErrorFromError from "../../../../errors/createBackkErrorFromError";
-import getSqlSelectStatementParts from "./utils/getSqlSelectStatementParts";
-import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
-import updateDbLocalTransactionCount from "./utils/updateDbLocalTransactionCount";
-import UserDefinedFilter from "../../../../types/userdefinedfilters/UserDefinedFilter";
-import MongoDbQuery from "../../../mongodb/MongoDbQuery";
-import convertFilterObjectToSqlEquals from "./utils/convertFilterObjectToSqlEquals";
-import getTableName from "../../../utils/getTableName";
-import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
-import getRequiredUserAccountIdFieldNameAndValue
-  from "../../../utils/getRrequiredUserAccountIdFieldNameAndValue";
-import SqlEquals from "../../expressions/SqlEquals";
+import SqlExpression from '../../expressions/SqlExpression';
+import AbstractSqlDataStore from '../../../AbstractSqlDataStore';
+import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
+import getSqlSelectStatementParts from './utils/getSqlSelectStatementParts';
+import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
+import updateDbLocalTransactionCount from './utils/updateDbLocalTransactionCount';
+import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
+import MongoDbQuery from '../../../mongodb/MongoDbQuery';
+import convertFilterObjectToSqlEquals from './utils/convertFilterObjectToSqlEquals';
+import getTableName from '../../../utils/getTableName';
+import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
+import getUserAccountIdFieldNameAndRequiredValue from '../../../utils/getUserAccountIdFieldNameAndRequiredValue';
+import SqlEquals from '../../expressions/SqlEquals';
 
 export default async function getEntitiesCount<T>(
   dataStore: AbstractSqlDataStore,
@@ -30,7 +29,7 @@ export default async function getEntitiesCount<T>(
   EntityClass = dataStore.getType(EntityClass);
 
   try {
-    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+    const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
     if (userAccountIdFieldName && userAccountId) {
       (filters as any).push(new SqlEquals({ [userAccountIdFieldName]: userAccountId }));
     }

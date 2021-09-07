@@ -1,17 +1,15 @@
-import { BackkEntity } from "../../../../types/entities/BackkEntity";
-import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
-import createErrorFromErrorCodeMessageAndStatus
-  from "../../../../errors/createErrorFromErrorCodeMessageAndStatus";
-import { BACKK_ERRORS } from "../../../../errors/backkErrors";
-import isBackkError from "../../../../errors/isBackkError";
-import createBackkErrorFromError from "../../../../errors/createBackkErrorFromError";
-import AbstractSqlDataStore from "../../../AbstractSqlDataStore";
-import getTableName from "../../../utils/getTableName";
-import getEntityById from "./getEntityById";
-import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
-import getRequiredUserAccountIdFieldNameAndValue
-  from "../../../utils/getRrequiredUserAccountIdFieldNameAndValue";
-import throwIf from "../../../../utils/exception/throwIf";
+import { BackkEntity } from '../../../../types/entities/BackkEntity';
+import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
+import createErrorFromErrorCodeMessageAndStatus from '../../../../errors/createErrorFromErrorCodeMessageAndStatus';
+import { BACKK_ERRORS } from '../../../../errors/backkErrors';
+import isBackkError from '../../../../errors/isBackkError';
+import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
+import AbstractSqlDataStore from '../../../AbstractSqlDataStore';
+import getTableName from '../../../utils/getTableName';
+import getEntityById from './getEntityById';
+import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
+import getUserAccountIdFieldNameAndRequiredValue from '../../../utils/getUserAccountIdFieldNameAndRequiredValue';
+import throwIf from '../../../../utils/exception/throwIf';
 
 export default async function doesEntityArrayFieldContainValue<T extends BackkEntity>(
   dataStore: AbstractSqlDataStore,
@@ -27,7 +25,7 @@ export default async function doesEntityArrayFieldContainValue<T extends BackkEn
   EntityClass = dataStore.getType(EntityClass);
 
   try {
-    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+    const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
 
     if (userAccountIdFieldName && userAccountId) {
       const [, error] = await getEntityById(

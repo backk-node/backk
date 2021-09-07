@@ -14,7 +14,7 @@ import MongoDbQuery from '../../../mongodb/MongoDbQuery';
 import convertFilterObjectToSqlEquals from '../dql/utils/convertFilterObjectToSqlEquals';
 import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
 import isBackkError from '../../../../errors/isBackkError';
-import getRequiredUserAccountIdFieldNameAndValue from '../../../utils/getRrequiredUserAccountIdFieldNameAndValue';
+import getUserAccountIdFieldNameAndRequiredValue from '../../../utils/getUserAccountIdFieldNameAndRequiredValue';
 import SqlEquals from '../../expressions/SqlEquals';
 
 export default async function deleteEntitiesByFilters<T extends object>(
@@ -44,7 +44,7 @@ export default async function deleteEntitiesByFilters<T extends object>(
   try {
     didStartTransaction = await tryStartLocalTransactionIfNeeded(dataStore);
 
-    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+    const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
     if (userAccountIdFieldName && userAccountId) {
       (filters as any).push(new SqlEquals({ [userAccountIdFieldName]: userAccountId }));
     }

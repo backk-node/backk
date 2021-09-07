@@ -22,11 +22,10 @@ import tryExecuteEntitiesPostHook from '../../../hooks/tryExecuteEntitiesPostHoo
 import { Many } from '../../../AbstractDataStore';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
-import tryEnsurePreviousOrNextPageIsRequested from "../../../utils/tryEnsurePreviousOrNextPageIsRequested";
-import EntityCountRequest from "../../../../types/EntityCountRequest";
-import getRequiredUserAccountIdFieldNameAndValue
-  from "../../../utils/getRrequiredUserAccountIdFieldNameAndValue";
-import SqlEquals from "../../expressions/SqlEquals";
+import tryEnsurePreviousOrNextPageIsRequested from '../../../utils/tryEnsurePreviousOrNextPageIsRequested';
+import EntityCountRequest from '../../../../types/EntityCountRequest';
+import getUserAccountIdFieldNameAndRequiredValue from '../../../utils/getUserAccountIdFieldNameAndRequiredValue';
+import SqlEquals from '../../expressions/SqlEquals';
 
 export default async function getEntitiesByFilters<T extends BackkEntity>(
   dataStore: AbstractSqlDataStore,
@@ -37,11 +36,14 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
   options?: {
     preHooks?: PreHook | PreHook[];
     postHook?: EntitiesPostHook<T>;
-    entityCountRequests?: EntityCountRequest[]
+    entityCountRequests?: EntityCountRequest[];
   }
 ): PromiseErrorOr<Many<T>> {
   if (allowFetchingOnlyPreviousOrNextPage) {
-    tryEnsurePreviousOrNextPageIsRequested(postQueryOperations.currentPageTokens, postQueryOperations.paginations);
+    tryEnsurePreviousOrNextPageIsRequested(
+      postQueryOperations.currentPageTokens,
+      postQueryOperations.paginations
+    );
   }
 
   if (typeof filters === 'object' && !Array.isArray(filters)) {
@@ -60,7 +62,7 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
       didStartTransaction = await tryStartLocalTransactionIfNeeded(dataStore);
     }
 
-    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+    const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
     if (userAccountIdFieldName && userAccountId) {
       (filters as any).push(new SqlEquals({ [userAccountIdFieldName]: userAccountId }));
     }
@@ -85,7 +87,13 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
       joinClauses,
       filterValues,
       outerSortClause
-    } = getSqlSelectStatementParts(dataStore, postQueryOperations, EntityClass, filters as any, options?.entityCountRequests);
+    } = getSqlSelectStatementParts(
+      dataStore,
+      postQueryOperations,
+      EntityClass,
+      filters as any,
+      options?.entityCountRequests
+    );
 
     const tableName = getTableName(EntityClass.name);
     const tableAlias = dataStore.schema + '_' + EntityClass.name.toLowerCase();
@@ -97,8 +105,8 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
 
     const selectStatement = [
       `SELECT ${columns} FROM (SELECT *${
-          shouldReturnRootEntityCount ? ', COUNT(*) OVER() AS _count' : ''
-        } FROM ${dataStore.schema}.${tableName}`,
+        shouldReturnRootEntityCount ? ', COUNT(*) OVER() AS _count' : ''
+      } FROM ${dataStore.schema}.${tableName}`,
       rootWhereClause,
       rootSortClause,
       rootPaginationClause,

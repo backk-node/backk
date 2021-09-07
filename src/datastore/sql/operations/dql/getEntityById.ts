@@ -24,7 +24,7 @@ import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from '../../../utils/tryEnsurePreviousOrNextPageIsRequested';
 import EntityCountRequest from '../../../../types/EntityCountRequest';
-import getRequiredUserAccountIdFieldNameAndValue from '../../../utils/getRrequiredUserAccountIdFieldNameAndValue';
+import getUserAccountIdFieldNameAndRequiredValue from '../../../utils/getUserAccountIdFieldNameAndRequiredValue';
 
 // noinspection OverlyComplexFunctionJS,FunctionTooLongJS
 export default async function getEntityById<T extends BackkEntity>(
@@ -106,7 +106,7 @@ export default async function getEntityById<T extends BackkEntity>(
         entityCountRequest.subEntityPath === '' || entityCountRequest.subEntityPath === '*'
     );
 
-    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+    const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
     const additionalWhereExpression =
       userAccountIdFieldName && userAccountId
         ? ` AND ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()}.${userAccountIdFieldName} = ${dataStore.getValuePlaceholder(

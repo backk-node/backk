@@ -15,7 +15,7 @@ import { Many } from '../../../AbstractDataStore';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from '../../../utils/tryEnsurePreviousOrNextPageIsRequested';
 import EntityCountRequest from '../../../../types/EntityCountRequest';
-import getRequiredUserAccountIdFieldNameAndValue from '../../../utils/getRrequiredUserAccountIdFieldNameAndValue';
+import getUserAccountIdFieldNameAndRequiredValue from '../../../utils/getUserAccountIdFieldNameAndRequiredValue';
 
 export default async function getEntitiesByIds<T>(
   dataStore: AbstractSqlDataStore,
@@ -83,7 +83,7 @@ export default async function getEntitiesByIds<T>(
         entityCountRequest.subEntityPath === '' || entityCountRequest.subEntityPath === '*'
     );
 
-    const [userAccountIdFieldName, userAccountId] = getRequiredUserAccountIdFieldNameAndValue(dataStore);
+    const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
     const additionalWhereExpression =
       userAccountIdFieldName && userAccountId
         ? ` AND ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()}.${userAccountIdFieldName} = ${dataStore.getValuePlaceholder(

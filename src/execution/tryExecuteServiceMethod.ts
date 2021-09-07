@@ -425,15 +425,12 @@ export default async function tryExecuteServiceMethod(
               if (subjectCache.has(subject)) {
                 userAccountId = subjectCache.get(subject);
               } else {
-
                 [userAccountId, error] = await userService.getIdBySubject({ subject });
                 try {
-
                   subjectCache.set(subject, userAccountId.data._id);
                 } catch {
                   // No operation
                 }
-
                 clsNamespace.set('dbLocalTransactionCount', 0);
               }
             }

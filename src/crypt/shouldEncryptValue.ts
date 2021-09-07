@@ -131,18 +131,22 @@ export default function shouldEncryptValue(propertyName: string, EntityClass?: F
     return entityPropertyNameToShouldEncryptValueMap[`${EntityClass.name}${propertyName}`];
   }
 
-  const shouldEncryptValue = propertyName.endsWith('Ip') ||
-    (EntityClass && typePropertyAnnotationContainer.isTypePropertyEncrypted(EntityClass, propertyName)) ||
-    (subPropertyNamesWhoseValuesShouldBeEncrypted.some(
-      (subPropertyName) =>
-        propertyName.toLowerCase().includes(subPropertyName) ||
-        propertyNamesWhoseValuesShouldBeEncrypted.some(
-          (otherPropertyName) => propertyName.toLowerCase() === otherPropertyName
-        )
-    ) &&
-      (!EntityClass ||
-        (EntityClass &&
-          !typePropertyAnnotationContainer.isTypePropertyNotEncrypted(EntityClass, propertyName))));
+  let shouldEncryptValue;
+
+  if (EntityClass && typePropertyAnnotationContainer.isTypePropertyNotEncrypted(EntityClass, propertyName)) {
+    shouldEncryptValue = false;
+  } else {
+    shouldEncryptValue =
+      propertyName.endsWith('Ip') ||
+      (EntityClass && typePropertyAnnotationContainer.isTypePropertyEncrypted(EntityClass, propertyName)) ||
+      subPropertyNamesWhoseValuesShouldBeEncrypted.some(
+        (subPropertyName) =>
+          propertyName.toLowerCase().includes(subPropertyName) ||
+          propertyNamesWhoseValuesShouldBeEncrypted.some(
+            (otherPropertyName) => propertyName.toLowerCase() === otherPropertyName
+          )
+      );
+  }
 
   if (EntityClass && EntityClass.name) {
     entityPropertyNameToShouldEncryptValueMap[`${EntityClass.name}${propertyName}`] = shouldEncryptValue;

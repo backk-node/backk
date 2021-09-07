@@ -430,6 +430,7 @@ export default async function tryExecuteServiceMethod(
 
               if (userAccountId === undefined) {
                 [userAccountId, error] = await userService.getIdBySubject({ subject });
+                clsNamespace.set('dbLocalTransactionCount', 0);
               }
 
               throwIf(error);

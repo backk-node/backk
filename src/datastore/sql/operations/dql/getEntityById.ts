@@ -109,7 +109,7 @@ export default async function getEntityById<T extends BackkEntity>(
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
     const additionalWhereExpression =
       userAccountIdFieldName && userAccountId !== undefined
-        ? ` AND ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()}.${userAccountIdFieldName} = ${dataStore.getValuePlaceholder(
+        ? ` AND ${userAccountIdFieldName} = ${dataStore.getValuePlaceholder(
             2
           )}`
         : '';

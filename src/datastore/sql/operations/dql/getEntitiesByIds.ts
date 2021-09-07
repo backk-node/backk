@@ -86,7 +86,7 @@ export default async function getEntitiesByIds<T>(
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
     const additionalWhereExpression =
       userAccountIdFieldName && userAccountId !== undefined
-        ? ` AND ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()}.${userAccountIdFieldName} = ${dataStore.getValuePlaceholder(
+        ? ` AND ${userAccountIdFieldName} = ${dataStore.getValuePlaceholder(
             numericIds.length + 1
           )}`
         : '';

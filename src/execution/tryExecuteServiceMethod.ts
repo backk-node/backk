@@ -415,27 +415,26 @@ export default async function tryExecuteServiceMethod(
             }
 
             let userAccountId;
-            let error;
 
             if (microservice[serviceName] instanceof UserAccountBaseService) {
-              [userAccountId, error] = [serviceFunctionArgument._id ?? subject, null];
+              [userAccountId] = [serviceFunctionArgument._id ?? subject, null];
             }
 
             if (userAccountId === undefined) {
               if (subjectCache.has(subject)) {
                 userAccountId = subjectCache.get(subject);
               } else {
-                [userAccountId, error] = await userService.getIdBySubject({ subject });
+                const [idEntity, error] = await userService.getIdBySubject({ subject });
+                throwIf(error);
+                userAccountId = idEntity.data._id;
                 try {
-                  subjectCache.set(subject, userAccountId.data._id);
+                  subjectCache.set(subject, userAccountId);
                 } catch {
                   // No operation
                 }
                 clsNamespace.set('dbLocalTransactionCount', 0);
               }
             }
-
-            throwIf(error);
 
             clsNamespace.set(
               'userAccountIdFieldName',

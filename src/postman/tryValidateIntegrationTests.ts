@@ -5,6 +5,7 @@ export default function tryValidateIntegrationTests(
   integrationTests: any[],
   servicesMetadata: ServiceMetadata[]
 ) {
+  // noinspection OverlyComplexBooleanExpressionJS
   integrationTests.forEach((integrationTest, index) => {
     const functionName = integrationTest.testFileName.split('test')[1];
 
@@ -50,6 +51,7 @@ export default function tryValidateIntegrationTests(
       integrationTest.testTemplate.at = integrationTest.serviceName + '.' + functionName;
     }
 
+    // noinspection OverlyComplexBooleanExpressionJS
     const foundInvalidKey = Object.keys(integrationTest.testTemplate).find(
       (key) =>
         key !== 'after' &&
@@ -62,7 +64,9 @@ export default function tryValidateIntegrationTests(
         key !== 'serviceName' &&
         key !== 'testFileName' &&
         key !== 'tests' &&
-        key !== 'type'
+        key !== 'type' &&
+        key != 'authJwtSubject' &&
+        key != 'authJwtRole'
     );
 
     if (foundInvalidKey) {

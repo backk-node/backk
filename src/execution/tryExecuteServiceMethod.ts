@@ -425,21 +425,20 @@ export default async function tryExecuteServiceMethod(
               let error;
 
               if (microservice[serviceName] instanceof UserAccountBaseService) {
-                [userAccountId, error] = [serviceFunctionArgument._id, null];
+                [userAccountId, error] = [serviceFunctionArgument._id ?? subject, null];
               }
 
               if (userAccountId === undefined) {
                 [userAccountId, error] = await userService.getIdBySubject({ subject });
+                try {
+                  subjectCache.set(subject, userAccountId.data._id);
+                } catch {
+                  // No operation
+                }
                 clsNamespace.set('dbLocalTransactionCount', 0);
               }
 
               throwIf(error);
-
-              try {
-                subjectCache.set(subject, userAccountId.data._id);
-              } catch {
-                // No operation
-              }
             }
 
             clsNamespace.set(

@@ -1,5 +1,10 @@
+import _ from "lodash";
+import throwException from "../utils/exception/throwException";
+import { sign } from "jsonwebtoken";
+import { Base64 } from "js-base64";
+
 export default function createPostmanCollectionItemFromCustomTest({
-  testTemplate: { testTemplateName, serviceFunctionName, argument, responseStatusCode, responseTests }
+  testTemplate: { authJwtSubject, authJwtRole, testTemplateName, serviceFunctionName, argument, responseStatusCode, responseTests }
 }: any) {
   const checkResponseCode = responseStatusCode
     ? `pm.test("Status code is ${responseStatusCode} OK", function () {
@@ -7,10 +12,42 @@ export default function createPostmanCollectionItemFromCustomTest({
 });`
     : '';
 
+  let auth;
+  if (authJwtRole || authJwtSubject) {
+    const payload = {};
+
+    _.set(
+      payload,
+      'sub',
+      authJwtSubject
+    );
+
+    _.set(
+      payload,
+      process.env.JWT_ROLES_CLAIM_PATH ??
+      throwException('JWT_ROLES_CLAIM_PATH environment variable must be defined'),
+      [authJwtRole ?? process.env.TEST_USER_ROLE]
+    );
+
+    const jwt = sign(payload, process.env.JWT_SIGN_SECRET || 'abcdef');
+
+    auth = {
+      type: 'bearer',
+        bearer: [
+        {
+          key: 'token',
+          value: Base64.encode(jwt),
+          type: 'string'
+        }
+      ]
+    }
+  }
+
   return {
     name: testTemplateName,
     request: {
       method: 'POST',
+      auth,
       header:
         argument === undefined
           ? []

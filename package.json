@@ -40,8 +40,8 @@
   "scripts": {
     "prebuild": "rimraf lib && copyfiles -f \"./src/types/**/*.ts\" lib/src && copyfiles -f \"./src/service/**/*Service.ts\" lib/src",
     "build": "tsc -p tsconfig.json",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "lint": "eslint . --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint ./src --ext .ts",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "prepublishOnly": "npm run build"
@@ -69,8 +69,8 @@
     "jsonwebtoken": "8.5.1",
     "libphonenumber-js": "1.9.16",
     "lodash": "4.17.21",
+    "memory-cache-node": "^1.1.1",
     "mustache": "4.2.0",
-    "node-cache": "^5.1.2",
     "node-fetch": "2.6.1",
     "organize-imports-cli": "0.7.0",
     "prettier": "1.19.1",

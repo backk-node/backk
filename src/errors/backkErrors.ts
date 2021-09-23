@@ -77,5 +77,10 @@ export const BACKK_ERRORS = {
     errorCode: '15',
     message: 'Invalid HTTP method. HTTP method must be POST',
     statusCode: HttpStatusCodes.BAD_REQUEST
+  },
+  REQUEST_IS_TOO_LONG: {
+    errorCode: '16',
+    message: 'Request is too long',
+    statusCode: HttpStatusCodes.BAD_REQUEST
   }
 };

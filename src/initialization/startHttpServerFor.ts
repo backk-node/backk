@@ -1,9 +1,11 @@
-import { createServer } from 'http';
-import tryExecuteServiceMethod, {
-  ServiceFunctionExecutionOptions
-} from '../execution/tryExecuteServiceMethod';
-import Microservice from '../microservice/Microservice';
-import log, { Severity } from '../observability/logging/log';
+import { createServer } from "http";
+import tryExecuteServiceMethod, { ServiceFunctionExecutionOptions } from "../execution/tryExecuteServiceMethod";
+import Microservice from "../microservice/Microservice";
+import log, { Severity } from "../observability/logging/log";
+import throwException from "../utils/exception/throwException";
+import createBackkErrorFromErrorCodeMessageAndStatus
+  from "../errors/createBackkErrorFromErrorCodeMessageAndStatus";
+import { BACKK_ERRORS } from "../errors/backkErrors";
 
 export type HttpVersion = 1;
 
@@ -15,8 +17,21 @@ export default async function startHttpServerFor(
 ) {
   const server = createServer((request, response) => {
     const requestBodyChunks: string[] = [];
-
     request.setEncoding('utf8');
+
+    const contentLength = parseInt(request.headers['content-length'] ?? '0', 10);
+    const MAX_REQUEST_CONTENT_LENGTH_IN_BYTES = parseInt(
+      process.env.MAX_REQUEST_CONTENT_LENGTH_IN_BYTES ??
+        throwException('MAX_REQUEST_CONTENT_LENGTH_IN_BYTES environment variable must be defined'),
+      10
+    );
+
+    if (contentLength === undefined || contentLength > MAX_REQUEST_CONTENT_LENGTH_IN_BYTES) {
+      const backkError = createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.REQUEST_IS_TOO_LONG);
+      response.writeHead(backkError.statusCode, { 'Content-Type': 'application/json' });
+      response.end(JSON.stringify(backkError));
+      return;
+    }
 
     request.on('data', (chunk) => {
       requestBodyChunks.push(chunk);

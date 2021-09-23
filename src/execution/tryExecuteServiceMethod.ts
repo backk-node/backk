@@ -1,6 +1,7 @@
 import { plainToClass } from 'class-transformer';
 import _ from 'lodash';
 import Redis from 'ioredis';
+import { MemoryCache } from "memory-cache-node";
 import tryAuthorize from '../authorization/tryAuthorize';
 import BaseService from '../service/BaseService';
 import tryVerifyCaptchaToken from '../captcha/tryVerifyCaptchaToken';
@@ -13,7 +14,7 @@ import defaultServiceMetrics from '../observability/metrics/defaultServiceMetric
 import createBackkErrorFromError from '../errors/createBackkErrorFromError';
 import log, { Severity } from '../observability/logging/log';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
-import { HttpStatusCodes, MAX_INT_VALUE } from '../constants/constants';
+import { HttpStatusCodes, MAX_INT_VALUE, Values } from "../constants/constants";
 import getNamespacedServiceName from '../utils/getNamespacedServiceName';
 import AuditLoggingService from '../observability/logging/audit/AuditLoggingService';
 import createAuditLogEntry from '../observability/logging/audit/createAuditLogEntry';
@@ -35,7 +36,6 @@ import LivenessCheckService from '../service/LivenessCheckService';
 import getMicroserviceServiceNameByServiceClass from '../microservice/getMicroserviceServiceNameByServiceClass';
 import ReadinessCheckService from '../service/ReadinessCheckService';
 import StartupCheckService from '../service/startup/StartupCheckService';
-import NodeCache from 'node-cache';
 import throwIf from '../utils/exception/throwIf';
 import { getDefaultOrThrowExceptionInProduction } from '../utils/exception/getDefaultOrThrowExceptionInProduction';
 
@@ -53,12 +53,7 @@ export interface ServiceFunctionExecutionOptions {
   };
 }
 
-const subjectCache = new NodeCache({
-  useClones: false,
-  checkperiod: 5 * 60,
-  stdTTL: 30 * 60,
-  maxKeys: 100000
-});
+const subjectCache = new MemoryCache(5 * 60, Values._100K);
 
 export default async function tryExecuteServiceMethod(
   microservice: any,
@@ -421,14 +416,14 @@ export default async function tryExecuteServiceMethod(
             }
 
             if (userAccountId === undefined) {
-              if (subjectCache.has(subject)) {
-                userAccountId = subjectCache.get(subject);
+              if (subjectCache.hasItem(subject)) {
+                userAccountId = subjectCache.retrieveItemValue(subject);
               } else {
                 const [idEntity, error] = await userService.getIdBySubject({ subject });
                 throwIf(error);
                 userAccountId = idEntity.data._id;
                 try {
-                  subjectCache.set(subject, userAccountId);
+                  subjectCache.storeExpiringItem(subject, userAccountId, 30 * 60);
                 } catch {
                   // No operation
                 }

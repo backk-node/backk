@@ -28,7 +28,7 @@ export default async function tryExecutePostHook<T extends BackkEntity | SubEnti
     }
   } catch (error) {
     throw new Error(
-      createErrorMessageWithStatusCode(error.errorMessage, HttpStatusCodes.INTERNAL_SERVER_ERROR)
+      createErrorMessageWithStatusCode(error.message, HttpStatusCodes.INTERNAL_SERVER_ERROR)
     );
   }
 

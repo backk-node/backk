@@ -28,6 +28,7 @@ export interface Field {
 export type Many<T> = {
   metadata: {
     currentPageTokens: CurrentPageToken[] | undefined;
+    [key: string]: any;
   };
   data: T[];
 };
@@ -35,6 +36,7 @@ export type Many<T> = {
 export type One<T> = {
   metadata: {
     currentPageTokens: CurrentPageToken[] | undefined;
+    [key: string]: any;
   };
   data: T;
 };

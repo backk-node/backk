@@ -412,7 +412,10 @@ export default async function tryExecuteServiceMethod(
             let userAccountId;
 
             if (microservice[serviceName] instanceof UserAccountBaseService) {
-              [userAccountId] = [serviceFunctionArgument._id ?? subject, null];
+              userAccountId = serviceFunctionArgument._id ?? subject;
+              if (serviceFunctionArgument._id) {
+                subjectCache.storeExpiringItem(subject, userAccountId, 30 * 60);
+              }
             }
 
             if (userAccountId === undefined) {
@@ -422,11 +425,7 @@ export default async function tryExecuteServiceMethod(
                 const [idEntity, error] = await userService.getIdBySubject({ subject });
                 throwIf(error);
                 userAccountId = idEntity.data._id;
-                try {
-                  subjectCache.storeExpiringItem(subject, userAccountId, 30 * 60);
-                } catch {
-                  // No operation
-                }
+                subjectCache.storeExpiringItem(subject, userAccountId, 30 * 60);
                 clsNamespace.set('dbLocalTransactionCount', 0);
               }
             }

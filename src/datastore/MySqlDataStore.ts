@@ -24,9 +24,8 @@ export default class MySqlDataStore extends AbstractSqlDataStore {
       port: parseInt(this.port, 10),
       user: this.user,
       password: this.password,
-      database: this.schema,
       waitForConnections: true,
-      connectionLimit: 10,
+      connectionLimit: 100,
       queueLimit: 0
     });
   }

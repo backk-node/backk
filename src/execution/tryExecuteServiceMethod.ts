@@ -415,6 +415,12 @@ export default async function tryExecuteServiceMethod(
               userAccountId = serviceFunctionArgument._id ?? subject;
               if (serviceFunctionArgument._id) {
                 subjectCache.storeExpiringItem(subject, userAccountId, 30 * 60);
+              } else if (subject) {
+                subjectCache.removeItem(subject);
+              } else {
+                throw createBackkErrorFromErrorCodeMessageAndStatus(
+                  BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED
+                );
               }
             }
 

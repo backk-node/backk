@@ -92,7 +92,8 @@ export default class MongoDbDataStore extends AbstractDataStore {
         : '');
 
     const MONGODB_PASSWORD =
-      process.env.MONGODB_PASSWORD || (process.env.NODE_ENV === 'production'
+      process.env.MONGODB_PASSWORD ||
+      (process.env.NODE_ENV === 'production'
         ? throwException('MONGODB_PASSWORD environment variable must be defined')
         : '');
 

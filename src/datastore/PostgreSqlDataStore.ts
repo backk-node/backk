@@ -14,17 +14,18 @@ export default class PostgreSqlDataStore extends AbstractSqlDataStore {
     // noinspection MagicNumberJS
     types.setTypeParser(20, 'text', parseInt);
     this.host =
-      process.env.POSTGRESQL_HOST ?? throwException('POSTGRESQL_HOST environment variable must be defined');
+      process.env.POSTGRESQL_HOST || throwException('POSTGRESQL_HOST environment variable must be defined');
 
     this.pool = new Pool({
       user:
-        process.env.POSTGRESQL_USER ?? throwException('POSTGRESQL_USER environment variable must be defined'),
+        process.env.POSTGRESQL_USER || throwException('POSTGRESQL_USER environment variable must be defined'),
       host: this.host,
       database: 'postgres',
       password:
-        process.env.POSTGRESQL_USER ?? throwException('POSTGRESQL_USER environment variable must be defined'),
+        process.env.POSTGRESQL_PASSWORD ||
+        throwException('POSTGRESQL_PASSWORD environment variable must be defined'),
       port: parseInt(
-        process.env.POSTGRESQL_PORT ?? throwException('POSTGRESQL_PORT environment variable must be defined'),
+        process.env.POSTGRESQL_PORT || throwException('POSTGRESQL_PORT environment variable must be defined'),
         10
       )
     });

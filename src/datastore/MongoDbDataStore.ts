@@ -70,7 +70,7 @@ import tryEnsurePreviousOrNextPageIsRequested from './utils/tryEnsurePreviousOrN
 import EntityCountRequest from '../types/EntityCountRequest';
 import throwException from '../utils/exception/throwException';
 import getUserAccountIdFieldNameAndRequiredValue from './utils/getUserAccountIdFieldNameAndRequiredValue';
-import getDbNameFromServiceName from "../utils/getDbNameFromServiceName";
+import getDbNameFromServiceName from '../utils/getDbNameFromServiceName';
 
 export default class MongoDbDataStore extends AbstractDataStore {
   private readonly uri: string;
@@ -80,18 +80,27 @@ export default class MongoDbDataStore extends AbstractDataStore {
     super('', getDbNameFromServiceName());
 
     const MONGODB_HOST =
-      process.env.MONGODB_HOST ?? throwException('MONGODB_HOST environment variable must be defined');
+      process.env.MONGODB_HOST || throwException('MONGODB_HOST environment variable must be defined');
 
     const MONGODB_PORT =
-      process.env.MONGODB_PORT ?? throwException('MONGODB_PORT environment variable must be defined');
+      process.env.MONGODB_PORT || throwException('MONGODB_PORT environment variable must be defined');
 
     const MONGODB_USER =
-      process.env.MONGODB_USER ?? throwException('MONGODB_USER environment variable must be defined');
+      process.env.MONGODB_USER ||
+      (process.env.NODE_ENV === 'production'
+        ? throwException('MONGODB_USER environment variable must be defined')
+        : '');
 
     const MONGODB_PASSWORD =
-      process.env.MONGODB_PASSWORD ?? throwException('MONGODB_USER environment variable must be defined');
+      process.env.MONGODB_PASSWORD || (process.env.NODE_ENV === 'production'
+        ? throwException('MONGODB_PASSWORD environment variable must be defined')
+        : '');
 
-    this.uri = `mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}`;
+    if (MONGODB_USER && MONGODB_PASSWORD) {
+      this.uri = `mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}`;
+    } else {
+      this.uri = `mongodb://${MONGODB_HOST}:${MONGODB_PORT}`;
+    }
     this.mongoClient = new MongoClient(this.uri, { useNewUrlParser: true, useUnifiedTopology: true });
   }
 
@@ -272,7 +281,11 @@ export default class MongoDbDataStore extends AbstractDataStore {
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(this);
 
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
-      if (userAccountIdFieldName && userAccountId !== undefined && entity[userAccountIdFieldName] !== userAccountId) {
+      if (
+        userAccountIdFieldName &&
+        userAccountId !== undefined &&
+        entity[userAccountIdFieldName] !== userAccountId
+      ) {
         throw createBackkErrorFromErrorCodeMessageAndStatus(
           BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED
         );
@@ -711,7 +724,9 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
       const filter =
-        userAccountIdFieldName && userAccountId !== undefined ? { [userAccountIdFieldName]: userAccountId } : {};
+        userAccountIdFieldName && userAccountId !== undefined
+          ? { [userAccountIdFieldName]: userAccountId }
+          : {};
 
       const entities = await this.tryExecute(false, async (client) => {
         if (isSelectForUpdate) {
@@ -1836,7 +1851,9 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
       const filter =
-        userAccountIdFieldName && userAccountId !== undefined ? { [userAccountIdFieldName]: userAccountId } : {};
+        userAccountIdFieldName && userAccountId !== undefined
+          ? { [userAccountIdFieldName]: userAccountId }
+          : {};
 
       await this.tryExecute(shouldUseTransaction, async (client) => {
         await client

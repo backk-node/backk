@@ -13,11 +13,11 @@ export default class MySqlDataStore extends AbstractSqlDataStore {
 
   constructor() {
     super(getDbNameFromServiceName());
-    this.host = process.env.MYSQL_HOST ?? throwException('MYSQL_HOST environment variable must be defined');
-    this.port = process.env.MYSQL_PORT ?? throwException('MYSQL_PORT environment variable must be defined');
-    this.user = process.env.MYSQL_USER ?? throwException('MYSQL_USER environment variable must be defined');
+    this.host = process.env.MYSQL_HOST || throwException('MYSQL_HOST environment variable must be defined');
+    this.port = process.env.MYSQL_PORT || throwException('MYSQL_PORT environment variable must be defined');
+    this.user = process.env.MYSQL_USER || throwException('MYSQL_USER environment variable must be defined');
     this.password =
-      process.env.MYSQL_PASSWORD ?? throwException('MYSQL_PASSWORD environment variable must be defined');
+      process.env.MYSQL_PASSWORD || throwException('MYSQL_PASSWORD environment variable must be defined');
 
     this.pool = mysql.createPool({
       host: this.host,

@@ -106,7 +106,7 @@ export default async function getEntityByFilters<T extends BackkEntity>(
 
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
     if (userAccountIdFieldName && userAccountId !== undefined) {
-      matchExpression[userAccountIdFieldName] = userAccountId;
+      matchExpression[userAccountIdFieldName] = new ObjectId(userAccountId);
     }
 
     updateDbLocalTransactionCount(dataStore);

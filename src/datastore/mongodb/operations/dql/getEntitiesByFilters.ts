@@ -98,9 +98,11 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(dataStore);
     }
 
-    const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
-    if (userAccountIdFieldName && userAccountId !== undefined) {
-      matchExpression[userAccountIdFieldName] = userAccountIdFieldName === 'subject' ? userAccountId : new ObjectId(userAccountId);
+    if (!isRecursive) {
+      const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
+      if (userAccountIdFieldName && userAccountId !== undefined) {
+        matchExpression[userAccountIdFieldName] = userAccountIdFieldName === 'subject' ? userAccountId : new ObjectId(userAccountId);
+      }
     }
 
     if (!isRecursive) {

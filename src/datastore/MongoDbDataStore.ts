@@ -980,7 +980,11 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       let filter = { _id: new ObjectId(_id) };
       if (userAccountIdFieldName && userAccountId !== undefined) {
-        filter = { ...filter, [userAccountIdFieldName]: new ObjectId(userAccountId) };
+        if (userAccountIdFieldName === 'subject') {
+          filter = { ...filter, [userAccountIdFieldName]: userAccountId };
+        } else {
+          filter = { ...filter, [userAccountIdFieldName]: new ObjectId(userAccountId) };
+        }
       }
 
       const entities = await this.tryExecute(shouldUseTransaction, async (client) => {

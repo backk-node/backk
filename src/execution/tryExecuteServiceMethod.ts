@@ -444,7 +444,7 @@ export default async function tryExecuteServiceMethod(
               )
             );
 
-            clsNamespace.set('userAccountId', userAccountId);
+            clsNamespace.set('userAccountId', userAccountId.toString());
           }
 
           [response, backkError] = await microservice[serviceName][functionName](

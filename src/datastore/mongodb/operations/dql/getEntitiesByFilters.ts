@@ -101,7 +101,7 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
     if (!isRecursive) {
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
       if (userAccountIdFieldName && userAccountId !== undefined) {
-        matchExpression[userAccountIdFieldName] = userAccountIdFieldName === 'subject' ? userAccountId : new ObjectId(userAccountId);
+        matchExpression[userAccountIdFieldName] = userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId;
       }
     }
 

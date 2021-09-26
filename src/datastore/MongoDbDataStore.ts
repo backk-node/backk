@@ -726,7 +726,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
       const filter =
         userAccountIdFieldName && userAccountId !== undefined
-          ? { [userAccountIdFieldName]: userAccountIdFieldName === 'subject' ? userAccountId : new ObjectId(userAccountId) }
+          ? { [userAccountIdFieldName]: userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId }
           : {};
 
       const entities = await this.tryExecute(false, async (client) => {
@@ -901,7 +901,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
     if (userAccountIdFieldName && userAccountId !== undefined) {
-      (matchExpression as any)[userAccountIdFieldName] = userAccountIdFieldName === 'subject' ? userAccountId : new ObjectId(userAccountId);
+      (matchExpression as any)[userAccountIdFieldName] = userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId;
     }
 
     try {
@@ -980,10 +980,10 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       let filter = { _id: new ObjectId(_id) };
       if (userAccountIdFieldName && userAccountId !== undefined) {
-        if (userAccountIdFieldName === 'subject') {
-          filter = { ...filter, [userAccountIdFieldName]: userAccountId };
-        } else {
+        if (userAccountIdFieldName === '_id') {
           filter = { ...filter, [userAccountIdFieldName]: new ObjectId(userAccountId) };
+        } else {
+          filter = { ...filter, [userAccountIdFieldName]: userAccountId };
         }
       }
 
@@ -1120,7 +1120,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       let filter = { _id: { $in: _ids.map((_id: string) => new ObjectId(_id)) } };
       if (userAccountIdFieldName && userAccountId !== undefined) {
-        filter = { ...filter, [userAccountIdFieldName]: userAccountIdFieldName === 'subject' ? userAccountId : new ObjectId(userAccountId) };
+        filter = { ...filter, [userAccountIdFieldName]: userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId };
       }
 
       const entities = await this.tryExecute(false, async (client) => {
@@ -1492,7 +1492,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
       if (userAccountIdFieldName && userAccountId !== undefined) {
-        matchExpression[userAccountIdFieldName] = userAccountIdFieldName === 'subject' ? userAccountId : new ObjectId(userAccountId);
+        matchExpression[userAccountIdFieldName] = userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId;
       }
 
       const entityPropertyNameToPropertyTypeNameMap = getClassPropertyNameToPropertyTypeNameMap(EntityClass);
@@ -1729,7 +1729,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
       if (userAccountIdFieldName && userAccountId !== undefined) {
-        matchExpression[userAccountIdFieldName] = userAccountIdFieldName === 'subject' ? userAccountId : new ObjectId(userAccountId);
+        matchExpression[userAccountIdFieldName] = userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId;
       }
 
       await this.tryExecute(shouldUseTransaction, async (client) => {
@@ -1857,7 +1857,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
       const filter =
         userAccountIdFieldName && userAccountId !== undefined
-          ? { [userAccountIdFieldName]: userAccountIdFieldName === 'subject' ? userAccountId : new ObjectId(userAccountId) }
+          ? { [userAccountIdFieldName]: userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId }
           : {};
 
       await this.tryExecute(shouldUseTransaction, async (client) => {
@@ -2054,7 +2054,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       let filter = { _id: new ObjectId(_id), [fieldName]: fieldValue };
       if (userAccountIdFieldName && userAccountId !== undefined) {
-        filter = { ...filter, [userAccountIdFieldName]: userAccountIdFieldName === 'subject' ? userAccountId : new ObjectId(userAccountId) };
+        filter = { ...filter, [userAccountIdFieldName]: userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId };
       }
 
       return await this.tryExecute(false, async (client) => {

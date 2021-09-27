@@ -71,10 +71,17 @@ export class HttpStatusCodes {
   static readonly NOT_MODIFIED = 304;
   static readonly CLIENT_ERRORS_START = 400;
   static readonly BAD_REQUEST = 400;
+  static readonly UNAUTHORIZED = 401;
   static readonly FORBIDDEN = 403;
   static readonly NOT_FOUND = 404;
+  static readonly METHOD_NOT_ALLOWED = 405;
+  static readonly NOT_ACCEPTABLE = 406;
   static readonly CONFLICT = 409;
+  static readonly PAYLOAD_TOO_LARGE = 413;
+  static readonly UNPROCESSABLE_ENTITY = 422;
+  static readonly TOO_MANY_REQUESTS = 429;
   static readonly INTERNAL_ERRORS_START = 500;
   static readonly INTERNAL_SERVER_ERROR = 500;
+  static readonly NOT_IMPLEMENTED = 501;
   static readonly SERVICE_UNAVAILABLE = 503;
 }

@@ -16,7 +16,7 @@ export const BACKK_ERRORS = {
   DUPLICATE_ENTITY: {
     errorCode: '3',
     message: 'Duplicate entity',
-    statusCode: HttpStatusCodes.BAD_REQUEST
+    statusCode: HttpStatusCodes.CONFLICT
   },
   ENTITY_NOT_FOUND: {
     errorCode: '4',
@@ -36,32 +36,32 @@ export const BACKK_ERRORS = {
   MAX_ENTITY_COUNT_REACHED: {
     errorCode: '7',
     message: 'Maximum sub-entity count reached. Cannot add new sub-entity',
-    statusCode: HttpStatusCodes.BAD_REQUEST
+    statusCode: HttpStatusCodes.UNPROCESSABLE_ENTITY
   },
   UNKNOWN_SERVICE: {
     errorCode: '8',
     message: 'Unknown service: ',
-    statusCode: HttpStatusCodes.BAD_REQUEST
+    statusCode: HttpStatusCodes.NOT_IMPLEMENTED
   },
   UNKNOWN_SERVICE_FUNCTION: {
     errorCode: '9',
     message: 'Unknown function: ',
-    statusCode: HttpStatusCodes.BAD_REQUEST
+    statusCode: HttpStatusCodes.NOT_IMPLEMENTED
   },
   MISSING_SERVICE_FUNCTION_ARGUMENT: {
     errorCode: '10',
     message: 'Missing service function argument',
-    statusCode: HttpStatusCodes.BAD_REQUEST
+    statusCode: HttpStatusCodes.NOT_ACCEPTABLE
   },
   REMOTE_SERVICE_FUNCTION_CALL_NOT_ALLOWED: {
     errorCode: '11',
     message: 'Remote service function call not allowed',
-    statusCode: HttpStatusCodes.BAD_REQUEST
+    statusCode: HttpStatusCodes.FORBIDDEN
   },
   TOO_MANY_SERVICE_FUNCTIONS_CALLED: {
     errorCode: '12',
     errorMessage: 'Too many service functions called',
-    statusCode: HttpStatusCodes.BAD_REQUEST
+    statusCode: HttpStatusCodes.TOO_MANY_REQUESTS
   },
   REMOTE_SERVICE_FUNCTION_CALL_NOT_ALLOWED_INSIDE_TRANSACTION: {
     errorCode: '13',
@@ -76,11 +76,16 @@ export const BACKK_ERRORS = {
   HTTP_METHOD_MUST_BE_POST: {
     errorCode: '15',
     message: 'Invalid HTTP method. HTTP method must be POST',
-    statusCode: HttpStatusCodes.BAD_REQUEST
+    statusCode: HttpStatusCodes.METHOD_NOT_ALLOWED
   },
   REQUEST_IS_TOO_LONG: {
     errorCode: '16',
     message: 'Request is too long',
-    statusCode: HttpStatusCodes.BAD_REQUEST
-  }
+    statusCode: HttpStatusCodes.PAYLOAD_TOO_LARGE
+  },
+  USER_NOT_AUTHENTICATED: {
+    errorCode: '17',
+    message: 'User is not authenticated',
+    statusCode: HttpStatusCodes.UNAUTHORIZED
+  },
 };

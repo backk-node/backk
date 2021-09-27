@@ -12,6 +12,7 @@ import getNestedClasses from '../metadata/getNestedClasses';
 import AbstractDataStore from '../datastore/AbstractDataStore';
 import log, { Severity } from '../observability/logging/log';
 import { BACKK_ERRORS } from '../errors/backkErrors';
+import writeOpenApiSpecFile from "../openapi/writeOpenApiSpecFile";
 
 export interface MicroserviceInitOptions {
   generatePostmanTestFile?: boolean;
@@ -134,8 +135,9 @@ export default function initializeMicroservice(
     if (process.env.NODE_ENV === 'development' && (microserviceInitOptions?.generatePostmanTestFile ?? true)) {
       writeTestsPostmanCollectionExportFile(microservice, servicesMetadata);
     }
+
     if (process.env.NODE_ENV === 'development' && (microserviceInitOptions?.generatePostmanApiFile ?? true)) {
-      writeApiPostmanCollectionExportFile(microservice, servicesMetadata);
+      writeOpenApiSpecFile(microservice, servicesMetadata);
     }
 
     const serviceNames = Object.entries(microservice)

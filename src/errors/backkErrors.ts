@@ -1,4 +1,4 @@
-import { HttpStatusCodes } from '../constants/constants';
+import { HttpStatusCodes } from "../constants/constants";
 
 export const BACKK_ERRORS = {
   ENTITY_VERSION_MISMATCH: {
@@ -60,7 +60,7 @@ export const BACKK_ERRORS = {
   },
   TOO_MANY_SERVICE_FUNCTIONS_CALLED: {
     errorCode: '12',
-    errorMessage: 'Too many service functions called',
+    message: 'Too many service functions called',
     statusCode: HttpStatusCodes.TOO_MANY_REQUESTS
   },
   REMOTE_SERVICE_FUNCTION_CALL_NOT_ALLOWED_INSIDE_TRANSACTION: {
@@ -87,5 +87,5 @@ export const BACKK_ERRORS = {
     errorCode: '17',
     message: 'User is not authenticated',
     statusCode: HttpStatusCodes.UNAUTHORIZED
-  },
+  }
 };

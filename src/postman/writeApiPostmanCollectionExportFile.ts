@@ -134,7 +134,7 @@ export default function writeApiPostmanCollectionExportFile<T>(
   }
 
   writeFileSync(
-    process.cwd() + '/postman/api_collection.json',
+    process.cwd() + '/postman/apiCollection.json',
     JSON.stringify(postmanMetadata, null, 4)
   );
 }

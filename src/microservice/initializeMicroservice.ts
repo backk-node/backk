@@ -15,8 +15,8 @@ import { BACKK_ERRORS } from '../errors/backkErrors';
 import writeOpenApiSpecFile from "../openapi/writeOpenApiSpecFile";
 
 export interface MicroserviceInitOptions {
-  generatePostmanTestFile?: boolean;
-  generatePostmanApiFile?: boolean;
+  generatePostmanIntegrationTestsFile?: boolean;
+  generateApiSpecFiles?: boolean;
 }
 
 export default function initializeMicroservice(
@@ -132,12 +132,13 @@ export default function initializeMicroservice(
       genericErrors: BACKK_ERRORS
     };
 
-    if (process.env.NODE_ENV === 'development' && (microserviceInitOptions?.generatePostmanTestFile ?? true)) {
+    if (process.env.NODE_ENV !== 'production' && (microserviceInitOptions?.generatePostmanIntegrationTestsFile ?? true)) {
       writeTestsPostmanCollectionExportFile(microservice, servicesMetadata);
     }
 
-    if (process.env.NODE_ENV === 'development' && (microserviceInitOptions?.generatePostmanApiFile ?? true)) {
+    if (process.env.NODE_ENV !== 'production' && (microserviceInitOptions?.generateApiSpecFiles ?? true)) {
       writeOpenApiSpecFile(microservice, servicesMetadata);
+      writeApiPostmanCollectionExportFile(microservice, servicesMetadata)
     }
 
     const serviceNames = Object.entries(microservice)

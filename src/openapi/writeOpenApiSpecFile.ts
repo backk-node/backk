@@ -335,11 +335,11 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
           ].reduce((pattern: string | undefined, validation: string) => {
             if (validation.startsWith('lengthAndMatches(')) {
               const [, , patternStr, ...rest] = validation.split(',');
-              return (patternStr + rest.join(',')).slice(2, -2);
+              return (patternStr + (rest.length > 0 ? ',' + rest.join(',') : '')).slice(2, -2);
             }
             if (validation.startsWith('maxLengthAndMatches(')) {
               const [, patternStr, ...rest] = validation.split(',');
-              return (patternStr + rest.join(',')).slice(2, -2);
+              return (patternStr + (rest.length > 0 ? ',' + rest.join(',') : '')).slice(2, -2);
             }
             return pattern;
           }, undefined);

@@ -344,7 +344,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             }
             if (validation.startsWith('maxLengthAndMatches(')) {
               const [, patternStart, ...rest] = validation.split(',');
-              const patternStr = (patternStart + (rest.length > 0 ? ',' + rest.join(',') : '')).slice(2, -2);
+              const patternStr = (patternStart + (rest.length > 0 ? ',' + rest.join(',') : ''))
               return patternStr.endsWith(', { each: })')
                 ? patternStr.slice(2, -', { each: })'.length)
                 : patternStr.slice(2, -2);

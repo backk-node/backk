@@ -38,6 +38,7 @@ import ReadinessCheckService from '../service/ReadinessCheckService';
 import StartupCheckService from '../service/startup/StartupCheckService';
 import throwIf from '../utils/exception/throwIf';
 import { getDefaultOrThrowExceptionInProduction } from '../utils/exception/getDefaultOrThrowExceptionInProduction';
+import { getOpenApiSpec } from "../openapi/writeOpenApiSpecFile";
 
 export interface ServiceFunctionExecutionOptions {
   isMetadataServiceEnabled?: boolean;
@@ -167,9 +168,21 @@ export default async function tryExecuteServiceMethod(
       }
     }
 
-    if (serviceFunctionName === 'metadataService.getServicesMetadata') {
+    if (serviceFunctionName === 'metadataService.getOpenApiSpec') {
       if (!options || options.isMetadataServiceEnabled === undefined || options.isMetadataServiceEnabled) {
-        resp.writeHead(200, { 'Content-Type': 'application/json' });
+        resp.writeHead(HttpStatusCodes.SUCCESS, { 'Content-Type': 'application/json' });
+        resp.end(JSON.stringify(getOpenApiSpec(microservice, microservice.publicServicesMetadata)));
+        return;
+      } else {
+        throw createBackkErrorFromErrorCodeMessageAndStatus({
+          ...BACKK_ERRORS.UNKNOWN_SERVICE,
+          message: BACKK_ERRORS.UNKNOWN_SERVICE.message + serviceName
+        });
+      }
+    }
+    else if (serviceFunctionName === 'metadataService.getServicesMetadata') {
+      if (!options || options.isMetadataServiceEnabled === undefined || options.isMetadataServiceEnabled) {
+        resp.writeHead(HttpStatusCodes.SUCCESS, { 'Content-Type': 'application/json' });
         resp.end(JSON.stringify(microservice.publicServicesMetadata));
         return;
       } else {

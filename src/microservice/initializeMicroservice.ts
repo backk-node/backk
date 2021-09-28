@@ -132,11 +132,11 @@ export default function initializeMicroservice(
       genericErrors: BACKK_ERRORS
     };
 
-    if (process.env.NODE_ENV !== 'production' && (microserviceInitOptions?.generatePostmanIntegrationTestsFile ?? true)) {
+    if (process.env.NODE_ENV === 'development' && (microserviceInitOptions?.generatePostmanIntegrationTestsFile ?? true)) {
       writeTestsPostmanCollectionExportFile(microservice, servicesMetadata);
     }
 
-    if (process.env.NODE_ENV !== 'production' && (microserviceInitOptions?.generateApiSpecFiles ?? true)) {
+    if (process.env.NODE_ENV === 'development' && (microserviceInitOptions?.generateApiSpecFiles ?? true)) {
       writeOpenApiSpecFile(microservice, servicesMetadata);
       writeApiPostmanCollectionExportFile(microservice, servicesMetadata)
     }

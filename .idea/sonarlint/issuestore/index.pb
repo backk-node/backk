@@ -29,8 +29,6 @@ d
 4src/decorators/service/function/AllowForUserRoles.ts,7/5/754251d4fed56a1d69dd227e152edfcecc5379ca
 Y
 )src/decorators/service/function/Create.ts,1/1/110d1806f8140a9e90b4a8025c22d82218ae2069
-Z
-*src/decorators/service/function/CronJob.ts,a/8/a88bb6510ffce012c9290828e536a4fcac1de31e
 Y
 )src/decorators/service/function/Delete.ts,7/a/7a34de9e8da4d29ad3b0c44eb49cad3bee2865ce
 [

@@ -622,6 +622,19 @@ export default function writeTestsPostmanCollectionExportFile<T>(
           }
         }
       },
+      {
+        name: 'metadataService.getOpenApiSpec',
+        request: {
+          method: 'POST',
+          url: {
+            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/metadataService.getOpenApiSpec`,
+            protocol: 'http',
+            host: ['localhost'],
+            port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,
+            path: ['metadataService.getOpenApiSpec']
+          }
+        }
+      },
       ...itemGroups
     ]
   };

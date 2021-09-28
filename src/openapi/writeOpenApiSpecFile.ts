@@ -336,12 +336,18 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             propertyName
           ].reduce((pattern: string | undefined, validation: string) => {
             if (validation.startsWith('lengthAndMatches(')) {
-              const [, , patternStr, ...rest] = validation.split(',');
-              return (patternStr + (rest.length > 0 ? ',' + rest.join(',') : '')).slice(2, -2);
+              const [, , patternStart, ...rest] = validation.split(',');
+              const patternStr = patternStart + (rest.length > 0 ? ',' + rest.join(',') : '');
+              return patternStr.endsWith(', { each: })')
+                ? patternStr.slice(2, -', { each: })'.length)
+                : patternStr.slice(2, -2);
             }
             if (validation.startsWith('maxLengthAndMatches(')) {
-              const [, patternStr, ...rest] = validation.split(',');
-              return (patternStr + (rest.length > 0 ? ',' + rest.join(',') : '')).slice(2, -2);
+              const [, patternStart, ...rest] = validation.split(',');
+              const patternStr = (patternStart + (rest.length > 0 ? ',' + rest.join(',') : '')).slice(2, -2);
+              return patternStr.endsWith(', { each: })')
+                ? patternStr.slice(2, -', { each: })'.length)
+                : patternStr.slice(2, -2);
             }
             return pattern;
           }, undefined);
@@ -354,6 +360,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
                   !validation.startsWith('isString(') &&
                   !validation.startsWith('isStringOrObjectId(') &&
                   !validation.startsWith('isAnyString(') &&
+                  !validation.startsWith('isArray') &&
                   validation.startsWith('is')
                 ) {
                   return validation;
@@ -367,8 +374,8 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
           const minItems: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
           ]?.reduce((minItems: number | undefined, validation: string) => {
-            if (validation.startsWith('minArraySize(')) {
-              const valueStr = validation.slice('minArraySize('.length, -1);
+            if (validation.startsWith('arrayMinSize(')) {
+              const valueStr = validation.slice('arrayMinSize('.length, -1);
               return parseInt(valueStr, 10);
             }
             return minItems;
@@ -377,8 +384,8 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
           const maxItems: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
           ]?.reduce((maxItems: number | undefined, validation: string) => {
-            if (validation.startsWith('maxArraySize(')) {
-              const valueStr = validation.slice('maxArraySize('.length, -1);
+            if (validation.startsWith('arrayMaxSize(')) {
+              const valueStr = validation.slice('arrayMaxSize('.length, -1);
               return parseInt(valueStr, 10);
             }
             return maxItems;
@@ -387,7 +394,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
           const uniqueItems: boolean | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
           ]?.reduce((uniqueItems: number | undefined, validation: string) => {
-            if (validation === 'arrayUnique') {
+            if (validation === 'arrayUnique()') {
               return true;
             }
             return uniqueItems;
@@ -436,20 +443,37 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             }
           }
 
+          if (isArrayType) {
+            (type as any).items = {
+              ...type.items,
+              ...(minimum === undefined ? {} : { minimum }),
+              ...(maximum === undefined ? {} : { maximum }),
+              ...(multipleOf === undefined ? {} : { multipleOf }),
+              ...(minLength === undefined ? {} : { minLength }),
+              ...(maxLength === undefined ? {} : { maxLength }),
+              ...(propertyTypeName.startsWith('Date') ? { format: 'date-time' } : {}),
+              ...(propertyName.toLowerCase().includes('password') ? { format: 'password ' } : {}),
+              ...(format === undefined ? {} : { format }),
+              ...(pattern === undefined ? {} : { pattern })
+            };
+          }
+
           const propertyDocumentation = (serviceMetadata.typesDocumentation as any)[typeName]?.[propertyName];
           properties[propertyName] = {
             ...(propertyDocumentation ? { description: propertyDocumentation } : {}),
             ...type,
-            ...(minimum === undefined ? {} : { minimum }),
-            ...(maximum === undefined ? {} : { maximum }),
-            ...(multipleOf === undefined ? {} : { multipleOf }),
-            ...(minLength === undefined ? {} : { minLength }),
-            ...(maxLength === undefined ? {} : { maxLength }),
+            ...(minimum === undefined && !isArrayType ? {} : { minimum }),
+            ...(maximum === undefined && !isArrayType ? {} : { maximum }),
+            ...(multipleOf === undefined && !isArrayType ? {} : { multipleOf }),
+            ...(minLength === undefined && !isArrayType ? {} : { minLength }),
+            ...(maxLength === undefined && !isArrayType ? {} : { maxLength }),
             ...(isNullableType ? { nullable: isNullableType } : {}),
-            ...(propertyTypeName.startsWith('Date') ? { format: 'date-time' } : {}),
-            ...(propertyName.toLowerCase().includes('password') ? { format: 'password ' } : {}),
-            ...(format === undefined ? {} : { format }),
-            ...(pattern === undefined ? {} : { pattern }),
+            ...(propertyTypeName.startsWith('Date') && !isArrayType ? { format: 'date-time' } : {}),
+            ...(propertyName.toLowerCase().includes('password') && !isArrayType
+              ? { format: 'password ' }
+              : {}),
+            ...(format === undefined && !isArrayType ? {} : { format }),
+            ...(pattern === undefined && !isArrayType ? {} : { pattern }),
             ...(minItems === undefined ? {} : { minItems }),
             ...(maxItems === undefined ? {} : { maxItems }),
             ...(uniqueItems === undefined ? {} : { uniqueItems }),

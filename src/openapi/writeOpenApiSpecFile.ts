@@ -14,8 +14,8 @@ import getServiceFunctionTestArgument from '../postman/getServiceFunctionTestArg
 import getServiceFunctionExampleReturnValue from '../postman/getServiceFunctionExampleReturnValue';
 import { ErrorDef } from '../datastore/hooks/EntityPreHook';
 import LivenessCheckService from '../service/LivenessCheckService';
-import ReadinessCheckService from "../service/ReadinessCheckService";
-import StartupCheckService from "../service/startup/StartupCheckService";
+import ReadinessCheckService from '../service/ReadinessCheckService';
+import StartupCheckService from '../service/startup/StartupCheckService';
 
 function getErrorContent(errorDef: ErrorDef) {
   return {
@@ -150,7 +150,9 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
       ) {
         commonErrorMap[HttpStatusCodes.UNAUTHORIZED] = {
           description:
-            BACKK_ERRORS.USER_NOT_AUTHENTICATED.errorCode + ': ' + BACKK_ERRORS.USER_NOT_AUTHENTICATED.message,
+            BACKK_ERRORS.USER_NOT_AUTHENTICATED.errorCode +
+            ': ' +
+            BACKK_ERRORS.USER_NOT_AUTHENTICATED.message,
           ...getErrorContent(BACKK_ERRORS.USER_NOT_AUTHENTICATED)
         };
 

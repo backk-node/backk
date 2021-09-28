@@ -10,7 +10,6 @@ import isUpdateFunction from '../service/crudentity/utils/isUpdateFunction';
 import { BACKK_ERRORS } from '../errors/backkErrors';
 import isReadFunction from '../service/crudentity/utils/isReadFunction';
 import isEntityTypeName from '../utils/type/isEntityTypeName';
-import isEnumTypeName from '../utils/type/isEnumTypeName';
 import getServiceFunctionTestArgument from '../postman/getServiceFunctionTestArgument';
 import getServiceFunctionExampleReturnValue from '../postman/getServiceFunctionExampleReturnValue';
 import { ErrorDef } from '../datastore/hooks/EntityPreHook';
@@ -413,20 +412,20 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
           properties[propertyName] = {
             description: (serviceMetadata.typesDocumentation as any)[typeName]?.[propertyName],
             ...type,
-            minimum,
-            maximum,
-            multipleOf,
-            minLength,
-            maxLength,
-            nullable: isNullableType,
+            ...(minimum === undefined ? {} : { minimum }),
+            ...(maximum === undefined ? {} : { maximum }),
+            ...(multipleOf === undefined ? {} : { multipleOf }),
+            ...(minLength === undefined ? {} : { minLength }),
+            ...(maxLength === undefined ? {} : { maxLength }),
+            ...(isNullableType ? { nullable: isNullableType } : {}),
             ...(propertyTypeName.startsWith('Date') ? { format: 'date-time' } : {}),
             ...(propertyName.toLowerCase().includes('password') ? { format: 'password ' } : {}),
-            format,
-            pattern,
-            minItems,
-            maxItems,
-            uniqueItems,
-            readonly
+            ...(format === undefined ? {} : { format }),
+            ...(pattern === undefined ? {} : { pattern }),
+            ...(minItems === undefined ? {} : { minItems }),
+            ...(maxItems=== undefined ? {} : { maxItems }),
+            ...(uniqueItems === undefined ? {} : { uniqueItems }),
+            ...(readonly === undefined ? {} : { readonly })
           };
 
           return properties;
@@ -452,20 +451,26 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
       title: appName + ' API',
       description: process.env.MICROSERVICE_DESCRIPTION ?? '',
       version: process.env.npm_package_version,
-      termsOfService: process.env.API_TERMS_OF_SERVICE_URL,
+      ...(process.env.API_TERMS_OF_SERVICE_URL
+        ? { termsOfService: process.env.API_TERMS_OF_SERVICE_URL }
+        : {}),
       contact: {
-        name: process.env.API_CONTACT_NAME,
-        email: process.env.API_CONTACT_EMAIL,
-        url: process.env.API_CONTACT_URL
+        ...(process.env.API_CONTACT_NAME ? { name: process.env.API_CONTACT_NAME } : {}),
+        ...(process.env.API_CONTACT_EMAIL ? { email: process.env.API_CONTACT_EMAIL } : {}),
+        ...(process.env.API_CONTACT_URL ? { url: process.env.API_CONTACT_URL } : {})
       },
       license: {
-        name: process.env.API_LICENSE_NAME,
-        url: process.env.API_LICENSE_URL
+        ...(process.env.API_LICENSE_NAME ? { name: process.env.API_LICENSE_NAME } : {}),
+        ...(process.env.API_LICENSE_URL ? { url: process.env.API_LICENSE_URL } : {})
       },
-      externalDocs: {
-        description: 'Find more about ' + appName + ' API',
-        url: process.env.API_EXTERNAL_DOCS_URL
-      }
+      ...(process.env.API_EXTERNAL_DOCS_URL
+        ? {
+            externalDocs: {
+              description: 'Find more about ' + appName + ' API',
+              url: process.env.API_EXTERNAL_DOCS_URL
+            }
+          }
+        : {})
     },
     servers: [
       process.env.NODE_ENV === 'development'

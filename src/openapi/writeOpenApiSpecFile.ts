@@ -230,7 +230,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             propertyTypeName
           );
 
-          if (isOptionalType) {
+          if (!isOptionalType) {
             required.push(propertyName);
           }
 
@@ -403,14 +403,15 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             }
           } else {
             if (isArrayType) {
-              type = { type: 'array', items: { type: propertyTypeName } };
+              type = { type: 'array', items: { type: baseTypeName } };
             } else {
-              type = { type: propertyTypeName };
+              type = { type: baseTypeName };
             }
           }
 
+          const propertyDocumentation = (serviceMetadata.typesDocumentation as any)[typeName]?.[propertyName];
           properties[propertyName] = {
-            description: (serviceMetadata.typesDocumentation as any)[typeName]?.[propertyName],
+            ...(propertyDocumentation ? { description: propertyDocumentation } : {}),
             ...type,
             ...(minimum === undefined ? {} : { minimum }),
             ...(maximum === undefined ? {} : { maximum }),
@@ -423,7 +424,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             ...(format === undefined ? {} : { format }),
             ...(pattern === undefined ? {} : { pattern }),
             ...(minItems === undefined ? {} : { minItems }),
-            ...(maxItems=== undefined ? {} : { maxItems }),
+            ...(maxItems === undefined ? {} : { maxItems }),
             ...(uniqueItems === undefined ? {} : { uniqueItems }),
             ...(readonly === undefined ? {} : { readonly })
           };

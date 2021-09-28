@@ -317,10 +317,10 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             propertyName
           ].reduce((pattern: string | undefined, validation: string) => {
             if (validation.startsWith('lengthAndMatches(')) {
-              return validation.split(',')[3].slice(1, -2);
+              return validation.split(',')[2].slice(1, -2);
             }
             if (validation.startsWith('maxLengthAndMatches(')) {
-              return validation.split(',')[2].slice(1, -2);
+              return validation.split(',')[1].slice(1, -2);
             }
             return pattern;
           }, undefined);

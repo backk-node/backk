@@ -30,7 +30,7 @@ function getErrorContent(errorDef: ErrorDef) {
 
 export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMetadata[]) {
   const paths: { [path: string]: object } = {};
-  let schemas: any;
+  let schemas: any = {};
 
   servicesMetadata.forEach((serviceMetadata: ServiceMetadata) => {
     serviceMetadata.functions.forEach((functionMetadata: FunctionMetadata) => {

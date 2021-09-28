@@ -266,8 +266,6 @@ e
 5src/decorators/typeproperty/IsCreditCardExpiration.ts,e/5/e505e6e1c0c4c2019ec4b55e47e6e0cc0a29e82e
 k
 ;src/decorators/typeproperty/IsCreditCardVerificationCode.ts,c/f/cfa4d7f3e566256b3a42c0d49988e587428de778
-V
-&src/decorators/typeproperty/IsOneOf.ts,2/7/273bd9233581c63410b2941a80a089ee6d45819b
 [
 +src/decorators/typeproperty/IsPostalCode.ts,4/c/4c82f6a832e3d724bfd3cc34530ecb3c2ed2a3be
 _

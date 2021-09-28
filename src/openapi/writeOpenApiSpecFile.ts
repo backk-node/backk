@@ -13,13 +13,16 @@ import isEntityTypeName from '../utils/type/isEntityTypeName';
 import getServiceFunctionTestArgument from '../postman/getServiceFunctionTestArgument';
 import getServiceFunctionExampleReturnValue from '../postman/getServiceFunctionExampleReturnValue';
 import { ErrorDef } from '../datastore/hooks/EntityPreHook';
+import LivenessCheckService from '../service/LivenessCheckService';
+import ReadinessCheckService from "../service/ReadinessCheckService";
+import StartupCheckService from "../service/startup/StartupCheckService";
 
 function getErrorContent(errorDef: ErrorDef) {
   return {
     content: {
       'application/json': {
         schema: {
-          $ref: '#/components/schemas/Error'
+          $ref: '#/components/schemas/ErrorResponse'
         },
         example: errorDef
       }
@@ -39,7 +42,15 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
       if (
         serviceFunctionAnnotationContainer.hasOnStartUp(ServiceClass, functionMetadata.functionName) ||
-        serviceFunctionAnnotationContainer.getServiceFunctionNameToCronScheduleMap()[serviceFunctionName]
+        serviceFunctionAnnotationContainer.getServiceFunctionNameToCronScheduleMap()[serviceFunctionName] ||
+        serviceFunctionAnnotationContainer.isServiceFunctionAllowedForClusterInternalUse(
+          ServiceClass,
+          functionMetadata.functionName
+        ) ||
+        serviceFunctionAnnotationContainer.isServiceFunctionAllowedForServiceInternalUse(
+          ServiceClass,
+          functionMetadata.functionName
+        )
       ) {
         return;
       }
@@ -53,7 +64,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
         false
       );
 
-      const { baseTypeName, isArrayType } = getTypeInfoForTypeName(functionMetadata.returnValueType);
+      const { baseTypeName, isArrayType, isNull } = getTypeInfoForTypeName(functionMetadata.returnValueType);
       const path = '/' + serviceMetadata.serviceName + '.' + functionMetadata.functionName;
 
       const responseExample = getServiceFunctionExampleReturnValue(
@@ -124,57 +135,64 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
         };
       }
 
-      if (functionMetadata.argType !== 'void') {
+      if (functionMetadata.argType !== undefined) {
         commonErrorMap[HttpStatusCodes.BAD_REQUEST] = {
           description: BACKK_ERRORS.INVALID_ARGUMENT.errorCode + ': ' + BACKK_ERRORS.INVALID_ARGUMENT.message,
           ...getErrorContent(BACKK_ERRORS.INVALID_ARGUMENT)
         };
       }
 
-      commonErrorMap[HttpStatusCodes.FORBIDDEN] = {
-        description:
-          BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED.errorCode +
-          ': ' +
-          BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED.message,
-        ...getErrorContent(BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED)
-      };
+      if (
+        serviceMetadata.serviceName !== 'metadataService' &&
+        !(ServiceClass instanceof LivenessCheckService) &&
+        !(ServiceClass instanceof ReadinessCheckService) &&
+        !(ServiceClass instanceof StartupCheckService)
+      ) {
+        commonErrorMap[HttpStatusCodes.UNAUTHORIZED] = {
+          description:
+            BACKK_ERRORS.USER_NOT_AUTHENTICATED.errorCode + ': ' + BACKK_ERRORS.USER_NOT_AUTHENTICATED.message,
+          ...getErrorContent(BACKK_ERRORS.USER_NOT_AUTHENTICATED)
+        };
+        
+        commonErrorMap[HttpStatusCodes.FORBIDDEN] = {
+          description:
+            BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED.errorCode +
+            ': ' +
+            BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED.message,
+          ...getErrorContent(BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED)
+        };
+      }
 
-      commonErrorMap[HttpStatusCodes.UNPROCESSABLE_ENTITY] = {
-        description:
-          BACKK_ERRORS.MAX_ENTITY_COUNT_REACHED.errorCode +
-          ': ' +
-          BACKK_ERRORS.MAX_ENTITY_COUNT_REACHED.message,
-        ...getErrorContent(BACKK_ERRORS.MAX_ENTITY_COUNT_REACHED)
-      };
+      if (functionMetadata.argType !== undefined) {
+        commonErrorMap[HttpStatusCodes.UNPROCESSABLE_ENTITY] = {
+          description:
+            BACKK_ERRORS.MAX_ENTITY_COUNT_REACHED.errorCode +
+            ': ' +
+            BACKK_ERRORS.MAX_ENTITY_COUNT_REACHED.message,
+          ...getErrorContent(BACKK_ERRORS.MAX_ENTITY_COUNT_REACHED)
+        };
 
-      commonErrorMap[HttpStatusCodes.NOT_ACCEPTABLE] = {
-        description:
-          BACKK_ERRORS.MISSING_SERVICE_FUNCTION_ARGUMENT.errorCode +
-          ': ' +
-          BACKK_ERRORS.MISSING_SERVICE_FUNCTION_ARGUMENT.message,
-        ...getErrorContent(BACKK_ERRORS.MISSING_SERVICE_FUNCTION_ARGUMENT)
-      };
+        commonErrorMap[HttpStatusCodes.NOT_ACCEPTABLE] = {
+          description:
+            BACKK_ERRORS.MISSING_SERVICE_FUNCTION_ARGUMENT.errorCode +
+            ': ' +
+            BACKK_ERRORS.MISSING_SERVICE_FUNCTION_ARGUMENT.message,
+          ...getErrorContent(BACKK_ERRORS.MISSING_SERVICE_FUNCTION_ARGUMENT)
+        };
 
-      commonErrorMap[HttpStatusCodes.PAYLOAD_TOO_LARGE] = {
-        description:
-          BACKK_ERRORS.REQUEST_IS_TOO_LONG.errorCode + ': ' + BACKK_ERRORS.REQUEST_IS_TOO_LONG.message,
-        ...getErrorContent(BACKK_ERRORS.REQUEST_IS_TOO_LONG)
-      };
-
-      commonErrorMap[HttpStatusCodes.UNAUTHORIZED] = {
-        description:
-          BACKK_ERRORS.USER_NOT_AUTHENTICATED.errorCode + ': ' + BACKK_ERRORS.USER_NOT_AUTHENTICATED.message,
-        ...getErrorContent(BACKK_ERRORS.USER_NOT_AUTHENTICATED)
-      };
+        commonErrorMap[HttpStatusCodes.PAYLOAD_TOO_LARGE] = {
+          description:
+            BACKK_ERRORS.REQUEST_IS_TOO_LONG.errorCode + ': ' + BACKK_ERRORS.REQUEST_IS_TOO_LONG.message,
+          ...getErrorContent(BACKK_ERRORS.REQUEST_IS_TOO_LONG)
+        };
+      }
 
       paths[path] = {
-        summary: serviceMetadata.serviceName,
-        description: serviceMetadata.serviceDocumentation,
         post: {
-          summary: functionMetadata.functionName,
-          description: functionMetadata.documentation,
+          summary: serviceMetadata.serviceName + '.' + functionMetadata.functionName,
+          ...(functionMetadata.documentation ? { description: functionMetadata.documentation } : {}),
           tags: [serviceMetadata.serviceName],
-          ...(functionMetadata.argType === 'void'
+          ...(functionMetadata.argType === undefined
             ? {}
             : {
                 requestBody: {
@@ -193,7 +211,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
           responses: {
             '200': {
               description: 'Successful operation',
-              ...(baseTypeName === 'void'
+              ...(isNull
                 ? {}
                 : {
                     content: {
@@ -316,10 +334,11 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             propertyName
           ].reduce((pattern: string | undefined, validation: string) => {
             if (validation.startsWith('lengthAndMatches(')) {
-              return validation.split(',')[2].slice(1, -2);
+              const [, , patternStr, ...rest] = validation.split(',');
+              return (patternStr + rest.join(',')).slice(2, -2);
             }
             if (validation.startsWith('maxLengthAndMatches(')) {
-              return validation.split(',')[1].slice(1, -2);
+              return validation.split(',')[1].slice(2, -2);
             }
             return pattern;
           }, undefined);
@@ -329,14 +348,12 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             format = (serviceMetadata.validations as any)[typeName]?.[propertyName]?.reduce(
               (format: string | undefined, validation: string) => {
                 if (
-                  validation !== 'isString()' &&
-                  validation !== 'isStringOrObjectId()' &&
-                  validation !== 'isAnyString()' &&
+                  !validation.startsWith('isString(') &&
+                  !validation.startsWith('isStringOrObjectId(') &&
+                  !validation.startsWith('isAnyString(') &&
                   validation.startsWith('is')
                 ) {
-                  return validation.endsWith('()')
-                    ? validation.slice(2, -2).toLowerCase()
-                    : validation.slice(2).toLowerCase();
+                  return validation;
                 }
                 return format;
               },
@@ -381,8 +398,15 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
           let type;
           if (baseTypeName[0] === '(') {
-            const enumValues = baseTypeName.slice(1, -1).split('|');
-            const enumType = enumValues[0].startsWith("'") ? 'string' : 'number';
+            const enumValueStrs = baseTypeName.slice(1, -1).split('|');
+            const enumType = enumValueStrs[0].startsWith("'") ? 'string' : 'number';
+
+            let enumValues: string[] | number[];
+            if (enumType === 'number') {
+              enumValues = enumValueStrs.map((enumValueStr) => parseInt(enumValueStr, 10));
+            } else {
+              enumValues = enumValueStrs.map((enumValueStr) => enumValueStr.slice(1, -1));
+            }
 
             if (isArrayType) {
               type = { type: 'array', items: { type: enumType, enum: enumValues } };
@@ -391,11 +415,11 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             }
           } else if (isEntityTypeName(baseTypeName)) {
             if (isArrayType) {
-              type = { type: 'array', items: { $ref: '#/components/schemas/' + propertyTypeName } };
+              type = { type: 'array', items: { $ref: '#/components/schemas/' + baseTypeName } };
             } else {
-              type = { $ref: '#/components/schemas/' + propertyTypeName };
+              type = { $ref: '#/components/schemas/' + baseTypeName };
             }
-          } else if (propertyTypeName.startsWith('Date')) {
+          } else if (baseTypeName === 'Date' || baseTypeName === 'bigint') {
             if (isArrayType) {
               type = { type: 'array', items: { type: 'string' } };
             } else {

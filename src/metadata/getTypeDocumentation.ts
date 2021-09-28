@@ -13,7 +13,7 @@ export default function getTypeDocumentation<T>(
     return typePropertyDocumentation
       ? {
         ...accumulatedTypeDocs,
-        [propertyName]: typePropertyDocumentation
+        [propertyName]: typePropertyDocumentation.trim()
       }
       : accumulatedTypeDocs;
   }, {});

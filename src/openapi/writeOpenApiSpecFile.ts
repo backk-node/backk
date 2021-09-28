@@ -153,7 +153,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             BACKK_ERRORS.USER_NOT_AUTHENTICATED.errorCode + ': ' + BACKK_ERRORS.USER_NOT_AUTHENTICATED.message,
           ...getErrorContent(BACKK_ERRORS.USER_NOT_AUTHENTICATED)
         };
-        
+
         commonErrorMap[HttpStatusCodes.FORBIDDEN] = {
           description:
             BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED.errorCode +
@@ -338,7 +338,8 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
               return (patternStr + rest.join(',')).slice(2, -2);
             }
             if (validation.startsWith('maxLengthAndMatches(')) {
-              return validation.split(',')[1].slice(2, -2);
+              const [, patternStr, ...rest] = validation.split(',');
+              return (patternStr + rest.join(',')).slice(2, -2);
             }
             return pattern;
           }, undefined);

@@ -36,7 +36,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
     serviceMetadata.functions.forEach((functionMetadata: FunctionMetadata) => {
       const ServiceClass = (microservice as any)[serviceMetadata.serviceName].constructor;
       const serviceFunctionName = `${ServiceClass.name.charAt(0).toLowerCase() +
-      ServiceClass.name.slice(1)}.${functionMetadata.functionName}`;
+        ServiceClass.name.slice(1)}.${functionMetadata.functionName}`;
 
       if (
         serviceFunctionAnnotationContainer.hasOnStartUp(ServiceClass, functionMetadata.functionName) ||
@@ -178,41 +178,41 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
           ...(functionMetadata.argType === 'void'
             ? {}
             : {
-              requestBody: {
-                description: functionMetadata.argType,
-                required: true,
-                content: {
-                  'application/json': {
-                    schema: {
-                      $ref: '#/components/schemas/' + functionMetadata.argType
-                    },
-                    example: requestExample
+                requestBody: {
+                  description: functionMetadata.argType,
+                  required: true,
+                  content: {
+                    'application/json': {
+                      schema: {
+                        $ref: '#/components/schemas/' + functionMetadata.argType
+                      },
+                      example: requestExample
+                    }
                   }
                 }
-              }
-            }),
+              }),
           responses: {
             '200': {
               description: 'Successful operation',
               ...(baseTypeName === 'void'
                 ? {}
                 : {
-                  content: {
-                    'application/json': {
-                      schema: {
-                        ...(isArrayType
-                          ? {
-                            type: 'array',
-                            items: {
-                              $ref: '#/components/schemas/' + baseTypeName
-                            }
-                          }
-                          : { $ref: '#/components/schemas/' + baseTypeName })
-                      },
-                      example: responseExample
+                    content: {
+                      'application/json': {
+                        schema: {
+                          ...(isArrayType
+                            ? {
+                                type: 'array',
+                                items: {
+                                  $ref: '#/components/schemas/' + baseTypeName
+                                }
+                              }
+                            : { $ref: '#/components/schemas/' + baseTypeName })
+                        },
+                        example: responseExample
+                      }
                     }
-                  }
-                })
+                  })
             },
             ...errorResponseMap,
             ...commonErrorMap
@@ -237,7 +237,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
           const minimum: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
-            ]?.reduce((minimum: number | undefined, validation: string) => {
+          ]?.reduce((minimum: number | undefined, validation: string) => {
             if (validation.startsWith('min(')) {
               const valueStr = validation.slice(4, -1);
               return propertyTypeName === 'integer' ? parseInt(valueStr, 10) : parseFloat(valueStr);
@@ -251,7 +251,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
           const maximum: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
-            ]?.reduce((maximum: number | undefined, validation: string) => {
+          ]?.reduce((maximum: number | undefined, validation: string) => {
             if (validation.startsWith('max(')) {
               const valueStr = validation.slice(4, -1);
               return propertyTypeName === 'integer' ? parseInt(valueStr, 10) : parseFloat(valueStr);
@@ -265,7 +265,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
           const multipleOf: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
-            ]?.reduce((multipleOf: number | undefined, validation: string) => {
+          ]?.reduce((multipleOf: number | undefined, validation: string) => {
             if (validation.startsWith('isDivisibleBy(')) {
               const valueStr = validation.slice('isDivisibleBy('.length, -1);
               return parseInt(valueStr, 10);
@@ -275,7 +275,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
           const minLength: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
-            ].reduce((minLength: number | undefined, validation: string) => {
+          ].reduce((minLength: number | undefined, validation: string) => {
             if (validation.startsWith('minLength(')) {
               const valueStr = validation.slice('minLength('.length, -1);
               return parseInt(valueStr, 10);
@@ -293,7 +293,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
           const maxLength: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
-            ].reduce((maxLength: number | undefined, validation: string) => {
+          ].reduce((maxLength: number | undefined, validation: string) => {
             if (validation.startsWith('maxLength(')) {
               const valueStr = validation.slice('maxLength('.length, -1);
               return parseInt(valueStr, 10);
@@ -315,7 +315,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
           const pattern: string | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
-            ].reduce((pattern: string | undefined, validation: string) => {
+          ].reduce((pattern: string | undefined, validation: string) => {
             if (validation.startsWith('lengthAndMatches(')) {
               return validation.split(',')[3].slice(1, -2);
             }
@@ -347,7 +347,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
           const minItems: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
-            ]?.reduce((minItems: number | undefined, validation: string) => {
+          ]?.reduce((minItems: number | undefined, validation: string) => {
             if (validation.startsWith('minArraySize(')) {
               const valueStr = validation.slice('minArraySize('.length, -1);
               return parseInt(valueStr, 10);
@@ -357,7 +357,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
           const maxItems: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
-            ]?.reduce((maxItems: number | undefined, validation: string) => {
+          ]?.reduce((maxItems: number | undefined, validation: string) => {
             if (validation.startsWith('maxArraySize(')) {
               const valueStr = validation.slice('maxArraySize('.length, -1);
               return parseInt(valueStr, 10);
@@ -367,7 +367,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
           const uniqueItems: boolean | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
-            ]?.reduce((uniqueItems: number | undefined, validation: string) => {
+          ]?.reduce((uniqueItems: number | undefined, validation: string) => {
             if (validation === 'arrayUnique') {
               return true;
             }
@@ -376,12 +376,9 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
           const readonly: boolean | undefined = (serviceMetadata.propertyModifiers as any)[typeName]?.[
             propertyName
-            ]?.reduce((readonly: boolean | undefined, propertyModifier: string) => {
-            if (propertyModifier.includes('readonly')) {
-              return true;
-            }
-            return uniqueItems;
-          }, undefined);
+          ]?.includes('readonly')
+            ? true
+            : undefined;
 
           let type;
           if (isEnumTypeName(baseTypeName)) {
@@ -470,15 +467,17 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
         url: process.env.API_EXTERNAL_DOCS_URL
       }
     },
-    servers: [ process.env.NODE_ENV === 'development' ?
-      {
-        url: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}`,
-        description: 'Local development server'
-      } : {
-        url: `https://${process.env.API_GW_FQDN}${process.env.API_GW_PATH}`,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        description: process.env.NODE_ENV!.toUpperCase() + process.env.NODE_ENV!.slice(1) + ' server'
-      }
+    servers: [
+      process.env.NODE_ENV === 'development'
+        ? {
+            url: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}`,
+            description: 'Local development server'
+          }
+        : {
+            url: `https://${process.env.API_GW_FQDN}${process.env.API_GW_PATH}`,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            description: process.env.NODE_ENV!.toUpperCase() + process.env.NODE_ENV!.slice(1) + ' server'
+          }
     ],
     components: {
       securitySchemes: {

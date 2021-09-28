@@ -235,7 +235,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             required.push(propertyName);
           }
 
-          const minimum: number | undefined = (serviceMetadata.validations as any)[typeName][
+          const minimum: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
             ]?.reduce((minimum: number | undefined, validation: string) => {
             if (validation.startsWith('min(')) {
@@ -249,7 +249,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             return minimum;
           }, undefined);
 
-          const maximum: number | undefined = (serviceMetadata.validations as any)[typeName][
+          const maximum: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
             ]?.reduce((maximum: number | undefined, validation: string) => {
             if (validation.startsWith('max(')) {
@@ -263,7 +263,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             return maximum;
           }, undefined);
 
-          const multipleOf: number | undefined = (serviceMetadata.validations as any)[typeName][
+          const multipleOf: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
             ]?.reduce((multipleOf: number | undefined, validation: string) => {
             if (validation.startsWith('isDivisibleBy(')) {
@@ -273,7 +273,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             return multipleOf;
           }, undefined);
 
-          const minLength: number | undefined = (serviceMetadata.validations as any)[typeName][
+          const minLength: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
             ].reduce((minLength: number | undefined, validation: string) => {
             if (validation.startsWith('minLength(')) {
@@ -291,7 +291,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             return minLength;
           }, undefined);
 
-          const maxLength: number | undefined = (serviceMetadata.validations as any)[typeName][
+          const maxLength: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
             ].reduce((maxLength: number | undefined, validation: string) => {
             if (validation.startsWith('maxLength(')) {
@@ -313,7 +313,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             return maxLength;
           }, undefined);
 
-          const pattern: string | undefined = (serviceMetadata.validations as any)[typeName][
+          const pattern: string | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
             ].reduce((pattern: string | undefined, validation: string) => {
             if (validation.startsWith('lengthAndMatches(')) {
@@ -327,7 +327,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
           let format: string | undefined;
           if (baseTypeName === 'string') {
-            format = (serviceMetadata.validations as any)[typeName][propertyName]?.reduce(
+            format = (serviceMetadata.validations as any)[typeName]?.[propertyName]?.reduce(
               (format: string | undefined, validation: string) => {
                 if (
                   validation !== 'isString()' &&
@@ -345,7 +345,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             );
           }
 
-          const minItems: number | undefined = (serviceMetadata.validations as any)[typeName][
+          const minItems: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
             ]?.reduce((minItems: number | undefined, validation: string) => {
             if (validation.startsWith('minArraySize(')) {
@@ -355,7 +355,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             return minItems;
           }, undefined);
 
-          const maxItems: number | undefined = (serviceMetadata.validations as any)[typeName][
+          const maxItems: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
             ]?.reduce((maxItems: number | undefined, validation: string) => {
             if (validation.startsWith('maxArraySize(')) {
@@ -365,7 +365,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             return maxItems;
           }, undefined);
 
-          const uniqueItems: boolean | undefined = (serviceMetadata.validations as any)[typeName][
+          const uniqueItems: boolean | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
             ]?.reduce((uniqueItems: number | undefined, validation: string) => {
             if (validation === 'arrayUnique') {
@@ -374,7 +374,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             return uniqueItems;
           }, undefined);
 
-          const readonly: boolean | undefined = (serviceMetadata.propertyModifiers as any)[typeName][
+          const readonly: boolean | undefined = (serviceMetadata.propertyModifiers as any)[typeName]?.[
             propertyName
             ]?.reduce((readonly: boolean | undefined, propertyModifier: string) => {
             if (propertyModifier.includes('readonly')) {
@@ -414,7 +414,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
           }
 
           properties[propertyName] = {
-            description: (serviceMetadata.typesDocumentation as any)?.[typeName][propertyName],
+            description: (serviceMetadata.typesDocumentation as any)[typeName]?.[propertyName],
             ...type,
             minimum,
             maximum,

@@ -381,7 +381,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             : undefined;
 
           let type;
-          if (isEnumTypeName(baseTypeName)) {
+          if (baseTypeName[0] === '(') {
             const enumValues = baseTypeName.slice(1, -1).split('|');
             const enumType = enumValues[0].startsWith("'") ? 'string' : 'number';
 

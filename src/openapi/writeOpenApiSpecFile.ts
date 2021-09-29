@@ -410,7 +410,6 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
           if (baseTypeName[0] === '(') {
             const enumValueStrs = baseTypeName.slice(1, -1).split('|');
             const enumType = enumValueStrs[0].startsWith("'") ? 'string' : 'number';
-
             let enumValues: string[] | number[];
             if (enumType === 'number') {
               enumValues = enumValueStrs.map((enumValueStr) => parseInt(enumValueStr, 10));

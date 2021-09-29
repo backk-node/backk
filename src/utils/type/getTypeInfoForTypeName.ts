@@ -49,11 +49,6 @@ export default function getTypeInfoForTypeName(typeName: string) {
     typeName = typeName.slice(6, -1);
   }
 
-  if (isArrayType && typeName.startsWith('(') && typeName.endsWith(')')) {
-    // noinspection AssignmentToFunctionParameterJS
-    typeName = typeName.slice(1, -1);
-  }
-
   let isNullableType = false;
   if (typeName.endsWith(' | null')) {
     isNullableType = true;

@@ -12,9 +12,6 @@ import isReadFunction from '../service/crudentity/utils/isReadFunction';
 import getServiceFunctionTestArgument from '../postman/getServiceFunctionTestArgument';
 import getServiceFunctionExampleReturnValue from '../postman/getServiceFunctionExampleReturnValue';
 import { ErrorDef } from '../datastore/hooks/EntityPreHook';
-import LivenessCheckService from '../service/LivenessCheckService';
-import ReadinessCheckService from '../service/ReadinessCheckService';
-import StartupCheckService from '../service/startup/StartupCheckService';
 
 function getErrorContent(errorDef: ErrorDef) {
   return {
@@ -34,23 +31,34 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
   let schemas: any = {};
 
   servicesMetadata.forEach((serviceMetadata: ServiceMetadata) => {
+
+    const cronJobFunctionArgNames = new Set<string>();
     serviceMetadata.functions.forEach((functionMetadata: FunctionMetadata) => {
       const ServiceClass = (microservice as any)[serviceMetadata.serviceName].constructor;
       const serviceFunctionName = `${ServiceClass.name.charAt(0).toLowerCase() +
         ServiceClass.name.slice(1)}.${functionMetadata.functionName}`;
 
+      if (serviceFunctionAnnotationContainer.getServiceFunctionNameToCronScheduleMap()[serviceFunctionName]) {
+          cronJobFunctionArgNames.add(functionMetadata.argType);
+      } else {
+        cronJobFunctionArgNames.delete(functionMetadata.argType);
+      }
+
       if (
         serviceFunctionAnnotationContainer.hasOnStartUp(ServiceClass, functionMetadata.functionName) ||
         serviceFunctionAnnotationContainer.getServiceFunctionNameToCronScheduleMap()[serviceFunctionName] ||
-        serviceFunctionAnnotationContainer.isServiceFunctionAllowedForClusterInternalUse(
-          ServiceClass,
-          functionMetadata.functionName
-        ) ||
         serviceFunctionAnnotationContainer.isServiceFunctionAllowedForServiceInternalUse(
           ServiceClass,
           functionMetadata.functionName
         )
       ) {
+        return;
+      }
+
+      if (process.env.NODE_ENV === 'production' && serviceFunctionAnnotationContainer.isServiceFunctionAllowedForClusterInternalUse(
+        ServiceClass,
+        functionMetadata.functionName
+      )) {
         return;
       }
 
@@ -242,7 +250,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
     schemas = Object.assign(
       schemas,
       Object.entries(serviceMetadata.publicTypes).reduce((schemas, [typeName, typeSpec]) => {
-        if (typeName === 'DbTableVersion') {
+        if (typeName === 'DbTableVersion' || cronJobFunctionArgNames.has(typeName)) {
           return schemas;
         }
 

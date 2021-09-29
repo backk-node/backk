@@ -399,7 +399,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             return uniqueItems;
           }, undefined);
 
-          const readonly: boolean | undefined = (serviceMetadata.propertyModifiers as any)[typeName]?.[
+          const readOnly: boolean | undefined = (serviceMetadata.propertyModifiers as any)[typeName]?.[
             propertyName
           ]?.includes('readonly')
             ? true
@@ -475,10 +475,10 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             ...(minItems === undefined ? {} : { minItems }),
             ...(maxItems === undefined ? {} : { maxItems }),
             ...(uniqueItems === undefined ? {} : { uniqueItems }),
-            ...(readonly === undefined ? {} : { readonly })
+            ...(readOnly === undefined ? {} : { readonly: readOnly })
           };
 
-          if (!isOptionalType && !readonly) {
+          if (!isOptionalType) {
             required.push(propertyName);
           }
 
@@ -508,15 +508,23 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
       ...(process.env.API_TERMS_OF_SERVICE_URL
         ? { termsOfService: process.env.API_TERMS_OF_SERVICE_URL }
         : {}),
-    ...(process.env.API_CONTACT_NAME ? { contact: {
-        ...(process.env.API_CONTACT_NAME ? { name: process.env.API_CONTACT_NAME } : {}),
-        ...(process.env.API_CONTACT_EMAIL ? { email: process.env.API_CONTACT_EMAIL } : {}),
-        ...(process.env.API_CONTACT_URL ? { url: process.env.API_CONTACT_URL } : {})
-      }} : {}),
-      license: {
-        ...(process.env.API_LICENSE_NAME ? { name: process.env.API_LICENSE_NAME } : {}),
-        ...(process.env.API_LICENSE_URL ? { url: process.env.API_LICENSE_URL } : {})
-      },
+      ...(process.env.API_CONTACT_NAME
+        ? {
+            contact: {
+              ...(process.env.API_CONTACT_NAME ? { name: process.env.API_CONTACT_NAME } : {}),
+              ...(process.env.API_CONTACT_EMAIL ? { email: process.env.API_CONTACT_EMAIL } : {}),
+              ...(process.env.API_CONTACT_URL ? { url: process.env.API_CONTACT_URL } : {})
+            }
+          }
+        : {}),
+      ...(process.env.API_LICENSE_NAME
+        ? {
+            license: {
+              ...(process.env.API_LICENSE_NAME ? { name: process.env.API_LICENSE_NAME } : {}),
+              ...(process.env.API_LICENSE_URL ? { url: process.env.API_LICENSE_URL } : {})
+            }
+          }
+        : {}),
       ...(process.env.API_EXTERNAL_DOCS_URL
         ? {
             externalDocs: {

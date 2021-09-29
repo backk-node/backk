@@ -242,16 +242,16 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
     schemas = Object.assign(
       schemas,
       Object.entries(serviceMetadata.publicTypes).reduce((schemas, [typeName, typeSpec]) => {
+        if (typeName === 'DbTableVersion') {
+          return schemas;
+        }
+
         const required: string[] = [];
 
         const properties = Object.entries(typeSpec).reduce((properties, [propertyName, propertyTypeName]) => {
           const { baseTypeName, isArrayType, isOptionalType, isNullableType } = getTypeInfoForTypeName(
             propertyTypeName
           );
-
-          if (!isOptionalType) {
-            required.push(propertyName);
-          }
 
           const minimum: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
@@ -478,6 +478,10 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             ...(readonly === undefined ? {} : { readonly })
           };
 
+          if (!isOptionalType && !readonly) {
+            required.push(propertyName);
+          }
+
           return properties;
         }, {} as { [key: string]: object });
 
@@ -496,7 +500,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
   const appName = cwd.split('/').reverse()[0];
 
   return {
-    openapi: '3.0.0',
+    openapi: '3.0.3',
     info: {
       title: appName + ' API',
       description: process.env.MICROSERVICE_DESCRIPTION ?? '',
@@ -504,11 +508,11 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
       ...(process.env.API_TERMS_OF_SERVICE_URL
         ? { termsOfService: process.env.API_TERMS_OF_SERVICE_URL }
         : {}),
-      contact: {
+    ...(process.env.API_CONTACT_NAME ? { contact: {
         ...(process.env.API_CONTACT_NAME ? { name: process.env.API_CONTACT_NAME } : {}),
         ...(process.env.API_CONTACT_EMAIL ? { email: process.env.API_CONTACT_EMAIL } : {}),
         ...(process.env.API_CONTACT_URL ? { url: process.env.API_CONTACT_URL } : {})
-      },
+      }} : {}),
       license: {
         ...(process.env.API_LICENSE_NAME ? { name: process.env.API_LICENSE_NAME } : {}),
         ...(process.env.API_LICENSE_URL ? { url: process.env.API_LICENSE_URL } : {})

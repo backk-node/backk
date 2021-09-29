@@ -475,7 +475,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             ...(minItems === undefined ? {} : { minItems }),
             ...(maxItems === undefined ? {} : { maxItems }),
             ...(uniqueItems === undefined ? {} : { uniqueItems }),
-            ...(readOnly === undefined ? {} : { readonly: readOnly })
+            ...(readOnly === undefined ? {} : { readOnly })
           };
 
           if (!isOptionalType) {

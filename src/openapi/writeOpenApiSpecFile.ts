@@ -424,7 +424,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
               type = { type: enumType, enum: enumValues };
             }
           } else if (baseTypeName[0] === baseTypeName[0].toUpperCase() &&
-            typeName[0] !== 'Date') {
+            typeName !== 'Date') {
             if (isArrayType) {
               type = { type: 'array', items: { $ref: '#/components/schemas/' + baseTypeName } };
             } else {

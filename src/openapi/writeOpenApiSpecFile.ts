@@ -9,7 +9,6 @@ import isCreateFunction from '../service/crudentity/utils/isCreateFunction';
 import isUpdateFunction from '../service/crudentity/utils/isUpdateFunction';
 import { BACKK_ERRORS } from '../errors/backkErrors';
 import isReadFunction from '../service/crudentity/utils/isReadFunction';
-import isEntityTypeName from '../utils/type/isEntityTypeName';
 import getServiceFunctionTestArgument from '../postman/getServiceFunctionTestArgument';
 import getServiceFunctionExampleReturnValue from '../postman/getServiceFunctionExampleReturnValue';
 import { ErrorDef } from '../datastore/hooks/EntityPreHook';
@@ -144,9 +143,9 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
       if (
         serviceMetadata.serviceName !== 'metadataService' &&
-        !(ServiceClass instanceof LivenessCheckService) &&
-        !(ServiceClass instanceof ReadinessCheckService) &&
-        !(ServiceClass instanceof StartupCheckService)
+        (microservice as any)[serviceMetadata.serviceName].getServiceType() !== 'LivenessCheckService' &&
+        (microservice as any)[serviceMetadata.serviceName].getServiceType() !== 'ReadinessCheckService' &&
+        (microservice as any)[serviceMetadata.serviceName].getServiceType() !== 'StartupCheckService'
       ) {
         commonErrorMap[HttpStatusCodes.UNAUTHORIZED] = {
           description:
@@ -344,7 +343,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             }
             if (validation.startsWith('maxLengthAndMatches(')) {
               const [, patternStart, ...rest] = validation.split(',');
-              const patternStr = (patternStart + (rest.length > 0 ? ',' + rest.join(',') : ''))
+              const patternStr = patternStart + (rest.length > 0 ? ',' + rest.join(',') : '');
               return patternStr.endsWith('/, { each: true })')
                 ? patternStr.slice(2, -'/, { each: true })'.length)
                 : patternStr.slice(2, -2);
@@ -422,8 +421,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             } else {
               type = { type: enumType, enum: enumValues };
             }
-          } else if (baseTypeName[0] === baseTypeName[0].toUpperCase() &&
-            baseTypeName !== 'Date') {
+          } else if (baseTypeName[0] === baseTypeName[0].toUpperCase() && baseTypeName !== 'Date') {
             if (isArrayType) {
               type = { type: 'array', items: { $ref: '#/components/schemas/' + baseTypeName } };
             } else {

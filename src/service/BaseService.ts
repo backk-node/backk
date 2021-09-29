@@ -44,6 +44,10 @@ export default class BaseService implements Service {
     }
   }
 
+  getServiceType(): string {
+    return '';
+  }
+
   /** @internal */
   getDataStore(): AbstractDataStore {
     return this.dataStore;

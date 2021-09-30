@@ -1,4 +1,4 @@
-import typeAnnotationContainer from './typePropertyAnnotationContainer';
+import typeAnnotationContainer from '../typePropertyAnnotationContainer';
 
 export default function Private() {
   // eslint-disable-next-line @typescript-eslint/ban-types

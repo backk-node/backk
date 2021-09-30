@@ -15,7 +15,6 @@ class TypePropertyAnnotationContainer {
   private readonly typePropertyNameToIsNotEncryptedMap: { [key: string]: boolean } = {};
   private readonly typePropertyNameToIsPrivateMap: { [key: string]: boolean } = {};
   private readonly typePropertyNameToIsManyToManyMap: { [key: string]: boolean } = {};
-  private readonly typePropertyNameToIsTransientMap: { [key: string]: boolean } = {};
   private readonly typePropertyNameToIsExternalIdMap: { [key: string]: boolean } = {};
   private readonly typePropertyNameToIsInternalMap: { [key: string]: boolean } = {};
   private readonly typePropertyNameToIsOneToManyMap: { [key: string]: boolean } = {};
@@ -23,6 +22,12 @@ class TypePropertyAnnotationContainer {
   private readonly typePropertyNameToRemoteServiceFetchSpecMap: { [key: string]: RemoteServiceFetchSpec } = {};
   private readonly typePropertyNameToIsNotUniqueMap: { [key: string]: boolean } = {};
   private readonly typePropertyNameToIsReadWriteMap: { [key: string]: boolean } = {};
+  private readonly typePropertyNameToIsReadOnlyMap: { [key: string]: boolean } = {};
+  private readonly typePropertyNameToIsWriteOnlyMap: { [key: string]: boolean } = {};
+  private readonly typePropertyNameToIsCreateOnlyMap: { [key: string]: boolean } = {};
+  private readonly typePropertyNameToIsUpdateOnlyMap: { [key: string]: boolean } = {};
+  private readonly typePropertyNameToIsReadUpdateMap: { [key: string]: boolean } = {};
+  private readonly typePropertyNameToIsTransientMap: { [key: string]: boolean } = {};
 
   addDocumentationForTypeProperty(Type: Function, propertyName: string, docString: string) {
     this.typePropertyNameToDocStringMap[`${Type.name}${propertyName}`] = docString;
@@ -34,6 +39,10 @@ class TypePropertyAnnotationContainer {
 
   setTypePropertyAsNotUnique(Type: Function, propertyName: string) {
     this.typePropertyNameToIsNotUniqueMap[`${Type.name}${propertyName}`] = true;
+  }
+
+  setTypePropertyAsTransient(Type: Function, propertyName: string) {
+    this.typePropertyNameToIsTransientMap[`${Type.name}${propertyName}`] = true;
   }
 
   setTypePropertyAsNotHashed(Type: Function, propertyName: string) {
@@ -67,10 +76,6 @@ class TypePropertyAnnotationContainer {
     ] = isExternalServiceEntity;
   }
 
-  setTypePropertyAsTransient(Type: Function, propertyName: string) {
-    this.typePropertyNameToIsTransientMap[`${Type.name}${propertyName}`] = true;
-  }
-
   setTypePropertyAsExternalId(Type: Function, propertyName: string) {
     this.typePropertyNameToIsExternalIdMap[`${Type.name}${propertyName}`] = true;
   }
@@ -81,6 +86,26 @@ class TypePropertyAnnotationContainer {
 
   setTypePropertyAsReadWrite(Type: Function, propertyName: string) {
     this.typePropertyNameToIsReadWriteMap[`${Type.name}${propertyName}`] = true;
+  }
+
+  setTypePropertyAsReadOnly(Type: Function, propertyName: string) {
+    this.typePropertyNameToIsReadOnlyMap[`${Type.name}${propertyName}`] = true;
+  }
+
+  setTypePropertyAsWriteOnly(Type: Function, propertyName: string) {
+    this.typePropertyNameToIsWriteOnlyMap[`${Type.name}${propertyName}`] = true;
+  }
+
+  setTypePropertyAsCreateOnly(Type: Function, propertyName: string) {
+    this.typePropertyNameToIsCreateOnlyMap[`${Type.name}${propertyName}`] = true;
+  }
+
+  setTypePropertyAsUpdateOnly(Type: Function, propertyName: string) {
+    this.typePropertyNameToIsUpdateOnlyMap[`${Type.name}${propertyName}`] = true;
+  }
+
+  setTypePropertyAsReadUpdate(Type: Function, propertyName: string) {
+    this.typePropertyNameToIsReadUpdateMap[`${Type.name}${propertyName}`] = true;
   }
 
   setTypePropertyAsFetchedFromRemoteService(
@@ -107,6 +132,18 @@ class TypePropertyAnnotationContainer {
     }
 
     return undefined;
+  }
+
+  isTypePropertyTransient(Type: Function, propertyName: string) {
+    let proto = Object.getPrototypeOf(new (Type as new () => any)());
+    while (proto !== Object.prototype) {
+      if (this.typePropertyNameToIsTransientMap[`${proto.constructor.name}${propertyName}`] !== undefined) {
+        return this.typePropertyNameToIsTransientMap[`${proto.constructor.name}${propertyName}`];
+      }
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    return false;
   }
 
   isTypePropertyUnique(Type: Function, propertyName: string) {
@@ -246,18 +283,6 @@ class TypePropertyAnnotationContainer {
     return false;
   }
 
-  isTypePropertyTransient(Type: Function, propertyName: string) {
-    let proto = Object.getPrototypeOf(new (Type as new () => any)());
-    while (proto !== Object.prototype) {
-      if (this.typePropertyNameToIsTransientMap[`${proto.constructor.name}${propertyName}`] !== undefined) {
-        return this.typePropertyNameToIsTransientMap[`${proto.constructor.name}${propertyName}`];
-      }
-      proto = Object.getPrototypeOf(proto);
-    }
-
-    return false;
-  }
-
   isTypePropertyExternalId(Type: Function, propertyName: string) {
     let proto = Object.getPrototypeOf(new (Type as new () => any)());
     while (proto !== Object.prototype) {
@@ -287,6 +312,66 @@ class TypePropertyAnnotationContainer {
     while (proto !== Object.prototype) {
       if (this.typePropertyNameToIsReadWriteMap[`${proto.constructor.name}${propertyName}`] !== undefined) {
         return this.typePropertyNameToIsReadWriteMap[`${proto.constructor.name}${propertyName}`];
+      }
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    return false;
+  }
+
+  isTypePropertyReadOnly(Type: Function, propertyName: string) {
+    let proto = Object.getPrototypeOf(new (Type as new () => any)());
+    while (proto !== Object.prototype) {
+      if (this.typePropertyNameToIsReadOnlyMap[`${proto.constructor.name}${propertyName}`] !== undefined) {
+        return this.typePropertyNameToIsReadOnlyMap[`${proto.constructor.name}${propertyName}`];
+      }
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    return false;
+  }
+
+  isTypePropertyWriteOnly(Type: Function, propertyName: string) {
+    let proto = Object.getPrototypeOf(new (Type as new () => any)());
+    while (proto !== Object.prototype) {
+      if (this.typePropertyNameToIsWriteOnlyMap[`${proto.constructor.name}${propertyName}`] !== undefined) {
+        return this.typePropertyNameToIsWriteOnlyMap[`${proto.constructor.name}${propertyName}`];
+      }
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    return false;
+  }
+
+  isTypePropertyCreateOnly(Type: Function, propertyName: string) {
+    let proto = Object.getPrototypeOf(new (Type as new () => any)());
+    while (proto !== Object.prototype) {
+      if (this.typePropertyNameToIsCreateOnlyMap[`${proto.constructor.name}${propertyName}`] !== undefined) {
+        return this.typePropertyNameToIsCreateOnlyMap[`${proto.constructor.name}${propertyName}`];
+      }
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    return false;
+  }
+
+  isTypePropertyUpdateOnly(Type: Function, propertyName: string) {
+    let proto = Object.getPrototypeOf(new (Type as new () => any)());
+    while (proto !== Object.prototype) {
+      if (this.typePropertyNameToIsUpdateOnlyMap[`${proto.constructor.name}${propertyName}`] !== undefined) {
+        return this.typePropertyNameToIsUpdateOnlyMap[`${proto.constructor.name}${propertyName}`];
+      }
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    return false;
+  }
+
+  isTypePropertyReadUpdate(Type: Function, propertyName: string) {
+    let proto = Object.getPrototypeOf(new (Type as new () => any)());
+    while (proto !== Object.prototype) {
+      if (this.typePropertyNameToIsReadUpdateMap[`${proto.constructor.name}${propertyName}`] !== undefined) {
+        return this.typePropertyNameToIsReadUpdateMap[`${proto.constructor.name}${propertyName}`];
       }
       proto = Object.getPrototypeOf(proto);
     }

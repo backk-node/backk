@@ -1,10 +1,9 @@
 import _IdAndCaptcha from "../id/_IdAndCaptcha";
 import Unique from "../../decorators/typeproperty/Unique";
-import { IsAscii, IsString, MaxLength } from "class-validator";
-import Private from "../../decorators/typeproperty/Private";
+import { IsString, MaxLength } from "class-validator";
 import IsUndefined from "../../decorators/typeproperty/IsUndefined";
-import ReadWrite from "../../decorators/typeproperty/ReadWrite";
 import IsSubject from "../../decorators/typeproperty/IsSubject";
+import CreateOnly from "../../decorators/typeproperty/access/CreateOnly";
 
 export default class BaseUserAccount extends _IdAndCaptcha  {
   @IsUndefined({ groups: ['__backk_update__'] })
@@ -12,7 +11,6 @@ export default class BaseUserAccount extends _IdAndCaptcha  {
   @IsString()
   @MaxLength(255)
   @IsSubject()
-  @ReadWrite()
-  @Private()
+  @CreateOnly()
   subject!: string;
 }

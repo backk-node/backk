@@ -4,7 +4,7 @@ import _IdAndVersion from "./id/_IdAndVersion";
 import Unique from "../decorators/typeproperty/Unique";
 import { IsString } from "class-validator";
 import { Lengths } from "../constants/constants";
-import ReadWrite from "../decorators/typeproperty/ReadWrite";
+import ReadWrite from "../decorators/typeproperty/access/ReadWrite";
 
 @Entity()
 export default class DbTableVersion extends _IdAndVersion {
@@ -12,5 +12,5 @@ export default class DbTableVersion extends _IdAndVersion {
   @IsString()
   @MaxLengthAndMatches(Lengths._512, /^[a-zA-Z_][a-zA-Z0-9_]*$/)
   @ReadWrite()
-  public entityName!: string;
+  entityName!: string;
 }

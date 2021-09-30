@@ -11,5 +11,5 @@ export default class _IdAndCaptchaAndVersion extends _IdAndCaptcha {
   @Min(-1)
   @NotUnique()
   @Max(Number.MAX_SAFE_INTEGER)
-  public version!: number;
+  version!: number;
 }

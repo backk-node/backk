@@ -14,7 +14,6 @@ import Pagination from "./Pagination";
 import MaxLengthAndMatches from "../../decorators/typeproperty/MaxLengthAndMatches";
 import { Lengths, Values } from "../../constants/constants";
 import CurrentPageToken from "./CurrentPageToken";
-import EntityCountRequest from "../EntityCountRequest";
 
 export default class DefaultPostQueryOperations implements PostQueryOperations {
   constructor(pageSize: number = Values._50) {

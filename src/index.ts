@@ -107,10 +107,10 @@ export { default as ManyToMany } from './decorators/typeproperty/ManyToMany';
 export { default as NotEncrypted } from './decorators/typeproperty/NotEncrypted';
 export { default as NotHashed } from './decorators/typeproperty/NotHashed';
 export { default as OneToMany } from './decorators/typeproperty/OneToMany';
-export { default as Private } from './decorators/typeproperty/Private';
+export { default as Private } from './decorators/typeproperty/access/Private';
 export { default as Transient } from './decorators/typeproperty/Transient';
 export { UiProps, default as UiProperties } from './decorators/typeproperty/UiProperties';
-export { default as ReadWrite } from './decorators/typeproperty/ReadWrite';
+export { default as ReadWrite } from './decorators/typeproperty/access/ReadWrite';
 
 // Register custom decorator
 export { default as registerCustomDecorator } from './decorators/registerCustomDecorator';

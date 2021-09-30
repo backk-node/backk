@@ -6,6 +6,7 @@ import getTypeInfoForTypeName from '../../../../../../utils/type/getTypeInfoForT
 import isEntityTypeName from '../../../../../../utils/type/isEntityTypeName';
 import AbstractSqlDataStore from '../../../../../AbstractSqlDataStore';
 import EntityCountRequest from "../../../../../../types/EntityCountRequest";
+import isPropertyReadDenied from "../../../../../../utils/type/isPropertyReadDenied";
 
 export default function getFieldsForEntity(
   dataStore: AbstractSqlDataStore,
@@ -45,7 +46,7 @@ export default function getFieldsForEntity(
     ([entityPropertyName, entityPropertyTypeName]: [string, any]) => {
       if (
         (!isInternalCall &&
-          typePropertyAnnotationContainer.isTypePropertyPrivate(EntityClass, entityPropertyName)) ||
+          isPropertyReadDenied(EntityClass, entityPropertyName)) ||
         typePropertyAnnotationContainer.isTypePropertyTransient(EntityClass, entityPropertyName)
       ) {
         return;

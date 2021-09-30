@@ -8,5 +8,5 @@ export default class _Id implements BackkEntity {
   @IsUndefined({ groups: ['__backk_create__'] })
   @IsStringOrObjectId({ groups: ['__backk_update__'] })
   @MaxLengthAndMatches(24, /^[a-f\d]{1,24}$/, { groups: ['__backk_update__'] })
-  public _id!: string;
+  _id!: string;
 }

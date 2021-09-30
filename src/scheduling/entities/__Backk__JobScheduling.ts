@@ -3,7 +3,7 @@ import _Id from "../../types/id/_Id";
 import { IsDate, IsString, MaxLength } from "class-validator";
 import { Lengths } from "../../constants/constants";
 import NotUnique from "../../decorators/typeproperty/NotUnique";
-import ReadWrite from "../../decorators/typeproperty/ReadWrite";
+import ReadWrite from "../../decorators/typeproperty/access/ReadWrite";
 
 @Entity()
 // eslint-disable-next-line @typescript-eslint/camelcase,@typescript-eslint/class-name-casing

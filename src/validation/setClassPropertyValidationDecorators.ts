@@ -155,31 +155,28 @@ export default function setClassPropertyValidationDecorators(
             );
           }
 
-          const isPrivateProperty = classBodyNode.accessibility !== 'public';
-
           if (
-            isPrivateProperty &&
             entityAnnotationContainer.isEntity(Class) &&
-            !typePropertyAnnotationContainer.isTypePropertyPrivate(Class, propertyName)
+            !typePropertyAnnotationContainer.isTypePropertyCreateOnly(Class, propertyName) &&
+            !typePropertyAnnotationContainer.isTypePropertyPrivate(Class, propertyName) &&
+            !typePropertyAnnotationContainer.isTypePropertyReadOnly(Class, propertyName) &&
+            !typePropertyAnnotationContainer.isTypePropertyReadWrite(Class, propertyName) &&
+            !typePropertyAnnotationContainer.isTypePropertyUpdateOnly(Class, propertyName) &&
+            !typePropertyAnnotationContainer.isTypePropertyWriteOnly(Class, propertyName) &&
+            !typePropertyAnnotationContainer.isTypePropertyReadUpdate(Class, propertyName)
           ) {
             throw new Error(
               Class.name +
                 '.' +
                 propertyName +
-                " is a private property and it must be decorated with @Private() annotation. Or if the property should be public, denote it with a 'public' keyword"
+                ' must annotated with one of the property access decorators: @ReadWrite(), @ReadOnly(), @WriteOnly(), @CreateOnly(), @UpdateOnly(), @ReadUpdate() or @Private()'
             );
           }
 
           if (
-            !isPrivateProperty &&
-            typePropertyAnnotationContainer.isTypePropertyPrivate(Class, propertyName)
+            typePropertyAnnotationContainer.isTypePropertyCreateOnly(Class, propertyName) &&
+            entityAnnotationContainer.isEntity(Class)
           ) {
-            throw new Error(
-              Class.name + '.' + propertyName + ' is a public property and cannot have @Private() annotation'
-            );
-          }
-
-          if (isPrivateProperty && entityAnnotationContainer.isEntity(Class)) {
             const validationMetadataArgs: ValidationMetadataArgs = {
               type: ValidationTypes.CUSTOM_VALIDATION,
               target: Class,
@@ -194,18 +191,10 @@ export default function setClassPropertyValidationDecorators(
           }
 
           if (
-            classBodyNode.readonly &&
-            typePropertyAnnotationContainer.isTypePropertyReadWrite(Class, propertyName)
+            (typePropertyAnnotationContainer.isTypePropertyUpdateOnly(Class, propertyName) ||
+              typePropertyAnnotationContainer.isTypePropertyReadUpdate(Class, propertyName)) &&
+            entityAnnotationContainer.isEntity(Class)
           ) {
-            throw new Error(
-              Class.name +
-                '.' +
-                propertyName +
-                ' is a readonly property and cannot have @ReadWrite() annotation'
-            );
-          }
-
-          if (classBodyNode.readonly && entityAnnotationContainer.isEntity(Class)) {
             const validationMetadataArgs: ValidationMetadataArgs = {
               type: ValidationTypes.CUSTOM_VALIDATION,
               target: Class,
@@ -215,13 +204,25 @@ export default function setClassPropertyValidationDecorators(
             };
 
             const validationMetadata = new ValidationMetadata(validationMetadataArgs);
+            validationMetadata.groups = ['__backk_create__'];
+            getFromContainer(MetadataStorage).addValidationMetadata(validationMetadata);
+          }
 
-            if (propertyName === '_id') {
-              validationMetadata.groups = ['__backk_create__'];
-            } else {
-              validationMetadata.groups = ['__backk_create__', '__backk_update__'];
-            }
+          if (
+            (typePropertyAnnotationContainer.isTypePropertyPrivate(Class, propertyName) ||
+              typePropertyAnnotationContainer.isTypePropertyReadOnly(Class, propertyName)) &&
+            entityAnnotationContainer.isEntity(Class)
+          ) {
+            const validationMetadataArgs: ValidationMetadataArgs = {
+              type: ValidationTypes.CUSTOM_VALIDATION,
+              target: Class,
+              propertyName,
+              constraints: ['isUndefined'],
+              validationOptions: { each: isArrayType }
+            };
 
+            const validationMetadata = new ValidationMetadata(validationMetadataArgs);
+            validationMetadata.groups = ['__backk_create__', '__backk_update__'];
             getFromContainer(MetadataStorage).addValidationMetadata(validationMetadata);
           }
 
@@ -576,12 +577,12 @@ export default function setClassPropertyValidationDecorators(
           }
 
           if (typePropertyAnnotationContainer.getTypePropertyRemoteServiceFetchSpec(Class, propertyName)) {
-            if (!classBodyNode.readonly) {
+            if (!typePropertyAnnotationContainer.isTypePropertyReadOnly(Class, propertyName)) {
               throw new Error(
                 Class.name +
                   '.' +
                   propertyName +
-                  ' must be a readonly property when property decorated with @FetchFromRemoteService() annotation'
+                  ' must be a @ReadOnly() decorated property when property is decorated with @FetchFromRemoteService()'
               );
             }
           }

@@ -4,7 +4,7 @@ import _Id from "../../types/id/_Id";
 import { IsDate, IsString, MaxLength } from "class-validator";
 import Unique from "../../decorators/typeproperty/Unique";
 import { Lengths } from "../../constants/constants";
-import ReadWrite from "../../decorators/typeproperty/ReadWrite";
+import ReadWrite from "../../decorators/typeproperty/access/ReadWrite";
 
 @Entity()
 export default class __Backk__CronJobScheduling extends _Id {

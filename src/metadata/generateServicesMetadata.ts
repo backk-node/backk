@@ -5,7 +5,7 @@ import getClassPropertyNameToPropertyTypeNameMap from './getClassPropertyNameToP
 import { FunctionMetadata } from './types/FunctionMetadata';
 import getValidationMetadata from './getValidationMetadata';
 import getTypeDocumentation from './getTypeDocumentation';
-import getTypePropertyModifiers from './getTypePropertyModifiers';
+import getTypePropertyAccessType from './getTypePropertyAccessType';
 import CrudEntityService from '../service/crudentity/CrudEntityService';
 import assertFunctionNamesAreValidForCrudEntityService from '../service/crudentity/assertFunctionNamesAreValidForCrudEntityService';
 import AbstractDataStore from '../datastore/AbstractDataStore';
@@ -46,7 +46,7 @@ export default function generateServicesMetadata<T>(
 
       const publicTypesMetadata = Object.entries((controller as any)[serviceName].PublicTypes ?? {}).reduce(
         (accumulatedTypes, [typeName, typeClass]: [string, any]) => {
-          const typeObject = getClassPropertyNameToPropertyTypeNameMap(typeClass, dataStore, false, true);
+          const typeObject = getClassPropertyNameToPropertyTypeNameMap(typeClass, dataStore, false);
           return { ...accumulatedTypes, [typeName]: typeObject };
         },
         {}
@@ -136,12 +136,12 @@ export default function generateServicesMetadata<T>(
         {}
       );
 
-      const propertyModifiers = Object.entries((controller as any)[serviceName].PublicTypes ?? {}).reduce(
-        (accumulatedPropertyModifiers, [typeName, typeClass]: [string, any]) => {
-          const propertyModifiers = getTypePropertyModifiers((typesMetadata as any)[typeName], typeClass);
+      const propertyAccess = Object.entries((controller as any)[serviceName].PublicTypes ?? {}).reduce(
+        (accumulatedPropertyAccess, [typeName, typeClass]: [string, any]) => {
+          const propertyModifiers = getTypePropertyAccessType((typesMetadata as any)[typeName], typeClass);
           return Object.keys(propertyModifiers).length > 0
-            ? { ...accumulatedPropertyModifiers, [typeName]: propertyModifiers }
-            : accumulatedPropertyModifiers;
+            ? { ...accumulatedPropertyAccess, [typeName]: propertyModifiers }
+            : accumulatedPropertyAccess;
         },
         {}
       );
@@ -195,7 +195,7 @@ export default function generateServicesMetadata<T>(
             stackTrace: '?string'
           }
         },
-        propertyModifiers,
+        propertyAccess,
         typesDocumentation,
         typeReferences,
         validations: validationMetadatas

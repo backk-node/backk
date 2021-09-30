@@ -10,6 +10,7 @@ import getSampleStringValue from './getSampleStringValue';
 import { ValidationTypes } from 'class-validator';
 import { getClassPropertyCustomValidationTestValue } from '../validation/setClassPropertyValidationDecorators';
 import entityAnnotationContainer from '../decorators/entity/entityAnnotationContainer';
+import isPropertyReadDenied from "../utils/type/isPropertyReadDenied";
 
 // noinspection OverlyComplexFunctionJS
 export default function getServiceFunctionReturnValueTests(
@@ -37,7 +38,7 @@ export default function getServiceFunctionReturnValueTests(
       propertyName === 'version' ||
       propertyName === 'createdAtTimestamp' ||
       propertyName === 'lastModifiedTimestamp' ||
-      typePropertyAnnotationContainer.isTypePropertyPrivate(serviceTypes[returnValueTypeName], propertyName)
+      isPropertyReadDenied(serviceTypes[returnValueTypeName], propertyName)
     ) {
       return;
     }

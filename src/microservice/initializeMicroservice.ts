@@ -110,7 +110,7 @@ export default function initializeMicroservice(
         serviceName,
         functions,
         validations,
-        propertyModifiers,
+        propertyAccess,
         serviceDocumentation,
         typeReferences,
         typesDocumentation
@@ -120,7 +120,7 @@ export default function initializeMicroservice(
         serviceDocumentation,
         functions,
         types: publicTypes,
-        propertyModifiers,
+        propertyAccess: propertyModifiers,
         typesDocumentation,
         typeReferences,
         validations

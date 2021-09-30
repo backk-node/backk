@@ -407,7 +407,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             return uniqueItems;
           }, undefined);
 
-          const readOnly: boolean | undefined = (serviceMetadata.propertyModifiers as any)[typeName]?.[
+          const readOnly: boolean | undefined = (serviceMetadata.propertyAccess as any)[typeName]?.[
             propertyName
           ]?.includes('readonly')
             ? true

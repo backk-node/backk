@@ -14,6 +14,7 @@ import SortBy from '../../../../../types/postqueryoperations/SortBy';
 import Pagination from '../../../../../types/postqueryoperations/Pagination';
 import typePropertyAnnotationContainer from '../../../../../decorators/typeproperty/typePropertyAnnotationContainer';
 import EntityCountRequest from '../../../../../types/EntityCountRequest';
+import isPropertyReadDenied from "../../../../../utils/type/isPropertyReadDenied";
 
 // noinspection OverlyComplexFunctionJS
 export default function getJoinClauses(
@@ -43,7 +44,7 @@ export default function getJoinClauses(
         if (
           !shouldIncludeField('', joinEntityPath, projection, false) ||
           (!isInternalCall &&
-            typePropertyAnnotationContainer.isTypePropertyPrivate(EntityClass, joinSpec.entityFieldName))
+            isPropertyReadDenied(EntityClass, joinSpec.entityFieldName))
         ) {
           return '';
         }
@@ -158,7 +159,7 @@ export default function getJoinClauses(
             false
           ) ||
           (!isInternalCall &&
-            typePropertyAnnotationContainer.isTypePropertyPrivate(EntityClass, entityFieldName))
+            isPropertyReadDenied(EntityClass, entityFieldName))
         ) {
           return '';
         }

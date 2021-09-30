@@ -12,5 +12,5 @@ export default class _IdAndVersion extends _Id implements BackkEntity {
   @NotUnique()
   @Min(-1)
   @Max(Number.MAX_SAFE_INTEGER)
-  public version!: number;
+  version!: number;
 }

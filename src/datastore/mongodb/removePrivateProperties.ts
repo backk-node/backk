@@ -2,6 +2,7 @@ import typePropertyAnnotationContainer from "../../decorators/typeproperty/typeP
 import getClassPropertyNameToPropertyTypeNameMap
   from "../../metadata/getClassPropertyNameToPropertyTypeNameMap";
 import getTypeInfoForTypeName from "../../utils/type/getTypeInfoForTypeName";
+import isPropertyReadDenied from "../../utils/type/isPropertyReadDenied";
 
 function removeEntityPrivateProperties<T>(
   entity: any,
@@ -13,7 +14,7 @@ function removeEntityPrivateProperties<T>(
 
   Object.entries(entity).forEach(([propertyName, propertyValue]: [string, any]) => {
     if (
-      (!isInternalCall && typePropertyAnnotationContainer.isTypePropertyPrivate(EntityClass, propertyName)) ||
+      (!isInternalCall && isPropertyReadDenied(EntityClass, propertyName)) ||
       propertyName === 'entityIdFieldNameAsString'
     ) {
       delete entity[propertyName];

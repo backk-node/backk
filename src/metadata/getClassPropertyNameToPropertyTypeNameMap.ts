@@ -4,6 +4,7 @@ import AbstractDataStore from '../datastore/AbstractDataStore';
 import { MAX_INT_VALUE } from '../constants/constants';
 import typePropertyAnnotationContainer from '../decorators/typeproperty/typePropertyAnnotationContainer';
 import isEntityTypeName from '../utils/type/isEntityTypeName';
+import isPropertyReadDenied from '../utils/type/isPropertyReadDenied';
 
 const classNameToMetadataMap: { [key: string]: { [key: string]: string } } = {};
 
@@ -11,10 +12,9 @@ const classNameToMetadataMap: { [key: string]: { [key: string]: string } } = {};
 export default function getClassPropertyNameToPropertyTypeNameMap<T>(
   Class: new () => T,
   dataStore?: AbstractDataStore,
-  isGeneration = false,
-  shouldStripPrivateReadonlyProperties = false
+  isGeneration = false
 ): { [key: string]: string } {
-  if (!isGeneration && classNameToMetadataMap[Class.name] && !shouldStripPrivateReadonlyProperties) {
+  if (!isGeneration && classNameToMetadataMap[Class.name]) {
     return classNameToMetadataMap[Class.name];
   }
 
@@ -66,19 +66,7 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
         constraints?.[0] === 'isUndefined'
     );
 
-    const fullyUndefinedValidation = validationMetadatas.find(
-      ({ propertyName, type, constraints, groups }: ValidationMetadata) =>
-        propertyName === validationMetadata.propertyName &&
-        type === 'customValidation' &&
-        constraints?.[0] === 'isUndefined' &&
-        groups.includes('__backk_create__') &&
-        groups.includes('__backk_updates__')
-    );
-
-    if (
-      fullyUndefinedValidation &&
-      typePropertyAnnotationContainer.isTypePropertyPrivate(Class, validationMetadata.propertyName)
-    ) {
+    if (typePropertyAnnotationContainer.isTypePropertyPrivate(Class, validationMetadata.propertyName)) {
       return;
     }
 
@@ -350,7 +338,7 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
             Class.name +
             '.' +
             validationMetadata.propertyName +
-            ' must be declared to readonly, because it is a reference to external entity and cannot be modified by this service'
+            ' must be decorated with @ReadOnly(), because it is a reference to external entity and cannot be modified by this service'
         );
       }
     }
@@ -359,21 +347,6 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
       Class,
       validationMetadata.propertyName
     );
-
-    if (
-      !undefinedValidation &&
-      !isReadWriteProperty &&
-      isEntityTypeName(Class.name) &&
-      !typePropertyAnnotationContainer.isTypePropertyTransient(Class, validationMetadata.propertyName)
-    ) {
-      throw new Error(
-        'Property ' +
-          Class.name +
-          '.' +
-          validationMetadata.propertyName +
-          " must have a ReadWrite() annotation or 'readonly' specifier"
-      );
-    }
 
     if (isGeneration) {
       const isUnique = typePropertyAnnotationContainer.isTypePropertyUnique(

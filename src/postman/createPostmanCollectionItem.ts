@@ -38,17 +38,22 @@ export default function createPostmanCollectionItem(
 
   const types = Object.entries(serviceMetadata.types).reduce((types, [typeName, typeMetadata]) => {
     if (typeNames.includes(typeName)) {
-      const propertyModifiers: any = serviceMetadata.propertyAccess[typeName];
+      const propertyAccess: any = serviceMetadata.propertyAccess[typeName];
 
       const newTypeMetadata = Object.entries(typeMetadata).reduce(
         (newTypeMetadata, [propertyName, typeName]) => {
-          if (propertyModifiers[propertyName]) {
+          if (propertyAccess?.[propertyName]) {
             return {
               ...newTypeMetadata,
-              [propertyModifiers[propertyName] + ' ' + propertyName]: typeName
+              [propertyAccess[propertyName] + ' ' + propertyName]: typeName
+            };
+          } else {
+            return {
+              ...newTypeMetadata,
+              [propertyName]: typeName
             };
           }
-          return newTypeMetadata;
+
         },
         {}
       );

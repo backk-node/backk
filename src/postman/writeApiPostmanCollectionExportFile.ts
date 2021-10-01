@@ -117,7 +117,7 @@ export default function writeApiPostmanCollectionExportFile<T>(
           method: 'POST',
           url: {
             raw: `http://localhost:${process.env.HTTP_SERVER_PORT ??
-              3000}/metadataService.getServicesMetadata`,
+              3000}/${process.env.API_GATEWAY_PATH}/metadataService.getServicesMetadata`,
             protocol: 'http',
             host: ['localhost'],
             port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,

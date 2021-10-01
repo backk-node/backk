@@ -27,7 +27,6 @@ export default function generateTypesForServices<T>(controller: T, remoteService
           );
 
           (controller as any)[serviceName].Types[functionArgumentTypeName] = FunctionArgumentClass;
-          (controller as any)[serviceName].PublicTypes[functionArgumentTypeName] = FunctionArgumentClass;
         }
 
         if (functionArgumentTypeName !== undefined) {
@@ -55,7 +54,6 @@ export default function generateTypesForServices<T>(controller: T, remoteService
         if (baseTypeName !== 'null' && !(controller as any)[serviceName].Types[baseTypeName]) {
           const FunctionReturnValueClass = generateClassFromSrcFile(baseTypeName, remoteServiceRootDir);
           (controller as any)[serviceName].Types[baseTypeName] = FunctionReturnValueClass;
-          (controller as any)[serviceName].PublicTypes[baseTypeName] = FunctionReturnValueClass;
         }
 
         if (baseTypeName !== 'null') {

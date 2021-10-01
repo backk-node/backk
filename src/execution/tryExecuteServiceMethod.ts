@@ -1,7 +1,7 @@
 import { plainToClass } from 'class-transformer';
 import _ from 'lodash';
 import Redis from 'ioredis';
-import { MemoryCache } from "memory-cache-node";
+import { MemoryCache } from 'memory-cache-node';
 import tryAuthorize from '../authorization/tryAuthorize';
 import BaseService from '../service/BaseService';
 import tryVerifyCaptchaToken from '../captcha/tryVerifyCaptchaToken';
@@ -14,7 +14,7 @@ import defaultServiceMetrics from '../observability/metrics/defaultServiceMetric
 import createBackkErrorFromError from '../errors/createBackkErrorFromError';
 import log, { Severity } from '../observability/logging/log';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
-import { HttpStatusCodes, MAX_INT_VALUE, Values } from "../constants/constants";
+import { HttpStatusCodes, MAX_INT_VALUE, Values } from '../constants/constants';
 import getNamespacedServiceName from '../utils/getNamespacedServiceName';
 import AuditLoggingService from '../observability/logging/audit/AuditLoggingService';
 import createAuditLogEntry from '../observability/logging/audit/createAuditLogEntry';
@@ -38,7 +38,11 @@ import ReadinessCheckService from '../service/ReadinessCheckService';
 import StartupCheckService from '../service/startup/StartupCheckService';
 import throwIf from '../utils/exception/throwIf';
 import { getDefaultOrThrowExceptionInProduction } from '../utils/exception/getDefaultOrThrowExceptionInProduction';
-import { getOpenApiSpec } from "../openapi/writeOpenApiSpecFile";
+import { getOpenApiSpec } from '../openapi/writeOpenApiSpecFile';
+import {
+  generateInternalServicesMetadata,
+  generatePublicServicesMetadata
+} from '../microservice/initializeMicroservice';
 
 export interface ServiceFunctionExecutionOptions {
   isMetadataServiceEnabled?: boolean;
@@ -63,6 +67,7 @@ export default async function tryExecuteServiceMethod(
   headers: { [key: string]: string | string[] | undefined },
   httpMethod: string,
   resp: any,
+  isClusterInternalCall: boolean,
   options?: ServiceFunctionExecutionOptions
 ): Promise<void | object> {
   let storedError;
@@ -98,6 +103,7 @@ export default async function tryExecuteServiceMethod(
           serviceFunctionArgument,
           headers,
           resp,
+          isClusterInternalCall,
           options
         );
       } else if (serviceFunctionName === 'executeMultipleInSequenceWithoutTransaction') {
@@ -108,6 +114,7 @@ export default async function tryExecuteServiceMethod(
           serviceFunctionArgument,
           headers,
           resp,
+          isClusterInternalCall,
           options
         );
       } else if (serviceFunctionName === 'executeMultipleInParallelInsideTransaction') {
@@ -118,6 +125,7 @@ export default async function tryExecuteServiceMethod(
           serviceFunctionArgument,
           headers,
           resp,
+          isClusterInternalCall,
           options
         );
       } else if (serviceFunctionName === 'executeMultipleInSequenceInsideTransaction') {
@@ -128,6 +136,7 @@ export default async function tryExecuteServiceMethod(
           serviceFunctionArgument,
           headers,
           resp,
+          isClusterInternalCall,
           options
         );
       }
@@ -171,7 +180,16 @@ export default async function tryExecuteServiceMethod(
     if (serviceFunctionName === 'metadataService.getOpenApiSpec') {
       if (!options || options.isMetadataServiceEnabled === undefined || options.isMetadataServiceEnabled) {
         resp.writeHead(HttpStatusCodes.SUCCESS, { 'Content-Type': 'application/json' });
-        resp.end(JSON.stringify(getOpenApiSpec(microservice, microservice.publicServicesMetadata)));
+        resp.end(
+          JSON.stringify(
+            getOpenApiSpec(
+              microservice,
+              isClusterInternalCall
+                ? microservice.internalServicesMetadata ?? generateInternalServicesMetadata(microservice)
+                : microservice.publicServicesMetadata ?? generatePublicServicesMetadata(microservice)
+            )
+          )
+        );
         return;
       } else {
         throw createBackkErrorFromErrorCodeMessageAndStatus({
@@ -179,11 +197,16 @@ export default async function tryExecuteServiceMethod(
           message: BACKK_ERRORS.UNKNOWN_SERVICE.message + serviceName
         });
       }
-    }
-    else if (serviceFunctionName === 'metadataService.getServicesMetadata') {
+    } else if (serviceFunctionName === 'metadataService.getServicesMetadata') {
       if (!options || options.isMetadataServiceEnabled === undefined || options.isMetadataServiceEnabled) {
         resp.writeHead(HttpStatusCodes.SUCCESS, { 'Content-Type': 'application/json' });
-        resp.end(JSON.stringify(microservice.publicServicesMetadata));
+        resp.end(
+          JSON.stringify(
+            isClusterInternalCall
+              ? microservice.internalServicesMetadata ?? generateInternalServicesMetadata(microservice)
+              : microservice.publicServicesMetadata ?? generatePublicServicesMetadata(microservice)
+          )
+        );
         return;
       } else {
         throw createBackkErrorFromErrorCodeMessageAndStatus({

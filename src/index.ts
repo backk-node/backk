@@ -8,7 +8,6 @@ export { default as startRedisConsumerFor } from './initialization/startRedisCon
 
 // Microservice
 export { default as Microservice } from './microservice/Microservice';
-export { MicroserviceInitOptions } from './microservice/initializeMicroservice';
 
 // Base services
 export { default as AuthorizationService } from './authorization/AuthorizationService';

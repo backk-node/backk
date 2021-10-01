@@ -206,7 +206,8 @@ export default async function consumeFromKafka(
             serviceFunctionArgument,
             (headers as any) ?? {},
             'POST',
-            response
+            response,
+            true
           );
 
           if (response.getStatusCode() >= HttpStatusCodes.INTERNAL_ERRORS_START) {

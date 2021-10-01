@@ -7,15 +7,11 @@ export default class BaseService implements Service {
   readonly Types: object;
 
   /** @internal */
-  readonly PublicTypes: object;
-
-  /** @internal */
   constructor(
     private readonly errorNameToErrorDefinitionMap: ErrorNameToErrorDefinitionMap,
     protected readonly dataStore: AbstractDataStore
   ) {
     this.Types = {};
-    this.PublicTypes = {};
 
     if (dataStore) {
       dataStore.addService(this);

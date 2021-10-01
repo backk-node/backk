@@ -67,7 +67,8 @@ export default async function consumeFromRedis(
         serviceFunctionArgument,
         headers ?? {},
         'POST',
-        response
+        response,
+        true
       );
 
       if (response.getStatusCode() >= HttpStatusCodes.INTERNAL_ERRORS_START) {

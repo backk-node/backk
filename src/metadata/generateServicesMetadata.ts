@@ -14,12 +14,12 @@ import isCreateFunction from '../service/crudentity/utils/isCreateFunction';
 import { ErrorNameToErrorDefinitionMap } from "../types/ErrorDefinition";
 
 export default function generateServicesMetadata<T>(
-  controller: T,
+  microservice: T,
   dataStore: AbstractDataStore,
   remoteServiceRootDir = ''
 ): ServiceMetadata[] {
   // noinspection FunctionWithMoreThanThreeNegationsJS
-  return Object.entries(controller)
+  return Object.entries(microservice)
     .filter(
       ([serviceName, service]: [string, any]) =>
         service instanceof BaseService || (remoteServiceRootDir && !serviceName.endsWith('__BackkTypes__'))
@@ -28,25 +28,16 @@ export default function generateServicesMetadata<T>(
       const ServiceClass = service.constructor;
 
       const functionNames = Object.keys(
-        (controller as any)[`${serviceName}__BackkTypes__`].functionNameToReturnTypeNameMap
+        (microservice as any)[`${serviceName}__BackkTypes__`].functionNameToReturnTypeNameMap
       );
 
       if (service instanceof CrudEntityService) {
         assertFunctionNamesAreValidForCrudEntityService(ServiceClass, functionNames);
       }
 
-      const typesMetadata = Object.entries((controller as any)[serviceName].Types ?? {}).reduce(
+      const typesMetadata = Object.entries((microservice as any)[serviceName].Types ?? {}).reduce(
         (accumulatedTypes, [typeName, Class]: [string, any]) => {
           const typeObject = getClassPropertyNameToPropertyTypeNameMap(Class, dataStore, true);
-
-          return { ...accumulatedTypes, [typeName]: typeObject };
-        },
-        {}
-      );
-
-      const publicTypesMetadata = Object.entries((controller as any)[serviceName].PublicTypes ?? {}).reduce(
-        (accumulatedTypes, [typeName, typeClass]: [string, any]) => {
-          const typeObject = getClassPropertyNameToPropertyTypeNameMap(typeClass, dataStore, false);
           return { ...accumulatedTypes, [typeName]: typeObject };
         },
         {}
@@ -57,7 +48,7 @@ export default function generateServicesMetadata<T>(
         .filter(
           (functionName) =>
             !serviceFunctionAnnotationContainer.isServiceFunctionAllowedForServiceInternalUse(
-              (controller as any)[serviceName].constructor,
+              (microservice as any)[serviceName].constructor,
               functionName
             )
         )
@@ -87,7 +78,7 @@ export default function generateServicesMetadata<T>(
             throw new Error(serviceName + '.' + functionName + ': is missing authorization annotation');
           }
 
-          const functionArgumentTypeName = (controller as any)[`${serviceName}__BackkTypes__`]
+          const functionArgumentTypeName = (microservice as any)[`${serviceName}__BackkTypes__`]
             .functionNameToParamTypeNameMap[functionName];
 
           if (
@@ -107,7 +98,7 @@ export default function generateServicesMetadata<T>(
             );
           }
 
-          const returnValueTypeName: string = (controller as any)[`${serviceName}__BackkTypes__`]
+          const returnValueTypeName: string = (microservice as any)[`${serviceName}__BackkTypes__`]
             .functionNameToReturnTypeNameMap[functionName];
 
           const functionStr = service[functionName].toString();
@@ -117,7 +108,7 @@ export default function generateServicesMetadata<T>(
 
           return {
             functionName,
-            functionDocumentation: (controller as any)[`${serviceName}__BackkTypes__`]
+            functionDocumentation: (microservice as any)[`${serviceName}__BackkTypes__`]
               .functionNameToDocumentationMap[functionName],
             argType: functionArgumentTypeName,
             returnValueType: returnValueTypeName,
@@ -125,7 +116,7 @@ export default function generateServicesMetadata<T>(
           };
         });
 
-      const validationMetadatas = Object.entries((controller as any)[serviceName].PublicTypes ?? {}).reduce(
+      const validationMetadatas = Object.entries((microservice as any)[serviceName].Types ?? {}).reduce(
         (accumulatedTypes, [typeName, typeClass]: [string, any]) => {
           const validationMetadata = getValidationMetadata(typeClass);
           if (Object.keys(validationMetadata).length > 0) {
@@ -136,7 +127,7 @@ export default function generateServicesMetadata<T>(
         {}
       );
 
-      const propertyAccess = Object.entries((controller as any)[serviceName].PublicTypes ?? {}).reduce(
+      const propertyAccess = Object.entries((microservice as any)[serviceName].Types ?? {}).reduce(
         (accumulatedPropertyAccess, [typeName, typeClass]: [string, any]) => {
           const propertyModifiers = getTypePropertyAccessType((typesMetadata as any)[typeName], typeClass);
           return Object.keys(propertyModifiers).length > 0
@@ -146,7 +137,7 @@ export default function generateServicesMetadata<T>(
         {}
       );
 
-      const typesDocumentation = Object.entries((controller as any)[serviceName].PublicTypes ?? {}).reduce(
+      const typesDocumentation = Object.entries((microservice as any)[serviceName].Types ?? {}).reduce(
         (accumulatedTypesDocumentation, [typeName, typeClass]: [string, any]) => {
           const typeDocumentation = getTypeDocumentation((typesMetadata as any)[typeName], typeClass);
           return Object.keys(typeDocumentation).length > 0
@@ -156,7 +147,7 @@ export default function generateServicesMetadata<T>(
         {}
       );
 
-      const typeReferences = Object.entries((controller as any)[serviceName].PublicTypes ?? {}).reduce(
+      const typeReferences = Object.entries((microservice as any)[serviceName].Types ?? {}).reduce(
         (accumulatedTypeReferences, [typeName, typeClass]: [string, any]) => {
           if (
             entityAnnotationContainer.isEntity(typeClass) &&
@@ -175,17 +166,8 @@ export default function generateServicesMetadata<T>(
 
       return {
         serviceName,
-        serviceDocumentation: (controller as any)[`${serviceName}__BackkTypes__`].serviceDocumentation,
+        serviceDocumentation: (microservice as any)[`${serviceName}__BackkTypes__`].serviceDocumentation,
         functions,
-        publicTypes: {
-          ...publicTypesMetadata,
-          ErrorResponse: {
-            statusCode: 'integer',
-            errorCode: '?string',
-            errorMessage: 'string',
-            stackTrace: '?string'
-          }
-        },
         types: {
           ...typesMetadata,
           BackkError: {

@@ -13,6 +13,7 @@ import getCustomValidationConstraint from '../validation/getCustomValidationCons
 import entityAnnotationContainer from '../decorators/entity/entityAnnotationContainer';
 import getSampleStringValue from './getSampleStringValue';
 import { ValidationTypes } from 'class-validator';
+import isPropertyReadDenied from "../utils/type/isPropertyReadDenied";
 
 export default function getServiceFunctionExampleReturnValue(
   serviceTypes: { [key: string]: Function },
@@ -37,7 +38,7 @@ export default function getServiceFunctionExampleReturnValue(
   // noinspection FunctionWithMoreThanThreeNegationsJS,OverlyComplexFunctionJS,FunctionTooLongJS
   Object.entries(returnValueTypeProperties).forEach(([propertyName, propertyTypeName]: [string, string]) => {
     if (
-      isPropertyReadDefined(
+      isPropertyReadDenied(
         serviceTypes[returnValueTypeName],
         propertyName
       ) ||

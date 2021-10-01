@@ -44,7 +44,7 @@ export async function validateServiceFunctionArguments(sends: CallOrSendToSpec[]
         [serviceName]: serviceInstance
       };
 
-      initializeMicroservice(controller, noOpDataStore, undefined, remoteServiceRootDir);
+      initializeMicroservice(controller, noOpDataStore, false, '', remoteServiceRootDir);
       remoteServiceNameToControllerMap[`${topic}$/${serviceName}`] = controller;
     }
 

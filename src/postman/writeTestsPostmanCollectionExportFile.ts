@@ -614,7 +614,7 @@ export default function writeTestsPostmanCollectionExportFile<T>(
         request: {
           method: 'POST',
           url: {
-            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/metadataService.getServicesMetadata`,
+            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${process.env.API_GATEWAY_PATH}/metadataService.getServicesMetadata`,
             protocol: 'http',
             host: ['localhost'],
             port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,
@@ -627,7 +627,7 @@ export default function writeTestsPostmanCollectionExportFile<T>(
         request: {
           method: 'POST',
           url: {
-            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/metadataService.getOpenApiSpec`,
+            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${process.env.API_GATEWAY_PATH}/metadataService.getOpenApiSpec`,
             protocol: 'http',
             host: ['localhost'],
             port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,

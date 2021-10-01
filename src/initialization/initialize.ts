@@ -11,7 +11,11 @@ import Microservice from '../microservice/Microservice';
 import initializeMicroservice from '../microservice/initializeMicroservice';
 import changePackageJsonNameProperty from '../utils/changePackageJsonNameProperty';
 
-export default async function initialize(microservice: Microservice) {
+export default async function initialize(
+  microservice: Microservice,
+  commandLineArgs?: string[],
+  shouldGeneratePostmanIntegrationTestsOnRestartInDevEnv = true
+) {
   if (
     process.env.NODE_ENV !== 'development' &&
     process.env.NODE_ENV !== 'integration' &&
@@ -29,8 +33,18 @@ export default async function initialize(microservice: Microservice) {
     log(Severity.ERROR, `Microservice crashed with exception: ${error.message}`, error.stack ?? '');
   });
 
+  initializeMicroservice(
+    microservice,
+    microservice.dataStore,
+    shouldGeneratePostmanIntegrationTestsOnRestartInDevEnv,
+    commandLineArgs?.[2] ?? ''
+  );
+
+  if (commandLineArgs?.[2]) {
+    process.exit(0);
+  }
+
   changePackageJsonNameProperty();
-  initializeMicroservice(microservice, microservice.dataStore);
   initializeCls();
   StartupCheckService.microservice = microservice;
   logEnvironment();

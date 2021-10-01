@@ -5,11 +5,15 @@ export default class BackkResponse {
   private statusCode: number = HttpStatusCodes.INTERNAL_SERVER_ERROR;
   private response: object | null | undefined = {};
 
-  status(statusCode: number) {
+  setHeader() {
+
+  }
+
+  writeHead(statusCode: number, headers?: any) {
     this.statusCode = statusCode;
   }
 
-  send(response: object | null | undefined) {
+  end(response: object | null | undefined) {
     this.response = response;
   }
 

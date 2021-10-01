@@ -7,6 +7,7 @@ import __Backk__JobScheduling from "./entities/__Backk__JobScheduling";
 import tryExecuteServiceMethod from "../execution/tryExecuteServiceMethod";
 import { logError } from "../observability/logging/log";
 import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
+import BackkResponse from "../execution/BackkResponse";
 
 const scheduledJobs: { [key: string]: CronJob } = {};
 
@@ -44,7 +45,8 @@ export async function scheduleCronJob(
                   serviceFunctionArgument ?? {},
                   {},
                   'POST',
-                  undefined,
+                  new BackkResponse(),
+                  true,
                   undefined
                 )
               );

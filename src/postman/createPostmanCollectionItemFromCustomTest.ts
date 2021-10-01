@@ -72,7 +72,7 @@ export default function createPostmanCollectionItemFromCustomTest({
               }
             },
       url: {
-        raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/` + serviceFunctionName,
+        raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${process.env.API_GATEWAY_PATH}/` + serviceFunctionName,
         protocol: 'http',
         host: ['localhost'],
         port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,

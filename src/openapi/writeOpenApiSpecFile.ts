@@ -26,39 +26,28 @@ function getErrorContent(errorDef: ErrorDef) {
   };
 }
 
+let cachedOpenApiSpec: object | undefined;
+
 export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMetadata[]) {
+  if (cachedOpenApiSpec) {
+    return cachedOpenApiSpec;
+  }
+
   const paths: { [path: string]: object } = {};
   let schemas: any = {};
 
   servicesMetadata.forEach((serviceMetadata: ServiceMetadata) => {
-
     const cronJobFunctionArgNames = new Set<string>();
     serviceMetadata.functions.forEach((functionMetadata: FunctionMetadata) => {
       const ServiceClass = (microservice as any)[serviceMetadata.serviceName].constructor;
-      const serviceFunctionName = `${ServiceClass.name.charAt(0).toLowerCase() +
-        ServiceClass.name.slice(1)}.${functionMetadata.functionName}`;
-
-      if (serviceFunctionAnnotationContainer.getServiceFunctionNameToCronScheduleMap()[serviceFunctionName]) {
-          cronJobFunctionArgNames.add(functionMetadata.argType);
-      } else {
-        cronJobFunctionArgNames.delete(functionMetadata.argType);
-      }
 
       if (
-        serviceFunctionAnnotationContainer.hasOnStartUp(ServiceClass, functionMetadata.functionName) ||
-        serviceFunctionAnnotationContainer.getServiceFunctionNameToCronScheduleMap()[serviceFunctionName] ||
-        serviceFunctionAnnotationContainer.isServiceFunctionAllowedForServiceInternalUse(
+        process.env.NODE_ENV === 'production' &&
+        serviceFunctionAnnotationContainer.isServiceFunctionAllowedForClusterInternalUse(
           ServiceClass,
           functionMetadata.functionName
         )
       ) {
-        return;
-      }
-
-      if (process.env.NODE_ENV === 'production' && serviceFunctionAnnotationContainer.isServiceFunctionAllowedForClusterInternalUse(
-        ServiceClass,
-        functionMetadata.functionName
-      )) {
         return;
       }
 
@@ -249,7 +238,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
     schemas = Object.assign(
       schemas,
-      Object.entries(serviceMetadata.publicTypes).reduce((schemas, [typeName, typeSpec]) => {
+      Object.entries(serviceMetadata.types).reduce((schemas, [typeName, typeSpec]) => {
         if (typeName === 'DbTableVersion' || cronJobFunctionArgNames.has(typeName)) {
           return schemas;
         }
@@ -507,7 +496,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
   const cwd = process.cwd();
   const appName = cwd.split('/').reverse()[0];
 
-  return {
+  const openApiSpec = {
     openapi: '3.0.3',
     info: {
       title: appName + ' API',
@@ -545,11 +534,11 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
     servers: [
       process.env.NODE_ENV === 'development'
         ? {
-            url: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}`,
+            url: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${process.env.API_GATEWAY_PATH}`,
             description: 'Local development server'
           }
         : {
-            url: `https://${process.env.API_GW_FQDN}${process.env.API_GW_PATH}`,
+            url: `https://${process.env.API_GATEWAY_FQDN}${process.env.API_GATEWAY_PATH}`,
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             description: process.env.NODE_ENV!.toUpperCase() + process.env.NODE_ENV!.slice(1) + ' server'
           }
@@ -567,6 +556,12 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
     security: [{ bearerAuth: [] }],
     paths
   };
+
+  if (!cachedOpenApiSpec) {
+    cachedOpenApiSpec = openApiSpec;
+  }
+
+  return openApiSpec;
 }
 
 export default function writeOpenApiSpecFile<T>(microservice: T, servicesMetadata: ServiceMetadata[]) {

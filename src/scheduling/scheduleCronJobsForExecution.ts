@@ -1,18 +1,17 @@
-import { CronJob } from "cron";
-import parser from "cron-parser";
-import AbstractDataStore from "../datastore/AbstractDataStore";
-import serviceFunctionAnnotationContainer
-  from "../decorators/service/function/serviceFunctionAnnotationContainer";
+import { CronJob } from 'cron';
+import parser from 'cron-parser';
+import AbstractDataStore from '../datastore/AbstractDataStore';
+import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
 // eslint-disable-next-line @typescript-eslint/camelcase
-import __Backk__CronJobScheduling from "./entities/__Backk__CronJobScheduling";
-import findAsyncSequential from "../utils/findAsyncSequential";
-import wait from "../utils/wait";
-import { logError } from "../observability/logging/log";
-import tryExecuteServiceMethod from "../execution/tryExecuteServiceMethod";
-import findServiceFunctionArgumentType from "../metadata/findServiceFunctionArgumentType";
-import BackkResponse from "../execution/BackkResponse";
-import { HttpStatusCodes, Values } from "../constants/constants";
-import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
+import __Backk__CronJobScheduling from './entities/__Backk__CronJobScheduling';
+import findAsyncSequential from '../utils/findAsyncSequential';
+import wait from '../utils/wait';
+import { logError } from '../observability/logging/log';
+import tryExecuteServiceMethod from '../execution/tryExecuteServiceMethod';
+import findServiceFunctionArgumentType from '../metadata/findServiceFunctionArgumentType';
+import BackkResponse from '../execution/BackkResponse';
+import { HttpStatusCodes, Values } from '../constants/constants';
+import getClsNamespace from '../continuationlocalstorage/getClsNamespace';
 
 const cronJobs: { [key: string]: CronJob } = {};
 
@@ -40,15 +39,20 @@ export default function scheduleCronJobsForExecution(controller: any, dataStore:
                 const [, error] = await dataStore.executeInsideTransaction(async () => {
                   getClsNamespace('multipleServiceFunctionExecutions').set('globalTransaction', true);
 
-                  const [, error] = await dataStore.updateEntityByFilters(__Backk__CronJobScheduling, { serviceFunctionName }, {
-                    lastScheduledTimestamp: new Date(),
-                    nextScheduledTimestamp: interval.next().toDate()
-                  }, {
-                    entityPreHooks: {
-                      shouldSucceedOrBeTrue: ({ nextScheduledTimestamp }) =>
-                        Math.abs(Date.now() - nextScheduledTimestamp.valueOf()) < Values._500
+                  const [, error] = await dataStore.updateEntityByFilters(
+                    __Backk__CronJobScheduling,
+                    { serviceFunctionName },
+                    {
+                      lastScheduledTimestamp: new Date(),
+                      nextScheduledTimestamp: interval.next().toDate()
+                    },
+                    {
+                      entityPreHooks: {
+                        shouldSucceedOrBeTrue: ({ nextScheduledTimestamp }) =>
+                          Math.abs(Date.now() - nextScheduledTimestamp.valueOf()) < Values._500
+                      }
                     }
-                  });
+                  );
 
                   if (error?.statusCode === HttpStatusCodes.BAD_REQUEST) {
                     return [null, null];
@@ -73,6 +77,7 @@ export default function scheduleCronJobsForExecution(controller: any, dataStore:
                     {},
                     'POST',
                     response,
+                    true,
                     undefined
                   );
 

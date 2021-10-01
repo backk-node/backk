@@ -27,16 +27,16 @@ export default function createPostmanCollectionItem(
   if (functionMetadata.argType) {
     const { baseTypeName } = getTypeInfoForTypeName(functionMetadata.argType);
     typeNames.push(baseTypeName);
-    getNestedTypeNames(serviceMetadata.publicTypes[baseTypeName], serviceMetadata.publicTypes, typeNames);
+    getNestedTypeNames(serviceMetadata.types[baseTypeName], serviceMetadata.types, typeNames);
   }
 
   if (functionMetadata.returnValueType) {
     const { baseTypeName } = getTypeInfoForTypeName(functionMetadata.returnValueType);
     typeNames.push(baseTypeName);
-    getNestedTypeNames(serviceMetadata.publicTypes[baseTypeName], serviceMetadata.publicTypes, typeNames);
+    getNestedTypeNames(serviceMetadata.types[baseTypeName], serviceMetadata.types, typeNames);
   }
 
-  const types = Object.entries(serviceMetadata.publicTypes).reduce((types, [typeName, typeMetadata]) => {
+  const types = Object.entries(serviceMetadata.types).reduce((types, [typeName, typeMetadata]) => {
     if (typeNames.includes(typeName)) {
       const propertyModifiers: any = serviceMetadata.propertyAccess[typeName];
 
@@ -132,11 +132,11 @@ export default function createPostmanCollectionItem(
               }
             },
       url: {
-        raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/` + serviceMetadata.serviceName + '.' + functionMetadata.functionName,
+        raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${process.env.API_GATEWAY_PATH}/` + serviceMetadata.serviceName + '.' + functionMetadata.functionName,
         protocol: 'http',
         host: ['localhost'],
         port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,
-        path: [serviceMetadata.serviceName + '.' + functionMetadata.functionName]
+        path: [process.env.API_GATEWAY_PATH, serviceMetadata.serviceName + '.' + functionMetadata.functionName]
       }
     },
     response: [],

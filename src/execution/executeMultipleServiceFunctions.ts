@@ -21,6 +21,7 @@ async function executeMultiple<T>(
   serviceFunctionArgument: object,
   controller: any,
   headers: { [key: string]: string | string[] | undefined },
+  isClusterInternalCall: boolean,
   options: ServiceFunctionExecutionOptions | undefined,
   serviceFunctionCallIdToResponseMap: { [p: string]: ServiceFunctionCallResponse },
   statusCodes: number[],
@@ -53,31 +54,31 @@ async function executeMultiple<T>(
 
       if (localOrRemoteServiceFunctionName.includes('/')) {
         if (isTransactional) {
-          response.send(
+          response.end(
             createBackkErrorFromErrorCodeMessageAndStatus(
               BACKK_ERRORS.REMOTE_SERVICE_FUNCTION_CALL_NOT_ALLOWED_INSIDE_TRANSACTION
             )
           );
 
-          response.status(HttpStatusCodes.BAD_REQUEST);
+          response.writeHead(HttpStatusCodes.BAD_REQUEST);
         } else if (!options?.multipleServiceFunctionExecution?.regExpForAllowedRemoteServiceFunctionCalls) {
-          response.send(
+          response.end(
             createBackkErrorFromErrorCodeMessageAndStatus(
               BACKK_ERRORS.ALLOWED_REMOTE_SERVICE_FUNCTIONS_REGEXP_PATTERN_NOT_DEFINED
             )
           );
 
-          response.status(HttpStatusCodes.BAD_REQUEST);
+          response.writeHead(HttpStatusCodes.BAD_REQUEST);
         } else if (
           !localOrRemoteServiceFunctionName.match(options?.multipleServiceFunctionExecution?.regExpForAllowedRemoteServiceFunctionCalls)
         ) {
-          response.send(
+          response.end(
             createBackkErrorFromErrorCodeMessageAndStatus(
               BACKK_ERRORS.REMOTE_SERVICE_FUNCTION_CALL_NOT_ALLOWED
             )
           );
 
-          response.status(HttpStatusCodes.BAD_REQUEST);
+          response.writeHead(HttpStatusCodes.BAD_REQUEST);
         } else {
           const [serviceHost, serviceFunctionName] = localOrRemoteServiceFunctionName.split('/');
 
@@ -85,8 +86,8 @@ async function executeMultiple<T>(
             `http://${serviceHost}.svc.cluster.local/${serviceFunctionName}`
           );
 
-          response.send(remoteResponse);
-          response.status(error ? error.statusCode : HttpStatusCodes.SUCCESS);
+          response.end(remoteResponse);
+          response.writeHead(error ? error.statusCode : HttpStatusCodes.SUCCESS);
         }
       } else {
         await tryExecuteServiceMethod(
@@ -96,6 +97,7 @@ async function executeMultiple<T>(
           headers,
           'POST',
           response,
+          isClusterInternalCall,
           options
         );
       }
@@ -120,7 +122,8 @@ export default async function executeMultipleServiceFunctions(
   controller: any,
   serviceFunctionCalls: object,
   headers: { [key: string]: string | string[] | undefined },
-  resp?: any,
+  resp: any,
+  isClusterInternalCall: boolean,
   options?: ServiceFunctionExecutionOptions
 ): Promise<void | object> {
   const areServiceFunctionCallsValid = Object.values(serviceFunctionCalls).reduce(
@@ -164,6 +167,7 @@ export default async function executeMultipleServiceFunctions(
             serviceFunctionCalls,
             controller,
             headers,
+            isClusterInternalCall,
             options,
             serviceFunctionCallIdToResponseMap,
             statusCodes,
@@ -181,6 +185,7 @@ export default async function executeMultipleServiceFunctions(
           serviceFunctionCalls,
           controller,
           headers,
+          isClusterInternalCall,
           options,
           serviceFunctionCallIdToResponseMap,
           statusCodes

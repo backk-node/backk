@@ -8,7 +8,6 @@ import isEnumTypeName from '../utils/type/isEnumTypeName';
 export default function getNestedClasses(
   classNames: string[],
   Types: { [key: string]: new () => any },
-  PublicTypes: { [key: string]: new () => any },
   remoteServiceRootDir = ''
 ) {
   classNames.forEach((className) => {
@@ -61,14 +60,13 @@ export default function getNestedClasses(
             ) {
               if (!Types[baseTypeName]) {
                 Types[baseTypeName] = generateClassFromSrcFile(baseTypeName, remoteServiceRootDir);
-                PublicTypes[baseTypeName] = Types[baseTypeName];
-                getNestedClasses([baseTypeName], Types, PublicTypes);
+                getNestedClasses([baseTypeName], Types);
 
                 let proto = Object.getPrototypeOf(new (Types[baseTypeName] as new () => any)());
                 while (proto !== Object.prototype) {
                   if (!Types[proto.constructor.name]) {
                     Types[proto.constructor.name] = proto.constructor;
-                    getNestedClasses([baseTypeName], Types, PublicTypes);
+                    getNestedClasses([baseTypeName], Types);
                   }
                   proto = Object.getPrototypeOf(proto);
                 }

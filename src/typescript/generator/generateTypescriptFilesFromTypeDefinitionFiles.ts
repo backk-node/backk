@@ -36,7 +36,7 @@ function generateTypescriptFileFor(
         isPrivate = true;
       }
 
-      if (spreadType.startsWith('Public<')) {
+      if (spreadType.startsWith('ReadWrite<')) {
         spreadType = spreadType.slice(7, -1);
         isPublic = true;
       }

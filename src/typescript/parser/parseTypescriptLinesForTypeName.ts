@@ -93,7 +93,7 @@ export default function parseTypescriptLinesForTypeName(
   typeName: string,
   isBaseTypeOptional: boolean,
   isReadonly: boolean,
-  isPublic: boolean,
+  isReadWrite: boolean,
   isNonNullable: boolean,
   isPrivate: boolean,
   keys: string[],
@@ -202,20 +202,79 @@ export default function parseTypescriptLinesForTypeName(
                 }
 
                 if (isReadonly) {
-                  classProperty.readonly = true;
-                }
-
-                if (isPublic) {
-                  classProperty.accessibility = 'public';
+                  classProperty.accessibility = undefined;
                   classProperty.decorators = classProperty.decorators?.filter(
                     (decorator: any) =>
                       decorator.expression.callee.name !== 'Private' &&
-                      decorator.expression.callee.name !== 'IsUndefined'
+                      decorator.expression.callee.name !== 'IsUndefined' &&
+                      decorator.expression.callee.name !== 'ReadOnly' &&
+                      decorator.expression.callee.name !== 'WriteOnly' &&
+                      decorator.expression.callee.name !== 'CreateOnly' &&
+                      decorator.expression.callee.name !== 'UpdateOnly' &&
+                      decorator.expression.callee.name !== 'ReadUpdate' &&
+                      decorator.expression.callee.name !== 'ReadWrite'
                   );
+
+                  importLines.push("import { ReadOnly } from 'backk';");
+
+                  classProperty.decorators.push({
+                    type: 'Decorator',
+                    expression: {
+                      type: 'CallExpression',
+                      callee: {
+                        type: 'Identifier',
+                        name: 'ReadOnly'
+                      },
+                      arguments: [],
+                      optional: false
+                    }
+                  });
+                }
+
+                if (isReadWrite) {
+                  classProperty.decorators = classProperty.decorators?.filter(
+                    (decorator: any) =>
+                      decorator.expression.callee.name !== 'Private' &&
+                      decorator.expression.callee.name !== 'IsUndefined' &&
+                      decorator.expression.callee.name !== 'ReadOnly' &&
+                      decorator.expression.callee.name !== 'WriteOnly' &&
+                      decorator.expression.callee.name !== 'CreateOnly' &&
+                      decorator.expression.callee.name !== 'UpdateOnly' &&
+                      decorator.expression.callee.name !== 'ReadUpdate' &&
+                      decorator.expression.callee.name !== 'ReadWrite'
+                  );
+
+                  importLines.push("import { ReadWrite } from 'backk';");
+
+                  classProperty.decorators.push({
+                    type: 'Decorator',
+                    expression: {
+                      type: 'CallExpression',
+                      callee: {
+                        type: 'Identifier',
+                        name: 'ReadWrite'
+                      },
+                      arguments: [],
+                      optional: false
+                    }
+                  });
                 }
 
                 if (isPrivate) {
                   classProperty.accessibility = undefined;
+
+                  classProperty.decorators = classProperty.decorators?.filter(
+                    (decorator: any) =>
+                      decorator.expression.callee.name !== 'Private' &&
+                      decorator.expression.callee.name !== 'IsUndefined' &&
+                      decorator.expression.callee.name !== 'ReadOnly' &&
+                      decorator.expression.callee.name !== 'WriteOnly' &&
+                      decorator.expression.callee.name !== 'CreateOnly' &&
+                      decorator.expression.callee.name !== 'UpdateOnly' &&
+                      decorator.expression.callee.name !== 'ReadUpdate' &&
+                      decorator.expression.callee.name !== 'ReadWrite'
+                  );
+
                   importLines.push("import { Private } from 'backk';");
 
                   classProperty.decorators.push({
@@ -256,20 +315,78 @@ export default function parseTypescriptLinesForTypeName(
         }
 
         if (isReadonly) {
-          classBodyNode.readonly = true;
-        }
-
-        if (isPublic) {
-          classBodyNode.accessibility = 'public';
           classBodyNode.decorators = classBodyNode.decorators?.filter(
             (decorator: any) =>
               decorator.expression.callee.name !== 'Private' &&
-              decorator.expression.callee.name !== 'IsUndefined'
+              decorator.expression.callee.name !== 'IsUndefined' &&
+              decorator.expression.callee.name !== 'ReadOnly' &&
+              decorator.expression.callee.name !== 'WriteOnly' &&
+              decorator.expression.callee.name !== 'CreateOnly' &&
+              decorator.expression.callee.name !== 'UpdateOnly' &&
+              decorator.expression.callee.name !== 'ReadUpdate' &&
+              decorator.expression.callee.name !== 'ReadWrite'
           );
+
+          importLines.push("import { ReadOnly } from 'backk';");
+
+          classBodyNode.decorators.push({
+            type: 'Decorator',
+            expression: {
+              type: 'CallExpression',
+              callee: {
+                type: 'Identifier',
+                name: 'ReadOnly'
+              },
+              arguments: [],
+              optional: false
+            }
+          });
+        }
+
+        if (isReadWrite) {
+          classBodyNode.decorators = classBodyNode.decorators?.filter(
+            (decorator: any) =>
+              decorator.expression.callee.name !== 'Private' &&
+              decorator.expression.callee.name !== 'IsUndefined' &&
+              decorator.expression.callee.name !== 'ReadOnly' &&
+              decorator.expression.callee.name !== 'WriteOnly' &&
+              decorator.expression.callee.name !== 'CreateOnly' &&
+              decorator.expression.callee.name !== 'UpdateOnly' &&
+              decorator.expression.callee.name !== 'ReadUpdate' &&
+              decorator.expression.callee.name !== 'ReadWrite'
+          );
+
+          importLines.push("import { ReadWrite } from 'backk';");
+
+          classBodyNode.decorators.push({
+            type: 'Decorator',
+            expression: {
+              type: 'CallExpression',
+              callee: {
+                type: 'Identifier',
+                name: 'ReadWrite'
+              },
+              arguments: [],
+              optional: false
+            }
+          });
         }
 
         if (isPrivate) {
           classBodyNode.accessibility = undefined;
+
+          classBodyNode.decorators = classBodyNode.decorators?.filter(
+            (decorator: any) =>
+              decorator.expression.callee.name !== 'Private' &&
+              decorator.expression.callee.name !== 'IsUndefined' &&
+              decorator.expression.callee.name !== 'ReadOnly' &&
+              decorator.expression.callee.name !== 'WriteOnly' &&
+              decorator.expression.callee.name !== 'CreateOnly' &&
+              decorator.expression.callee.name !== 'UpdateOnly' &&
+              decorator.expression.callee.name !== 'ReadUpdate' &&
+              decorator.expression.callee.name !== 'ReadWrite'
+          );
+
           importLines.push("import { Private } from 'backk';");
 
           classBodyNode.decorators.push({

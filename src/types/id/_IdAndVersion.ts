@@ -4,6 +4,7 @@ import { BackkEntity } from "../entities/BackkEntity";
 import IsUndefined from "../../decorators/typeproperty/IsUndefined";
 import IsBigInt from "../../decorators/typeproperty/IsBigInt";
 import NotUnique from "../../decorators/typeproperty/NotUnique";
+import ReadUpdate from "../../decorators/typeproperty/access/ReadUpdate";
 
 // eslint-disable-next-line @typescript-eslint/class-name-casing
 export default class _IdAndVersion extends _Id implements BackkEntity {
@@ -12,5 +13,6 @@ export default class _IdAndVersion extends _Id implements BackkEntity {
   @NotUnique()
   @Min(-1)
   @Max(Number.MAX_SAFE_INTEGER)
+  @ReadUpdate()
   version!: number;
 }

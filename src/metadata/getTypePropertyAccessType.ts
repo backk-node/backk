@@ -1,9 +1,14 @@
 import typePropertyAnnotationContainer from '../decorators/typeproperty/typePropertyAnnotationContainer';
+import entityAnnotationContainer from '../decorators/entity/entityAnnotationContainer';
 
 export default function getTypePropertyAccessType<T>(
   typeMetadata: { [key: string]: string } | undefined,
   Class: new () => T
 ): { [key: string]: string } {
+  if (!entityAnnotationContainer.isEntity(Class)) {
+    return {};
+  }
+
   return Object.keys(typeMetadata ?? {}).reduce((accumulatedTypePropertyModifiers, propertyName) => {
     let typePropertyAccess;
 
@@ -18,11 +23,13 @@ export default function getTypePropertyAccessType<T>(
     } else if (typePropertyAnnotationContainer.isTypePropertyUpdateOnly(Class, propertyName)) {
       typePropertyAccess = '@UpdateOnly()';
     } else if (typePropertyAnnotationContainer.isTypePropertyWriteOnly(Class, propertyName)) {
-      typePropertyAccess = '@WriteOnly';
+      typePropertyAccess = '@WriteOnly()';
     } else if (typePropertyAnnotationContainer.isTypePropertyReadUpdate(Class, propertyName)) {
-      typePropertyAccess = '@ReadUpdate';
+      typePropertyAccess = '@ReadUpdate()';
     } else {
-      throw new Error('Unsupported property access type');
+      throw new Error(
+        Class.name + '.' + propertyName + ': Unsupported property access type: ' + typePropertyAccess
+      );
     }
 
     return {

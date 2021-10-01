@@ -110,6 +110,11 @@ export { default as Private } from './decorators/typeproperty/access/Private';
 export { default as Transient } from './decorators/typeproperty/Transient';
 export { UiProps, default as UiProperties } from './decorators/typeproperty/UiProperties';
 export { default as ReadWrite } from './decorators/typeproperty/access/ReadWrite';
+export { default as ReadOnly } from './decorators/typeproperty/access/ReadOnly';
+export { default as ReadUpdate } from './decorators/typeproperty/access/ReadUpdate';
+export { default as WriteOnly } from './decorators/typeproperty/access/WriteOnly';
+export { default as CreateOnly } from './decorators/typeproperty/access/CreateOnly';
+export { default as UpdateOnly } from './decorators/typeproperty/access/UpdateOnly';
 
 // Register custom decorator
 export { default as registerCustomDecorator } from './decorators/registerCustomDecorator';

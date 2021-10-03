@@ -166,8 +166,7 @@ function getPublicMetadata(
 export function generatePublicServicesMetadata(microservice: any) {
   microservice.publicServicesMetadata = microservice.servicesMetadata.map((serviceMetadata: ServiceMetadata) => {
     const {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      types, // NOSONAR
+      publicTypes,
       serviceName,
       functions,
       validations,
@@ -179,7 +178,7 @@ export function generatePublicServicesMetadata(microservice: any) {
 
     const {
       publicFunctions,
-      publicTypes,
+      publicTypes: newPublicTypes,
       publicPropertyAccess,
       publicTypesDocumentation,
       publicTypeReferences,
@@ -187,7 +186,7 @@ export function generatePublicServicesMetadata(microservice: any) {
     } = getPublicMetadata(
       microservice[serviceMetadata.serviceName].constructor,
       functions,
-      types,
+      publicTypes,
       propertyAccess,
       typesDocumentation,
       typeReferences,
@@ -198,7 +197,7 @@ export function generatePublicServicesMetadata(microservice: any) {
       serviceName,
       serviceDocumentation,
       functions: publicFunctions,
-      types: publicTypes,
+      types: newPublicTypes,
       propertyAccess: publicPropertyAccess,
       typesDocumentation: publicTypesDocumentation,
       typeReferences: publicTypeReferences,
@@ -212,8 +211,7 @@ export function generatePublicServicesMetadata(microservice: any) {
 export function generateInternalServicesMetadata(microservice: any) {
   microservice.internalServicesMetadata = microservice.servicesMetadata.map((serviceMetadata: ServiceMetadata) => {
     const {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      types, // NOSONAR
+      publicTypes,
       serviceName,
       functions,
       validations,
@@ -233,7 +231,7 @@ export function generateInternalServicesMetadata(microservice: any) {
     } = getInternalMetadata(
       microservice[serviceMetadata.serviceName].constructor,
       functions,
-      types,
+      publicTypes,
       propertyAccess,
       typesDocumentation,
       typeReferences,
@@ -347,12 +345,10 @@ export default function initializeMicroservice(
 
     if (command === '--generatePublicApiSpecOnly') {
       writeOpenApiSpecFile(microservice, microservice.publicServicesMetadata);
-      writeApiPostmanCollectionExportFile(microservice, microservice.publicServicesMetadata);
     }
 
     if (command === '--generateClusterInternalApiSpecOnly') {
       writeOpenApiSpecFile(microservice, microservice.publicServicesMetadata);
-      writeApiPostmanCollectionExportFile(microservice, microservice.publicServicesMetadata);
     }
 
     microservice.publicServicesMetadata = {

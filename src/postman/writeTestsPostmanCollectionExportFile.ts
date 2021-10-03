@@ -639,12 +639,16 @@ export default function writeTestsPostmanCollectionExportFile<T>(
     ]
   };
 
-  if (!existsSync(cwd + '/postman')) {
-    mkdirSync(cwd + '/postman');
+  if (!existsSync(cwd + '/generated')) {
+    mkdirSync(cwd + '/generated');
+  }
+
+  if (!existsSync(cwd + '/generated/integrationtests')) {
+    mkdirSync(cwd + '/generated/integrationtests');
   }
 
   writeFileSync(
-    process.cwd() + '/postman/integrationTestsCollection.json',
+    process.cwd() + '/generated/integrationtests/postmanCollection.json',
     JSON.stringify(postmanMetadata, null, 4)
   );
 }

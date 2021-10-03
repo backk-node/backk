@@ -40,6 +40,6 @@ import { Application, Comment, TSConfigReader, TypeDocReader } from 'typedoc-pks
       }
     });
 
-    app.generateDocs(project, 'docs');
+    app.generateDocs(project, 'generated/docs');
   }
 })();

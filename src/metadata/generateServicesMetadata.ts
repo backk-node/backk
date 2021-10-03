@@ -43,6 +43,14 @@ export default function generateServicesMetadata<T>(
         {}
       );
 
+      const publicTypesMetadata = Object.entries((microservice as any)[serviceName].Types ?? {}).reduce(
+        (accumulatedTypes, [typeName, Class]: [string, any]) => {
+          const typeObject = getClassPropertyNameToPropertyTypeNameMap(Class, dataStore, false, true);
+          return { ...accumulatedTypes, [typeName]: typeObject };
+        },
+        {}
+      );
+
       // noinspection FunctionWithMoreThanThreeNegationsJS
       const functions: FunctionMetadata[] = functionNames
         .filter(
@@ -170,6 +178,15 @@ export default function generateServicesMetadata<T>(
         functions,
         types: {
           ...typesMetadata,
+          BackkError: {
+            statusCode: 'integer',
+            errorCode: '?string',
+            message: 'string',
+            stackTrace: '?string'
+          }
+        },
+        publicTypes: {
+          ...publicTypesMetadata,
           BackkError: {
             statusCode: 'integer',
             errorCode: '?string',

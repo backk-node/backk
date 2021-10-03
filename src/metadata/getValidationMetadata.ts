@@ -1,5 +1,6 @@
-import { getFromContainer, MetadataStorage } from "class-validator";
-import { ValidationMetadata } from "class-validator/metadata/ValidationMetadata";
+import { getFromContainer, MetadataStorage } from 'class-validator';
+import { ValidationMetadata } from 'class-validator/metadata/ValidationMetadata';
+import typePropertyAnnotationContainer from '../decorators/typeproperty/typePropertyAnnotationContainer';
 
 export default function getValidationMetadata<T>(Class: new () => T): object {
   const metadataForValidations = getFromContainer(MetadataStorage).getTargetValidationMetadatas(Class, '');
@@ -7,6 +8,10 @@ export default function getValidationMetadata<T>(Class: new () => T): object {
 
   // noinspection FunctionWithMoreThanThreeNegationsJS
   metadataForValidations.forEach((validationMetadata: ValidationMetadata) => {
+    if (typePropertyAnnotationContainer.isTypePropertyPrivate(Class, validationMetadata.propertyName)) {
+      return;
+    }
+
     const validationType =
       validationMetadata.type === 'customValidation'
         ? validationMetadata.constraints[0]

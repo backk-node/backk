@@ -4,7 +4,6 @@ import AbstractDataStore from '../datastore/AbstractDataStore';
 import { MAX_INT_VALUE } from '../constants/constants';
 import typePropertyAnnotationContainer from '../decorators/typeproperty/typePropertyAnnotationContainer';
 import isEntityTypeName from '../utils/type/isEntityTypeName';
-import isPropertyReadDenied from '../utils/type/isPropertyReadDenied';
 
 const classNameToMetadataMap: { [key: string]: { [key: string]: string } } = {};
 
@@ -12,7 +11,8 @@ const classNameToMetadataMap: { [key: string]: { [key: string]: string } } = {};
 export default function getClassPropertyNameToPropertyTypeNameMap<T>(
   Class: new () => T,
   dataStore?: AbstractDataStore,
-  isGeneration = false
+  isGeneration = false,
+  allowOnlyPublicTypes = false
 ): { [key: string]: string } {
   if (!isGeneration && classNameToMetadataMap[Class.name]) {
     return classNameToMetadataMap[Class.name];
@@ -59,16 +59,19 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
       );
     }
 
+    if (
+      allowOnlyPublicTypes &&
+      typePropertyAnnotationContainer.isTypePropertyPrivate(Class, validationMetadata.propertyName)
+    ) {
+      return;
+    }
+
     const undefinedValidation = validationMetadatas.find(
       ({ propertyName, type, constraints }: ValidationMetadata) =>
         propertyName === validationMetadata.propertyName &&
         type === 'customValidation' &&
         constraints?.[0] === 'isUndefined'
     );
-
-    if (typePropertyAnnotationContainer.isTypePropertyPrivate(Class, validationMetadata.propertyName)) {
-      return;
-    }
 
     const hasDifferentDataStoreGroup = validationMetadata.groups?.find(
       (group) => group.startsWith('DataStore: ') && group !== 'DataStore: ' + dataStore?.getDataStoreType()
@@ -342,11 +345,6 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
         );
       }
     }
-
-    const isReadWriteProperty = typePropertyAnnotationContainer.isTypePropertyReadWrite(
-      Class,
-      validationMetadata.propertyName
-    );
 
     if (isGeneration) {
       const isUnique = typePropertyAnnotationContainer.isTypePropertyUnique(

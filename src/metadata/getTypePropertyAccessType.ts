@@ -10,6 +10,10 @@ export default function getTypePropertyAccessType<T>(
   }
 
   return Object.keys(typeMetadata ?? {}).reduce((accumulatedTypePropertyModifiers, propertyName) => {
+    if (typePropertyAnnotationContainer.isTypePropertyPrivate(Class, propertyName)) {
+      return accumulatedTypePropertyModifiers;
+    }
+
     let typePropertyAccess;
 
     if (typePropertyAnnotationContainer.isTypePropertyCreateOnly(Class, propertyName)) {

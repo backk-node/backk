@@ -1,4 +1,3 @@
-import typePropertyAnnotationContainer from "../../decorators/typeproperty/typePropertyAnnotationContainer";
 import getClassPropertyNameToPropertyTypeNameMap
   from "../../metadata/getClassPropertyNameToPropertyTypeNameMap";
 import getTypeInfoForTypeName from "../../utils/type/getTypeInfoForTypeName";

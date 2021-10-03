@@ -569,9 +569,13 @@ export default function writeOpenApiSpecFile<T>(microservice: T, servicesMetadat
 
   const cwd = process.cwd();
 
+  if (!existsSync(cwd + '/generated')) {
+    mkdirSync(cwd + '/generated');
+  }
+
   if (!existsSync(cwd + '/openapi')) {
     mkdirSync(cwd + '/openapi');
   }
 
-  writeFileSync(process.cwd() + '/openapi/openApiSpec.yaml', YAML.stringify(openApiSpec));
+  writeFileSync(process.cwd() + '/generated/openapi/spec.yaml', YAML.stringify(openApiSpec));
 }

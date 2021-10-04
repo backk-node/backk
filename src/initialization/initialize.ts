@@ -30,7 +30,7 @@ export default async function initialize(
     log(Severity.ERROR, `Microservice crashed with exception: ${error.message}`, error.stack ?? '');
   });
 
-  if (commandLineArgs?.[2] && commandLineArgs?.[2] !== '--generateApiSpecsOnly') {
+  if (commandLineArgs?.[2] && commandLineArgs?.[2] !== '--generateApiSpecsOnly' && commandLineArgs?.[2] !== '--enableProcessKillService') {
     console.error(
       'Invalid command line parameter: ' +
         commandLineArgs?.[2] +

@@ -89,7 +89,13 @@ export default async function startHttpServerFor(
     server.close();
   });
 
-  const port = process.env.HTTP_SERVER_PORT ?? 3000;
+  let port;
+
+  if (microservice.isProcessKillServiceEnabled) {
+    port = 30000;
+  } else {
+    port = process.env.HTTP_SERVER_PORT ?? 3000;
+  }
   log(Severity.INFO, `HTTP server started, listening to port ${port}`, '');
   return server.listen(port);
 }

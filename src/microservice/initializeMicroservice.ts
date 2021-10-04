@@ -1,25 +1,26 @@
-import _ from 'lodash';
-import BaseService from '../service/BaseService';
-import generateServicesMetadata from '../metadata/generateServicesMetadata';
-import parseServiceFunctionNameToArgAndReturnTypeNameMaps from '../typescript/parser/parseServiceFunctionNameToArgAndReturnTypeNameMaps';
-import getSrcFilePathNameForTypeName from '../utils/file/getSrcFilePathNameForTypeName';
-import setClassPropertyValidationDecorators from '../validation/setClassPropertyValidationDecorators';
-import setNestedTypeValidationDecorators from '../validation/setNestedTypeValidationDecorators';
-import writeTestsPostmanCollectionExportFile from '../postman/writeTestsPostmanCollectionExportFile';
-import writeApiPostmanCollectionExportFile from '../postman/writeApiPostmanCollectionExportFile';
-import generateTypesForServices from '../metadata/generateTypesForServices';
-import getNestedClasses from '../metadata/getNestedClasses';
-import AbstractDataStore from '../datastore/AbstractDataStore';
-import log, { Severity } from '../observability/logging/log';
-import { BACKK_ERRORS } from '../errors/backkErrors';
-import writeOpenApiSpecFile from '../openapi/writeOpenApiSpecFile';
-import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
-import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
-import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
+import _ from "lodash";
+import BaseService from "../service/BaseService";
+import generateServicesMetadata from "../metadata/generateServicesMetadata";
+import parseServiceFunctionNameToArgAndReturnTypeNameMaps
+  from "../typescript/parser/parseServiceFunctionNameToArgAndReturnTypeNameMaps";
+import getSrcFilePathNameForTypeName from "../utils/file/getSrcFilePathNameForTypeName";
+import setClassPropertyValidationDecorators from "../validation/setClassPropertyValidationDecorators";
+import setNestedTypeValidationDecorators from "../validation/setNestedTypeValidationDecorators";
+import writeTestsPostmanCollectionExportFile from "../postman/writeTestsPostmanCollectionExportFile";
+import generateTypesForServices from "../metadata/generateTypesForServices";
+import getNestedClasses from "../metadata/getNestedClasses";
+import AbstractDataStore from "../datastore/AbstractDataStore";
+import log, { Severity } from "../observability/logging/log";
+import { BACKK_ERRORS } from "../errors/backkErrors";
+import writeOpenApiSpecFile from "../openapi/writeOpenApiSpecFile";
+import { FunctionMetadata } from "../metadata/types/FunctionMetadata";
+import serviceFunctionAnnotationContainer
+  from "../decorators/service/function/serviceFunctionAnnotationContainer";
+import getTypeInfoForTypeName from "../utils/type/getTypeInfoForTypeName";
 import { ServiceMetadata } from "../metadata/types/ServiceMetadata";
 
 function addNestedTypes(privateTypeNames: Set<string>, typeName: string, types: { [p: string]: object }) {
-  Object.keys(types[typeName]).forEach((typeName) => {
+  Object.keys(types[typeName] ?? {}).forEach((typeName) => {
     const { baseTypeName } = getTypeInfoForTypeName(typeName);
     if (
       baseTypeName[0].toUpperCase() === baseTypeName[0] &&
@@ -33,7 +34,7 @@ function addNestedTypes(privateTypeNames: Set<string>, typeName: string, types: 
 }
 
 function removeNestedTypes(privateTypeNames: Set<string>, typeName: string, types: { [p: string]: object }) {
-  Object.keys(types[typeName]).forEach((typeName) => {
+  Object.keys(types[typeName] ?? {}).forEach((typeName) => {
     const { baseTypeName } = getTypeInfoForTypeName(typeName);
     if (
       baseTypeName[0].toUpperCase() === baseTypeName[0] &&

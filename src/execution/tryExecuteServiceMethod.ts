@@ -745,13 +745,11 @@ export default async function tryExecuteServiceMethod(
       resp.writeHead((errorOrBackkError as BackkError).statusCode, { 'Content-Type': 'application/json' });
       resp.end(JSON.stringify(errorOrBackkError));
     } else {
+
       resp.writeHead(HttpStatusCodes.INTERNAL_SERVER_ERROR, { 'Content-Type': 'application/json' });
       resp.end(
         JSON.stringify(
-          createBackkErrorFromErrorMessageAndStatusCode(
-            errorOrBackkError.message,
-            HttpStatusCodes.INTERNAL_SERVER_ERROR
-          )
+         createBackkErrorFromError(errorOrBackkError)
         )
       );
     }

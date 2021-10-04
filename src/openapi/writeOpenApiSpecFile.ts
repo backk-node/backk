@@ -571,7 +571,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
   return openApiSpec;
 }
 
-export default function writeOpenApiSpecFile<T>(microservice: T, servicesMetadata: ServiceMetadata[]) {
+export default function writeOpenApiSpecFile<T>(microservice: T, servicesMetadata: ServiceMetadata[], directory: string) {
   const openApiSpec = getOpenApiSpec(microservice, servicesMetadata);
 
   const cwd = process.cwd();
@@ -580,9 +580,13 @@ export default function writeOpenApiSpecFile<T>(microservice: T, servicesMetadat
     mkdirSync(cwd + '/generated');
   }
 
-  if (!existsSync(cwd + '/openapi')) {
-    mkdirSync(cwd + '/openapi');
+  if (!existsSync(cwd + '/generated/openapi')) {
+    mkdirSync(cwd + '/generated/openapi');
   }
 
-  writeFileSync(process.cwd() + '/generated/openapi/spec.yaml', YAML.stringify(openApiSpec));
+  if (!existsSync(cwd + '/generated/openapi/' + directory)) {
+    mkdirSync(cwd + '/generated/openapi/' + directory);
+  }
+
+  writeFileSync(process.cwd() + `/generated/openapi/${directory}/spec.yaml`, YAML.stringify(openApiSpec));
 }

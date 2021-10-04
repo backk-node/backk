@@ -345,11 +345,11 @@ export default function initializeMicroservice(
     }
 
     if (command === '--generatePublicApiSpecOnly') {
-      writeOpenApiSpecFile(microservice, microservice.publicServicesMetadata);
+      writeOpenApiSpecFile(microservice, microservice.publicServicesMetadata, 'public');
     }
 
     if (command === '--generateClusterInternalApiSpecOnly') {
-      writeOpenApiSpecFile(microservice, microservice.internalServicesMetadata);
+      writeOpenApiSpecFile(microservice, microservice.internalServicesMetadata, 'internal');
     }
 
     const serviceNames = Object.entries(microservice)

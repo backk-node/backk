@@ -290,7 +290,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
           const minLength: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
-          ].reduce((minLength: number | undefined, validation: string) => {
+          ]?.reduce((minLength: number | undefined, validation: string) => {
             if (validation.startsWith('minLength(')) {
               const valueStr = validation.slice('minLength('.length, -1);
               return parseInt(valueStr, 10);
@@ -308,7 +308,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
           const maxLength: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
-          ].reduce((maxLength: number | undefined, validation: string) => {
+          ]?.reduce((maxLength: number | undefined, validation: string) => {
             if (validation.startsWith('maxLength(')) {
               const valueStr = validation.slice('maxLength('.length, -1);
               return parseInt(valueStr, 10);
@@ -330,7 +330,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
           const pattern: string | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
-          ].reduce((pattern: string | undefined, validation: string) => {
+          ]?.reduce((pattern: string | undefined, validation: string) => {
             if (validation.startsWith('lengthAndMatches(')) {
               const [, , patternStart, ...rest] = validation.split(',');
               const patternStr = patternStart + (rest.length > 0 ? ',' + rest.join(',') : '');
@@ -398,7 +398,13 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
           const readOnly: boolean | undefined = (serviceMetadata.propertyAccess as any)[typeName]?.[
             propertyName
-          ]?.includes('readonly')
+          ]?.includes('@ReadOnly()')
+            ? true
+            : undefined;
+
+          const writeOnly: boolean | undefined = (serviceMetadata.propertyAccess as any)[typeName]?.[
+            propertyName
+            ]?.includes('@WriteOnly()')
             ? true
             : undefined;
 
@@ -472,7 +478,8 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             ...(minItems === undefined ? {} : { minItems }),
             ...(maxItems === undefined ? {} : { maxItems }),
             ...(uniqueItems === undefined ? {} : { uniqueItems }),
-            ...(readOnly === undefined ? {} : { readOnly })
+            ...(readOnly === undefined ? {} : { readOnly }),
+            ...(writeOnly === undefined ? {} : { writeOnly })
           };
 
           if (!isOptionalType) {

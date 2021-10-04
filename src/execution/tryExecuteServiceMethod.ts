@@ -43,6 +43,8 @@ import {
   generateInternalServicesMetadata,
   generatePublicServicesMetadata
 } from '../microservice/initializeMicroservice';
+import isBackkError from '../errors/isBackkError';
+import createBackkErrorFromErrorMessageAndStatusCode from '../errors/createBackkErrorFromErrorMessageAndStatusCode';
 
 export interface ServiceFunctionExecutionOptions {
   isMetadataServiceEnabled?: boolean;
@@ -737,10 +739,22 @@ export default async function tryExecuteServiceMethod(
     );
 
     resp.end(JSON.stringify(response));
-  } catch (backkError) {
-    storedError = backkError;
-    resp.writeHead((backkError as BackkError).statusCode, { 'Content-Type': 'application/json' });
-    resp.end(JSON.stringify(backkError));
+  } catch (errorOrBackkError) {
+    storedError = errorOrBackkError;
+    if (isBackkError(errorOrBackkError)) {
+      resp.writeHead((errorOrBackkError as BackkError).statusCode, { 'Content-Type': 'application/json' });
+      resp.end(JSON.stringify(errorOrBackkError));
+    } else {
+      resp.writeHead(HttpStatusCodes.INTERNAL_SERVER_ERROR, { 'Content-Type': 'application/json' });
+      resp.end(
+        JSON.stringify(
+          createBackkErrorFromErrorMessageAndStatusCode(
+            errorOrBackkError.message,
+            HttpStatusCodes.INTERNAL_SERVER_ERROR
+          )
+        )
+      );
+    }
   } finally {
     if (microservice[serviceName] instanceof UserAccountBaseService || subject) {
       const auditLogEntry = createAuditLogEntry(

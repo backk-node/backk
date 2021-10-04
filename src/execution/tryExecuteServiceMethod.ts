@@ -201,14 +201,14 @@ export default async function tryExecuteServiceMethod(
     } else if (serviceFunctionName === 'metadataService.getServicesMetadata') {
       if (!options || options.isMetadataServiceEnabled === undefined || options.isMetadataServiceEnabled) {
         resp.writeHead(HttpStatusCodes.SUCCESS, { 'Content-Type': 'application/json' });
-        resp.end({
-          servicesMetadata: JSON.stringify(
-            isClusterInternalCall
+        resp.end(
+          JSON.stringify({
+            servicesMetadata: isClusterInternalCall
               ? microservice.internalServicesMetadata ?? generateInternalServicesMetadata(microservice)
-              : microservice.publicServicesMetadata ?? generatePublicServicesMetadata(microservice)
-          ),
-          commonErrors: BACKK_ERRORS
-        });
+              : microservice.publicServicesMetadata ?? generatePublicServicesMetadata(microservice),
+            commonErrors: BACKK_ERRORS
+          })
+        );
         return;
       } else {
         throw createBackkErrorFromErrorCodeMessageAndStatus({

@@ -67,21 +67,21 @@ function getInternalMetadata(
       const { baseTypeName } = getTypeInfoForTypeName(func.returnValueType);
       publicTypeNames.delete(baseTypeName);
       removeNestedTypes(publicTypeNames, baseTypeName, types);
-      return false;
+      return true;
     } else {
       publicTypeNames.add(func.argType);
       const { baseTypeName } = getTypeInfoForTypeName(func.returnValueType);
       publicTypeNames.add(baseTypeName);
       addNestedTypes(publicTypeNames, baseTypeName, types);
-      return true;
+      return false;
     }
   });
 
-  const internalTypes = types;
-  const internalPropertyAccess = propertyAccess;
-  const internalTypesDocumentation = typesDocumentation;
-  const internalTypeReferences = typeReferences;
-  const internalValidations = validations;
+  const internalTypes =  { ...types };
+  const internalPropertyAccess = { ...propertyAccess };
+  const internalTypesDocumentation = { ...typesDocumentation };
+  const internalTypeReferences = { ...typeReferences };
+  const internalValidations = { ...validations };
 
   publicTypeNames.forEach((publicTypeName) => {
     delete internalTypes[publicTypeName];
@@ -138,11 +138,11 @@ function getPublicMetadata(
     }
   });
 
-  const publicTypes = types;
-  const publicPropertyAccess = propertyAccess;
-  const publicTypesDocumentation = typesDocumentation;
-  const publicTypeReferences = typeReferences;
-  const publicValidations = validations;
+  const publicTypes = { ...types };
+  const publicPropertyAccess = { ... propertyAccess };
+  const publicTypesDocumentation = { ...typesDocumentation };
+  const publicTypeReferences = { ...typeReferences };
+  const publicValidations = { ...validations };
 
   privateTypeNames.forEach((privateTypeName) => {
     delete publicTypes[privateTypeName];

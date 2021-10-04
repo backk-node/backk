@@ -404,7 +404,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
           const writeOnly: boolean | undefined = (serviceMetadata.propertyAccess as any)[typeName]?.[
             propertyName
-            ]?.includes('@WriteOnly()')
+          ]?.includes('@WriteOnly()')
             ? true
             : undefined;
 
@@ -538,18 +538,41 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
           }
         : {})
     },
-    servers: [
+    servers:
       process.env.NODE_ENV === 'development'
-        ? {
-            url: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${process.env.API_GATEWAY_PATH}`,
-            description: 'Local development server'
-          }
-        : {
-            url: `https://${process.env.API_GATEWAY_FQDN}${process.env.API_GATEWAY_PATH}`,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            description: process.env.NODE_ENV!.toUpperCase() + process.env.NODE_ENV!.slice(1) + ' server'
-          }
-    ],
+        ? [
+            {
+              url: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${process.env.API_GATEWAY_PATH}`,
+              description: 'Local development server'
+            },
+            ...[
+              process.env.CI_API_GATEWAY_FQDN
+                ? {
+                    url: `https://${process.env.CI_API_GATEWAY_FQDN}${process.env.API_GATEWAY_PATH}`,
+                    description: 'CI server'
+                  }
+                : [],
+              process.env.STAGING_API_GATEWAY_FQDN
+                ? {
+                    url: `https://${process.env.STAGING_API_GATEWAY_FQDN}${process.env.API_GATEWAY_PATH}`,
+                    description: 'Stating server'
+                  }
+                : [],
+              process.env.PROD_API_GATEWAY_FQDN
+                ? {
+                    url: `https://${process.env.PROD_API_GATEWAY_FQDN}${process.env.API_GATEWAY_PATH}`,
+                    description: 'Production server'
+                  }
+                : []
+            ]
+          ]
+        : [
+            {
+              url: `https://${process.env.API_GATEWAY_FQDN}${process.env.API_GATEWAY_PATH}`,
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              description: process.env.NODE_ENV!.toUpperCase() + process.env.NODE_ENV!.slice(1) + ' server'
+            }
+          ],
     components: {
       securitySchemes: {
         bearerAuth: {
@@ -571,7 +594,11 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
   return openApiSpec;
 }
 
-export default function writeOpenApiSpecFile<T>(microservice: T, servicesMetadata: ServiceMetadata[], directory: string) {
+export default function writeOpenApiSpecFile<T>(
+  microservice: T,
+  servicesMetadata: ServiceMetadata[],
+  directory: string
+) {
   const openApiSpec = getOpenApiSpec(microservice, servicesMetadata);
 
   const cwd = process.cwd();

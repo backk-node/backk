@@ -78,18 +78,6 @@ export default async function tryExecuteServiceMethod(
   let [serviceName, functionName] = serviceFunctionName.split('.');
 
   try {
-    if (serviceFunctionName === 'processKillService.killSelf') {
-      if (process.env.NODE_ENV === 'development' && microservice.isProcessKillServiceEnabled) {
-        resp.writeHead(HttpStatusCodes.SUCCESS);
-        resp.end();
-        process.exit(0);
-      } else {
-        throw createBackkErrorFromErrorCodeMessageAndStatus(
-          BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED
-        );
-      }
-    }
-
     if (
       options?.multipleServiceFunctionExecution?.isAllowed &&
       isExecuteMultipleRequest(serviceFunctionName)

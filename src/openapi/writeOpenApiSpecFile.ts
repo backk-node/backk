@@ -544,27 +544,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             {
               url: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${process.env.API_GATEWAY_PATH}`,
               description: 'Local development server'
-            },
-            ...[
-              process.env.CI_API_GATEWAY_FQDN
-                ? {
-                    url: `https://${process.env.CI_API_GATEWAY_FQDN}${process.env.API_GATEWAY_PATH}`,
-                    description: 'CI server'
-                  }
-                : [],
-              process.env.STAGING_API_GATEWAY_FQDN
-                ? {
-                    url: `https://${process.env.STAGING_API_GATEWAY_FQDN}${process.env.API_GATEWAY_PATH}`,
-                    description: 'Stating server'
-                  }
-                : [],
-              process.env.PROD_API_GATEWAY_FQDN
-                ? {
-                    url: `https://${process.env.PROD_API_GATEWAY_FQDN}${process.env.API_GATEWAY_PATH}`,
-                    description: 'Production server'
-                  }
-                : []
-            ]
+            }
           ]
         : [
             {
@@ -586,6 +566,27 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
     security: [{ bearerAuth: [] }],
     paths
   };
+
+  if (process.env.CI_API_GATEWAY_FQDN) {
+    openApiSpec.servers.push({
+      url: `https://${process.env.CI_API_GATEWAY_FQDN}${process.env.API_GATEWAY_PATH}`,
+      description: 'CI server'
+    })
+  }
+
+  if (process.env.STAGING_API_GATEWAY_FQDN) {
+    openApiSpec.servers.push({
+      url: `https://${process.env.STAGING_API_GATEWAY_FQDN}${process.env.API_GATEWAY_PATH}`,
+      description: 'Staging server'
+    })
+  }
+
+  if (process.env.PRODUCTION_API_GATEWAY_FQDN) {
+    openApiSpec.servers.push({
+      url: `https://${process.env.PRODUCTION_API_GATEWAY_FQDN}${process.env.API_GATEWAY_PATH}`,
+      description: 'Production server'
+    })
+  }
 
   if (!cachedOpenApiSpec) {
     cachedOpenApiSpec = openApiSpec;

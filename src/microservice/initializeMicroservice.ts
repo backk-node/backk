@@ -1,23 +1,21 @@
-import _ from "lodash";
-import BaseService from "../service/BaseService";
-import generateServicesMetadata from "../metadata/generateServicesMetadata";
-import parseServiceFunctionNameToArgAndReturnTypeNameMaps
-  from "../typescript/parser/parseServiceFunctionNameToArgAndReturnTypeNameMaps";
-import getSrcFilePathNameForTypeName from "../utils/file/getSrcFilePathNameForTypeName";
-import setClassPropertyValidationDecorators from "../validation/setClassPropertyValidationDecorators";
-import setNestedTypeValidationDecorators from "../validation/setNestedTypeValidationDecorators";
-import writeTestsPostmanCollectionExportFile from "../postman/writeTestsPostmanCollectionExportFile";
-import generateTypesForServices from "../metadata/generateTypesForServices";
-import getNestedClasses from "../metadata/getNestedClasses";
-import AbstractDataStore from "../datastore/AbstractDataStore";
-import log, { Severity } from "../observability/logging/log";
-import { BACKK_ERRORS } from "../errors/backkErrors";
-import writeOpenApiSpecFile from "../openapi/writeOpenApiSpecFile";
-import { FunctionMetadata } from "../metadata/types/FunctionMetadata";
-import serviceFunctionAnnotationContainer
-  from "../decorators/service/function/serviceFunctionAnnotationContainer";
-import getTypeInfoForTypeName from "../utils/type/getTypeInfoForTypeName";
-import { ServiceMetadata } from "../metadata/types/ServiceMetadata";
+import _ from 'lodash';
+import BaseService from '../service/BaseService';
+import generateServicesMetadata from '../metadata/generateServicesMetadata';
+import parseServiceFunctionNameToArgAndReturnTypeNameMaps from '../typescript/parser/parseServiceFunctionNameToArgAndReturnTypeNameMaps';
+import getSrcFilePathNameForTypeName from '../utils/file/getSrcFilePathNameForTypeName';
+import setClassPropertyValidationDecorators from '../validation/setClassPropertyValidationDecorators';
+import setNestedTypeValidationDecorators from '../validation/setNestedTypeValidationDecorators';
+import writeTestsPostmanCollectionExportFile from '../postman/writeTestsPostmanCollectionExportFile';
+import generateTypesForServices from '../metadata/generateTypesForServices';
+import getNestedClasses from '../metadata/getNestedClasses';
+import AbstractDataStore from '../datastore/AbstractDataStore';
+import log, { Severity } from '../observability/logging/log';
+import { BACKK_ERRORS } from '../errors/backkErrors';
+import writeOpenApiSpecFile from '../openapi/writeOpenApiSpecFile';
+import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
+import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
+import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
+import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
 
 function addNestedTypes(privateTypeNames: Set<string>, typeName: string, types: { [p: string]: object }) {
   Object.keys(types[typeName] ?? {}).forEach((typeName) => {
@@ -165,91 +163,95 @@ function getPublicMetadata(
 }
 
 export function generatePublicServicesMetadata(microservice: any) {
-  microservice.publicServicesMetadata = microservice.servicesMetadata.map((serviceMetadata: ServiceMetadata) => {
-    const {
-      publicTypes,
-      serviceName,
-      functions,
-      validations,
-      propertyAccess,
-      serviceDocumentation,
-      typeReferences,
-      typesDocumentation
-    } = serviceMetadata;
+  microservice.publicServicesMetadata = microservice.servicesMetadata.map(
+    (serviceMetadata: ServiceMetadata) => {
+      const {
+        publicTypes,
+        serviceName,
+        functions,
+        validations,
+        propertyAccess,
+        serviceDocumentation,
+        typeReferences,
+        typesDocumentation
+      } = serviceMetadata;
 
-    const {
-      publicFunctions,
-      publicTypes: newPublicTypes,
-      publicPropertyAccess,
-      publicTypesDocumentation,
-      publicTypeReferences,
-      publicValidations
-    } = getPublicMetadata(
-      microservice[serviceMetadata.serviceName].constructor,
-      functions,
-      publicTypes,
-      propertyAccess,
-      typesDocumentation,
-      typeReferences,
-      validations
-    );
+      const {
+        publicFunctions,
+        publicTypes: newPublicTypes,
+        publicPropertyAccess,
+        publicTypesDocumentation,
+        publicTypeReferences,
+        publicValidations
+      } = getPublicMetadata(
+        microservice[serviceMetadata.serviceName].constructor,
+        functions,
+        publicTypes,
+        propertyAccess,
+        typesDocumentation,
+        typeReferences,
+        validations
+      );
 
-    return {
-      serviceName,
-      serviceDocumentation,
-      functions: publicFunctions,
-      types: newPublicTypes,
-      propertyAccess: publicPropertyAccess,
-      typesDocumentation: publicTypesDocumentation,
-      typeReferences: publicTypeReferences,
-      validations: publicValidations
-    };
-  });
+      return {
+        serviceName,
+        serviceDocumentation,
+        functions: publicFunctions,
+        types: newPublicTypes,
+        propertyAccess: publicPropertyAccess,
+        typesDocumentation: publicTypesDocumentation,
+        typeReferences: publicTypeReferences,
+        validations: publicValidations
+      };
+    }
+  );
 
   return microservice.publicServicesMetadata;
 }
 
 export function generateInternalServicesMetadata(microservice: any) {
-  microservice.internalServicesMetadata = microservice.servicesMetadata.map((serviceMetadata: ServiceMetadata) => {
-    const {
-      publicTypes,
-      serviceName,
-      functions,
-      validations,
-      propertyAccess,
-      serviceDocumentation,
-      typeReferences,
-      typesDocumentation
-    } = serviceMetadata;
+  microservice.internalServicesMetadata = microservice.servicesMetadata.map(
+    (serviceMetadata: ServiceMetadata) => {
+      const {
+        publicTypes,
+        serviceName,
+        functions,
+        validations,
+        propertyAccess,
+        serviceDocumentation,
+        typeReferences,
+        typesDocumentation
+      } = serviceMetadata;
 
-    const {
-      internalFunctions,
-      internalTypes,
-      internalPropertyAccess,
-      internalTypesDocumentation,
-      internalTypeReferences,
-      internalValidations
-    } = getInternalMetadata(
-      microservice[serviceMetadata.serviceName].constructor,
-      functions,
-      publicTypes,
-      propertyAccess,
-      typesDocumentation,
-      typeReferences,
-      validations
-    );
+      const {
+        internalFunctions,
+        internalTypes,
+        internalPropertyAccess,
+        internalTypesDocumentation,
+        internalTypeReferences,
+        internalValidations
+      } = getInternalMetadata(
+        microservice[serviceMetadata.serviceName].constructor,
+        functions,
+        publicTypes,
+        propertyAccess,
+        typesDocumentation,
+        typeReferences,
+        validations
+      );
 
-    return {
-      serviceName,
-      serviceDocumentation,
-      functions: internalFunctions,
-      types: internalTypes,
-      propertyAccess: internalPropertyAccess,
-      typesDocumentation: internalTypesDocumentation,
-      typeReferences: internalTypeReferences,
-      validations: internalValidations
-    };
-  });
+      return {
+        serviceName,
+        serviceDocumentation,
+        functions: internalFunctions,
+        types: internalTypes,
+        propertyAccess: internalPropertyAccess,
+        typesDocumentation: internalTypesDocumentation,
+        typeReferences: internalTypeReferences,
+        validations: internalValidations
+      };
+    }
+  );
 
   return microservice.internalServicesMetadata;
 }
@@ -346,16 +348,24 @@ export default function initializeMicroservice(
 
     if (command === '--generatePublicApiSpecOnly') {
       if (process.env.NODE_ENV !== 'development') {
-        throw new Error('API spec generation allowed in dev environment only')
+        throw new Error('API spec generation allowed in dev environment only');
       }
-      writeOpenApiSpecFile(microservice, microservice.publicServicesMetadata, 'public');
+      writeOpenApiSpecFile(
+        microservice,
+        microservice.publicServicesMetadata ?? generatePublicServicesMetadata(microservice),
+        'public'
+      );
     }
 
     if (command === '--generateClusterInternalApiSpecOnly') {
       if (process.env.NODE_ENV !== 'development') {
-        throw new Error('API spec generation allowed in dev environment only')
+        throw new Error('API spec generation allowed in dev environment only');
       }
-      writeOpenApiSpecFile(microservice, microservice.internalServicesMetadata, 'internal');
+      writeOpenApiSpecFile(
+        microservice,
+        microservice.internalServicesMetadata ?? generateInternalServicesMetadata(microservice),
+        'internal'
+      );
     }
 
     const serviceNames = Object.entries(microservice)

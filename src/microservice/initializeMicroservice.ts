@@ -345,10 +345,16 @@ export default function initializeMicroservice(
     }
 
     if (command === '--generatePublicApiSpecOnly') {
+      if (process.env.NODE_ENV !== 'development') {
+        throw new Error('API spec generation allowed in dev environment only')
+      }
       writeOpenApiSpecFile(microservice, microservice.publicServicesMetadata, 'public');
     }
 
     if (command === '--generateClusterInternalApiSpecOnly') {
+      if (process.env.NODE_ENV !== 'development') {
+        throw new Error('API spec generation allowed in dev environment only')
+      }
       writeOpenApiSpecFile(microservice, microservice.internalServicesMetadata, 'internal');
     }
 

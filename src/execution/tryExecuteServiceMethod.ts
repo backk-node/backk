@@ -44,7 +44,6 @@ import {
   generatePublicServicesMetadata
 } from '../microservice/initializeMicroservice';
 import isBackkError from '../errors/isBackkError';
-import createBackkErrorFromErrorMessageAndStatusCode from '../errors/createBackkErrorFromErrorMessageAndStatusCode';
 
 export interface ServiceFunctionExecutionOptions {
   isMetadataServiceEnabled?: boolean;
@@ -202,13 +201,14 @@ export default async function tryExecuteServiceMethod(
     } else if (serviceFunctionName === 'metadataService.getServicesMetadata') {
       if (!options || options.isMetadataServiceEnabled === undefined || options.isMetadataServiceEnabled) {
         resp.writeHead(HttpStatusCodes.SUCCESS, { 'Content-Type': 'application/json' });
-        resp.end(
-          JSON.stringify(
+        resp.end({
+          servicesMetadata: JSON.stringify(
             isClusterInternalCall
               ? microservice.internalServicesMetadata ?? generateInternalServicesMetadata(microservice)
               : microservice.publicServicesMetadata ?? generatePublicServicesMetadata(microservice)
-          )
-        );
+          ),
+          commonErrors: BACKK_ERRORS
+        });
         return;
       } else {
         throw createBackkErrorFromErrorCodeMessageAndStatus({
@@ -745,13 +745,8 @@ export default async function tryExecuteServiceMethod(
       resp.writeHead((errorOrBackkError as BackkError).statusCode, { 'Content-Type': 'application/json' });
       resp.end(JSON.stringify(errorOrBackkError));
     } else {
-
       resp.writeHead(HttpStatusCodes.INTERNAL_SERVER_ERROR, { 'Content-Type': 'application/json' });
-      resp.end(
-        JSON.stringify(
-         createBackkErrorFromError(errorOrBackkError)
-        )
-      );
+      resp.end(JSON.stringify(createBackkErrorFromError(errorOrBackkError)));
     }
   } finally {
     if (microservice[serviceName] instanceof UserAccountBaseService || subject) {

@@ -349,13 +349,8 @@ export default function initializeMicroservice(
     }
 
     if (command === '--generateClusterInternalApiSpecOnly') {
-      writeOpenApiSpecFile(microservice, microservice.publicServicesMetadata);
+      writeOpenApiSpecFile(microservice, microservice.internalServicesMetadata);
     }
-
-    microservice.publicServicesMetadata = {
-      servicesMetadata: microservice.publicServicesMetadata,
-      genericErrors: BACKK_ERRORS
-    };
 
     const serviceNames = Object.entries(microservice)
       .filter(([, service]: [string, any]) => service instanceof BaseService)

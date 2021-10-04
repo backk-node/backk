@@ -618,7 +618,7 @@ export default function writeTestsPostmanCollectionExportFile<T>(
             protocol: 'http',
             host: ['localhost'],
             port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,
-            path: ['metadataService.getServicesMetadata']
+            path: [process.env.API_GATEWAY_PATH, 'metadataService.getServicesMetadata']
           }
         }
       },
@@ -631,7 +631,7 @@ export default function writeTestsPostmanCollectionExportFile<T>(
             protocol: 'http',
             host: ['localhost'],
             port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,
-            path: ['metadataService.getOpenApiSpec']
+            path: [process.env.API_GATEWAY_PATH, 'metadataService.getOpenApiSpec']
           }
         }
       },

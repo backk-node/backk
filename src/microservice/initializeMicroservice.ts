@@ -346,7 +346,7 @@ export default function initializeMicroservice(
       writeTestsPostmanCollectionExportFile(microservice, servicesMetadata);
     }
 
-    if (command === '--generatePublicApiSpecOnly' || command === '--generateApiSpecsOnly') {
+    if (command === '--generateApiSpecsOnly') {
       if (process.env.NODE_ENV !== 'development') {
         throw new Error('API spec generation allowed in dev environment only');
       }
@@ -357,7 +357,7 @@ export default function initializeMicroservice(
       );
     }
 
-    if (command === '--generateClusterInternalApiSpecOnly' || command === '--generateApiSpecsOnly') {
+    if (command === '--generateApiSpecsOnly') {
       if (process.env.NODE_ENV !== 'development') {
         throw new Error('API spec generation allowed in dev environment only');
       }

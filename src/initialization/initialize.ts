@@ -33,6 +33,15 @@ export default async function initialize(
     log(Severity.ERROR, `Microservice crashed with exception: ${error.message}`, error.stack ?? '');
   });
 
+  if (commandLineArgs?.[2] && commandLineArgs?.[2] !== '--generateApiSpecsOnly') {
+    console.error(
+      'Invalid command line parameter: ' +
+        commandLineArgs?.[2] +
+        '\nSupported command line parameters are:\n--generateApiSpecsOnly'
+    );
+    process.exit(1);
+  }
+
   initializeMicroservice(
     microservice,
     microservice.dataStore,

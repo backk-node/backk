@@ -258,8 +258,6 @@ J
 src/constants/constants.ts,4/2/42fd5820762b08c55fd142e832060c0b0c75e155
 b
 2src/validation/getMaxLengthValidationConstraint.ts,5/f/5f3c841740926480f29efa41da4649f8a10d12f6
-I
-src/errors/backkErrors.ts,9/d/9de565af347d623f5e99e6a6ab0d8ad581e1dc6d
 Z
 *src/decorators/service/function/CronJob.ts,a/8/a88bb6510ffce012c9290828e536a4fcac1de31e
 u

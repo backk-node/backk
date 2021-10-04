@@ -34,9 +34,13 @@ export default async function initialize(
     console.error(
       'Invalid command line parameter: ' +
         commandLineArgs?.[2] +
-        '\nSupported command line parameters are:\n--generateApiSpecsOnly'
+        '\nSupported command line parameters are:\n--generateApiSpecsOnly\n--enableProcessKillService'
     );
     process.exit(1);
+  }
+
+  if (commandLineArgs?.[2] === '--enableProcessKillService') {
+    microservice.isProcessKillServiceEnabled = true;
   }
 
   initializeMicroservice(
@@ -46,7 +50,7 @@ export default async function initialize(
     commandLineArgs?.[2] ?? ''
   );
 
-  if (commandLineArgs?.[2]) {
+  if (commandLineArgs?.[2] === '--generateApiSpecsOnly') {
     process.exit(0);
   }
 

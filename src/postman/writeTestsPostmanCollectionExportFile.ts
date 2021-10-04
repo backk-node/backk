@@ -635,6 +635,19 @@ export default function writeTestsPostmanCollectionExportFile<T>(
           }
         }
       },
+      {
+        name: 'processKillService.killSelf',
+        request: {
+          method: 'POST',
+          url: {
+            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${process.env.API_GATEWAY_PATH}/processKillService.killSelf`,
+            protocol: 'http',
+            host: ['localhost'],
+            port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,
+            path: [process.env.API_GATEWAY_PATH, 'processKillService.killSelf']
+          }
+        }
+      },
       ...itemGroups
     ]
   };

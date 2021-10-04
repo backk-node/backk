@@ -25,9 +25,6 @@ export default async function initialize(
       'NODE_ENV environment variable must be defined and have one of following values: development, integration or production'
     );
   }
-  process.on('exit', (code) => {
-    log(Severity.INFO, `Microservice terminated with exit code: ${code}`, '');
-  });
 
   process.on('uncaughtExceptionMonitor', (error: Error) => {
     log(Severity.ERROR, `Microservice crashed with exception: ${error.message}`, error.stack ?? '');
@@ -52,6 +49,10 @@ export default async function initialize(
   if (commandLineArgs?.[2]) {
     process.exit(0);
   }
+
+  process.on('exit', (code) => {
+    log(Severity.INFO, `Microservice terminated with exit code: ${code}`, '');
+  });
 
   changePackageJsonNameProperty();
   initializeCls();

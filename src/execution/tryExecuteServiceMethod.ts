@@ -203,7 +203,7 @@ export default async function tryExecuteServiceMethod(
         resp.writeHead(HttpStatusCodes.SUCCESS, { 'Content-Type': 'application/json' });
         resp.end(
           JSON.stringify({
-            servicesMetadata: isClusterInternalCall
+            services: isClusterInternalCall
               ? microservice.internalServicesMetadata ?? generateInternalServicesMetadata(microservice)
               : microservice.publicServicesMetadata ?? generatePublicServicesMetadata(microservice),
             commonErrors: BACKK_ERRORS

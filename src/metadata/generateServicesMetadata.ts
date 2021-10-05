@@ -45,6 +45,9 @@ export default function generateServicesMetadata<T>(
 
       const publicTypesMetadata = Object.entries((microservice as any)[serviceName].Types ?? {}).reduce(
         (accumulatedTypes, [typeName, Class]: [string, any]) => {
+          if (typeName.includes(':')) {
+            return accumulatedTypes;
+          }
           const typeObject = getClassPropertyNameToPropertyTypeNameMap(Class, dataStore, false, true);
           return { ...accumulatedTypes, [typeName]: typeObject };
         },

@@ -18,7 +18,7 @@ function getErrorContent(errorDef: ErrorDef) {
     content: {
       'application/json': {
         schema: {
-          $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/schemas/BackkError'
         },
         example: errorDef
       }

@@ -187,7 +187,8 @@ export default async function tryExecuteServiceMethod(
               microservice,
               isClusterInternalCall
                 ? microservice.internalServicesMetadata ?? generateInternalServicesMetadata(microservice)
-                : microservice.publicServicesMetadata ?? generatePublicServicesMetadata(microservice)
+                : microservice.publicServicesMetadata ?? generatePublicServicesMetadata(microservice),
+              isClusterInternalCall ? 'internal' : 'public'
             )
           )
         );

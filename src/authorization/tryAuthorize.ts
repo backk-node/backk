@@ -25,6 +25,10 @@ export default async function tryAuthorize(
     );
   }
 
+  const serviceFunctionName = `${ServiceClass.name.charAt(0).toLowerCase() + ServiceClass.name.slice(1)}.${
+    functionName
+  }`;
+
   // TODO check that X-Original-Uri is not set to public URI for this microservice
   // TODO if authHeader is missing and X-Original-Uri is set, return 401 Unauthorized
   if (authHeader === undefined) {
@@ -32,8 +36,7 @@ export default async function tryAuthorize(
       serviceAnnotationContainer.isServiceAllowedForClusterInternalUse(ServiceClass) ||
       serviceFunctionAnnotationContainer.isServiceFunctionAllowedForClusterInternalUse(
         ServiceClass,
-        functionName
-      )
+        functionName)
     ) {
       return;
     }

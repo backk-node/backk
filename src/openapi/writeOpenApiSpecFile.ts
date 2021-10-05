@@ -26,11 +26,11 @@ function getErrorContent(errorDef: ErrorDef) {
   };
 }
 
-let cachedOpenApiSpec: object | undefined;
+const cachedOpenApiSpec: { [key: string]: object } = {};
 
-export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMetadata[]) {
-  if (cachedOpenApiSpec) {
-    return cachedOpenApiSpec;
+export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMetadata[], directory: string) {
+  if (cachedOpenApiSpec[directory]) {
+    return cachedOpenApiSpec[directory];
   }
 
   const paths: { [path: string]: object } = {};
@@ -588,8 +588,8 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
     })
   }
 
-  if (!cachedOpenApiSpec) {
-    cachedOpenApiSpec = openApiSpec;
+  if (!cachedOpenApiSpec[directory]) {
+    cachedOpenApiSpec[directory] = openApiSpec;
   }
 
   return openApiSpec;
@@ -600,7 +600,7 @@ export default function writeOpenApiSpecFile<T>(
   servicesMetadata: ServiceMetadata[],
   directory: string
 ) {
-  const openApiSpec = getOpenApiSpec(microservice, servicesMetadata);
+  const openApiSpec = getOpenApiSpec(microservice, servicesMetadata, directory);
 
   const cwd = process.cwd();
 

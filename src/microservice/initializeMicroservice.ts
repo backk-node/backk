@@ -58,11 +58,15 @@ function getInternalMetadata(
   const publicTypeNames = new Set<string>();
 
   const internalFunctions = functions.filter((func) => {
+    const serviceFunctionName = `${ServiceClass.name.charAt(0).toLowerCase() + ServiceClass.name.slice(1)}.${
+      func.functionName
+    }`;
+
     if (
       serviceFunctionAnnotationContainer.isServiceFunctionAllowedForClusterInternalUse(
         ServiceClass,
         func.functionName
-      )
+      ) && !serviceFunctionAnnotationContainer.getServiceFunctionNameToCronScheduleMap()[serviceFunctionName]
     ) {
       publicTypeNames.delete(func.argType);
       const { baseTypeName } = getTypeInfoForTypeName(func.returnValueType);

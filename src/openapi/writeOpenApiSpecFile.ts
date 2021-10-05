@@ -571,21 +571,21 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
     openApiSpec.servers.push({
       url: `https://${process.env.CI_API_GATEWAY_FQDN}${process.env.API_GATEWAY_PATH}`,
       description: 'CI server'
-    })
+    });
   }
 
   if (process.env.STAGING_API_GATEWAY_FQDN) {
     openApiSpec.servers.push({
       url: `https://${process.env.STAGING_API_GATEWAY_FQDN}${process.env.API_GATEWAY_PATH}`,
       description: 'Staging server'
-    })
+    });
   }
 
   if (process.env.PRODUCTION_API_GATEWAY_FQDN) {
     openApiSpec.servers.push({
       url: `https://${process.env.PRODUCTION_API_GATEWAY_FQDN}${process.env.API_GATEWAY_PATH}`,
       description: 'Production server'
-    })
+    });
   }
 
   if (!cachedOpenApiSpec[directory]) {
@@ -616,5 +616,9 @@ export default function writeOpenApiSpecFile<T>(
     mkdirSync(cwd + '/generated/openapi/' + directory);
   }
 
-  writeFileSync(process.cwd() + `/generated/openapi/${directory}/spec.yaml`, YAML.stringify(openApiSpec));
+  writeFileSync(
+    process.cwd() +
+      `/generated/openapi/${directory}/openApi${directory[0].toUpperCase()}${directory.slice(1)}Spec.yaml`,
+    YAML.stringify(openApiSpec)
+  );
 }

@@ -6,6 +6,7 @@ import { HttpStatusCodes } from '../../constants/constants';
 import AllowForClusterInternalUse from '../../decorators/service/function/AllowForClusterInternalUse';
 import scheduleJobsForExecution, { scheduledJobs } from '../../scheduling/scheduleJobsForExecution';
 import { PromiseErrorOr } from '../../types/PromiseErrorOr';
+import AllowForEveryUser from "../../decorators/service/function/AllowForEveryUser";
 
 export default class StartupCheckServiceImpl extends StartupCheckService {
   constructor(dataStore: AbstractDataStore) {
@@ -13,6 +14,7 @@ export default class StartupCheckServiceImpl extends StartupCheckService {
   }
 
   // noinspection FunctionWithMoreThanThreeNegationsJS
+  @AllowForEveryUser()
   async isMicroserviceStarted(): PromiseErrorOr<null> {
     if (
       !(await isDbInitialized(this.dataStore)) &&

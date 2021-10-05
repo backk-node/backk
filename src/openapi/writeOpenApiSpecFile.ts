@@ -618,7 +618,7 @@ export default function writeOpenApiSpecFile<T>(
 
   writeFileSync(
     process.cwd() +
-      `/generated/openapi/${directory}/openApi${directory[0].toUpperCase()}${directory.slice(1)}Spec.yaml`,
+      `/generated/openapi/openApi${directory[0].toUpperCase()}${directory.slice(1)}Spec.yaml`,
     YAML.stringify(openApiSpec)
   );
 }

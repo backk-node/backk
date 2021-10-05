@@ -612,10 +612,6 @@ export default function writeOpenApiSpecFile<T>(
     mkdirSync(cwd + '/generated/openapi');
   }
 
-  if (!existsSync(cwd + '/generated/openapi/' + directory)) {
-    mkdirSync(cwd + '/generated/openapi/' + directory);
-  }
-
   writeFileSync(
     process.cwd() +
       `/generated/openapi/openApi${directory[0].toUpperCase()}${directory.slice(1)}Spec.yaml`,

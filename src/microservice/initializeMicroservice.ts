@@ -58,7 +58,9 @@ function getInternalMetadata(
   const publicTypeNames = new Set<string>();
 
   const internalFunctions = functions.filter((func) => {
-    const serviceFunctionName = `${ServiceClass.name.charAt(0).toLowerCase() + ServiceClass.name.slice(1)}.${
+    const SuperClass = Object.getPrototypeOf(ServiceClass.prototype).constructor;
+
+    const serviceFunctionName = `${SuperClass.name.charAt(0).toLowerCase() + ServiceClass.name.slice(1)}.${
       func.functionName
     }`;
 
@@ -117,7 +119,9 @@ function getPublicMetadata(
 ) {
   const privateTypeNames = new Set<string>();
   const publicFunctions = functions.filter((func) => {
-    const serviceFunctionName = `${ServiceClass.name.charAt(0).toLowerCase() + ServiceClass.name.slice(1)}.${
+    const SuperClass = Object.getPrototypeOf(ServiceClass.prototype).constructor;
+
+    const serviceFunctionName = `${SuperClass.name.charAt(0).toLowerCase() + ServiceClass.name.slice(1)}.${
       func.functionName
     }`;
 

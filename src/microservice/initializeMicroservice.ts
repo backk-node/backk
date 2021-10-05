@@ -60,7 +60,7 @@ function getInternalMetadata(
   const internalFunctions = functions.filter((func) => {
     const SuperClass = Object.getPrototypeOf(ServiceClass.prototype).constructor;
 
-    const serviceFunctionName = `${SuperClass.name.charAt(0).toLowerCase() + ServiceClass.name.slice(1)}.${
+    const serviceFunctionName = `${SuperClass.name.charAt(0).toLowerCase() + SuperClass.name.slice(1)}.${
       func.functionName
     }`;
 
@@ -71,12 +71,14 @@ function getInternalMetadata(
       ) && !serviceFunctionAnnotationContainer.getServiceFunctionNameToCronScheduleMap()[serviceFunctionName]
     ) {
       publicTypeNames.delete(func.argType);
+      removeNestedTypes(publicTypeNames, func.argType, types);
       const { baseTypeName } = getTypeInfoForTypeName(func.returnValueType);
       publicTypeNames.delete(baseTypeName);
       removeNestedTypes(publicTypeNames, baseTypeName, types);
       return true;
     } else {
       publicTypeNames.add(func.argType);
+      addNestedTypes(publicTypeNames, func.argType, types);
       const { baseTypeName } = getTypeInfoForTypeName(func.returnValueType);
       publicTypeNames.add(baseTypeName);
       addNestedTypes(publicTypeNames, baseTypeName, types);
@@ -121,7 +123,7 @@ function getPublicMetadata(
   const publicFunctions = functions.filter((func) => {
     const SuperClass = Object.getPrototypeOf(ServiceClass.prototype).constructor;
 
-    const serviceFunctionName = `${SuperClass.name.charAt(0).toLowerCase() + ServiceClass.name.slice(1)}.${
+    const serviceFunctionName = `${SuperClass.name.charAt(0).toLowerCase() + SuperClass.name.slice(1)}.${
       func.functionName
     }`;
 
@@ -134,12 +136,14 @@ function getPublicMetadata(
       )
     ) {
       privateTypeNames.add(func.argType);
+      addNestedTypes(privateTypeNames, func.argType, types);
       const { baseTypeName } = getTypeInfoForTypeName(func.returnValueType);
       privateTypeNames.add(baseTypeName);
       addNestedTypes(privateTypeNames, baseTypeName, types);
       return false;
     } else {
       privateTypeNames.delete(func.argType);
+      removeNestedTypes(privateTypeNames, func.argType, types);
       const { baseTypeName } = getTypeInfoForTypeName(func.returnValueType);
       privateTypeNames.delete(baseTypeName);
       removeNestedTypes(privateTypeNames, baseTypeName, types);

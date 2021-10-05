@@ -32,7 +32,6 @@ class ServiceFunctionAnnotationContainer {
 
   private readonly serviceFunctionNameToOnStartUpMap: { [key: string]: boolean } = {};
   private readonly serviceFunctionNameToIsCreateFunctionMap: { [key: string]: boolean } = {};
-  private readonly serviceFunctionNameToIsMetadataFunctionMap: { [key: string]: boolean } = {};
   private readonly serviceFunctionNameToIsDeleteFunctionMap: { [key: string]: boolean } = {};
   private readonly serviceFunctionNameToResponseStatusCodeMap: { [key: string]: number } = {};
   private readonly serviceFunctionNameToTestSetupMap: { [key: string]: (string | TestSetupSpec)[] } = {};
@@ -123,10 +122,6 @@ class ServiceFunctionAnnotationContainer {
 
   addCreateAnnotation(serviceClass: Function, functionName: string) {
     this.serviceFunctionNameToIsCreateFunctionMap[`${serviceClass.name}${functionName}`] = true;
-  }
-
-  addMetadataFunctionAnnotation(serviceClass: Function, functionName: string) {
-    this.serviceFunctionNameToIsMetadataFunctionMap[`${serviceClass.name}${functionName}`] = true;
   }
 
   addDeleteAnnotation(serviceClass: Function, functionName: string) {
@@ -422,21 +417,6 @@ class ServiceFunctionAnnotationContainer {
     let proto = Object.getPrototypeOf(new (serviceClass as new () => any)());
     while (proto !== Object.prototype) {
       if (this.serviceFunctionNameToOnStartUpMap[`${proto.constructor.name}${functionName}`] !== undefined) {
-        return true;
-      }
-      proto = Object.getPrototypeOf(proto);
-    }
-
-    return false;
-  }
-
-  isMetadataServiceFunction(serviceClass: Function, functionName: string) {
-    let proto = Object.getPrototypeOf(new (serviceClass as new () => any)());
-    while (proto !== Object.prototype) {
-      if (
-        this.serviceFunctionNameToIsMetadataFunctionMap[`${proto.constructor.name}${functionName}`] !==
-        undefined
-      ) {
         return true;
       }
       proto = Object.getPrototypeOf(proto);

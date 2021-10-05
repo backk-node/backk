@@ -50,7 +50,6 @@ export { default as AllowForUserRoles } from './decorators/service/function/Allo
 export { default as Create } from './decorators/service/function/Create';
 export { CronSchedule, Range, default as CronJob } from './decorators/service/function/CronJob';
 export { default as Delete } from './decorators/service/function/Delete';
-export { default as Metadata } from './decorators/service/function/Metadata';
 export { default as NoAutoTests } from './decorators/service/function/NoAutoTest';
 export { default as NoCaptcha } from './decorators/service/function/NoCaptcha';
 export { default as NoDistributedTransactionNeeded } from './decorators/service/function/NoDistributedTransactionNeeded';

@@ -29,8 +29,6 @@ Y
 )src/decorators/service/function/Create.ts,1/1/110d1806f8140a9e90b4a8025c22d82218ae2069
 Y
 )src/decorators/service/function/Delete.ts,7/a/7a34de9e8da4d29ad3b0c44eb49cad3bee2865ce
-[
-+src/decorators/service/function/Metadata.ts,8/7/879a9302adb605fb7f33021d2fa6bc8431ae2c61
 \
 ,src/decorators/service/NoServiceAutoTests.ts,b/3/b3c63c73eb25cbb897003c8ae07db599607b3bb8
 ]

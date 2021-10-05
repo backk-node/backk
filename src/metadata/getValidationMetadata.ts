@@ -12,6 +12,10 @@ export default function getValidationMetadata<T>(Class: new () => T): object {
       return;
     }
 
+    if (validationMetadata.type === 'isString') {
+      return;
+    }
+
     const validationType =
       validationMetadata.type === 'customValidation'
         ? validationMetadata.constraints[0]

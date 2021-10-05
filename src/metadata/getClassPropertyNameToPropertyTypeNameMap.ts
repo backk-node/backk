@@ -14,7 +14,7 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
   isGeneration = false,
   allowOnlyPublicTypes = false
 ): { [key: string]: string } {
-  if (!isGeneration && classNameToMetadataMap[Class.name]) {
+  if (!isGeneration && classNameToMetadataMap[Class.name] && !allowOnlyPublicTypes) {
     return classNameToMetadataMap[Class.name];
   }
 

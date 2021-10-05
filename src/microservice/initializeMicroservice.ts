@@ -19,7 +19,7 @@ import getTypeInfoForTypeName from "../utils/type/getTypeInfoForTypeName";
 import { ServiceMetadata } from "../metadata/types/ServiceMetadata";
 
 function addNestedTypes(privateTypeNames: Set<string>, typeName: string, types: { [p: string]: object }) {
-  Object.keys(types[typeName] ?? {}).forEach((typeName) => {
+  Object.values(types[typeName] ?? {}).forEach((typeName) => {
     const { baseTypeName } = getTypeInfoForTypeName(typeName);
     if (
       baseTypeName[0].toUpperCase() === baseTypeName[0] &&
@@ -33,7 +33,7 @@ function addNestedTypes(privateTypeNames: Set<string>, typeName: string, types: 
 }
 
 function removeNestedTypes(privateTypeNames: Set<string>, typeName: string, types: { [p: string]: object }) {
-  Object.keys(types[typeName] ?? {}).forEach((typeName) => {
+  Object.values(types[typeName] ?? {}).forEach((typeName) => {
     const { baseTypeName } = getTypeInfoForTypeName(typeName);
     if (
       baseTypeName[0].toUpperCase() === baseTypeName[0] &&
@@ -55,7 +55,8 @@ function getInternalMetadata(
   typeReferences: { [p: string]: string },
   validations: { [p: string]: any[] }
 ) {
-  const publicTypeNames = new Set<string>();
+  const nonInternalTypeNames = new Set<string>();
+  const internalTypeNames = new Set<string>();
 
   const internalFunctions = functions.filter((func) => {
     const SuperClass = Object.getPrototypeOf(ServiceClass.prototype).constructor;
@@ -70,18 +71,18 @@ function getInternalMetadata(
         func.functionName
       ) && !serviceFunctionAnnotationContainer.getServiceFunctionNameToCronScheduleMap()[serviceFunctionName]
     ) {
-      publicTypeNames.delete(func.argType);
-      removeNestedTypes(publicTypeNames, func.argType, types);
+      internalTypeNames.add(func.argType);
+      addNestedTypes(nonInternalTypeNames, func.argType, types);
       const { baseTypeName } = getTypeInfoForTypeName(func.returnValueType);
-      publicTypeNames.delete(baseTypeName);
-      removeNestedTypes(publicTypeNames, baseTypeName, types);
+      internalTypeNames.add(baseTypeName);
+      addNestedTypes(nonInternalTypeNames, baseTypeName, types);
       return true;
     } else {
-      publicTypeNames.add(func.argType);
-      addNestedTypes(publicTypeNames, func.argType, types);
+      nonInternalTypeNames.add(func.argType);
+      addNestedTypes(nonInternalTypeNames, func.argType, types);
       const { baseTypeName } = getTypeInfoForTypeName(func.returnValueType);
-      publicTypeNames.add(baseTypeName);
-      addNestedTypes(publicTypeNames, baseTypeName, types);
+      nonInternalTypeNames.add(baseTypeName);
+      addNestedTypes(nonInternalTypeNames, baseTypeName, types);
       return false;
     }
   });
@@ -92,12 +93,14 @@ function getInternalMetadata(
   const internalTypeReferences = { ...typeReferences };
   const internalValidations = { ...validations };
 
-  publicTypeNames.forEach((publicTypeName) => {
-    delete internalTypes[publicTypeName];
-    delete internalPropertyAccess[publicTypeName];
-    delete (internalTypesDocumentation as any)?.[publicTypeName];
-    delete internalTypeReferences[publicTypeName];
-    delete internalValidations[publicTypeName];
+  nonInternalTypeNames.forEach((nonInternalTypeName) => {
+    if (!internalTypeNames.has(nonInternalTypeName)) {
+      delete internalTypes[nonInternalTypeName];
+      delete internalPropertyAccess[nonInternalTypeName];
+      delete (internalTypesDocumentation as any)?.[nonInternalTypeName];
+      delete internalTypeReferences[nonInternalTypeName];
+      delete internalValidations[nonInternalTypeName];
+    }
   });
 
   return {

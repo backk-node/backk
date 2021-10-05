@@ -189,8 +189,8 @@ export default function generateServicesMetadata<T>(
 
       let serviceDocumentation: string | undefined = (microservice as any)[`${serviceName}__BackkTypes__`].serviceDocumentation;
 
-      if (serviceDocumentation?.startsWith('*') && serviceDocumentation?.endsWith('*')) {
-        serviceDocumentation = serviceDocumentation.slice(1, -1).replace(/\\n \*/g, '\n')
+      if (serviceDocumentation?.startsWith('* ') && serviceDocumentation?.endsWith(' *')) {
+        serviceDocumentation = serviceDocumentation.slice(2, -2).replace(/\n \*/g, '\n')
       }
 
       return {

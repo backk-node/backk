@@ -17,19 +17,19 @@ export default function getTypePropertyAccessType<T>(
     let typePropertyAccess;
 
     if (typePropertyAnnotationContainer.isTypePropertyCreateOnly(Class, propertyName)) {
-      typePropertyAccess = '@CreateOnly()';
+      typePropertyAccess = 'createOnly';
     } else if (typePropertyAnnotationContainer.isTypePropertyPrivate(Class, propertyName)) {
-      typePropertyAccess = '@Private()';
+      typePropertyAccess = 'private';
     } else if (typePropertyAnnotationContainer.isTypePropertyReadOnly(Class, propertyName)) {
-      typePropertyAccess = '@ReadOnly()';
+      typePropertyAccess = 'readOnly';
     } else if (typePropertyAnnotationContainer.isTypePropertyReadWrite(Class, propertyName)) {
-      typePropertyAccess = '@ReadWrite()';
+      typePropertyAccess = 'readWrite';
     } else if (typePropertyAnnotationContainer.isTypePropertyUpdateOnly(Class, propertyName)) {
-      typePropertyAccess = '@UpdateOnly()';
+      typePropertyAccess = 'updateOnly';
     } else if (typePropertyAnnotationContainer.isTypePropertyWriteOnly(Class, propertyName)) {
-      typePropertyAccess = '@WriteOnly()';
+      typePropertyAccess = 'writeOnly';
     } else if (typePropertyAnnotationContainer.isTypePropertyReadUpdate(Class, propertyName)) {
-      typePropertyAccess = '@ReadUpdate()';
+      typePropertyAccess = 'readUpdate';
     } else {
       throw new Error(
         Class.name + '.' + propertyName + ': Unsupported property access type: ' + typePropertyAccess

@@ -129,6 +129,9 @@ export default function generateServicesMetadata<T>(
 
       const validationMetadatas = Object.entries((microservice as any)[serviceName].Types ?? {}).reduce(
         (accumulatedTypes, [typeName, typeClass]: [string, any]) => {
+          if (typeName.includes(':')) {
+            return accumulatedTypes;
+          }
           const validationMetadata = getValidationMetadata(typeClass);
           if (Object.keys(validationMetadata).length > 0) {
             return { ...accumulatedTypes, [typeName]: validationMetadata };
@@ -140,6 +143,9 @@ export default function generateServicesMetadata<T>(
 
       const propertyAccess = Object.entries((microservice as any)[serviceName].Types ?? {}).reduce(
         (accumulatedPropertyAccess, [typeName, typeClass]: [string, any]) => {
+          if (typeName.includes(':')) {
+            return accumulatedPropertyAccess;
+          }
           const propertyModifiers = getTypePropertyAccessType((typesMetadata as any)[typeName], typeClass);
           return Object.keys(propertyModifiers).length > 0
             ? { ...accumulatedPropertyAccess, [typeName]: propertyModifiers }
@@ -150,6 +156,9 @@ export default function generateServicesMetadata<T>(
 
       const typesDocumentation = Object.entries((microservice as any)[serviceName].Types ?? {}).reduce(
         (accumulatedTypesDocumentation, [typeName, typeClass]: [string, any]) => {
+          if (typeName.includes(':')) {
+            return accumulatedTypesDocumentation;
+          }
           const typeDocumentation = getTypeDocumentation((typesMetadata as any)[typeName], typeClass);
           return Object.keys(typeDocumentation).length > 0
             ? { ...accumulatedTypesDocumentation, [typeName]: typeDocumentation }
@@ -160,6 +169,9 @@ export default function generateServicesMetadata<T>(
 
       const typeReferences = Object.entries((microservice as any)[serviceName].Types ?? {}).reduce(
         (accumulatedTypeReferences, [typeName, typeClass]: [string, any]) => {
+          if (typeName.includes(':')) {
+            return accumulatedTypeReferences;
+          }
           if (
             entityAnnotationContainer.isEntity(typeClass) &&
             entityAnnotationContainer.entityNameToTableNameMap[typeName]

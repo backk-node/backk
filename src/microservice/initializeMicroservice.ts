@@ -1,22 +1,20 @@
-import _ from "lodash";
-import BaseService from "../service/BaseService";
-import generateServicesMetadata from "../metadata/generateServicesMetadata";
-import parseServiceFunctionNameToArgAndReturnTypeNameMaps
-  from "../typescript/parser/parseServiceFunctionNameToArgAndReturnTypeNameMaps";
-import getSrcFilePathNameForTypeName from "../utils/file/getSrcFilePathNameForTypeName";
-import setClassPropertyValidationDecorators from "../validation/setClassPropertyValidationDecorators";
-import setNestedTypeValidationDecorators from "../validation/setNestedTypeValidationDecorators";
-import writeTestsPostmanCollectionExportFile from "../postman/writeTestsPostmanCollectionExportFile";
-import generateTypesForServices from "../metadata/generateTypesForServices";
-import getNestedClasses from "../metadata/getNestedClasses";
-import AbstractDataStore from "../datastore/AbstractDataStore";
-import log, { Severity } from "../observability/logging/log";
-import writeOpenApiSpecFile from "../openapi/writeOpenApiSpecFile";
-import { FunctionMetadata } from "../metadata/types/FunctionMetadata";
-import serviceFunctionAnnotationContainer
-  from "../decorators/service/function/serviceFunctionAnnotationContainer";
-import getTypeInfoForTypeName from "../utils/type/getTypeInfoForTypeName";
-import { ServiceMetadata } from "../metadata/types/ServiceMetadata";
+import _ from 'lodash';
+import BaseService from '../service/BaseService';
+import generateServicesMetadata from '../metadata/generateServicesMetadata';
+import parseServiceFunctionNameToArgAndReturnTypeNameMaps from '../typescript/parser/parseServiceFunctionNameToArgAndReturnTypeNameMaps';
+import getSrcFilePathNameForTypeName from '../utils/file/getSrcFilePathNameForTypeName';
+import setClassPropertyValidationDecorators from '../validation/setClassPropertyValidationDecorators';
+import setNestedTypeValidationDecorators from '../validation/setNestedTypeValidationDecorators';
+import writeTestsPostmanCollectionExportFile from '../postman/writeTestsPostmanCollectionExportFile';
+import generateTypesForServices from '../metadata/generateTypesForServices';
+import getNestedClasses from '../metadata/getNestedClasses';
+import AbstractDataStore from '../datastore/AbstractDataStore';
+import log, { Severity } from '../observability/logging/log';
+import writeOpenApiSpecFile from '../openapi/writeOpenApiSpecFile';
+import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
+import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
+import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
+import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
 
 function addNestedTypes(privateTypeNames: Set<string>, typeName: string, types: { [p: string]: object }) {
   Object.values(types[typeName] ?? {}).forEach((typeName) => {
@@ -55,7 +53,6 @@ function getInternalMetadata(
   typeReferences: { [p: string]: string },
   validations: { [p: string]: any[] }
 ) {
-  const nonInternalTypeNames = new Set<string>();
   const internalTypeNames = new Set<string>();
 
   const internalFunctions = functions.filter((func) => {
@@ -69,39 +66,81 @@ function getInternalMetadata(
       serviceFunctionAnnotationContainer.isServiceFunctionAllowedForClusterInternalUse(
         ServiceClass,
         func.functionName
-      ) && !serviceFunctionAnnotationContainer.getServiceFunctionNameToCronScheduleMap()[serviceFunctionName]
+      ) &&
+      !serviceFunctionAnnotationContainer.getServiceFunctionNameToCronScheduleMap()[serviceFunctionName]
     ) {
       internalTypeNames.add(func.argType);
-      addNestedTypes(nonInternalTypeNames, func.argType, types);
+      addNestedTypes(internalTypeNames, func.argType, types);
       const { baseTypeName } = getTypeInfoForTypeName(func.returnValueType);
       internalTypeNames.add(baseTypeName);
-      addNestedTypes(nonInternalTypeNames, baseTypeName, types);
+      addNestedTypes(internalTypeNames, baseTypeName, types);
       return true;
     } else {
-      nonInternalTypeNames.add(func.argType);
-      addNestedTypes(nonInternalTypeNames, func.argType, types);
-      const { baseTypeName } = getTypeInfoForTypeName(func.returnValueType);
-      nonInternalTypeNames.add(baseTypeName);
-      addNestedTypes(nonInternalTypeNames, baseTypeName, types);
       return false;
     }
   });
 
-  const internalTypes =  { ...types };
-  const internalPropertyAccess = { ...propertyAccess };
-  const internalTypesDocumentation = { ...typesDocumentation };
-  const internalTypeReferences = { ...typeReferences };
-  const internalValidations = { ...validations };
-
-  nonInternalTypeNames.forEach((nonInternalTypeName) => {
-    if (!internalTypeNames.has(nonInternalTypeName)) {
-      delete internalTypes[nonInternalTypeName];
-      delete internalPropertyAccess[nonInternalTypeName];
-      delete (internalTypesDocumentation as any)?.[nonInternalTypeName];
-      delete internalTypeReferences[nonInternalTypeName];
-      delete internalValidations[nonInternalTypeName];
+  const internalTypes = Object.entries({ ...types }).reduce((internalTypes, [typeName, value]) => {
+    if (internalTypeNames.has(typeName)) {
+      return {
+        ...internalTypes,
+        typeName: value
+      };
     }
-  });
+    return internalTypes;
+  }, {});
+
+  const internalPropertyAccess = Object.entries({ ...propertyAccess }).reduce(
+    (internalPropertyAccess, [typeName, value]) => {
+      if (internalTypeNames.has(typeName)) {
+        return {
+          ...internalPropertyAccess,
+          typeName: value
+        };
+      }
+      return internalPropertyAccess;
+    },
+    {}
+  );
+
+  const internalTypesDocumentation = Object.entries({ ...typesDocumentation }).reduce(
+    (internalTypesDocumentation, [typeName, value]) => {
+      if (internalTypeNames.has(typeName)) {
+        return {
+          ...internalTypesDocumentation,
+          typeName: value
+        };
+      }
+      return internalTypesDocumentation;
+    },
+    {}
+  );
+
+  const internalTypeReferences = Object.entries({ ...typeReferences }).reduce(
+    (internalTypeReferences, [typeName, value]) => {
+      if (internalTypeNames.has(typeName)) {
+        return {
+          ...internalTypeReferences,
+          typeName: value
+        };
+      }
+      return internalTypeReferences;
+    },
+    {}
+  );
+
+  const internalValidations = Object.entries({ ...validations }).reduce(
+    (internalTypes, [typeName, value]) => {
+      if (internalTypeNames.has(typeName)) {
+        return {
+          ...internalTypes,
+          typeName: value
+        };
+      }
+      return internalTypes;
+    },
+    {}
+  );
 
   return {
     internalFunctions,
@@ -155,7 +194,7 @@ function getPublicMetadata(
   });
 
   const publicTypes = { ...types };
-  const publicPropertyAccess = { ... propertyAccess };
+  const publicPropertyAccess = { ...propertyAccess };
   const publicTypesDocumentation = { ...typesDocumentation };
   const publicTypeReferences = { ...typeReferences };
   const publicValidations = { ...validations };

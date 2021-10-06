@@ -631,10 +631,10 @@ You can use following decorators for your service implementation class:
 
 | Decorator | Description |
 |-----------|-------------|
-| @NoServiceAutoTests()                         | Do not generate automatic integration tests for this service         |
-| @AllowServiceForEveryUser()                   | Service can be accessed by any user             |
-| @AllowServiceForUserRoles(roles: string[])    | Service can be accessed only by users with specific role or roles           |
-| @AllowServiceForClusterInternalUse()             | Service can be accessed only from inside of Kubernetes cluster |
+| `@NoServiceAutoTests()`                         | Do not generate automatic integration tests for this service         |
+| `@AllowServiceForEveryUser()`                   | Service can be accessed by any user             |
+| `@AllowServiceForUserRoles(roles: string[])`    | Service can be accessed only by users with specific role or roles           |
+| `@AllowServiceForClusterInternalUse()`          | Service can be accessed only from inside of Kubernetes cluster |
 
 #### <a name="service-function-decorators"></a> Service Function Decorators
 

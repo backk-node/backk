@@ -18,6 +18,7 @@
   - [Microservice](#api-documentation-microservice)
   - [Initialization](#api-documentation-initialization)
   - [Base Services](#api-documentation-base-services)
+  - [Decorators](#api-documentation-decorators)
   - [AbstractDataStore](#api-documentation-abstractdatastore)
 - [Feedback](#feedback)
   - [Report a Bug](#report-bug)
@@ -320,6 +321,7 @@ Redis consumer is reading a list with a key named: `<service-name>.<service-name
 - [LivenessCheckService](#livenesscheckservice)
 - [ReadinessCheckService](#readinesscheckservice)
 - [StartupCheckService and StartupCheckServiceImpl](#startupcheckservice)
+- [AuditLoggingService](#auditloggingservice)
 
 #### <a name="baseservice"></a> BaseService
 A base class for your own services.
@@ -579,7 +581,7 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-#### AuditLoggingService
+#### <a name="auditloggingservice"></a> AuditLoggingService
 This service is called to log requests made to the microservice.
 
 ```typescript
@@ -615,6 +617,32 @@ export default class MicroserviceImpl extends Microservice {
   private readonly auditLogService = new AuditLogServiceImpl();
 }
 ```
+
+### <a name="api-documentation-decorators"></a> Decorators
+- [Service decorators](#service-decorators)
+- [Service Function Decorators](#service-function-decorators)
+- [Entity Decorators](#entity-decorators)
+- [Entity Property Decorators](#entity-property-decorators)
+- [Validation Decorators](#validation-decorators)
+
+#### <a name="service-decorators"></a> Service Decorators
+
+You can use following decorators for your service implementation class:
+
+| Decorator | Description |
+|-----------|-------------|
+| @NoServiceAutoTests()                         | Do not generate automatic integration tests for this service         |
+| @AllowServiceForEveryUser()                   | Service can be accessed by any user             |
+| @AllowServiceForUserRoles(roles: string[])    | Service can be accessed only by users with specific role or roles           |
+| @AllowServiceForClusterInternalUse()             | Service can be accessed only from inside of Kubernetes cluster |
+
+#### <a name="service-function-decorators"></a> Service Function Decorators
+
+#### <a name="entity-decorators"></a> Entity Decorators
+
+#### <a name="entity-property-decorators"></a> Entity Property Decorators
+
+#### <a name="validation-decorators"></a> Validation Decorators
 
 ## <a name="feedback"></a> Feedback
 

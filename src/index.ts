@@ -55,13 +55,11 @@ export { default as NoCaptcha } from './decorators/service/function/NoCaptcha';
 export { default as NoDistributedTransactionNeeded } from './decorators/service/function/NoDistributedTransactionNeeded';
 export { default as NoTransactionNeeded } from './decorators/service/function/NoTransactionNeeded';
 export { default as ExecuteOnStartUp } from './decorators/service/function/ExecuteOnStartUp';
-
 export {
   HttpHeaders,
   HeaderValueGenerator,
   default as ResponseHeaders
 } from './decorators/service/function/ResponseHeaders';
-
 export { default as ResponseStatusCode } from './decorators/service/function/ResponseStatusCode';
 export { UpdateType, default as Update } from './decorators/service/function/Update';
 

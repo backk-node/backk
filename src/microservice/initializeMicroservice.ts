@@ -374,9 +374,12 @@ export default function initializeMicroservice(
         service instanceof BaseService || (remoteServiceRootDir && !serviceName.endsWith('__BackkTypes__'))
     )
     .forEach(([serviceName]: [string, any]) => {
+      microservice[serviceName].TopLevelTypes = {};
+
       getNestedClasses(
         Object.keys(microservice[serviceName].Types ?? {}),
         microservice[serviceName].Types,
+        microservice[serviceName].TopLevelTypes,
         remoteServiceRootDir
       );
 

@@ -43,7 +43,7 @@ export default function generateServicesMetadata<T>(
         {}
       );
 
-      const publicTypesMetadata = Object.entries((microservice as any)[serviceName].Types ?? {}).reduce(
+      const publicTypesMetadata = Object.entries((microservice as any)[serviceName].TopLevelTypes ?? {}).reduce(
         (accumulatedTypes, [typeName, Class]: [string, any]) => {
           if (typeName.includes(':')) {
             return accumulatedTypes;
@@ -127,7 +127,7 @@ export default function generateServicesMetadata<T>(
           };
         });
 
-      const validationMetadatas = Object.entries((microservice as any)[serviceName].Types ?? {}).reduce(
+      const validationMetadatas = Object.entries((microservice as any)[serviceName].TopLevelTypes ?? {}).reduce(
         (accumulatedTypes, [typeName, typeClass]: [string, any]) => {
           if (typeName.includes(':')) {
             return accumulatedTypes;
@@ -141,7 +141,7 @@ export default function generateServicesMetadata<T>(
         {}
       );
 
-      const propertyAccess = Object.entries((microservice as any)[serviceName].Types ?? {}).reduce(
+      const propertyAccess = Object.entries((microservice as any)[serviceName].TopLevelTypes ?? {}).reduce(
         (accumulatedPropertyAccess, [typeName, typeClass]: [string, any]) => {
           if (typeName.includes(':')) {
             return accumulatedPropertyAccess;
@@ -154,7 +154,7 @@ export default function generateServicesMetadata<T>(
         {}
       );
 
-      const typesDocumentation = Object.entries((microservice as any)[serviceName].Types ?? {}).reduce(
+      const typesDocumentation = Object.entries((microservice as any)[serviceName].TopLevelTypes ?? {}).reduce(
         (accumulatedTypesDocumentation, [typeName, typeClass]: [string, any]) => {
           if (typeName.includes(':')) {
             return accumulatedTypesDocumentation;
@@ -167,7 +167,7 @@ export default function generateServicesMetadata<T>(
         {}
       );
 
-      const typeReferences = Object.entries((microservice as any)[serviceName].Types ?? {}).reduce(
+      const typeReferences = Object.entries((microservice as any)[serviceName].TopLevelTypes ?? {}).reduce(
         (accumulatedTypeReferences, [typeName, typeClass]: [string, any]) => {
           if (typeName.includes(':')) {
             return accumulatedTypeReferences;

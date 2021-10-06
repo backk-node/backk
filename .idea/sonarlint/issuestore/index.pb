@@ -270,8 +270,6 @@ X
 (src/utils/type/getTypeInfoForTypeName.ts,5/a/5a598c1f84dcd1f73f8f2a53b13cf1449483a796
 F
 src/service/Service.ts,c/9/c950fd6035eef6309f3fc09e7c2ca8f748d18106
-c
-3src/validation/setNestedTypeValidationDecorators.ts,a/2/a2731d0d863b33cc1f7ed5f81e935b9751e3b2c2
 ]
 -src/decorators/typeproperty/access/Private.ts,2/e/2efccbc8fb7519dc75e3596ef09dcd4aa8234736
 Z

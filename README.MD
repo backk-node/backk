@@ -922,6 +922,28 @@ Creates new entities `entities` of class `EntityClass` in the data store. `preHo
 operation and if any of the pre-hooks fails, the whole create operation fails. `postHook` is executed after create operation.
 If post-hook fails, the whole create operation fails. Returns the created entities or error.
 
+#### <a name="addsubentitytoentitybyid"></a> addSubEntityToEntityById
+```ts
+addSubEntityToEntityById<T extends BackkEntity, U extends SubEntity>(
+  subEntityPath: string,
+  subEntity: Omit<U, 'id'> | { _id: string },
+  EntityClass: { new (): T },
+  _id: string,
+  options?: {
+    ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
+    entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
+    postQueryOperations?: PostQueryOperations;
+    postHook?: PostHook<T>;
+  }
+): PromiseErrorOr<null>;
+```
+
+Finds an entity of class `EntityClass` by id `_id`, then adds sub-entity `subEntity` to path `subEntityPath`.
+If entity by id `_id` is not found, then entity provided by `ifEntityNotFoundUse` function will be used instead.
+`preHooks` are executed before the add operation and if any of the pre-hooks fails, the whole add operation fails.
+`postHook` is executed after add operation. If post-hook fails, the whole add operation fails.
+Returns nothing or error.
+
 ## <a name="feedback"></a> Feedback
 
 ### <a name="report-bug"></a> Report Bug

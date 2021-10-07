@@ -922,8 +922,12 @@ createEntities<T extends BackkEntity>(
 ): PromiseErrorOr<Many<T>>; 
 ```
 
-Creates new entities `entities` of class `EntityClass` in the data store. `preHooks` are executed before the create
-operation and if any of the pre-hooks fails, the whole create operation fails. `postHook` is executed after create operation.
+Creates new entities `entities` of class `EntityClass` in the data store.
+
+`preHooks` are executed before the create
+operation and if any of the pre-hooks fails, the whole create operation fails.
+
+`postHook` is executed after create operation.
 If post-hook fails, the whole create operation fails. 
 
 Returns the created entities or error.
@@ -946,9 +950,12 @@ addSubEntityToEntityById<T extends BackkEntity, U extends SubEntity>(
 
 Finds an entity of class `EntityClass` by id `_id`, then adds sub-entity `subEntity` to path `subEntityPath`.
 For example, if you have an `Order` entity with a property `orderItems: OrderItem[]`, you can add an order item sub-entity (of class `OrderItem`) to path `orderItems`.
+
 If entity by id `_id` is not found, then entity provided by `ifEntityNotFoundUse` function will be used instead.
+
 `preHooks` are executed before the add operation and if any of the pre-hooks fails, the whole add operation fails.
 A pre-hook gets the entity as argument, and it can be used to validate the proper state of entity before the add operation.
+
 `postHook` is executed after add operation. If post-hook fails, the whole add operation fails. A post-hook can be used 
 for example to notify other microservices about the operation.
 
@@ -972,9 +979,12 @@ addSubEntityToEntityByFilters<T extends BackkEntity, U extends SubEntity>(
 
 Finds an entity of class `EntityClass` by filter(s) `filters`, then adds sub-entity `subEntity` to path `subEntityPath`.
 For example, if you have an `Order` entity with a property `orderItems: OrderItem[]`, you can add an order item sub-entity (of class `OrderItem`) to path `orderItems`.
+
 If entity by filters `filters` is not found, then entity provided by `ifEntityNotFoundUse` function will be used instead.
+
 `preHooks` are executed before the add operation and if any of the pre-hooks fails, the whole add operation fails.
 A pre-hook gets the entity as argument, and it can be used to validate the proper state of entity before the add operation.
+
 `postHook` is executed after add operation. If post-hook fails, the whole add operation fails. A post-hook can be used
 for example to notify other microservices about the operation.
 

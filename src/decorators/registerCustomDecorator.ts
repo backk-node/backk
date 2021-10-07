@@ -4,7 +4,7 @@ export const customDecoratorNameToTestValueMap: { [key: string]: any } = {};
 
 export default function registerCustomDecorator(options: ValidationDecoratorOptions, testValue: any) {
   if (!options.name) {
-    throw new Error('value must be specified in ValidationDecoratorOptions');
+    throw new Error('Name must be specified in ValidationDecoratorOptions');
   }
 
   if (options.name !== options.constraints?.[0]) {

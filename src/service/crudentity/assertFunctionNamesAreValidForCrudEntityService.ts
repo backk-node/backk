@@ -18,7 +18,7 @@ export default function assertFunctionNamesAreValidForCrudEntityService(
       !serviceFunctionAnnotationContainer.hasOnStartUp(ServiceClass, functionName)
     ) {
       throw new Error(
-        'Invalid function value: ' +
+        'Invalid function name: ' +
           ServiceClass.name +
           '.' +
           functionName +

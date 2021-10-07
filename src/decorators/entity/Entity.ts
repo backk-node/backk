@@ -10,7 +10,7 @@ export default function Entity(
       !EntityClass.name.match(/^[A-Z][a-zA-Z0-9]*$/)
     ) {
       throw new Error(
-        EntityClass.name + ': entity class value must match regular expression: /^[A-Z][a-zA-Z0-9]*$/'
+        EntityClass.name + ': entity class name must match regular expression: /^[A-Z][a-zA-Z0-9]*$/'
       );
     }
 

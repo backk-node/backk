@@ -75,7 +75,7 @@ const types = {
   UserDefinedFilter,
   OrFilter,
   Captcha,
-  Name: Value,
+  Value,
   Version,
   BaseUserAccount,
   Subject,

@@ -7,5 +7,5 @@ export default function getMicroserviceServiceNameByServiceClass(
     return service[0];
   }
 
-  return 'Service value not found';
+  return 'Service name not found';
 }

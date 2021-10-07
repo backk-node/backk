@@ -78,7 +78,7 @@ export default function getSrcFilePathNameForTypeName(typeName: string, serviceR
   if (foundFilePathNames.length === 0) {
     throw new Error('File not found for type: ' + typeName);
   } else if (foundFilePathNames.length > 1) {
-    throw new Error('Multiple types with same value not supported: ' + typeName);
+    throw new Error('Multiple types with same name not supported: ' + typeName);
   }
 
   return foundFilePathNames[0];

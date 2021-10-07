@@ -849,34 +849,34 @@ You can use following decorators for the properties of your classes to validate 
 ### <a name="api-documentation-abstractdatastore"></a> AbstractDataStore
 
 - [createEntity](#createentity)
-- [createEntities](#createEntities)
+- [createEntities](#createEntities)  
 
 - [addSubEntityToEntityById](#addsubentitytoentitybyid)
 - [addSubEntityToEntityByFilters](#addsubentitytoentitybyfilters)
 - [addSubEntitiesToEntityById](#addsubentitiestoentitybyid)
-- [addSubEntitiesToEntityByFilters](#addsubentitiestoentitybyfilters)
+- [addSubEntitiesToEntityByFilters](#addsubentitiestoentitybyfilters)  
 
 - [getAllEntities](#getallentities)
 - [getEntityCount](#getentitycount)
 - [getEntityByFilters](#getentitybyfilters)
 - [getEntitiesByFilters](#getentitiesbyfilters)
 - [getEntityById](#getentitybyid)
-- [getEntitiesByIds](#getentitiesbyids)
+- [getEntitiesByIds](#getentitiesbyids)  
 
 - [updateEntity](#updateentity)
 - [updateEntityByFilters](#updateentitybyfilters)
-- [updateEntitiesByFilters](#updateentitiesbyfilters)
+- [updateEntitiesByFilters](#updateentitiesbyfilters)  
 
 - [deleteAllEntities](#deleteallentities)
 - [deleteEntityById](#deleteentitybyid)
 - [deleteEntityByFilters](#deleteentitybyfilters)
 - [deleteEntitiesByIds](#deleteentitiesbyids)
-- [deleteEntitiesByFilters](#deleteentitiesbyfilters)
+- [deleteEntitiesByFilters](#deleteentitiesbyfilters)  
 
 - [removeSubEntityFromEntityById](#removesubentityfromentitybyid)
 - [removeSubEntityFromEntityByFilters](#removesubentityfromentitybyfilters)
 - [removeSubEntitiesFromEntityById](#removesubentitiesfromentitybyid)
-- [removeSubEntitiesFromEntityByFilters](#removesubentitiesfromentitybyfilters)
+- [removeSubEntitiesFromEntityByFilters](#removesubentitiesfromentitybyfilters)  
 
 - [addValuesToArrayFieldInEntity](#addvaluestoarrayfieldinentity)
 - [doesArrayFieldInEntityContainValue](#doesarrayfieldinentitycontainvalue)

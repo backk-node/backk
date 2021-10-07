@@ -983,7 +983,7 @@ addSubEntityToEntityByFilters<T extends BackkEntity, U extends SubEntity>(
 Finds an entity of class `EntityClass` by filter(s) `filters`, then adds sub-entity `subEntity` to path `subEntityPath`.
 For example, if you have an `ShoppingCart` entity found by `userAccountId` with a property `shoppingCartItems: ShoppingCartItem[]`, you can add a shopping cart item sub-entity (of class `ShoppingCartItem`) to path `shoppingCartItems`:
 ```ts
-addSubEntityToEntityById('shoppingCartItems', shoppingCartItem, ShoppingCart, { userAccountId });
+addSubEntityToEntityByFilters('shoppingCartItems', shoppingCartItem, ShoppingCart, { userAccountId });
 ```
 
 If entity by filters `filters` is not found, then entity provided by `ifEntityNotFoundUse` function will be used instead.
@@ -1047,7 +1047,7 @@ addSubEntitiesToEntityByFilters<T extends BackkEntity, U extends SubEntity>(
 Finds an entity of class `EntityClass` by filter(s) `filters`, then adds sub-entities `subEntities` to path `subEntityPath`.
 For example, if you have an `ShoppingCart` entity found by `userAccountId` with a property `shoppingCartItems: ShoppingCartItem[]`, you can add a shopping cart items sub-entities (of class `ShoppingCartItem`) to path `shoppingCartItems`:
 ```ts
-addSubEntityToEntityById('shoppingCartItems', shoppingCartItems, ShoppingCart, { userAccountId });
+addSubEntityToEntityByFilters('shoppingCartItems', shoppingCartItems, ShoppingCart, { userAccountId });
 ```
 
 If entity by filters `filters` is not found, then entity provided by `ifEntityNotFoundUse` function will be used instead.

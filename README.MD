@@ -648,15 +648,15 @@ You can use following decorators for you service class's functions:
 | `@AllowForEveryUserForOwnResources()`    | Service function can be accessed by any user, but only for own resources |
 | `@AllowForTests()`                       | Service function can be accessed by integration tests only |
 | `@NoAutoTests()`                         | Automatic integration tests are not generated for this service function |
-| `@CronJob(cronSchedule: CronSchedule, retryIntervalsInSecs: number[])` | Service function is a cron job that is executed according to given cron schedule |
+| `@CronJob(cronSchedule: CronSchedule, retryIntervalsInSecs: number[])` | Service function is a cron job that is executed according to given cron schedule. Type definition for `CronSchedule` is below this table. |
 | `@Create()` | Service function is used to create a resource |
-| `Update(updateType: UpdateType)` | Service function is used to update a resource | 
+| `@Update(updateType: UpdateType)` | Service function is used to update a resource | 
 | `@Delete()` | Service function is used to delete a resource |
 | `@ExecuteOnStartup()` | Service function is executed when microservice is started |
 | `@NoCaptcha()` | This denotes that Captcha is not required when service function is creating a resource |
 | `@NoTransactionNeeded(reason: string)` | Service function execution does not require a transaction due to given reason |
 | `@NoDistributedTransactionNeeded(reason: string)` | Service function execution does not require a distributed transaction due to given reason |
-| `@ResponseHeaders<T extends object, U extends any>(headers: HttpHeaders<T, U>)` | Given headers are sent with the service function response |
+| `@ResponseHeaders<T extends object, U extends any>(headers: HttpHeaders<T, U>)` | Given headers are sent with the service function response. Type definition for `HttpHeaders` is below this table. |
 | `@ResponseStatusCode(statusCode: number)` | Service function response is sent with given status code |
 
 ```ts
@@ -692,10 +692,47 @@ type HttpHeaders<T extends object, U extends any> = {
 };
 ```
 
-
 #### <a name="entity-decorators"></a> Entity Decorators
 
+You can use following decorators for your entity classes:
+
+Decorator | Description |
+|-----------|-------------|
+| `@Entity()`                         | Denotes that this class is an entity         |
+| `@CompositeIndex(indexFields: string[], usingOption?: string, additionalSqlCreateIndexStatementOptions?: string)` | Creates a composite index for entity database table using given fields |
+| `@UniqueCompositeIndex(indexFields: string[], usingOption?: string, additionalSqlCreateIndexStatementOptions?: string)`    | Same as above but index is unique |
+
 #### <a name="entity-property-decorators"></a> Entity Property Decorators
+
+You can use following decorators for the properties of your entity classes:
+
+Decorator | Description |
+|-----------|-------------|
+| `@Encrypted()`                     | Entity property value is encrypted in database |
+| `@Encrypted(reason: string)`       | Entity property value is not needed to be encrypted in database because of given reason |
+| `@Hashed()`                        | Entity property value is hashed in database |
+| `@NotHashed(reason: string)`       | Entity property value is not needed to be hashed in database because of given reason |
+| `@TestValue(testValue: any)`       | Entity property should have this value in automatic integration tests |
+| `@Index(sortOrder?: SortOrder, usingOption?: string, additionalSqlCreateIndexStatementOptions?: string)` | Entity property is indexed in database according to given sort order ('ASC' or 'DESC') |
+| `@FetchFromRemoteService(remoteServiceFunctionUrl: string, buildRemoteServiceFunctionArgument: (arg: T, response: U) => { [key: string]: any }, options?: HttpRequestOptions)` | Entity property value is fetched from the given remote URL with given argument |
+| `@OneToMany(isReferenceToExternalEntity = false)` | Entity property is a one-to-many mapping to another entity  |
+| `@ManyToMany()` | Entity property is a many-to-many mapping to another entity |
+| `@UiProperties(uiProperties: UiProps)` | Entity property has the given UI properties |
+| `@Transient()` | Entity property is not stored in database |
+| `@Private()` | Entity property is private and cannot be accessed by clients (ie. it cannot be given in service function argument and is not visible in service function response) |
+| `@ReadWrite()` | Entity property can be written and read by clients (ie. it can be given in service function argument and it is visible in service function response) |
+| `@ReadOnly()` | Entity property can only be read by clients (ie. it cannot be given in service function argument, but it is visible in service function response) |
+| `@ReadUpdate()` | Entity property can be read and given in update requests by clients (example of such property is `_id` property) |
+| `@WriteOnly()` | Entity property can be only written by clients. (ie. it can be given in service function argument, but it is not visible in service function responses) |
+| `@CreateOnly()` | Entity property can only be given in resource create requests by clients | 
+| `@UpdateOnly()` | Entity property can only be given in resource update requests by clients |
+
+```ts
+type UiProps = {
+  shouldDisplay: boolean,
+  booleanValueInputType: 'switch' | 'checkbox'
+}
+```
 
 #### <a name="validation-decorators"></a> Validation Decorators
 

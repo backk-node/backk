@@ -1,6 +1,6 @@
 export type UiProps = {
   shouldDisplay: boolean,
-  booleanValueInputType: 'toggle' | 'checkbox'
+  booleanValueInputType: 'switch' | 'checkbox'
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

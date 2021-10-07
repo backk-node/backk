@@ -631,12 +631,67 @@ You can use following decorators for your service implementation class:
 
 | Decorator | Description |
 |-----------|-------------|
-| `@NoServiceAutoTests()`                         | Do not generate automatic integration tests for this service         |
+| `@NoServiceAutoTests()`                         | Automatic integration tests are no generated for this service         |
 | `@AllowServiceForEveryUser()`                   | Service can be accessed by any user             |
 | `@AllowServiceForUserRoles(roles: string[])`    | Service can be accessed only by users with specific role or roles           |
 | `@AllowServiceForClusterInternalUse()`          | Service can be accessed only from inside of Kubernetes cluster |
 
 #### <a name="service-function-decorators"></a> Service Function Decorators
+
+You can use following decorators for you service class's functions:
+
+| Decorator | Description |
+|-----------|-------------|
+| `@AllowForEveryUser()`                   | Service function can be accessed by any user             |
+| `@AllowForUserRoles(roles: string[])`    | Service function can be accessed only by users with specific role or roles           |
+| `@AllowForClusterInternalUse()`          | Service function can be accessed only from inside of Kubernetes cluster |
+| `@AllowForEveryUserForOwnResources()`    | Service function can be accessed by any user, but only for own resources |
+| `@AllowForTests()`                       | Service function can be accessed by integration tests only |
+| `@NoAutoTests()`                         | Automatic integration tests are not generated for this service function |
+| `@CronJob(cronSchedule: CronSchedule, retryIntervalsInSecs: number[])` | Service function is a cron job that is executed according to given cron schedule |
+| `@Create()` | Service function is used to create a resource |
+| `Update(updateType: UpdateType)` | Service function is used to update a resource | 
+| `@Delete()` | Service function is used to delete a resource |
+| `@ExecuteOnStartup()` | Service function is executed when microservice is started |
+| `@NoCaptcha()` | This denotes that Captcha is not required when service function is creating a resource |
+| `@NoTransactionNeeded(reason: string)` | Service function execution does not require a transaction due to given reason |
+| `@NoDistributedTransactionNeeded(reason: string)` | Service function execution does not require a distributed transaction due to given reason |
+| `@ResponseHeaders<T extends object, U extends any>(headers: HttpHeaders<T, U>)` | Given headers are sent with the service function response |
+| `@ResponseStatusCode(statusCode: number)` | Service function response is sent with given status code |
+
+```ts
+type Range = {
+  start: number;
+  end: number;
+};
+
+type CronSchedule = {
+  minutes?: number | number[] | Range | 'any';
+  minuteInterval?: number;
+  hours?: number | number[] | Range | 'any';
+  hourInterval?: number;
+  daysOfMonth?: number | number[] | Range | 'any';
+  dayInterval?: number;
+
+  // 0 - 11
+  months?: number | number[] | Range | 'any';
+  monthInterval?: number;
+
+  // 0-6 (Sun-Sat)
+  daysOfWeek?: number | number[] | Range;
+  weekDayInterval?: number;
+};
+
+type HeaderValueGenerator<T extends object, U extends any> = (
+  argument: T,
+  returnValue: U
+) => string | undefined;
+
+type HttpHeaders<T extends object, U extends any> = {
+  [key: string]: string | HeaderValueGenerator<T, U> | undefined;
+};
+```
+
 
 #### <a name="entity-decorators"></a> Entity Decorators
 

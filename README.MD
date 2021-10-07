@@ -934,7 +934,7 @@ Returns the created entities or error.
 
 #### <a name="addsubentitytoentitybyid"></a> addSubEntityToEntityById
 ```ts
-function addSubEntityToEntityById<T extends BackkEntity, U extends SubEntity>(
+addSubEntityToEntityById<T extends BackkEntity, U extends SubEntity>(
   subEntityPath: string,
   subEntity: Omit<U, 'id'> | { _id: string },
   EntityClass: { new (): T },
@@ -981,7 +981,10 @@ addSubEntityToEntityByFilters<T extends BackkEntity, U extends SubEntity>(
 ```
 
 Finds an entity of class `EntityClass` by filter(s) `filters`, then adds sub-entity `subEntity` to path `subEntityPath`.
-For example, if you have an `Order` entity with a property `orderItems: OrderItem[]`, you can add an order item sub-entity (of class `OrderItem`) to path `orderItems`.
+For example, if you have an `Order` entity with a property `orderItems: OrderItem[]`, you can add an order item sub-entity (of class `OrderItem`) to path `orderItems`:
+```ts
+addSubEntityToEntityById('orderItems', orderItem, Order, orderId);
+```
 
 If entity by filters `filters` is not found, then entity provided by `ifEntityNotFoundUse` function will be used instead.
 

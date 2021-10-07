@@ -934,7 +934,7 @@ Returns the created entities or error.
 
 #### <a name="addsubentitytoentitybyid"></a> addSubEntityToEntityById
 ```ts
-addSubEntityToEntityById<T extends BackkEntity, U extends SubEntity>(
+function addSubEntityToEntityById<T extends BackkEntity, U extends SubEntity>(
   subEntityPath: string,
   subEntity: Omit<U, 'id'> | { _id: string },
   EntityClass: { new (): T },

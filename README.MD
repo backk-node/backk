@@ -918,7 +918,7 @@ createEntities<T extends BackkEntity>(
 ): PromiseErrorOr<Many<T>>; 
 ```
 
-Creates new entity `entities` of class `EntityClass` in the data store. `preHooks` are executed before the create
+Creates new entities `entities` of class `EntityClass` in the data store. `preHooks` are executed before the create
 operation and if any of the pre-hooks fails, the whole create operation fails. `postHook` is executed after create operation.
 If post-hook fails, the whole create operation fails. Returns the created entities or error.
 

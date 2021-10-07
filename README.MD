@@ -943,7 +943,7 @@ addSubEntityToEntityById<T extends BackkEntity, U extends SubEntity>(
 ```
 
 Finds an entity of class `EntityClass` by id `_id`, then adds sub-entity `subEntity` to path `subEntityPath`.
-For example, if you have an `Order` entity, you can add an order item sub-entity (of class `OrderItem`) to path `orderItems`.
+For example, if you have an `Order` entity with a property `orderItems: OrderItem[]`, you can add an order item sub-entity (of class `OrderItem`) to path `orderItems`.
 If entity by id `_id` is not found, then entity provided by `ifEntityNotFoundUse` function will be used instead.
 `preHooks` are executed before the add operation and if any of the pre-hooks fails, the whole add operation fails.
 A pre-hook gets the entity as argument, and it can be used to validate the proper state of entity before the add operation.
@@ -969,7 +969,7 @@ addSubEntityToEntityByFilters<T extends BackkEntity, U extends SubEntity>(
 ```
 
 Finds an entity of class `EntityClass` by filter(s) `filters`, then adds sub-entity `subEntity` to path `subEntityPath`.
-For example, if you have an `Order` entity, you can add an order item sub-entity (of class `OrderItem`) to path `orderItems`.
+For example, if you have an `Order` entity with a property `orderItems: OrderItem[]`, you can add an order item sub-entity (of class `OrderItem`) to path `orderItems`.
 If entity by filters `filters` is not found, then entity provided by `ifEntityNotFoundUse` function will be used instead.
 `preHooks` are executed before the add operation and if any of the pre-hooks fails, the whole add operation fails.
 A pre-hook gets the entity as argument, and it can be used to validate the proper state of entity before the add operation.

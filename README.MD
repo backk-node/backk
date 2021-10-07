@@ -901,7 +901,26 @@ createEntity<T extends BackkEntity>(
   ): PromiseErrorOr<One<T>>;
 ```
 
-creates a new entity `entity` of class `EntityClass`.
+Creates a new entity `entity` of class `EntityClass` in the data store. `preHooks` are executed before the create
+operation and if any of the pre-hooks fails, the whole create operation fails. `postHook` is executed after create operation.
+If post-hook fails, the whole create operation fails. Returns the created entity or error.
+
+#### <a name="createentity"></a> createEntities
+```ts
+createEntities<T extends BackkEntity>(
+  EntityClass: { new (): T },
+  entities: Array<Omit<T, '_id' | 'createdAtTimestamp' | 'version' | 'lastModifiedTimestamp'>>,
+  options?: {
+    preHooks?: PreHook | PreHook[];
+    postQueryOperations?: PostQueryOperations;
+    postHook?: PostHook<T>;
+  }
+): PromiseErrorOr<Many<T>>; 
+```
+
+Creates new entity `entities` of class `EntityClass` in the data store. `preHooks` are executed before the create
+operation and if any of the pre-hooks fails, the whole create operation fails. `postHook` is executed after create operation.
+If post-hook fails, the whole create operation fails. Returns the created entities or error.
 
 ## <a name="feedback"></a> Feedback
 

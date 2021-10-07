@@ -850,7 +850,8 @@ You can use following decorators for the properties of your classes to validate 
 
 - [createEntity](#createentity)
 - [createEntities](#createEntities)
-<br/>
+
+
 - [addSubEntityToEntityById](#addsubentitytoentitybyid)
 - [addSubEntityToEntityByFilters](#addsubentitytoentitybyfilters)
 - [addSubEntitiesToEntityById](#addsubentitiestoentitybyid)

@@ -849,8 +849,8 @@ You can use following decorators for the properties of your classes to validate 
 ### <a name="api-documentation-abstractdatastore"></a> AbstractDataStore
 
 - [createEntity](#createentity)
-- [createEntities](#createEntities)  
-  
+- [createEntities](#createEntities)
+<br/>
 - [addSubEntityToEntityById](#addsubentitytoentitybyid)
 - [addSubEntityToEntityByFilters](#addsubentitytoentitybyfilters)
 - [addSubEntitiesToEntityById](#addsubentitiestoentitybyid)

@@ -949,6 +949,7 @@ addSubEntityToEntityById<T extends BackkEntity, U extends SubEntity>(
 ```
 
 Finds an entity of class `EntityClass` by id `_id`, then adds sub-entity `subEntity` to path `subEntityPath`.
+
 For example, if you have an `Order` entity with a property `orderItems: OrderItem[]`, you can add an order item sub-entity (of class `OrderItem`) to path `orderItems`:
 ```ts
 addSubEntityToEntityById('orderItems', orderItem, Order, orderId);
@@ -981,6 +982,7 @@ addSubEntityToEntityByFilters<T extends BackkEntity, U extends SubEntity>(
 ```
 
 Finds an entity of class `EntityClass` by filter(s) `filters`, then adds sub-entity `subEntity` to path `subEntityPath`.
+
 For example, if you have an `ShoppingCart` entity found by `userAccountId` with a property `shoppingCartItems: ShoppingCartItem[]`, you can add a shopping cart item sub-entity (of class `ShoppingCartItem`) to path `shoppingCartItems`:
 ```ts
 addSubEntityToEntityByFilters('shoppingCartItems', shoppingCartItem, ShoppingCart, { userAccountId });
@@ -1013,6 +1015,7 @@ addSubEntitiesToEntityById<T extends BackkEntity, U extends SubEntity>(
 ```
 
 Finds an entity of class `EntityClass` by id `_id`, then adds sub-entities `subEntities` to path `subEntityPath`.
+
 For example, if you have an `Order` entity with a property `orderItems: OrderItem[]`, you can add an order items sub-entities (of class `OrderItem`) to path `orderItems`:
 ```ts
 addSubEntityToEntityById('orderItems', orderItems, Order, orderId);
@@ -1045,6 +1048,7 @@ addSubEntitiesToEntityByFilters<T extends BackkEntity, U extends SubEntity>(
 ```
 
 Finds an entity of class `EntityClass` by filter(s) `filters`, then adds sub-entities `subEntities` to path `subEntityPath`.
+
 For example, if you have an `ShoppingCart` entity found by `userAccountId` with a property `shoppingCartItems: ShoppingCartItem[]`, you can add a shopping cart items sub-entities (of class `ShoppingCartItem`) to path `shoppingCartItems`:
 ```ts
 addSubEntityToEntityByFilters('shoppingCartItems', shoppingCartItems, ShoppingCart, { userAccountId });

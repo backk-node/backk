@@ -88,7 +88,7 @@ export { default as LengthAndMatchesAll } from './decorators/typeproperty/Length
 export { default as MaxLengthAndMatches } from './decorators/typeproperty/MaxLengthAndMatches';
 export { default as MaxLengthAndMatchesAll } from './decorators/typeproperty/MaxLengthAndMatchesAll';
 export { default as MinMax } from './decorators/typeproperty/MinMax';
-export { default as ShouldBeTrueForEntity } from './decorators/typeproperty/ShouldBeTrueForEntity';
+export { default as ShouldBeTrueForObject } from './decorators/typeproperty/ShouldBeTrueForObject';
 export { default as Unique } from './decorators/typeproperty/Unique';
 export { default as NotUnique } from './decorators/typeproperty/NotUnique';
 export { default as IsSubject } from './decorators/typeproperty/IsSubject';

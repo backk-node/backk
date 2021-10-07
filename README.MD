@@ -743,6 +743,7 @@ You can use following decorators for the properties of your classes to validate 
 
 | Decorator                                       | Description |
 | ------------------------------------------------| ----------- |
+| `@ShouldBeTrueForObject( validateObject: (object: T) => boolean, errorMessage?: string)` | This validator can used on any class property to validate using other properties of the object with the `validateObject` function |
 | **Number validation decorators**                |
 | `@IsInt()`                                      | Checks if the value is an integer number. |
 | `@IsBigInt()`                                   | Check if the value is Big int. |
@@ -762,6 +763,8 @@ You can use following decorators for the properties of your classes to validate 
 | `@IsNumberString(options?: IsNumericOptions)`   | Checks if a string is a number. |
 | **String validation decorators**                | |
 | `@IsAnyString()`                                | Value can be any string. |
+| `@IsOneOf(getPossibleValuesFunc: () => PromiseErrorOr<Many<Value>>, serviceFunctionName: string, testValue: string)` | Check that the string value is one of those returned from a call to `getPossibleValuesFunc` |
+| `@IsNoneOf(getPossibleValuesFunc: () => PromiseErrorOr<Many<Value>>, serviceFunctionName: string, testValue: string)` | Check that the string value is none of those returned from a call to `getPossibleValuesFunc` |
 | `@Contains(seed: string)`                       | Checks if the string contains the seed. |
 | `@NotContains(seed: string)`                    | Checks if the string not contains the seed. |
 | `@IsAlpha()`                                    | Checks if the string contains only letters (a-zA-Z). |
@@ -842,8 +845,6 @@ You can use following decorators for the properties of your classes to validate 
 | `@ArrayMaxSize(max: number)`                    | Checks if the array's length is less or equal to the specified number. |
 | `@ArrayUnique(identifier?: (o) => any)`         | Checks if all array's values are unique. Comparison for objects is reference-based. Optional function can be speciefied which return value will be used for the comparsion. |
 | `@ArrayNotUnique()`                             | Array's values don't need to be unique
-
-
 
 ## <a name="feedback"></a> Feedback
 

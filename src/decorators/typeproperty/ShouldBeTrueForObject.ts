@@ -1,7 +1,7 @@
 import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
 
-export default function ShouldBeTrueForEntity<T>(
-  func: (entity: T) => boolean,
+export default function ShouldBeTrueForObject<T>(
+  validateObject: (object: T) => boolean,
   errorMessage?: string,
   validationOptions?: ValidationOptions
 ) {
@@ -11,14 +11,14 @@ export default function ShouldBeTrueForEntity<T>(
       name: 'shouldBeTrueForEntity',
       target: object.constructor,
       propertyName: propertyName,
-      constraints: ['shouldBeTrueForEntity', func],
+      constraints: ['shouldBeTrueForEntity', validateObject],
       options: validationOptions,
       validator: {
         validate(value: any, args: ValidationArguments) {
-          return func(args.object as any);
+          return validateObject(args.object as any);
         },
         defaultMessage: () =>
-          errorMessage ? errorMessage : 'Entity did not match predicate: ' + func.toString()
+          errorMessage ? errorMessage : 'Entity did not match predicate: ' + validateObject.toString()
       }
     });
   };

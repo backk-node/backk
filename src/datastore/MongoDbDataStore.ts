@@ -1750,7 +1750,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
     }
   }
 
-  async removeSubEntitiesByJsonPathFromEntityById<T extends BackkEntity>(
+  async removeSubEntitiesFromEntityById<T extends BackkEntity>(
     subEntitiesJsonPath: string,
     EntityClass: { new (): T },
     _id: string,
@@ -1760,7 +1760,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       postHook?: PostHook<T>;
     }
   ): PromiseErrorOr<null> {
-    const dbOperationStartTimeInMillis = startDbOperation(this, 'removeSubEntitiesByJsonPathFromEntityById');
+    const dbOperationStartTimeInMillis = startDbOperation(this, 'removeSubEntitiesFromEntityById');
     // noinspection AssignmentToFunctionParameterJS
     EntityClass = this.getType(EntityClass);
     let shouldUseTransaction = false;
@@ -1807,7 +1807,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
     }
   }
 
-  async removeSubEntityByIdFromEntityById<T extends BackkEntity>(
+  async removeSubEntityFromEntityById<T extends BackkEntity>(
     subEntitiesJsonPath: string,
     subEntityId: string,
     EntityClass: { new (): T },
@@ -1818,7 +1818,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       postHook?: PostHook<T>;
     }
   ): PromiseErrorOr<null> {
-    const dbOperationStartTimeInMillis = startDbOperation(this, 'removeSubEntityByIdFromEntityById');
+    const dbOperationStartTimeInMillis = startDbOperation(this, 'removeSubEntityFromEntityById');
     const isNonNestedColumnName = subEntitiesJsonPath.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/);
     let response;
 
@@ -1833,7 +1833,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       );
     } else {
       const subEntityPath = `${subEntitiesJsonPath}[?(@.id == '${subEntityId}' || @._id == '${subEntityId}')]`;
-      response = await this.removeSubEntitiesByJsonPathFromEntityById(
+      response = await this.removeSubEntitiesFromEntityById(
         subEntityPath,
         EntityClass,
         _id,
@@ -1892,7 +1892,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
     return false;
   }
 
-  async removeSubEntitiesByJsonPathFromEntityByFilters<T extends BackkEntity, U extends object>(
+  async removeSubEntitiesFromEntityByFilters<T extends BackkEntity, U extends object>(
     subEntitiesJsonPath: string,
     EntityClass: { new (): T },
     filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
@@ -1904,7 +1904,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(
       this,
-      'removeSubEntitiesByJsonPathFromEntityByFilters'
+      'removeSubEntitiesFromEntityByFilters'
     );
     // noinspection AssignmentToFunctionParameterJS
     EntityClass = this.getType(EntityClass);
@@ -1950,7 +1950,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
     }
   }
 
-  async removeSubEntityByIdFromEntityByFilters<T extends BackkEntity>(
+  async removeSubEntityFromEntityByFilters<T extends BackkEntity>(
     subEntitiesJsonPath: string,
     subEntityId: string,
     EntityClass: { new (): T },
@@ -1961,7 +1961,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       postHook?: PostHook<T>;
     }
   ): PromiseErrorOr<null> {
-    const dbOperationStartTimeInMillis = startDbOperation(this, 'removeSubEntityByIdFromEntityByFilters');
+    const dbOperationStartTimeInMillis = startDbOperation(this, 'removeSubEntityFromEntityByFilters');
     const isNonNestedColumnName = subEntitiesJsonPath.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/);
     let response;
 
@@ -1976,7 +1976,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       );
     } else {
       const subEntityJsonPath = `${subEntitiesJsonPath}[?(@.id == '${subEntityId}' || @._id == '${subEntityId}')]`;
-      response = await this.removeSubEntitiesByJsonPathFromEntityByFilters(
+      response = await this.removeSubEntitiesFromEntityByFilters(
         subEntityJsonPath,
         EntityClass,
         filters,
@@ -1988,7 +1988,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
     return response;
   }
 
-  async addEntityArrayFieldValues<T extends BackkEntity>(
+  async addValuesToArrayFieldInEntity<T extends BackkEntity>(
     EntityClass: { new (): T },
     _id: string,
     fieldName: keyof T & string,
@@ -1999,7 +1999,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       postHook?: PostHook<T>;
     }
   ): PromiseErrorOr<null> {
-    const dbOperationStartTimeInMillis = startDbOperation(this, 'addEntityArrayFieldValues');
+    const dbOperationStartTimeInMillis = startDbOperation(this, 'addValuesToArrayFieldInEntity');
     // noinspection AssignmentToFunctionParameterJS
     EntityClass = this.getType(EntityClass);
     let shouldUseTransaction = false;
@@ -2028,13 +2028,13 @@ export default class MongoDbDataStore extends AbstractDataStore {
     }
   }
 
-  async doesEntityArrayFieldContainValue<T extends BackkEntity>(
+  async doesArrayFieldInEntityContainValue<T extends BackkEntity>(
     EntityClass: { new (): T },
     _id: string,
     fieldName: keyof T & string,
     fieldValue: string | number | boolean
   ): PromiseErrorOr<boolean> {
-    const dbOperationStartTimeInMillis = startDbOperation(this, 'addEntityArrayFieldValues');
+    const dbOperationStartTimeInMillis = startDbOperation(this, 'addValuesToArrayFieldInEntity');
     // noinspection AssignmentToFunctionParameterJS
     EntityClass = this.getType(EntityClass);
 
@@ -2086,7 +2086,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
     }
   }
 
-  async removeEntityArrayFieldValues<T extends BackkEntity>(
+  async removeValuesFromArrayFieldInEntity<T extends BackkEntity>(
     EntityClass: { new (): T },
     _id: string,
     fieldName: keyof T & string,
@@ -2097,7 +2097,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       postHook?: PostHook<T>;
     }
   ): PromiseErrorOr<null> {
-    const dbOperationStartTimeInMillis = startDbOperation(this, 'addEntityArrayFieldValues');
+    const dbOperationStartTimeInMillis = startDbOperation(this, 'addValuesToArrayFieldInEntity');
     // noinspection AssignmentToFunctionParameterJS
     EntityClass = this.getType(EntityClass);
     let shouldUseTransaction = false;

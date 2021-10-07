@@ -94,11 +94,11 @@ export default class NoOpDataStore extends AbstractDataStore {
     return Promise.resolve(false);
   }
 
-  removeSubEntitiesByJsonPathFromEntityById<T extends BackkEntity>(): PromiseErrorOr<null> {
+  removeSubEntitiesFromEntityById<T extends BackkEntity>(): PromiseErrorOr<null> {
     throw new Error('Not implemented');
   }
 
-  removeSubEntityByIdFromEntityById<T extends BackkEntity>(): PromiseErrorOr<null> {
+  removeSubEntityFromEntityById<T extends BackkEntity>(): PromiseErrorOr<null> {
     throw new Error('Not implemented');
   }
 
@@ -170,19 +170,19 @@ export default class NoOpDataStore extends AbstractDataStore {
     throw new Error('Not implemented');
   }
 
-  removeSubEntityByIdFromEntityByFilters<T extends BackkEntity>(): PromiseErrorOr<null> {
+  removeSubEntityFromEntityByFilters<T extends BackkEntity>(): PromiseErrorOr<null> {
     throw new Error('Not implemented');
   }
 
-  addEntityArrayFieldValues<T extends BackkEntity>(): PromiseErrorOr<null> {
+  addValuesToArrayFieldInEntity<T extends BackkEntity>(): PromiseErrorOr<null> {
     throw new Error('Not implemented');
   }
 
-  removeEntityArrayFieldValues<T extends BackkEntity>(): PromiseErrorOr<null> {
+  removeValuesFromArrayFieldInEntity<T extends BackkEntity>(): PromiseErrorOr<null> {
     throw new Error('Not implemented');
   }
 
-  removeSubEntitiesByJsonPathFromEntityByFilters<T extends BackkEntity, U extends object>(): PromiseErrorOr<
+  removeSubEntitiesFromEntityByFilters<T extends BackkEntity, U extends object>(): PromiseErrorOr<
     null
   > {
     throw new Error('Not implemented');
@@ -196,7 +196,7 @@ export default class NoOpDataStore extends AbstractDataStore {
     throw new Error('Not implemented');
   }
 
-  doesEntityArrayFieldContainValue<T extends BackkEntity>(): PromiseErrorOr<boolean> {
+  doesArrayFieldInEntityContainValue<T extends BackkEntity>(): PromiseErrorOr<boolean> {
     throw new Error('Not implemented');
   }
 }

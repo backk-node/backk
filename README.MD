@@ -846,6 +846,44 @@ You can use following decorators for the properties of your classes to validate 
 | `@ArrayUnique(identifier?: (o) => any)`         | Checks if all array's values are unique. Comparison for objects is reference-based. Optional function can be speciefied which return value will be used for the comparsion. |
 | `@ArrayNotUnique()`                             | Array's values don't need to be unique
 
+### <a name="api-documentation-abstractdatastore"></a> AbstractDataStore
+
+- [createEntity](#createentity)
+- [createEntities](#createEntities)
+
+- [addSubEntityToEntityById](#addsubentitytoentitybyid)
+- [addSubEntityToEntityByFilters](#addsubentitytoentitybyfilters)
+- [addSubEntitiesToEntityById](#addsubentitiestoentitybyid)
+- [addSubEntitiesToEntityByFilters](#addsubentitiestoentitybyfilters)
+
+- [getAllEntities](#getallentities)
+- [getEntityCount](#getentitycount)
+- [getEntityByFilters](#getentitybyfilters)
+- [getEntitiesByFilters](#getentitiesbyfilters)
+- [getEntityById](#getentitybyid)
+- [getEntitiesByIds](#getentitiesbyids)
+
+- [updateEntity](#updateentity)
+- [updateEntityByFilters](#updateentitybyfilters)
+- [updateEntitiesByFilters](#updateentitiesbyfilters)
+
+- [deleteAllEntities](#deleteallentities)
+- [deleteEntityById](#deleteentitybyid)
+- [deleteEntityByFilters](#deleteentitybyfilters)
+- [deleteEntitiesByIds](#deleteentitiesbyids)
+- [deleteEntitiesByFilters](#deleteentitiesbyfilters)
+
+- [removeSubEntityFromEntityById](#removesubentityfromentitybyid)
+- [removeSubEntityFromEntityByFilters](#removesubentityfromentitybyfilters)
+- [removeSubEntitiesFromEntityById](#removesubentitiesfromentitybyid)
+- [removeSubEntitiesFromEntityByFilters](#removesubentitiesfromentitybyfilters)
+
+- [addValuesToArrayFieldInEntity](#addvaluestoarrayfieldinentity)
+- [doesArrayFieldInEntityContainValue](#doesarrayfieldinentitycontainvalue)
+- [removeValuesFromArrayFieldInEntity](#removevaluesfromarrayfieldinentity)
+
+
+
 ## <a name="feedback"></a> Feedback
 
 ### <a name="report-bug"></a> Report Bug

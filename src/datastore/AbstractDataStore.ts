@@ -345,7 +345,7 @@ export default abstract class AbstractDataStore {
     filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object
   ): PromiseErrorOr<null>;
 
-  abstract removeSubEntitiesByJsonPathFromEntityById<T extends BackkEntity>(
+  abstract removeSubEntitiesFromEntityById<T extends BackkEntity>(
     subEntitiesJsonPath: string,
     EntityClass: { new (): T },
     _id: string,
@@ -356,7 +356,7 @@ export default abstract class AbstractDataStore {
     }
   ): PromiseErrorOr<null>;
 
-  abstract removeSubEntityByIdFromEntityById<T extends BackkEntity>(
+  abstract removeSubEntityFromEntityById<T extends BackkEntity>(
     subEntityPath: string,
     subEntityId: string,
     EntityClass: { new (): T },
@@ -368,7 +368,7 @@ export default abstract class AbstractDataStore {
     }
   ): PromiseErrorOr<null>;
 
-  abstract removeSubEntitiesByJsonPathFromEntityByFilters<T extends BackkEntity, U extends object>(
+  abstract removeSubEntitiesFromEntityByFilters<T extends BackkEntity, U extends object>(
     subEntitiesJsonPath: string,
     EntityClass: { new (): T },
     filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
@@ -379,7 +379,7 @@ export default abstract class AbstractDataStore {
     }
   ): PromiseErrorOr<null>;
 
-  abstract removeSubEntityByIdFromEntityByFilters<T extends BackkEntity>(
+  abstract removeSubEntityFromEntityByFilters<T extends BackkEntity>(
     subEntityPath: string,
     subEntityId: string,
     EntityClass: { new (): T },
@@ -393,7 +393,7 @@ export default abstract class AbstractDataStore {
 
   abstract deleteAllEntities<T>(EntityClass: new () => T): PromiseErrorOr<null>;
 
-  abstract addEntityArrayFieldValues<T extends BackkEntity>(
+  abstract addValuesToArrayFieldInEntity<T extends BackkEntity>(
     EntityClass: { new (): T },
     _id: string,
     fieldName: keyof T & string,
@@ -405,14 +405,14 @@ export default abstract class AbstractDataStore {
     }
   ): PromiseErrorOr<null>;
 
-  abstract doesEntityArrayFieldContainValue<T extends BackkEntity>(
+  abstract doesArrayFieldInEntityContainValue<T extends BackkEntity>(
     EntityClass: { new (): T },
     _id: string,
     fieldName: keyof T & string,
     fieldValue: string | number | boolean
   ): PromiseErrorOr<boolean>;
 
-  abstract removeEntityArrayFieldValues<T extends BackkEntity>(
+  abstract removeValuesFromArrayFieldInEntity<T extends BackkEntity>(
     EntityClass: { new (): T },
     _id: string,
     fieldName: keyof T & string,

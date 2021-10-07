@@ -939,6 +939,7 @@ addSubEntityToEntityById<T extends BackkEntity, U extends SubEntity>(
 ```
 
 Finds an entity of class `EntityClass` by id `_id`, then adds sub-entity `subEntity` to path `subEntityPath`.
+For example, if you have an `Order` entity, you can add order item sub-entity to path `orderItems`.
 If entity by id `_id` is not found, then entity provided by `ifEntityNotFoundUse` function will be used instead.
 `preHooks` are executed before the add operation and if any of the pre-hooks fails, the whole add operation fails.
 `postHook` is executed after add operation. If post-hook fails, the whole add operation fails.

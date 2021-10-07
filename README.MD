@@ -855,29 +855,34 @@ You can use following decorators for the properties of your classes to validate 
 - [addSubEntityToEntityById](#addsubentitytoentitybyid)
 - [addSubEntityToEntityByFilters](#addsubentitytoentitybyfilters)
 - [addSubEntitiesToEntityById](#addsubentitiestoentitybyid)
-- [addSubEntitiesToEntityByFilters](#addsubentitiestoentitybyfilters)  
+- [addSubEntitiesToEntityByFilters](#addsubentitiestoentitybyfilters)
+<br/>
   
 - [getAllEntities](#getallentities)
 - [getEntityCount](#getentitycount)
 - [getEntityByFilters](#getentitybyfilters)
 - [getEntitiesByFilters](#getentitiesbyfilters)
 - [getEntityById](#getentitybyid)
-- [getEntitiesByIds](#getentitiesbyids)  
+- [getEntitiesByIds](#getentitiesbyids)
+<br/>
   
 - [updateEntity](#updateentity)
 - [updateEntityByFilters](#updateentitybyfilters)
-- [updateEntitiesByFilters](#updateentitiesbyfilters)  
+- [updateEntitiesByFilters](#updateentitiesbyfilters)
+<br/>
   
 - [deleteAllEntities](#deleteallentities)
 - [deleteEntityById](#deleteentitybyid)
 - [deleteEntityByFilters](#deleteentitybyfilters)
 - [deleteEntitiesByIds](#deleteentitiesbyids)
-- [deleteEntitiesByFilters](#deleteentitiesbyfilters)  
+- [deleteEntitiesByFilters](#deleteentitiesbyfilters)
+<br/>
   
 - [removeSubEntityFromEntityById](#removesubentityfromentitybyid)
 - [removeSubEntityFromEntityByFilters](#removesubentityfromentitybyfilters)
 - [removeSubEntitiesFromEntityById](#removesubentitiesfromentitybyid)
 - [removeSubEntitiesFromEntityByFilters](#removesubentitiesfromentitybyfilters)
+<br/>
   
 - [addValuesToArrayFieldInEntity](#addvaluestoarrayfieldinentity)
 - [doesArrayFieldInEntityContainValue](#doesarrayfieldinentitycontainvalue)

@@ -888,7 +888,20 @@ You can use following decorators for the properties of your classes to validate 
 - [doesArrayFieldInEntityContainValue](#doesarrayfieldinentitycontainvalue)
 - [removeValuesFromArrayFieldInEntity](#removevaluesfromarrayfieldinentity)
 
+#### <a name="createentity"></a> createEntity
+```ts
+createEntity<T extends BackkEntity>(
+    EntityClass: { new (): T },
+    entity: Omit<T, '_id' | 'createdAtTimestamp' | 'version' | 'lastModifiedTimestamp'>,
+    options?: {
+      preHooks?: PreHook | PreHook[];
+      postQueryOperations?: PostQueryOperations;
+      postHook?: PostHook<T>;
+    }
+  ): PromiseErrorOr<One<T>>;
+```
 
+creates a new entity `entity` of class `EntityClass`.
 
 ## <a name="feedback"></a> Feedback
 

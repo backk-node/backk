@@ -5,7 +5,7 @@ import _IdAndCreatedAtTimestamp from './_IdAndCreatedAtTimestamp';
 import NotUnique from "../../decorators/typeproperty/NotUnique";
 import ReadWrite from "../../decorators/typeproperty/access/ReadWrite";
 
-// eslint-disable-next-line @typescript-eslint/class-name-casing
+// eslint-disable-next-line @typescript-eslint/class-value-casing
 export default class _IdAndCreatedAtTimestampAndUserAccountId extends _IdAndCreatedAtTimestamp
   implements BackkEntity {
   @IsStringOrObjectId()

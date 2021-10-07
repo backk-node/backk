@@ -19,7 +19,7 @@ export default async function doesEntityArrayFieldContainValue<T extends BackkEn
   fieldValue: string | number | boolean
 ): PromiseErrorOr<boolean> {
   if (fieldName.includes('.')) {
-    throw new Error('fieldName parameter may not contain dots, i.e. it cannot be a field path name');
+    throw new Error('fieldName parameter may not contain dots, i.e. it cannot be a field path value');
   }
   // noinspection AssignmentToFunctionParameterJS
   EntityClass = dataStore.getType(EntityClass);

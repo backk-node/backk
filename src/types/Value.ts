@@ -5,9 +5,9 @@ import Entity from "../decorators/entity/Entity";
 import ReadWrite from "../decorators/typeproperty/access/ReadWrite";
 
 @Entity()
-export class Name {
+export class Value {
   @MaxLength(Lengths._1K)
   @IsAnyString()
   @ReadWrite()
-  name!: string;
+  value!: string;
 }

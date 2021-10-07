@@ -1,9 +1,10 @@
 import { registerDecorator, ValidationOptions } from 'class-validator';
-import { Name } from '../../types/Name';
+import { Value } from '../../types/Value';
 import { PromiseErrorOr } from '../../types/PromiseErrorOr';
+import { Many } from "../../datastore/AbstractDataStore";
 
 export default function IsOneOf(
-  getPossibleValuesFunc: () => PromiseErrorOr<Name[]>,
+  getPossibleValuesFunc: () => PromiseErrorOr<Many<Value>>,
   serviceFunctionName: string,
   testValue: string,
   validationOptions?: ValidationOptions
@@ -20,7 +21,7 @@ export default function IsOneOf(
           const [possibleValues] = await getPossibleValuesFunc();
 
           return possibleValues
-            ? possibleValues.some((possibleValue) => value === possibleValue.name)
+            ? possibleValues.data.some((possibleValue) => value === possibleValue.value)
             : false;
         },
         defaultMessage: () =>

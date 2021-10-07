@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/class-name-casing
+// eslint-disable-next-line @typescript-eslint/class-value-casing
 import IsStringOrObjectId from "../../decorators/typeproperty/IsStringOrObjectId";
 import MaxLengthAndMatches from "../../decorators/typeproperty/MaxLengthAndMatches";
 import { Values } from "../../constants/constants";

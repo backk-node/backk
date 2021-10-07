@@ -15,7 +15,7 @@ export default function parseRemoteServiceFunctionCallUrlParts(remoteServiceUrl:
   if ((scheme === 'kafka' || scheme === 'redis') && (!server || server === 'undefined')) {
     throw new Error('Remote server not defined in remote service url: ' + remoteServiceUrl);
   } else if (!topic || topic === 'undefined') {
-    throw new Error('Service name not defined in remote service url: ' + remoteServiceUrl);
+    throw new Error('Service value not defined in remote service url: ' + remoteServiceUrl);
   } else if (!serviceFunctionName || serviceFunctionName === 'undefined') {
     throw new Error('Service function not defined in remote service url: ' + remoteServiceUrl);
   }

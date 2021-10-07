@@ -4,7 +4,7 @@ import IsUndefined from '../../decorators/typeproperty/IsUndefined';
 import { IsDate } from 'class-validator';
 import ReadOnly from "../../decorators/typeproperty/access/ReadOnly";
 
-// eslint-disable-next-line @typescript-eslint/class-name-casing
+// eslint-disable-next-line @typescript-eslint/class-value-casing
 export default class _IdAndVersionAndCreatedAtTimestampAndLastModifiedTimestamp
   extends _IdAndVersionAndCreatedAtTimestamp
   implements BackkEntity {

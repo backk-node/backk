@@ -166,7 +166,7 @@ export default function writeTestsPostmanCollectionExportFile<T>(
 
         if (!foundServiceMetadata || !foundFunctionMetadata) {
           throw new Error(
-            'Invalid service function name in @TestSetup annotation in ' +
+            'Invalid service function value in @TestSetup annotation in ' +
               serviceMetadata.serviceName +
               '.' +
               functionMetadata.functionName
@@ -403,7 +403,7 @@ export default function writeTestsPostmanCollectionExportFile<T>(
 
           if (!foundServiceMetadata || !foundFunctionMetadata) {
             throw new Error(
-              'Invalid service function name in @PostTest annotation in ' +
+              'Invalid service function value in @PostTest annotation in ' +
                 serviceMetadata.serviceName +
                 '.' +
                 functionMetadata.functionName

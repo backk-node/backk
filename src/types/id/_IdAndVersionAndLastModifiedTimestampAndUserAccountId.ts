@@ -4,7 +4,7 @@ import MaxLengthAndMatches from '../../decorators/typeproperty/MaxLengthAndMatch
 import NotUnique from "../../decorators/typeproperty/NotUnique";
 import ReadWrite from "../../decorators/typeproperty/access/ReadWrite";
 
-// eslint-disable-next-line @typescript-eslint/class-name-casing
+// eslint-disable-next-line @typescript-eslint/class-value-casing
 export default class _IdAndVersionAndLastModifiedTimestampAndUserAccountId extends _IdAndVersionAndLastModifiedTimestamp {
   @IsStringOrObjectId()
   @MaxLengthAndMatches(24, /^[a-f\d]{1,24}$/)

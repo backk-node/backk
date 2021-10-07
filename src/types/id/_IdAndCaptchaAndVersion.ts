@@ -5,7 +5,7 @@ import IsBigInt from '../../decorators/typeproperty/IsBigInt';
 import NotUnique from "../../decorators/typeproperty/NotUnique";
 import ReadUpdate from "../../decorators/typeproperty/access/ReadUpdate";
 
-// eslint-disable-next-line @typescript-eslint/class-name-casing
+// eslint-disable-next-line @typescript-eslint/class-value-casing
 export default class _IdAndCaptchaAndVersion extends _IdAndCaptcha {
   @IsUndefined({ groups: ['__backk_create__'] })
   @IsBigInt({ groups: ['__backk_none__'] })

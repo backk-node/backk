@@ -27,7 +27,7 @@ import _IdAndCaptchaAndVersionAndLastModifiedTimestamp
 import _IdAndCaptchaAndVersionAndCreatedAtTimestampAndLastModifiedTimestamp
   from "./id/_IdAndCaptchaAndVersionAndCreatedAtTimestampAndLastModifiedTimestamp";
 import OrFilter from "./userdefinedfilters/OrFilter";
-import { Name } from "./Name";
+import { Value } from "./Value";
 import Version from "./Version";
 import BaseUserAccount from "./useraccount/BaseUserAccount";
 import Subject from "./useraccount/Subject";
@@ -75,7 +75,7 @@ const types = {
   UserDefinedFilter,
   OrFilter,
   Captcha,
-  Name,
+  Name: Value,
   Version,
   BaseUserAccount,
   Subject,

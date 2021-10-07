@@ -6,7 +6,7 @@ import NotUnique from "../../decorators/typeproperty/NotUnique";
 import ReadWrite from "../../decorators/typeproperty/access/ReadWrite";
 
 @Entity()
-// eslint-disable-next-line @typescript-eslint/camelcase,@typescript-eslint/class-name-casing
+// eslint-disable-next-line @typescript-eslint/camelcase,@typescript-eslint/class-value-casing
 export default class __Backk__JobScheduling extends _Id {
   @IsString()
   @NotUnique()

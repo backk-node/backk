@@ -32,7 +32,7 @@ export default async function removeFieldValues<T extends BackkEntity>(
   }
 ): PromiseErrorOr<null> {
   if (fieldName.includes('.')) {
-    throw new Error('fieldName parameter may not contain dots, i.e. it cannot be a field path name');
+    throw new Error('fieldName parameter may not contain dots, i.e. it cannot be a field path value');
   }
   // noinspection AssignmentToFunctionParameterJS
   EntityClass = dataStore.getType(EntityClass);

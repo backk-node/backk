@@ -5,7 +5,7 @@ import IsStringOrObjectId from '../../decorators/typeproperty/IsStringOrObjectId
 import NotUnique from "../../decorators/typeproperty/NotUnique";
 import ReadWrite from "../../decorators/typeproperty/access/ReadWrite";
 
-// eslint-disable-next-line @typescript-eslint/class-name-casing
+// eslint-disable-next-line @typescript-eslint/class-value-casing
 export default class _IdAndUserAccountId extends _Id implements BackkEntity {
   @IsStringOrObjectId()
   @MaxLengthAndMatches(24, /^[a-f\d]{1,24}$/)

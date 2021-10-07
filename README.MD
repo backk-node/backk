@@ -901,9 +901,11 @@ createEntity<T extends BackkEntity>(
   ): PromiseErrorOr<One<T>>;
 ```
 
-Creates a new entity `entity` of class `EntityClass` in the data store. `preHooks` are executed before the create
-operation and if any of the pre-hooks fails, the whole create operation fails. `postHook` is executed after create operation.
-If post-hook fails, the whole create operation fails.
+Creates a new entity `entity` of class `EntityClass` in the data store.
+
+`preHooks` are executed before the create operation and if any of the pre-hooks fails, the whole create operation fails.
+
+`postHook` is executed after create operation. If post-hook fails, the whole create operation fails.
 
 Returns the created entity or error.
 

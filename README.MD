@@ -949,7 +949,10 @@ addSubEntityToEntityById<T extends BackkEntity, U extends SubEntity>(
 ```
 
 Finds an entity of class `EntityClass` by id `_id`, then adds sub-entity `subEntity` to path `subEntityPath`.
-For example, if you have an `Order` entity with a property `orderItems: OrderItem[]`, you can add an order item sub-entity (of class `OrderItem`) to path `orderItems`.
+For example, if you have an `Order` entity with a property `orderItems: OrderItem[]`, you can add an order item sub-entity (of class `OrderItem`) to path `orderItems`:
+```ts
+addSubEntityToEntityById('orderItems', orderItem, Order, orderId);
+```
 
 If entity by id `_id` is not found, then entity provided by `ifEntityNotFoundUse` function will be used instead.
 

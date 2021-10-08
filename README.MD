@@ -1049,12 +1049,29 @@ Retrieves the entity of class `EntityClass` identified by id `_id` from the data
 
 `preHooks` are executed before the retrieve operation and if any of the pre-hooks fails, the whole retrieve operation fails.
 
-if entity by given id is not found, then entity given by `ifEntityNotFoundReturn` will be returned
+if entity by given id is not found, then entity given by `ifEntityNotFoundReturn` will be returned.
 
 `postHook` is executed after the retrieve operation. If post-hook fails, the whole retrieve operation fails. A post-hook can be used
 for example to notify other microservices about the operation.
 
 Returns an entity or error.
+
+#### <a name="getentitiesbyids"></a> getEntitiesByIds
+```ts
+getEntitiesByIds<T extends BackkEntity>(
+  EntityClass: { new (): T },
+  _ids: string[],
+  postQueryOperations: PostQueryOperations,
+  allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
+  entityCountRequests?: EntityCountRequest[]
+): PromiseErrorOr<Many<T>>;
+```
+
+Retrieves the entities of class `EntityClass` identified by ids `_ids` from the data store.
+
+`postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of entities/sub-entities and pagination of entities/sub-entities.
+
+Returns the entities or error.
 
 ## <a name="feedback"></a> Feedback
 

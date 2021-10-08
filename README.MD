@@ -1555,7 +1555,7 @@ for example to notify other microservices about the operation.
 
 Returns nothing or error.
 
-### <a name="api-documentation"></a> CSV, Text, JSON and XML File Reading
+### <a name="api-documentation-filereading"></a> CSV, Text, JSON and XML File Reading
 
 - [tryGetObjectsFromCsvFile](#trygetobjectsfromcsvfile)
 - [tryGetSeparatedValuesFromTextFile](#trygetseparatedvaluesfromtextfile)

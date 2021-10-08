@@ -53,8 +53,6 @@ T
 $src/execution/ServiceFunctionCall.ts,d/7/d769150ff5903b8b45f738b13d835f55b8282547
 ^
 .src/decorators/typeproperty/IsInternalField.ts,d/4/d4cec8302ec011ddb1ab40808abde7513ab3ca7a
-R
-"src/remote/http/makeHttpRequest.ts,6/3/638d167128ba5c5cb0465430a3e6af7d84b27653
 o
 ?src/remote/messagequeue/sendToRemoteServiceInsideTransaction.ts,8/5/85b6b92b6f40a0f38a1f3277c423ff3749ff443d
 W
@@ -330,8 +328,6 @@ K
 src/types/DbTableVersion.ts,9/0/9084400eefc930003b8e0ef17e7d4e2877a782c5
 O
 src/types/EntityCountRequest.ts,c/7/c7e12834bee00d189396dd279054d2ffe7ea0681
-K
-src/types/PromiseErrorOr.ts,5/b/5b859bd1c54fa0c47a829617f140c5b4f89120d1
 M
 src/types/RecursivePartial.ts,5/1/512f2f0c31c7700389405c044b30ccea154313dd
 D
@@ -420,8 +416,6 @@ T
 $src/decorators/typeproperty/Index.ts,f/2/f26e51e60716e64d15f8d47940df31e32f143de4
 e
 5src/decorators/typeproperty/FetchFromRemoteService.ts,7/4/748f74847fd0f98e5bfef277f1921ce711d5ee3f
-T
-$src/remote/http/callRemoteService.ts,4/e/4e5f54640166ccdf6297f9fee279284c902e04de
 X
 (src/decorators/typeproperty/OneToMany.ts,9/9/9916583dd19b9e6ff9e95e96a416836c2fc0ea71
 Y

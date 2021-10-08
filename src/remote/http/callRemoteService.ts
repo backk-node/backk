@@ -23,7 +23,7 @@ export default async function callRemoteService(
   remoteServiceFunctionUrl: string,
   serviceFunctionArgument?: object,
   options?: HttpRequestOptions
-): PromiseErrorOr<object> {
+): PromiseErrorOr<object | null> {
   const clsNamespace = getNamespace('serviceFunctionExecution');
   clsNamespace?.set('remoteServiceCallCount', clsNamespace?.get('remoteServiceCallCount') + 1);
 

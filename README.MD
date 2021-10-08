@@ -1679,7 +1679,10 @@ Returns an array of values.
 
 ### <a name="api-documentation-observability"></a> Observability
 
-#### <a name="api-documentation-observability"></a> log
+- [log](#log)
+- [defaultPrometheusMeter](#defaultprometheusmeter)
+
+#### <a name="log"></a> log
 ```ts
 function log(
   severityNumber: Severity,
@@ -1699,10 +1702,51 @@ enum Severity {
 
 Writes a log entry with specified severity.
 
-#### <a name="api-documentation-observability"></a> defaultPrometheusMeter
+#### <a name="defaultprometheusmeter"></a> defaultPrometheusMeter
 
 `defaultPrometheusMeter` can used to define and then collect custom metrics from your microservice.
 For more information, see [Open Telemetry Metrics](https://www.npmjs.com/package/@opentelemetry/metrics)
+
+### <a name="api-documentation-remote-service-access"></a> Remote Service Access
+
+- [callRemoteService](#callremoteservice)
+- [makeHttpRequest](#makehttprequest)
+- [sendToRemoteService](#sendtoremoteservice)
+- [sendToRemoteServiceInsideTransaction](#sendtoremoteserviceinsidetransaction)
+
+#### <a name="callremoteservice"></a> callRemoteService
+```ts
+async function callRemoteService(
+  remoteServiceFunctionUrl: string,
+  serviceFunctionArgument?: object,
+  options?: HttpRequestOptions
+): PromiseErrorOr<object | null>
+
+interface HttpRequestOptions {
+  httpMethod?: 'GET' | 'POST';
+}
+```
+
+Calls a remote Backk service at URL `remoteServiceFunctionUrl` with argument `serviceFunctionArgument`.
+By default HTTP POST method is used.
+
+Returns an object, null or error.
+
+#### <a name="makehttprequest"></a> makeHttpRequest
+```ts
+async function makeHttpRequest(
+  requestUrl: string,
+  requestBodyObject?: object,
+  options?: HttpRequestOptions
+): PromiseErrorOr<object | null>
+
+interface HttpRequestOptions {
+  httpMethod?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+}
+```
+
+Makes an HTTP or HTTPS request to URL `requestUrl` with given `requestBodyObject`. Request content type is `application/json`.
+The request is made using HTTP GET method by default. The method can be changed by supplying `options.httpMethod`.
 
 ## <a name="feedback"></a> Feedback
 

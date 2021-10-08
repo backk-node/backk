@@ -883,9 +883,9 @@ You can use following decorators for the properties of your classes to validate 
 - [removeSubEntitiesFromEntityByFilters](#removesubentitiesfromentitybyfilters)
 <br/>
   
-- [addValuesToArrayFieldInEntity](#addvaluestoarrayfieldinentity)
-- [doesArrayFieldInEntityContainValue](#doesarrayfieldinentitycontainvalue)
-- [removeValuesFromArrayFieldInEntity](#removevaluesfromarrayfieldinentity)
+- [addArrayFieldValuesToEntityById](#addarrayfieldvaluestoentitybyid)
+- [doesArrayFieldContainValueInEntityById](#doesarrayfieldcontainvalueinentitybyid)
+- [removeArrayFieldValuesFromEntityById](#removearrayfieldsvaluesfromentitybyid)
 
 #### <a name="createentity"></a> createEntity
 
@@ -1302,6 +1302,48 @@ class AbstractDataStore {
 Deletes the entities of class `EntityClass` matching filters `filters` from the data store.
 
 Returns nothing or error.
+
+#### <a name="removesubentityfromentitybyid"></a> removeSubEntityFromEntityById
+```ts
+class AbstractDataStore {
+  removeSubEntityFromEntityById<T extends BackkEntity>(
+    subEntityPath: string,
+    subEntityId: string,
+    EntityClass: { new (): T },
+    _id: string,
+    options?: {
+      entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
+      postQueryOperations?: PostQueryOperations;
+      postHook?: PostHook<T>;
+    }
+  ): PromiseErrorOr<null>;
+}
+```
+
+Finds an entity of class `EntityClass` by id `_id`, then remove sub-entity with id `subEntityId` from path `subEntityPath`.
+
+`entityPreHooks` are executed before the delete operation, and they get the current entity as argument.
+if any of the pre-hooks fails, the whole delete operation fails.
+
+`postHook` is executed after the delete operation. If post-hook fails, the whole delete operation fails. A post-hook can be used
+for example to notify other microservices about the operation.
+
+Returns nothing or error.
+
+
+#### <a name="removesubentitiesfromentitybyid"></a> removeSubEntitiesFromEntityById
+
+#### <a name="removesubentityfromentitybyfilters"></a> removeSubEntityFromEntityByFilters
+
+#### <a name="removesubentitiesfromentitybyfilters"></a> removeSubEntitiesFromEntityByFilters
+
+#### <a name="removesubentitiesfromentitybyfilters"></a> removeSubEntitiesFromEntityByFilters
+
+#### <a name="addarrayfieldvaluestoentitybyid"></a> addArrayFieldValuesToEntityById
+
+#### <a name="doesarrayfieldcontainvalueinentitybyid"></a> doesArrayFieldContainValueInEntityById
+
+#### <a name="removearrayfieldvaluesfromentitybyid"></a> removeArrayFieldValuesFromEntityById
 
 ## <a name="feedback"></a> Feedback
 

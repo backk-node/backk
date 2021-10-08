@@ -857,48 +857,40 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     return response;
   }
 
-  async addValuesToArrayFieldInEntity<T extends BackkEntity>(
-    EntityClass: { new (): T },
-    _id: string,
+  async addArrayFieldValuesToEntityById<T extends BackkEntity>(
     fieldName: keyof T & string,
-    fieldValues: (string | number | boolean)[],
-    options?: {
-      entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
-      postQueryOperations?: PostQueryOperations;
-      postHook?: PostHook<T>;
-    }
+    fieldValuesToAdd: (string | number | boolean)[],
+    EntityClass: { new(): T },
+    _id: string,
+    options?: { entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[]; postQueryOperations?: PostQueryOperations; postHook?: PostHook<T> }
   ): PromiseErrorOr<null> {
-    const dbOperationStartTimeInMillis = startDbOperation(this, 'addValuesToArrayFieldInEntity');
-    const response = await addFieldValues(this, _id, fieldName, fieldValues, EntityClass, options);
+    const dbOperationStartTimeInMillis = startDbOperation(this, 'addArrayFieldValuesToEntityById');
+    const response = await addFieldValues(this, _id, fieldName, fieldValuesToAdd, EntityClass, options);
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
     return response;
   }
 
-  async doesArrayFieldInEntityContainValue<T extends BackkEntity>(
-    EntityClass: { new (): T },
-    _id: string,
+  async doesArrayFieldContainValueInEntityById<T extends BackkEntity>(
     fieldName: keyof T & string,
-    fieldValue: string | number | boolean
+    fieldValue: string | number | boolean,
+    EntityClass: { new(): T },
+    _id: string
   ): PromiseErrorOr<boolean> {
-    const dbOperationStartTimeInMillis = startDbOperation(this, 'doesArrayFieldInEntityContainValue');
+    const dbOperationStartTimeInMillis = startDbOperation(this, 'doesArrayFieldContainValueInEntityById');
     const response = await doesEntityArrayFieldContainValue(this, EntityClass, _id, fieldName, fieldValue);
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
     return response;
   }
 
-  async removeValuesFromArrayFieldInEntity<T extends BackkEntity>(
-    EntityClass: { new (): T },
-    _id: string,
+  async removeArrayFieldValuesFromEntityById<T extends BackkEntity>(
     fieldName: keyof T & string,
-    fieldValues: (string | number | boolean)[],
-    options?: {
-      entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
-      postQueryOperations?: PostQueryOperations;
-      postHook?: PostHook<T>;
-    }
+    fieldValuesToRemove: (string | number | boolean)[],
+    EntityClass: { new(): T },
+    _id: string,
+    options?: { entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[]; postQueryOperations?: PostQueryOperations; postHook?: PostHook<T> }
   ): PromiseErrorOr<null> {
-    const dbOperationStartTimeInMillis = startDbOperation(this, 'removeValuesFromArrayFieldInEntity');
-    const response = await removeFieldValues(this, _id, fieldName, fieldValues, EntityClass, options);
+    const dbOperationStartTimeInMillis = startDbOperation(this, 'removeArrayFieldValuesFromEntityById');
+    const response = await removeFieldValues(this, _id, fieldName, fieldValuesToRemove, EntityClass, options);
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
     return response;
   }

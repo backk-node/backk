@@ -178,8 +178,6 @@ f
 6src/remote/messagequeue/redis/getRedisServerFromEnv.ts,1/e/1edb681c7538be6211718331c4bc401f58059d12
 f
 6src/datastore/sql/operations/ddl/shouldInitializeDb.ts,d/3/d379e42349ec71560cd4733df4a1c3a22b8c9a0a
-U
-%src/datastore/AbstractSqlDataStore.ts,4/a/4a53d6f8742845084c6f1241fac40af293a2c1aa
 f
 6src/datastore/sql/operations/ddl/initializeDatabase.ts,0/e/0ea45dd67226acec248fa09323994e71c3fb19b3
 O

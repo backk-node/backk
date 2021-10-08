@@ -1988,18 +1988,14 @@ export default class MongoDbDataStore extends AbstractDataStore {
     return response;
   }
 
-  async addValuesToArrayFieldInEntity<T extends BackkEntity>(
-    EntityClass: { new (): T },
-    _id: string,
+  async addArrayFieldValuesToEntityById<T extends BackkEntity>(
     fieldName: keyof T & string,
-    fieldValues: (string | number | boolean)[],
-    options?: {
-      entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
-      postQueryOperations?: PostQueryOperations;
-      postHook?: PostHook<T>;
-    }
+    fieldValuesToAdd: (string | number | boolean)[],
+    EntityClass: { new(): T },
+    _id: string,
+    options?: { entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[]; postQueryOperations?: PostQueryOperations; postHook?: PostHook<T> }
   ): PromiseErrorOr<null> {
-    const dbOperationStartTimeInMillis = startDbOperation(this, 'addValuesToArrayFieldInEntity');
+    const dbOperationStartTimeInMillis = startDbOperation(this, 'addArrayFieldValuesToEntityById');
     // noinspection AssignmentToFunctionParameterJS
     EntityClass = this.getType(EntityClass);
     let shouldUseTransaction = false;
@@ -2013,7 +2009,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
           this,
           _id,
           fieldName,
-          fieldValues,
+          fieldValuesToAdd,
           EntityClass,
           options
         );
@@ -2028,13 +2024,13 @@ export default class MongoDbDataStore extends AbstractDataStore {
     }
   }
 
-  async doesArrayFieldInEntityContainValue<T extends BackkEntity>(
-    EntityClass: { new (): T },
-    _id: string,
+  async doesArrayFieldContainValueInEntityById<T extends BackkEntity>(
     fieldName: keyof T & string,
-    fieldValue: string | number | boolean
+    fieldValue: string | number | boolean,
+    EntityClass: { new(): T },
+    _id: string
   ): PromiseErrorOr<boolean> {
-    const dbOperationStartTimeInMillis = startDbOperation(this, 'addValuesToArrayFieldInEntity');
+    const dbOperationStartTimeInMillis = startDbOperation(this, 'addArrayFieldValuesToEntityById');
     // noinspection AssignmentToFunctionParameterJS
     EntityClass = this.getType(EntityClass);
 
@@ -2086,18 +2082,14 @@ export default class MongoDbDataStore extends AbstractDataStore {
     }
   }
 
-  async removeValuesFromArrayFieldInEntity<T extends BackkEntity>(
-    EntityClass: { new (): T },
-    _id: string,
+  async removeArrayFieldValuesFromEntityById<T extends BackkEntity>(
     fieldName: keyof T & string,
-    fieldValues: (string | number | boolean)[],
-    options?: {
-      entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
-      postQueryOperations?: PostQueryOperations;
-      postHook?: PostHook<T>;
-    }
+    fieldValuesToRemove: (string | number | boolean)[],
+    EntityClass: { new(): T },
+    _id: string,
+    options?: { entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[]; postQueryOperations?: PostQueryOperations; postHook?: PostHook<T> }
   ): PromiseErrorOr<null> {
-    const dbOperationStartTimeInMillis = startDbOperation(this, 'addValuesToArrayFieldInEntity');
+    const dbOperationStartTimeInMillis = startDbOperation(this, 'addArrayFieldValuesToEntityById');
     // noinspection AssignmentToFunctionParameterJS
     EntityClass = this.getType(EntityClass);
     let shouldUseTransaction = false;
@@ -2106,7 +2098,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       shouldUseTransaction = await tryStartLocalTransactionIfNeeded(this);
 
       return await this.tryExecute(shouldUseTransaction, async (client) => {
-        return removeFieldValues(client, this, _id, fieldName, fieldValues, EntityClass, options);
+        return removeFieldValues(client, this, _id, fieldName, fieldValuesToRemove, EntityClass, options);
       });
     } catch (errorOrBackkError) {
       return isBackkError(errorOrBackkError)

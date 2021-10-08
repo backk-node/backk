@@ -41,6 +41,8 @@ export type One<T> = {
   data: T;
 };
 
+export type ArrayFieldValue = string | number | boolean;
+
 export default abstract class AbstractDataStore {
   private readonly services: BaseService[] = [];
   readonly schema: string;
@@ -159,33 +161,6 @@ export default abstract class AbstractDataStore {
       }
     });
   }
-
-  // noinspection OverlyComplexFunctionJS
-  abstract addSubEntityToEntityById<T extends BackkEntity, U extends SubEntity>(
-    subEntityPath: string,
-    subEntity: Omit<U, 'id'> | { _id: string },
-    EntityClass: { new (): T },
-    _id: string,
-    options?: {
-      ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
-      entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
-      postQueryOperations?: PostQueryOperations;
-      postHook?: PostHook<T>;
-    }
-  ): PromiseErrorOr<null>;
-
-  abstract addSubEntityToEntityByFilters<T extends BackkEntity, U extends SubEntity>(
-    subEntityPath: string,
-    subEntity: Omit<U, 'id'> | { _id: string },
-    EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
-    options?: {
-      ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
-      entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
-      postQueryOperations?: PostQueryOperations;
-      postHook?: PostHook<T>;
-    }
-  ): PromiseErrorOr<null>;
 
   abstract addSubEntitiesToEntityByFilters<T extends BackkEntity, U extends SubEntity>(
     subEntityPath: string,
@@ -393,34 +368,26 @@ export default abstract class AbstractDataStore {
 
   abstract deleteAllEntities<T>(EntityClass: new () => T): PromiseErrorOr<null>;
 
-  abstract addValuesToArrayFieldInEntity<T extends BackkEntity>(
-    EntityClass: { new (): T },
+  abstract addArrayFieldValuesToEntityById<T extends BackkEntity>(
+    arrayFieldName: keyof T & string,
+    arrayFieldValuesToAdd: ArrayFieldValue[],
+    EntityClass: { new(): T },
     _id: string,
-    fieldName: keyof T & string,
-    fieldValuesToAdd: (string | number | boolean)[],
-    options?: {
-      entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
-      postQueryOperations?: PostQueryOperations;
-      postHook?: PostHook<T>;
-    }
+    options?: { entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[]; postQueryOperations?: PostQueryOperations; postHook?: PostHook<T> }
   ): PromiseErrorOr<null>;
 
-  abstract doesArrayFieldInEntityContainValue<T extends BackkEntity>(
-    EntityClass: { new (): T },
-    _id: string,
-    fieldName: keyof T & string,
-    fieldValue: string | number | boolean
+  abstract doesArrayFieldContainValueInEntityById<T extends BackkEntity>(
+    arrayFieldName: keyof T & string,
+    arrayFieldValue: ArrayFieldValue,
+    EntityClass: { new(): T },
+    _id: string
   ): PromiseErrorOr<boolean>;
 
-  abstract removeValuesFromArrayFieldInEntity<T extends BackkEntity>(
-    EntityClass: { new (): T },
+  abstract removeArrayFieldValuesFromEntityById<T extends BackkEntity>(
+    arrayFieldName: keyof T & string,
+    arrayFieldValuesToRemove: ArrayFieldValue[],
+    EntityClass: { new(): T },
     _id: string,
-    fieldName: keyof T & string,
-    fieldValuesToRemove: (string | number | boolean)[],
-    options?: {
-      entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
-      postQueryOperations?: PostQueryOperations;
-      postHook?: PostHook<T>;
-    }
+    options?: { entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[]; postQueryOperations?: PostQueryOperations; postHook?: PostHook<T> }
   ): PromiseErrorOr<null>;
 }

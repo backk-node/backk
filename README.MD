@@ -852,18 +852,16 @@ You can use following decorators for the properties of your classes to validate 
 - [createEntities](#createEntities)
 <br/>
 
-- [addSubEntityToEntityById](#addsubentitytoentitybyid)
-- [addSubEntityToEntityByFilters](#addsubentitytoentitybyfilters)
 - [addSubEntitiesToEntityById](#addsubentitiestoentitybyid)
 - [addSubEntitiesToEntityByFilters](#addsubentitiestoentitybyfilters)
 <br/>
   
 - [getAllEntities](#getallentities)
 - [getEntityCount](#getentitycount)
-- [getEntityByFilters](#getentitybyfilters)
-- [getEntitiesByFilters](#getentitiesbyfilters)
 - [getEntityById](#getentitybyid)
 - [getEntitiesByIds](#getentitiesbyids)
+- [getEntityByFilters](#getentitybyfilters)
+- [getEntitiesByFilters](#getentitiesbyfilters)
 <br/>
   
 - [updateEntity](#updateentity)
@@ -873,14 +871,14 @@ You can use following decorators for the properties of your classes to validate 
   
 - [deleteAllEntities](#deleteallentities)
 - [deleteEntityById](#deleteentitybyid)
-- [deleteEntityByFilters](#deleteentitybyfilters)
 - [deleteEntitiesByIds](#deleteentitiesbyids)
+- [deleteEntityByFilters](#deleteentitybyfilters)
 - [deleteEntitiesByFilters](#deleteentitiesbyfilters)
 <br/>
   
 - [removeSubEntityFromEntityById](#removesubentityfromentitybyid)
-- [removeSubEntityFromEntityByFilters](#removesubentityfromentitybyfilters)
 - [removeSubEntitiesFromEntityById](#removesubentitiesfromentitybyid)
+- [removeSubEntityFromEntityByFilters](#removesubentityfromentitybyfilters)
 - [removeSubEntitiesFromEntityByFilters](#removesubentitiesfromentitybyfilters)
 <br/>
   

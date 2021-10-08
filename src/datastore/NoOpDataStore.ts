@@ -174,11 +174,11 @@ export default class NoOpDataStore extends AbstractDataStore {
     throw new Error('Not implemented');
   }
 
-  addValuesToArrayFieldInEntity<T extends BackkEntity>(): PromiseErrorOr<null> {
+  addArrayFieldValuesToEntityById<T extends BackkEntity>(): PromiseErrorOr<null> {
     throw new Error('Not implemented');
   }
 
-  removeValuesFromArrayFieldInEntity<T extends BackkEntity>(): PromiseErrorOr<null> {
+  removeArrayFieldValuesFromEntityById<T extends BackkEntity>(): PromiseErrorOr<null> {
     throw new Error('Not implemented');
   }
 
@@ -196,7 +196,7 @@ export default class NoOpDataStore extends AbstractDataStore {
     throw new Error('Not implemented');
   }
 
-  doesArrayFieldInEntityContainValue<T extends BackkEntity>(): PromiseErrorOr<boolean> {
+  doesArrayFieldContainValueInEntityById<T extends BackkEntity>(): PromiseErrorOr<boolean> {
     throw new Error('Not implemented');
   }
 }

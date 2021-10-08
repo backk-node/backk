@@ -1102,6 +1102,32 @@ for example to notify other microservices about the operation.
 
 Returns the entity or error.
 
+#### <a name="getentitiesbyfilters"></a> getEntitiesByFilters
+```ts
+getEntitiesByFilters<T extends BackkEntity>(
+  EntityClass: { new (): T },
+  filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+  postQueryOperations: PostQueryOperations,
+  allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
+  options?: {
+    preHooks?: PreHook | PreHook[];
+    postHook?: EntitiesPostHook<T>;
+    entityCountRequests?: EntityCountRequest[]
+  }
+): PromiseErrorOr<Many<T>>;
+```
+
+Retrieves the entities of class `EntityClass` matching filter(s) `filters` from the data store.
+
+`postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of sub-entities and pagination of sub-entities.
+
+`preHooks` are executed before the retrieve operation and if any of the pre-hooks fails, the whole retrieve operation fails.
+
+`postHook` is executed after the retrieve operation. If post-hook fails, the whole retrieve operation fails. A post-hook can be used
+for example to notify other microservices about the operation.
+
+Returns the entities or error.
+
 ## <a name="feedback"></a> Feedback
 
 ### <a name="report-bug"></a> Report Bug

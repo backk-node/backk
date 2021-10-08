@@ -221,13 +221,13 @@ class MicroserviceImpl extends Microservice {
 In the example above, there is one service `userAccountService` in the microservice which can be accessed over HTTP like this:
 
 ```
-POST http://<user-account-microservice-host>:<port>/userAccountService
+POST https://<user-account-microservice-host>:<port>/userAccountService
 ```
 
 If the `userAccountService` has function `createUser`, it can be accessed over HTTP like this:
 
 ```
-POST http://<user-account-microservice-host>:<port>/userAccountService.createUser
+POST https://<user-account-microservice-host>:<port>/userAccountService.createUser
 ```
 
 The argument for the service function call `userAccountService.createUser` is sent in the HTTP POST request message body encoded in JSON
@@ -253,9 +253,9 @@ async function startHttpServerFor(
   microservice: Microservice,
   options?: ServiceFunctionExecutionOptions,
   httpVersion: HttpVersion = 1
-)
+);
 
-eexport interface ServiceFunctionExecutionOptions {
+interface ServiceFunctionExecutionOptions {
   isMetadataServiceEnabled?: boolean;
   httpGetRequests?: {
     regExpForAllowedServiceFunctionNames?: RegExp;
@@ -888,9 +888,11 @@ You can use following decorators for the properties of your classes to validate 
 - [removeValuesFromArrayFieldInEntity](#removevaluesfromarrayfieldinentity)
 
 #### <a name="createentity"></a> createEntity
+
 ```ts
-createEntity<T extends BackkEntity>(
-    EntityClass: { new (): T },
+class AbstractDataStore {
+  createEntity<T extends BackkEntity>(
+    EntityClass: { new(): T },
     entity: Omit<T, '_id' | 'createdAtTimestamp' | 'version' | 'lastModifiedTimestamp'>,
     options?: {
       preHooks?: PreHook | PreHook[];
@@ -898,6 +900,7 @@ createEntity<T extends BackkEntity>(
       postHook?: PostHook<T>;
     }
   ): PromiseErrorOr<One<T>>;
+}
 ```
 
 Creates a new entity `entity` of class `EntityClass` in the data store.
@@ -910,15 +913,17 @@ Returns the created entity or error.
 
 #### <a name="createentity"></a> createEntities
 ```ts
-createEntities<T extends BackkEntity>(
-  EntityClass: { new (): T },
-  entities: Array<Omit<T, '_id' | 'createdAtTimestamp' | 'version' | 'lastModifiedTimestamp'>>,
-  options?: {
-    preHooks?: PreHook | PreHook[];
-    postQueryOperations?: PostQueryOperations;
-    postHook?: PostHook<T>;
-  }
-): PromiseErrorOr<Many<T>>; 
+class AbstractDataStore {
+  createEntities<T extends BackkEntity>(
+    EntityClass: { new(): T },
+    entities: Array<Omit<T, '_id' | 'createdAtTimestamp' | 'version' | 'lastModifiedTimestamp'>>,
+    options?: {
+      preHooks?: PreHook | PreHook[];
+      postQueryOperations?: PostQueryOperations;
+      postHook?: PostHook<T>;
+    }
+  ): PromiseErrorOr<Many<T>>;
+}
 ```
 
 Creates new entities `entities` of class `EntityClass` in the data store.
@@ -933,18 +938,20 @@ Returns the created entities or error.
 
 #### <a name="addsubentitiestoentitybyid"></a> addSubEntitiesToEntityById
 ```ts
-addSubEntitiesToEntityById<T extends BackkEntity, U extends SubEntity>(
-  subEntityPath: string,
-  subEntities: Array<Omit<U, 'id'> | { _id: string }>,
-  EntityClass: { new (): T },
-  _id: string,
-  options?: {
-    ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
-    entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
-    postQueryOperations?: PostQueryOperations;
-    postHook?: PostHook<T>;
-  }
-): PromiseErrorOr<null>;
+class AbstractDataStore {
+  addSubEntitiesToEntityById<T extends BackkEntity, U extends SubEntity>(
+    subEntityPath: string,
+    subEntities: Array<Omit<U, 'id'> | { _id: string }>,
+    EntityClass: { new(): T },
+    _id: string,
+    options?: {
+      ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
+      entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
+      postQueryOperations?: PostQueryOperations;
+      postHook?: PostHook<T>;
+    }
+  ): PromiseErrorOr<null>;
+}
 ```
 
 Finds an entity of class `EntityClass` by id `_id`, then adds sub-entities `subEntities` to path `subEntityPath`.
@@ -966,18 +973,20 @@ Returns nothing or error.
 
 #### <a name="addsubentitiestoentitybyfilters"></a> addSubEntitiesToEntityByFilters
 ```ts
-addSubEntitiesToEntityByFilters<T extends BackkEntity, U extends SubEntity>(
-  subEntityPath: string,
-  subEntities: Array<Omit<U, 'id'> | { _id: string }>,
-  EntityClass: { new (): T },
-  filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
-  options?: {
-    ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
-    entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
-    postQueryOperations?: PostQueryOperations;
-    postHook?: PostHook<T>;
-  }
-): PromiseErrorOr<null>;
+class AbstractDataStore {
+  addSubEntitiesToEntityByFilters<T extends BackkEntity, U extends SubEntity>(
+    subEntityPath: string,
+    subEntities: Array<Omit<U, 'id'> | { _id: string }>,
+    EntityClass: { new(): T },
+    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    options?: {
+      ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
+      entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
+      postQueryOperations?: PostQueryOperations;
+      postHook?: PostHook<T>;
+    }
+  ): PromiseErrorOr<null>;
+}
 ```
 
 Finds an entity of class `EntityClass` by filter(s) `filters`, then adds sub-entities `subEntities` to path `subEntityPath`.
@@ -999,12 +1008,14 @@ Returns nothing or error.
 
 #### <a name="getallentities"></a> getAllEntities
 ```ts
-getAllEntities<T extends BackkEntity>(
-  EntityClass: new () => T,
-  postQueryOperations: PostQueryOperations,
-  allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
-  entityCountRequests?: EntityCountRequest[]
-): PromiseErrorOr<Many<T>>;
+class AbstractDataStore {
+  getAllEntities<T extends BackkEntity>(
+    EntityClass: new () => T,
+    postQueryOperations: PostQueryOperations,
+    allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
+    entityCountRequests?: EntityCountRequest[]
+  ): PromiseErrorOr<Many<T>>;
+}
 ```
 
 Retrieves entities of class `EntityClass` from the data store.
@@ -1015,10 +1026,12 @@ Returns the retrieved entities or error.
 
 #### <a name="getentitycount"></a> getEntityCount
 ```ts
-getEntityCount<T extends BackkEntity>(
-  EntityClass: new () => T,
-  filters?: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object
-): PromiseErrorOr<number>;
+class AbstractDataStore {
+  getEntityCount<T extends BackkEntity>(
+    EntityClass: new () => T,
+    filters?: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object
+  ): PromiseErrorOr<number>;
+}
 ```
 
 Retrieves the count of entities of class `EntityClass` from the data store.
@@ -1029,18 +1042,20 @@ Returns the number of entities or error.
 
 #### <a name="getentitybyid"></a> getEntityById
 ```ts
-getEntityById<T extends BackkEntity>(
-  EntityClass: { new (): T },
-  _id: string,
-  postQueryOperations: PostQueryOperations,
-  allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
-  options?: {
-    preHooks?: PreHook | PreHook[];
-    ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>;
-    postHook?: PostHook<T>;
-    entityCountRequests?: EntityCountRequest[]
-  }
-): PromiseErrorOr<One<T>>;
+class AbstractDataStore {
+  getEntityById<T extends BackkEntity>(
+    EntityClass: { new(): T },
+    _id: string,
+    postQueryOperations: PostQueryOperations,
+    allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
+    options?: {
+      preHooks?: PreHook | PreHook[];
+      ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>;
+      postHook?: PostHook<T>;
+      entityCountRequests?: EntityCountRequest[]
+    }
+  ): PromiseErrorOr<One<T>>;
+}
 ```
 
 Retrieves the entity of class `EntityClass` identified by id `_id` from the data store.
@@ -1058,13 +1073,15 @@ Returns the entity or error.
 
 #### <a name="getentitiesbyids"></a> getEntitiesByIds
 ```ts
-getEntitiesByIds<T extends BackkEntity>(
-  EntityClass: { new (): T },
-  _ids: string[],
-  postQueryOperations: PostQueryOperations,
-  allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
-  entityCountRequests?: EntityCountRequest[]
-): PromiseErrorOr<Many<T>>;
+class AbstractDataStore {
+  getEntitiesByIds<T extends BackkEntity>(
+    EntityClass: { new(): T },
+    _ids: string[],
+    postQueryOperations: PostQueryOperations,
+    allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
+    entityCountRequests?: EntityCountRequest[]
+  ): PromiseErrorOr<Many<T>>;
+}
 ```
 
 Retrieves the entities of class `EntityClass` identified by ids `_ids` from the data store.
@@ -1075,18 +1092,20 @@ Returns the entities or error.
 
 #### <a name="getentitybyfilters"></a> getEntityByFilters
 ```ts
-getEntityByFilters<T extends BackkEntity>(
-  EntityClass: { new (): T },
-  filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
-  postQueryOperations: PostQueryOperations,
-  allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
-  options?: {
-    preHooks?: PreHook | PreHook[];
-    ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>;
-    postHook?: PostHook<T>;
-    entityCountRequests?: EntityCountRequest[]
-  }
-): PromiseErrorOr<One<T>>;
+class AbstractDataStore {
+  getEntityByFilters<T extends BackkEntity>(
+    EntityClass: { new(): T },
+    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    postQueryOperations: PostQueryOperations,
+    allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
+    options?: {
+      preHooks?: PreHook | PreHook[];
+      ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>;
+      postHook?: PostHook<T>;
+      entityCountRequests?: EntityCountRequest[]
+    }
+  ): PromiseErrorOr<One<T>>;
+}
 ```
 
 Retrieves the entity of class `EntityClass` matching filter(s) `filters` from the data store.
@@ -1104,17 +1123,19 @@ Returns the entity or error.
 
 #### <a name="getentitiesbyfilters"></a> getEntitiesByFilters
 ```ts
-getEntitiesByFilters<T extends BackkEntity>(
-  EntityClass: { new (): T },
-  filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
-  postQueryOperations: PostQueryOperations,
-  allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
-  options?: {
-    preHooks?: PreHook | PreHook[];
-    postHook?: EntitiesPostHook<T>;
-    entityCountRequests?: EntityCountRequest[]
-  }
-): PromiseErrorOr<Many<T>>;
+class AbstractDataStore {
+  getEntitiesByFilters<T extends BackkEntity>(
+    EntityClass: { new(): T },
+    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    postQueryOperations: PostQueryOperations,
+    allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
+    options?: {
+      preHooks?: PreHook | PreHook[];
+      postHook?: EntitiesPostHook<T>;
+      entityCountRequests?: EntityCountRequest[]
+    }
+  ): PromiseErrorOr<Many<T>>;
+}
 ```
 
 Retrieves the entities of class `EntityClass` matching filter(s) `filters` from the data store.
@@ -1130,16 +1151,18 @@ Returns the entities or error.
 
 #### <a name="updateentity"></a> updateEntity
 ```ts
-updateEntity<T extends BackkEntity>(
-  EntityClass: { new (): T },
-  entityUpdate: RecursivePartial<T> & { _id: string },
-  options?: {
-    preHooks?: PreHook | PreHook[];
-    entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
-    postQueryOperations?: PostQueryOperations;
-    postHook?: PostHook<T>;
-  }
-): PromiseErrorOr<null>;
+class AbstractDataStore {
+  updateEntity<T extends BackkEntity>(
+    EntityClass: { new(): T },
+    entityUpdate: RecursivePartial<T> & { _id: string },
+    options?: {
+      preHooks?: PreHook | PreHook[];
+      entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
+      postQueryOperations?: PostQueryOperations;
+      postHook?: PostHook<T>;
+    }
+  ): PromiseErrorOr<null>;
+}
 ```
 
 Updates the entity of class `EntityClass` identified by `_id` in `entityUpdate` in the data store.
@@ -1156,16 +1179,18 @@ Returns nothing or error.
 
 #### <a name="updateentitybyfilters"></a> updateEntityByFilters
 ```ts
-updateEntityByFilters<T extends BackkEntity>(
-  EntityClass: { new (): T },
-  filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
-  entityUpdate: Partial<T>,
-  options?: {
-    entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
-    postQueryOperations?: PostQueryOperations;
-    postHook?: PostHook<T>;
-  }
-): PromiseErrorOr<null>;
+class AbstractDataStore {
+  updateEntityByFilters<T extends BackkEntity>(
+    EntityClass: { new(): T },
+    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    entityUpdate: Partial<T>,
+    options?: {
+      entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
+      postQueryOperations?: PostQueryOperations;
+      postHook?: PostHook<T>;
+    }
+  ): PromiseErrorOr<null>;
+}
 ```
 
 Updates the entity of class `EntityClass` identified by filter(s) `filters` in the data store.
@@ -1181,11 +1206,13 @@ Returns nothing or error.
 
 #### <a name="updateentitiesbyfilters"></a> updateEntitiesByFilters
 ```ts
-updateEntitiesByFilters<T extends BackkEntity>(
-  EntityClass: { new (): T },
-  filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
-  entityUpdate: Partial<T>
-): PromiseErrorOr<null>;
+class AbstractDataStore {
+  updateEntitiesByFilters<T extends BackkEntity>(
+    EntityClass: { new(): T },
+    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    entityUpdate: Partial<T>
+  ): PromiseErrorOr<null>;
+}
 ```
 
 Updates the entities of class `EntityClass` identified by filter(s) `filters` in the data store.
@@ -1195,7 +1222,9 @@ Returns nothing or error.
 
 #### <a name="deleteallentities"></a> deleteAllEntities
 ```ts
-deleteAllEntities<T>(EntityClass: new () => T): PromiseErrorOr<null>;
+class AbstractDataStore {
+  deleteAllEntities<T>(EntityClass: new () => T): PromiseErrorOr<null>;
+}
 ```
 
 Deletes all entities of class `EntityClass` from the data store.
@@ -1204,15 +1233,17 @@ Returns nothing or error.
 
 #### <a name="deleteentitybyid"></a> deleteEntityById
 ```ts
-deleteEntityById<T extends BackkEntity>(
-  EntityClass: { new (): T },
-  _id: string,
-  options?: {
-    entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
-    postQueryOperations?: PostQueryOperations;
-    postHook?: PostHook<T>;
-  }
-): PromiseErrorOr<null>;
+class AbstractDataStore {
+  deleteEntityById<T extends BackkEntity>(
+    EntityClass: { new(): T },
+    _id: string,
+    options?: {
+      entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
+      postQueryOperations?: PostQueryOperations;
+      postHook?: PostHook<T>;
+    }
+  ): PromiseErrorOr<null>;
+}
 ```
 
 Deletes the entities of class `EntityClass` identified by id `_id` from the data store.
@@ -1221,10 +1252,12 @@ Returns nothing or error.
 
 #### <a name="deleteentitiesbyids"></a> deleteEntitiesByIds
 ```ts
-deleteEntitiesByIds<T extends BackkEntity>(
-  EntityClass: { new (): T },
-  _ids: string[]
-): PromiseErrorOr<null>
+class AbstractDataStore {
+  deleteEntitiesByIds<T extends BackkEntity>(
+    EntityClass: { new(): T },
+    _ids: string[]
+  ): PromiseErrorOr<null>
+}
 ```
 
 Deletes the entities of class `EntityClass` identified by ids `_ids` from the data store.
@@ -1233,15 +1266,17 @@ Returns nothing or error.
 
 #### <a name="deleteentitybyfilters"></a> deleteEntityByFilters
 ```ts
-deleteEntityByFilters<T extends BackkEntity>(
-  EntityClass: { new (): T },
-  filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
-  options?: {
-    entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
-    postQueryOperations?: PostQueryOperations;
-    postHook?: PostHook<T>;
-  }
-): PromiseErrorOr<null>;
+class AbstractDataStore {
+  deleteEntityByFilters<T extends BackkEntity>(
+    EntityClass: { new(): T },
+    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    options?: {
+      entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
+      postQueryOperations?: PostQueryOperations;
+      postHook?: PostHook<T>;
+    }
+  ): PromiseErrorOr<null>;
+}
 ```
 
 Deletes the entity of class `EntityClass` matching filters `filters` from the data store.
@@ -1256,10 +1291,12 @@ Returns nothing or error.
 
 #### <a name="deleteentitiesbyfilters"></a> deleteEntitiesByFilters
 ```ts
-deleteEntitiesByFilters<T extends BackkEntity>(
-  EntityClass: { new (): T },
-  filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object
-): PromiseErrorOr<null>;
+class AbstractDataStore {
+  deleteEntitiesByFilters<T extends BackkEntity>(
+    EntityClass: { new(): T },
+    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object
+  ): PromiseErrorOr<null>;
+}
 ```
 
 Deletes the entities of class `EntityClass` matching filters `filters` from the data store.

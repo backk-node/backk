@@ -1,24 +1,24 @@
 import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
 
-export default function ShouldBeTrueForObject<T>(
-  validateObject: (object: T) => boolean,
+export default function ShouldBeTrue(
+  validateValue: (value: any) => boolean,
   errorMessage?: string,
   validationOptions?: ValidationOptions
 ) {
   // eslint-disable-next-line @typescript-eslint/ban-types
   return function(object: Object, propertyName: string) {
     registerDecorator({
-      name: 'shouldBeTrueForEntity',
+      name: 'shouldBeTrue',
       target: object.constructor,
       propertyName: propertyName,
-      constraints: ['shouldBeTrueForEntity', validateObject],
+      constraints: ['shouldBeTrue', validateValue],
       options: validationOptions,
       validator: {
         validate(value: any, args: ValidationArguments) {
-          return validateObject(args.object as any);
+          return validateValue(args.object as any);
         },
         defaultMessage: () =>
-          errorMessage ? errorMessage : 'Object did not match predicate: ' + validateObject.toString()
+          errorMessage ? errorMessage : 'Property did not match predicate: ' + validateValue.toString()
       }
     });
   };

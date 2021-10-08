@@ -743,7 +743,8 @@ You can use following decorators for the properties of your classes to validate 
 
 | Decorator                                       | Description |
 | ------------------------------------------------| ----------- |
-| `@ShouldBeTrueForObject( validateObject: (object: T) => boolean, errorMessage?: string)` | This validator can used on any class property to validate using other properties of the object with the `validateObject` function |
+| `@ShouldBeTrueForObject(validateObject: (object: T) => boolean, errorMessage?: string)` | This validator can used on any class property to validate using other properties of the object with the `validateObject` function |
+| `@ShouldBeTrue(validateValue: (value: any) => boolean, errorMessage?: string)` | Validates the value of the property with `validateValue` function |
 | **Number validation decorators**                |
 | `@IsInt()`                                      | Checks if the value is an integer number. |
 | `@IsBigInt()`                                   | Check if the value is Big int. |
@@ -930,72 +931,6 @@ If post-hook fails, the whole create operation fails.
 
 Returns the created entities or error.
 
-#### <a name="addsubentitytoentitybyid"></a> addSubEntityToEntityById
-```ts
-addSubEntityToEntityById<T extends BackkEntity, U extends SubEntity>(
-  subEntityPath: string,
-  subEntity: Omit<U, 'id'> | { _id: string },
-  EntityClass: { new (): T },
-  _id: string,
-  options?: {
-    ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
-    entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
-    postQueryOperations?: PostQueryOperations;
-    postHook?: PostHook<T>;
-  }
-): PromiseErrorOr<null>;
-```
-
-Finds an entity of class `EntityClass` by id `_id`, then adds sub-entity `subEntity` to path `subEntityPath`.
-
-For example, if you have an `Order` entity with a property `orderItems: OrderItem[]`, you can add an order item sub-entity (of class `OrderItem`) to path `orderItems`:
-```ts
-addSubEntityToEntityById('orderItems', orderItem, Order, orderId);
-```
-
-If entity by id `_id` is not found, then entity provided by `ifEntityNotFoundUse` function will be used instead.
-
-`preHooks` are executed before the add operation and if any of the pre-hooks fails, the whole add operation fails.
-A pre-hook gets the entity as argument, and it can be used to validate the proper state of entity before the add operation.
-
-`postHook` is executed after add operation. If post-hook fails, the whole add operation fails. A post-hook can be used 
-for example to notify other microservices about the operation.
-
-Returns nothing or error.
-
-#### <a name="addsubentitytoentitybyfilters"></a> addSubEntityToEntityByFilters
-```ts
-addSubEntityToEntityByFilters<T extends BackkEntity, U extends SubEntity>(
-  subEntityPath: string,
-  subEntity: Omit<U, 'id'> | { _id: string },
-  EntityClass: { new (): T },
-  filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
-  options?: {
-    ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
-    entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
-    postQueryOperations?: PostQueryOperations;
-    postHook?: PostHook<T>;
-  }
-): PromiseErrorOr<null>;
-```
-
-Finds an entity of class `EntityClass` by filter(s) `filters`, then adds sub-entity `subEntity` to path `subEntityPath`.
-
-For example, if you have an `ShoppingCart` entity found by `userAccountId` with a property `shoppingCartItems: ShoppingCartItem[]`, you can add a shopping cart item sub-entity (of class `ShoppingCartItem`) to path `shoppingCartItems`:
-```ts
-addSubEntityToEntityByFilters('shoppingCartItems', shoppingCartItem, ShoppingCart, { userAccountId });
-```
-
-If entity by filters `filters` is not found, then entity provided by `ifEntityNotFoundUse` function will be used instead.
-
-`preHooks` are executed before the add operation and if any of the pre-hooks fails, the whole add operation fails.
-A pre-hook gets the entity as argument, and it can be used to validate the proper state of entity before the add operation.
-
-`postHook` is executed after add operation. If post-hook fails, the whole add operation fails. A post-hook can be used
-for example to notify other microservices about the operation.
-
-Returns nothing or error.
-
 #### <a name="addsubentitiestoentitybyid"></a> addSubEntitiesToEntityById
 ```ts
 addSubEntitiesToEntityById<T extends BackkEntity, U extends SubEntity>(
@@ -1016,7 +951,7 @@ Finds an entity of class `EntityClass` by id `_id`, then adds sub-entities `subE
 
 For example, if you have an `Order` entity with a property `orderItems: OrderItem[]`, you can add an order items sub-entities (of class `OrderItem`) to path `orderItems`:
 ```ts
-addSubEntityToEntityById('orderItems', orderItems, Order, orderId);
+addSubEntitiesToEntityById('orderItems', orderItems, Order, orderId);
 ```
 
 If entity by id `_id` is not found, then entity provided by `ifEntityNotFoundUse` function will be used instead.
@@ -1049,7 +984,7 @@ Finds an entity of class `EntityClass` by filter(s) `filters`, then adds sub-ent
 
 For example, if you have an `ShoppingCart` entity found by `userAccountId` with a property `shoppingCartItems: ShoppingCartItem[]`, you can add a shopping cart items sub-entities (of class `ShoppingCartItem`) to path `shoppingCartItems`:
 ```ts
-addSubEntityToEntityByFilters('shoppingCartItems', shoppingCartItems, ShoppingCart, { userAccountId });
+addSubEntitiesToEntityByFilters('shoppingCartItems', shoppingCartItems, ShoppingCart, { userAccountId });
 ```
 
 If entity by filters `filters` is not found, then entity provided by `ifEntityNotFoundUse` function will be used instead.
@@ -1061,6 +996,65 @@ A pre-hook gets the entity as argument, and it can be used to validate the prope
 for example to notify other microservices about the operation.
 
 Returns nothing or error.
+
+#### <a name="getallentities"></a> getAllEntities
+```ts
+getAllEntities<T extends BackkEntity>(
+  EntityClass: new () => T,
+  postQueryOperations: PostQueryOperations,
+  allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
+  entityCountRequests?: EntityCountRequest[]
+): PromiseErrorOr<Many<T>>;
+```
+
+Retrieves entities of class `EntityClass` from the data store.
+
+`postQueryOperations` defines which entity fields are retrieved, the sorting order of entities and pagination of entities.
+
+Returns the retrieved entities or error.
+
+#### <a name="getentitycount"></a> getEntityCount
+```ts
+getEntityCount<T extends BackkEntity>(
+  EntityClass: new () => T,
+  filters?: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object
+): PromiseErrorOr<number>;
+```
+
+Retrieves the count of entities of class `EntityClass` from the data store.
+
+`filters` defined filter(s) for the count query.
+
+Returns the number of entities or error.
+
+#### <a name="getentitybyid"></a> getEntityById
+```ts
+getEntityById<T extends BackkEntity>(
+  EntityClass: { new (): T },
+  _id: string,
+  postQueryOperations: PostQueryOperations,
+  allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
+  options?: {
+    preHooks?: PreHook | PreHook[];
+    ifEntityNotFoundReturn?: () => PromiseErrorOr<One<T>>;
+    postHook?: PostHook<T>;
+    entityCountRequests?: EntityCountRequest[]
+  }
+): PromiseErrorOr<One<T>>;
+```
+
+Retrieves the entity of class `EntityClass` identified by id `_id` from the data store.
+
+`postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of sub-entities and pagination of sub-entities.
+
+`preHooks` are executed before the retrieve operation and if any of the pre-hooks fails, the whole retrieve operation fails.
+
+if entity by given id is not found, then entity given by `ifEntityNotFoundReturn` will be returned
+
+`postHook` is executed after the retrieve operation. If post-hook fails, the whole retrieve operation fails. A post-hook can be used
+for example to notify other microservices about the operation.
+
+Returns an entity or error.
 
 ## <a name="feedback"></a> Feedback
 

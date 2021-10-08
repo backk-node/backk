@@ -1569,7 +1569,7 @@ function tryGetObjectsFromCsvFile(
   filePathName: string,
   columnNames: string[] | 'readFromFirstRow' = 'readFromFirstRow',
   delimiter = ','
-): { [key: string]: any }[];
+): { [key: string]: string }[];
 ```
 
 Reads a CSV file `filePathName` and parses each row to an object. `columnNames` will be the keys of the each object.
@@ -1656,6 +1656,25 @@ will be parsed to following:
 ```js
 [1000, 2000, NaN];
 ```
+
+#### <a name="trygetvaluesbyjsonpathfromjsonfile"></a> tryGetValuesByJsonPathFromJsonFile
+```ts
+function tryGetValuesByJsonPathFromJsonFile(filePathName: string, jsonPath: string): any[]
+```
+
+Reads a text file `filePathName` and parses returns values matching the `jsonPath`.
+
+Returns an array of values.
+
+#### <a name="trygetvaluesbyxpathfromxmlfile"></a> tryGetValuesByXPathFromXmlFile
+```ts
+function tryGetValuesByXPathFromXmlFile(filePathName: string, xPath: string): any[]
+```
+
+Reads a text file `filePathName` and parses returns values matching the `xPath`.
+
+Returns an array of values.
+
 
 ## <a name="feedback"></a> Feedback
 

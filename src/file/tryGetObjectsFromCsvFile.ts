@@ -5,7 +5,7 @@ export default function tryGetObjectsFromCsvFile(
   filePathName: string,
   columnNames: string[] | 'readFromFirstRow' = 'readFromFirstRow',
   delimiter = ','
-): { [key: string]: any }[] {
+): { [key: string]: string }[] {
   return parse(readFileSync(filePathName, { encoding: 'UTF-8' }), {
     columns: columnNames === 'readFromFirstRow' ? true : columnNames,
     // eslint-disable-next-line @typescript-eslint/camelcase

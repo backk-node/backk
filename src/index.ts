@@ -140,7 +140,7 @@ export { One, Many } from './datastore/AbstractDataStore';
 export { Value } from './types/Value';
 export { default as tryGetObjectsFromCsvFile } from './file/tryGetObjectsFromCsvFile';
 export { default as tryGetSeparatedValuesFromTextFile } from './file/tryGetSeparatedValuesFromTextFile';
-export { default as tryGetSeparatedNumericValuesFromTextFile } from './file/tryGetSeparatedNumericValuesFromTextFile';
+export { default as tryGetSeparatedIntegerValuesFromTextFile } from './file/tryGetSeparatedIntegerValuesFromTextFile';
 export { default as tryGetValuesByJsonPathFromJsonFile } from './file/tryGetValuesByJsonPathFromJsonFile';
 export { default as tryGetValuesByXPathFromXmlFile } from './file/tryGetValuesByXPathFromXmlFile';
 

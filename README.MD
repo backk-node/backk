@@ -1563,7 +1563,7 @@ Returns nothing or error.
 - [tryGetValuesByJsonPathFromJsonFile](#trygetvaluesbyjsonpathfromjsonfile)
 - [tryGetValuesByXPathFromXmlFile](#trygetvaluesbyxpathfromxmlfile)
 
-### <a name="trygetobjectsfromcsvfile"></a> tryGetObjectsFromCsvFile
+#### <a name="trygetobjectsfromcsvfile"></a> tryGetObjectsFromCsvFile
 ```ts
 function tryGetObjectsFromCsvFile(
   filePathName: string,
@@ -1602,7 +1602,7 @@ will be parsed to following:
 ];
 ```
 
-### <a name="trygetseparatedvaluesfromtextfile"></a> tryGetSeparatedValuesFromTextFile
+#### <a name="trygetseparatedvaluesfromtextfile"></a> tryGetSeparatedValuesFromTextFile
 ```ts
 function tryGetSeparatedValuesFromTextFile(
   filePathName: string,
@@ -1629,7 +1629,7 @@ will be parsed to following:
 ['Tag 1', 'Tag 2'];
 ```
 
-### <a name="trygetseparatedintegervaluesfromtextfile"></a> tryGetSeparatedIntegerValuesFromTextFile
+#### <a name="trygetseparatedintegervaluesfromtextfile"></a> tryGetSeparatedIntegerValuesFromTextFile
 ```ts
 function tryGetSeparatedIntegerValuesFromTextFile(
   filePathName: string,

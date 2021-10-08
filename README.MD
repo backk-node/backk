@@ -21,6 +21,8 @@
   - [Decorators](#api-documentation-decorators)
   - [AbstractDataStore](#api-documentation-abstractdatastore)
   - [CSV, Text, JSON and XML File Reading](#api-documentation-filereading)
+  - [Observability](api-documentation-observability)
+  - [Remote Service Access](api-documentation-remote-service-access)
 - [Feedback](#feedback)
   - [Report a Bug](#report-bug)
   - [Report a Security Vulnerability](#report-security-vulnerability)
@@ -1675,6 +1677,32 @@ Reads a text file `filePathName` and parses returns values matching the `xPath`.
 
 Returns an array of values.
 
+### <a name="api-documentation-observability"></a> Observability
+
+#### <a name="api-documentation-observability"></a> log
+```ts
+function log(
+  severityNumber: Severity,
+  name: string,
+  body: string,
+  attributes?: { [key: string]: string | number | boolean | undefined | object[] }
+);
+
+enum Severity {
+  DEBUG = 5,
+  INFO = 9,
+  WARN = 13,
+  ERROR = 17,
+  FATAL = 21
+}
+```
+
+Writes a log entry with specified severity.
+
+#### <a name="api-documentation-observability"></a> defaultPrometheusMeter
+
+`defaultPrometheusMeter` can used to define and then collect custom metrics from your microservice.
+For more information, see [Open Telemetry Metrics](https://www.npmjs.com/package/@opentelemetry/metrics)
 
 ## <a name="feedback"></a> Feedback
 

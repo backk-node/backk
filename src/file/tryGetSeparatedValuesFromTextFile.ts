@@ -1,6 +1,5 @@
 import { readFileSync } from 'fs';
 
-
 export default function tryGetSeparatedValuesFromTextFile(
   filePathName: string,
   separator = '\n'
@@ -9,5 +8,5 @@ export default function tryGetSeparatedValuesFromTextFile(
     .split(separator)
     .filter((value) => value)
     .map((value) => value.trim())
-    
+
 }

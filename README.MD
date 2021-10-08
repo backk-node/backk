@@ -1193,6 +1193,24 @@ Only fields present in `entityUpdate` are updated.
 
 Returns nothing or error.
 
+#### <a name="deleteallentities"></a> deleteAllEntities
+```ts
+deleteAllEntities<T>(EntityClass: new () => T): PromiseErrorOr<null>;
+```
+
+Deletes all entities of class `EntityClass` from the data store.
+
+Returns nothing or error.
+
+#### <a name="deleteentitybyid"></a> deleteEntityById
+
+#### <a name="deleteentitiesbyids"></a> deleteEntitiesByIds
+
+#### <a name="deleteentitybyfilters"></a> deleteEntityByFilters
+
+#### <a name="deleteentitiesbyfilters"></a> deleteEntitiesByFilters
+
+
 ## <a name="feedback"></a> Feedback
 
 ### <a name="report-bug"></a> Report Bug

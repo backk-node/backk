@@ -202,7 +202,7 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
    # NOTE! You need to have the microservice running before executing the integration tests,
    # so ensure you have run npm start:dev before running the below command
    
-   npm integrationtest:dev
+   npm run integrationtest:dev
    ```
 
 ## <a name="example-microservice"></a> Example Microservice

@@ -53,8 +53,6 @@ T
 $src/execution/ServiceFunctionCall.ts,d/7/d769150ff5903b8b45f738b13d835f55b8282547
 ^
 .src/decorators/typeproperty/IsInternalField.ts,d/4/d4cec8302ec011ddb1ab40808abde7513ab3ca7a
-o
-?src/remote/messagequeue/sendToRemoteServiceInsideTransaction.ts,8/5/85b6b92b6f40a0f38a1f3277c423ff3749ff443d
 W
 'src/scheduling/defaultRetryIntervals.ts,a/c/acef35a3c59f362638e09c8171917638c60c8912
 A
@@ -140,14 +138,10 @@ p
 @src/datastore/utils/getUserAccountIdFieldNameAndRequiredValue.ts,2/5/25bf5708eed8084852ae1e4537d4636be0e5a939
 a
 1src/datastore/sql/operations/dql/getEntityById.ts,8/b/8b15ab504106c0c8ce4fd49312dd90de15d5b496
-^
-.src/remote/messagequeue/sendToRemoteService.ts,2/8/2898217950f733fa6c67c737e453b9d25969b79f
 `
 0src/datastore/sql/operations/dml/updateEntity.ts,0/5/05f62d510684151a2f5e7ae4730cc044e9d5de10
 Y
 )src/datastore/hooks/tryExecutePostHook.ts,0/0/00d5041e306eff3b8782cceb30e3aa9003d8440c
-e
-5src/remote/messagequeue/kafka/sendOneOrMoreToKafka.ts,c/8/c85e63005baa112768508fc435ef3f685516a669
 \
 ,src/remote/messagequeue/kafka/sendToKafka.ts,d/b/dbc342d1558a8147774c6129db7744957422c5ed
 U
@@ -444,8 +438,6 @@ Z
 *src/microservice/initializeMicroservice.ts,1/1/1162f5fb3b946952726e351e5b6fcea12aed21a8
 d
 4src/postman/writeTestsPostmanCollectionExportFile.ts,8/7/87e4fabf982d3fcb19cf6b5bd33aacaa35eb79bb
-j
-:src/remote/utils/parseRemoteServiceFunctionCallUrlParts.ts,a/5/a561c9580c6e13f3634b5ea01a48c933b81f6652
 e
 5src/scheduling/entities/__Backk__CronJobScheduling.ts,1/5/1587a30d7ac309ada12826f83b3beb5f0642294f
 a

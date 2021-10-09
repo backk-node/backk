@@ -199,12 +199,11 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
    2. Choose `Create New` and then `Import and Document API` and then choose file `generated/openapi/openApiPublicSpec.yaml`
 7. Backk automatically generates some integration tests and they can be run with following command:
    ```bash
-   # NOTE! You need to have microservice running before executing the integration tests, so ensure you have run npm start:dev
+   # NOTE! You need to have the microservice running before executing the integration tests,
+   # so ensure you have run npm start:dev before running the below command
+   
    npm integrationtest:dev
    ```
-
-### <a name="integration-testing-in-development-environment"></a> Integration testing in development environment
-
 
 ## <a name="example-microservice"></a> Example Microservice
 

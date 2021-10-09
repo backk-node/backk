@@ -204,6 +204,7 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
    
    npm run integrationtest:dev
    ```
+   You can also import the integration test to Postman from file `generated/integrationtests/integrationTestsPostmanCollection.json`
 
 ## <a name="example-microservice"></a> Example Microservice
 

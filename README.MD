@@ -1800,6 +1800,50 @@ redis://redis.default.svc.cluster.local:6379/notificationservice.default/emailNo
 
 Returns null or error.
 
+#### <a name="sentoremoteserviceinsidetransaction"></a> sendToRemoteServiceInsideTransaction
+```ts
+async function sendToRemoteServiceInsideTransaction(sends: CallOrSendToSpec[]): PromiseErrorOr<null>
+
+interface CallOrSendToSpec {
+  remoteServiceFunctionUrl: string;
+  serviceFunctionArgument?: object;
+  responseUrl?: string;
+  options?: SendToOptions;
+}
+
+interface SendToOptions {
+  compressionType?: CompressionTypes;
+  sendAcknowledgementType?: SendAcknowledgementType;
+}
+
+enum CompressionTypes {
+  None = 0,
+  GZIP = 1,
+  Snappy = 2,
+  LZ4 = 3,
+  ZSTD = 4,
+}
+
+enum SendAcknowledgementType {
+  NONE,
+  LEADER_ONLY,
+  ALL_REPLICAS = -1
+}
+```
+
+Sends multiple requests to a remote service(s) via a message queue (Kafka).
+To send a request to a remote service via Kafka, following format `remoteServiceFunctionUrl` must be used:
+
+```
+kafka://<kafka-host>:<kafka-port>/<microservice-name>.<microservice-namespace>/<serviceFunctionName>
+
+For example:
+kafka://kafka.default.svc.cluster.local:9092/notificationservice.default/emailNotificationService.sendEmail
+```
+
+`responseUrl` defines the URL where remote service sends its response to the request.
+
+Returns null or error.
 
 ## <a name="feedback"></a> Feedback
 

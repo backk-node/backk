@@ -814,7 +814,6 @@ You can use following decorators for the properties of your classes to validate 
 | `@IsNegative()`                                                                         | Checks if the value is a negative number smaller than zero.                                                                       |
 | `@Min(minValue: number)`                                                                | Checks if the given number is greater than or equal to given number.                                                              |
 | `@Max(maxValue: number)`                                                                | Checks if the given number is less than or equal to given number.                                                                 |
-
 | `@MinMax(minValue: number, maxValue: number)`
 | **Date validation decorators** |
 | `@MinDate(date: Date)` | Checks if the value is a date that's after the specified date. |

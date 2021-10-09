@@ -200,7 +200,7 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
 7. Backk automatically generates some integration tests and they can be run with following command:
    ```bash
    # NOTE! You need to have the microservice running before executing the integration tests,
-   # so ensure you have run npm start:dev before running the below command
+   # so ensure you have run npm run start:dev before running the below command
    
    npm run integrationtest:dev
    ```

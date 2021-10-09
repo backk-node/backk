@@ -188,7 +188,7 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
 
    There is one example service in `src/services/example` directory that you can use as a basis for your own service(s).
    If/When you don't need that example service anymore, just delete the `src/services/example` directory and remove example service from `MicroserviceImpl` class.
-6. Generate the OpenAPI 3 API specs for your API implementation with following command:
+6. Generate the [OpenAPI 3](https://swagger.io/specification/) API specs for your API implementation with following command:
    ```bash
    npm run generateApiSpecs
    ```

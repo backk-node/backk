@@ -95,11 +95,9 @@
 
 ## <a name="get-started"></a> Get Started
 
-- [Development environment](#development-environment)
-- [Integration testing in development environment](#integration-testing-in-development-environment)
-- [CI/CD](#cicd)
+- [Development Environment](#development-environment)
 
-### <a name="development-environment"></a> Development environment
+### <a name="development-environment"></a> Development Environment
 
 Follow the below steps: (In the future, there will be [backk-cli](https://github.com/backk-node/backk-cli) available, which can be used to generate a Backk project based on a set of questions)
 
@@ -201,7 +199,7 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
    For SwaggerHub:
    1. Navigate to [SwaggerHub](https://app.swaggerhub.com/home)
    2. Choose `Create New` and then `Import and Document API` and then choose file `generated/openapi/openApiPublicSpec.yaml`
-7. Backk automatically generates some integrationtests and they can be run with following command:
+7. Backk automatically generates some integration tests and they can be run with following command:
    ```bash
    # NOTE! You need to have microservice running before executing the integration tests, so ensure you have run npm start:dev
    npm integrationtest:dev

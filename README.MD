@@ -14,6 +14,7 @@
 - [Get Started](#get-started)
 - [Sample Microservice](#sample-microservice)
 - [Usage Documentation](#usage-documentation)
+  - 
 - [API Documentation](#api-documentation)
   - [Microservice](#api-documentation-microservice)
   - [Initialization](#api-documentation-initialization)
@@ -192,13 +193,22 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
    There is one example service in `src/services/example` directory that you can use as a basis for your own service(s).
    If/When you don't need that example service anymore, just delete the `src/services/example` directory and remove example service from `MicroserviceImpl` class.
 
-6. You can test your microservice API using [Postman](https://www.postman.com/downloads/)
+6. You can use and test your microservice API using [Postman](https://www.postman.com/downloads/) or [SwaggerHub](https://app.swaggerhub.com/home) 
+   For Postman:
    1. Launch Postman
-   2. Choose Import and then choose file `postman/<your-microservice-name>_api_postman_collection.json`
+   2. Choose `Import` and then choose file `generated/openapi/openApiPublicSpec.yaml`
+    
+   For SwaggerHub:
+   1. Navigate to [SwaggerHub](https://app.swaggerhub.com/home)
+   2. Choose `Create New` and then `Import and Document API` and then choose file `generated/openapi/openApiPublicSpec.yaml`
+7. Backk automatically generates some integrationtests and they can be run with following command:
+   ```bash
+   # NOTE! You need to have microservice running before executing the integration tests, so ensure you have run npm start:dev
+   npm integrationtest:dev
+   ```
 
 ### <a name="integration-testing-in-development-environment"></a> Integration testing in development environment
 
-### <a name="cicd"></a> CI/CD
 
 ## <a name="example-microservice"></a> Example Microservice
 
@@ -1567,7 +1577,6 @@ class AbstractDataStore {
 }
 ```
 Execute data store commands in `executable` inside a transaction.
-
 
 ### <a name="api-documentation-filereading"></a> CSV, Text, JSON and XML File Reading
 

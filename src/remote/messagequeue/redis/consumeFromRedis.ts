@@ -5,7 +5,7 @@ import { HttpStatusCodes } from '../../../constants/constants';
 import sendToRemoteService from '../sendToRemoteService';
 import log, { Severity } from '../../../observability/logging/log';
 import defaultServiceMetrics from '../../../observability/metrics/defaultServiceMetrics';
-import getNamespacedServiceName from '../../../utils/getNamespacedServiceName';
+import getNamespacedMicroserviceName from '../../../utils/getNamespacedMicroserviceName';
 import BackkResponse from '../../../execution/BackkResponse';
 import wait from '../../../utils/wait';
 
@@ -13,7 +13,7 @@ export default async function consumeFromRedis(
   controller: any,
   host: string | undefined,
   port: string | undefined,
-  topic = getNamespacedServiceName()
+  topic = getNamespacedMicroserviceName()
 ) {
   if (!host) {
     throw new Error('REDIS_HOST environment variable must be defined');

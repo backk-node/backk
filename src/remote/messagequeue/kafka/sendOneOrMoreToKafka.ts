@@ -10,7 +10,7 @@ import parseRemoteServiceFunctionCallUrlParts from "../../utils/parseRemoteServi
 import minimumLoggingSeverityToKafkaLoggingLevelMap from "./minimumLoggingSeverityToKafkaLoggingLevelMap";
 import logCreator from "./logCreator";
 import defaultServiceMetrics from "../../../observability/metrics/defaultServiceMetrics";
-import getNamespacedServiceName from "../../../utils/getNamespacedServiceName";
+import getNamespacedMicroserviceName from "../../../utils/getNamespacedMicroserviceName";
 import { PromiseErrorOr } from "../../../types/PromiseErrorOr";
 
 const kafkaServerToKafkaClientMap: { [key: string]: Kafka } = {};
@@ -29,7 +29,7 @@ export default async function sendOneOrMoreToKafka(
 
   if (!kafkaServerToKafkaClientMap[server]) {
     kafkaServerToKafkaClientMap[server] = new Kafka({
-      clientId: getNamespacedServiceName(),
+      clientId: getNamespacedMicroserviceName(),
       logLevel: minimumLoggingSeverityToKafkaLoggingLevelMap[process.env.LOG_LEVEL ?? 'INFO'],
       brokers: [server],
       logCreator

@@ -15,7 +15,7 @@ import createBackkErrorFromError from '../errors/createBackkErrorFromError';
 import log, { Severity } from '../observability/logging/log';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
 import { HttpStatusCodes, MAX_INT_VALUE, Values } from '../constants/constants';
-import getNamespacedServiceName from '../utils/getNamespacedServiceName';
+import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
 import AuditLoggingService from '../observability/logging/audit/AuditLoggingService';
 import createAuditLogEntry from '../observability/logging/audit/createAuditLogEntry';
 import executeMultipleServiceFunctions from './executeMultipleServiceFunctions';
@@ -363,7 +363,7 @@ export default async function tryExecuteServiceMethod(
       const key =
         'BackkResponseCache' +
         ':' +
-        getNamespacedServiceName() +
+        getNamespacedMicroserviceName() +
         ':' +
         serviceFunctionName +
         ':' +
@@ -645,7 +645,7 @@ export default async function tryExecuteServiceMethod(
           const key =
             'BackkResponseCache' +
             ':' +
-            getNamespacedServiceName() +
+            getNamespacedMicroserviceName() +
             ':' +
             serviceFunctionName +
             ':' +

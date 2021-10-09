@@ -932,6 +932,8 @@ You can use following decorators for the properties of your classes to validate 
 - [addArrayFieldValuesToEntityById](#addarrayfieldvaluestoentitybyid)
 - [doesArrayFieldContainValueInEntityById](#doesarrayfieldcontainvalueinentitybyid)
 - [removeArrayFieldValuesFromEntityById](#removearrayfieldsvaluesfromentitybyid)
+  <br/>
+- [executeInsideTransaction](#executeinsidetransaction)
 
 #### <a name="createentity"></a> createEntity
 
@@ -1556,6 +1558,16 @@ if any of the pre-hooks fails, the whole delete operation fails.
 for example to notify other microservices about the operation.
 
 Returns nothing or error.
+
+#### <a name="executeinsidetransaction"></a> executeInsideTransaction
+
+```ts
+class AbstractDataStore {
+  executeInsideTransaction<T>(executable: () => PromiseErrorOr<T>): PromiseErrorOr<T>
+}
+```
+Execute data store commands in `executable` inside a transaction.
+
 
 ### <a name="api-documentation-filereading"></a> CSV, Text, JSON and XML File Reading
 

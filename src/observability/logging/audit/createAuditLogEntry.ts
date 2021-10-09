@@ -1,11 +1,11 @@
 import fs from 'fs';
 import tracerProvider from '../../distributedtracinig/tracerProvider';
 import getTimeZone from '../../../utils/getTimeZone';
-import getServiceName from '../../../utils/getServiceName';
+import getMicroserviceName from '../../../utils/getMicroserviceName';
 import { AuditLogEntry, UserOperationResult } from "./AuditLogEntry";
 
 const cwd = process.cwd();
-const serviceName = getServiceName();
+const serviceName = getMicroserviceName();
 const packageJson = fs.readFileSync(cwd + '/package.json', { encoding: 'UTF-8' });
 const packageObj = JSON.parse(packageJson);
 

@@ -7,7 +7,7 @@ import defaultServiceMetrics from '../../../observability/metrics/defaultService
 import forEachAsyncParallel from '../../../utils/forEachAsyncParallel';
 import { HttpStatusCodes } from '../../../constants/constants';
 import sendToRemoteService from '../sendToRemoteService';
-import getNamespacedServiceName from '../../../utils/getNamespacedServiceName';
+import getNamespacedMicroserviceName from '../../../utils/getNamespacedMicroserviceName';
 import BackkResponse from '../../../execution/BackkResponse';
 import wait from '../../../utils/wait';
 import minimumLoggingSeverityToKafkaLoggingLevelMap from './minimumLoggingSeverityToKafkaLoggingLevelMap';
@@ -17,7 +17,7 @@ export default async function consumeFromKafka(
   controller: any,
   host: string | undefined,
   port: string |undefined,
-  defaultTopic: string = getNamespacedServiceName(),
+  defaultTopic: string = getNamespacedMicroserviceName(),
   defaultTopicConfig?: Omit<ITopicConfig, 'topic'>,
   additionalTopics?: string[]
 ) {
@@ -53,13 +53,13 @@ export default async function consumeFromKafka(
   };
 
   const kafkaClient = new Kafka({
-    clientId: getNamespacedServiceName(),
+    clientId: getNamespacedMicroserviceName(),
     logLevel: minimumLoggingSeverityToKafkaLoggingLevelMap[process.env.LOG_LEVEL ?? 'INFO'],
     brokers: [server],
     logCreator
   });
 
-  const consumer = kafkaClient.consumer({ groupId: getNamespacedServiceName() });
+  const consumer = kafkaClient.consumer({ groupId: getNamespacedMicroserviceName() });
   let fetchSpan: Span | undefined;
   let hasFetchError = false;
 

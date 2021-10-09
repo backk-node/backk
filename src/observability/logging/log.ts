@@ -3,7 +3,7 @@ import { LogEntry } from './LogEntry';
 import * as fs from 'fs';
 import tracerProvider from '../distributedtracinig/tracerProvider';
 import getTimeZone from '../../utils/getTimeZone';
-import getServiceName from '../../utils/getServiceName';
+import getMicroserviceName from '../../utils/getMicroserviceName';
 import { Values } from '../../constants/constants';
 
 export enum Severity {
@@ -23,7 +23,7 @@ export const severityNameToSeverityMap: { [key: string]: number } = {
 };
 
 const cwd = process.cwd();
-const serviceName = getServiceName();
+const serviceName = getMicroserviceName();
 const packageJson = fs.readFileSync(cwd + '/package.json', { encoding: 'UTF-8' });
 const packageObj = JSON.parse(packageJson);
 
@@ -83,7 +83,7 @@ export default function log(
       Resource: {
         'service.name': serviceName,
         'service.namespace': process.env.SERVICE_NAMESPACE ?? '',
-        'service.instance.id': process.env.SERVICE_INSTANCE_ID ?? getServiceName() + '-87ffab3-xx567',
+        'service.instance.id': process.env.SERVICE_INSTANCE_ID ?? getMicroserviceName() + '-87ffab3-xx567',
         'service.version': packageObj.version,
         'node.name': process.env.NODE_NAME ?? ''
       },

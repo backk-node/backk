@@ -215,8 +215,8 @@ export { default as createBackkErrorFromErrorMessageAndStatusCode } from './erro
 export { BackkError } from './types/BackkError';
 
 // Utils
-export { default as getServiceName } from './utils/getServiceName';
-export { default as getNamespacedServiceName } from './utils/getNamespacedServiceName';
+export { default as getMicroserviceName } from './utils/getMicroserviceName';
+export { default as getNamespacedMicroserviceName } from './utils/getNamespacedMicroserviceName';
 export { default as executeForAll } from './utils/executeForAll';
 export { default as throwException } from './utils/exception/throwException';
 

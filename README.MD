@@ -95,8 +95,6 @@
 
 ## <a name="get-started"></a> Get Started
 
-- [Development Environment](#development-environment)
-
 ### <a name="development-environment"></a> Development Environment
 
 Follow the below steps: (In the future, there will be [backk-cli](https://github.com/backk-node/backk-cli) available, which can be used to generate a Backk project based on a set of questions)

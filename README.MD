@@ -69,7 +69,7 @@
 
 ## <a name="example-backk-microservice"></a> Example Backk Microservice
 
-If you want to dive right into the deep end, check out the [Backk example microservice](https://github.com/backk-node/backk-example-project).
+If you want to dive right into the deep end, check out the [Backk example microservice.](https://github.com/backk-node/backk-example-project)
 
 ## <a name="feedback"></a> Feedback
 

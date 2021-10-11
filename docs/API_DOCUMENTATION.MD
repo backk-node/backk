@@ -732,12 +732,12 @@ You can use following decorators for the properties of your classes to validate 
 - [removeSubEntitiesFromEntityById](#removesubentitiesfromentitybyid)
 - [removeSubEntityFromEntityByFilters](#removesubentityfromentitybyfilters)
 - [removeSubEntitiesFromEntityByFilters](#removesubentitiesfromentitybyfilters)
-  <br/>
+<br/>
 
 - [addArrayFieldValuesToEntityById](#addarrayfieldvaluestoentitybyid)
 - [doesArrayFieldContainValueInEntityById](#doesarrayfieldcontainvalueinentitybyid)
 - [removeArrayFieldValuesFromEntityById](#removearrayfieldsvaluesfromentitybyid)
-  <br/>
+<br/>
 
 - [executeInsideTransaction](#executeinsidetransaction)
 

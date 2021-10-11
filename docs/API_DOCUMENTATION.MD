@@ -1,6 +1,6 @@
 ## API Documentation
 
-- [Microservice](#api-documentation-microservice)
+- [Microservice Class](api/MICROSERVICE_CLASS.MD)
 - [Initialization](#api-documentation-initialization)
 - [Base Services](#api-documentation-base-services)
 - [Decorators](#api-documentation-decorators)
@@ -9,38 +9,6 @@
 - [Observability](api-documentation-observability)
 - [Remote Service Access](api-documentation-remote-service-access)
 
-### <a name="api-documentation-microservice"></a> Microservice
-
-Create a new `MicroserviceImpl` class by extending the class `Microservice`.
-Add your one or more service(s) that comprise the microservice as private readonly fields of the `MicroserviceImpl` class.
-
-```typescript
-import { MySqlDataStore } from 'backk';
-
-const dataStore = new MySqlDataStore();
-
-class MicroserviceImpl extends Microservice {
-  private readonly userAccountService = new UserAccountServiceImpl(dataStore);
-
-  constructor() {
-    super(dataStore);
-  }
-}
-```
-
-In the example above, there is one service `userAccountService` in the microservice which can be accessed over HTTP like this:
-
-```
-POST https://<user-account-microservice-host>:<port>/userAccountService
-```
-
-If the `userAccountService` has function `createUser`, it can be accessed over HTTP like this:
-
-```
-POST https://<user-account-microservice-host>:<port>/userAccountService.createUser
-```
-
-The argument for the service function call `userAccountService.createUser` is sent in the HTTP POST request message body encoded in JSON
 
 ### <a name="api-documentation-initialization"></a> Initialization
 
@@ -702,11 +670,11 @@ You can use following decorators for the properties of your classes to validate 
 
 - [createEntity](#createentity)
 - [createEntities](#createEntities)
-  <br/>
+<br/>
 
 - [addSubEntitiesToEntityById](#addsubentitiestoentitybyid)
 - [addSubEntitiesToEntityByFilters](#addsubentitiestoentitybyfilters)
-  <br/>
+<br/>
 
 - [getAllEntities](#getallentities)
 - [getEntityCount](#getentitycount)
@@ -714,19 +682,19 @@ You can use following decorators for the properties of your classes to validate 
 - [getEntitiesByIds](#getentitiesbyids)
 - [getEntityByFilters](#getentitybyfilters)
 - [getEntitiesByFilters](#getentitiesbyfilters)
-  <br/>
+<br/>
 
 - [updateEntity](#updateentity)
 - [updateEntityByFilters](#updateentitybyfilters)
 - [updateEntitiesByFilters](#updateentitiesbyfilters)
-  <br/>
+<br/>
 
 - [deleteAllEntities](#deleteallentities)
 - [deleteEntityById](#deleteentitybyid)
 - [deleteEntitiesByIds](#deleteentitiesbyids)
 - [deleteEntityByFilters](#deleteentitybyfilters)
 - [deleteEntitiesByFilters](#deleteentitiesbyfilters)
-  <br/>
+<br/>
 
 - [removeSubEntityFromEntityById](#removesubentityfromentitybyid)
 - [removeSubEntitiesFromEntityById](#removesubentitiesfromentitybyid)

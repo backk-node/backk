@@ -1,4 +1,4 @@
-### AbstractDataStore
+## AbstractDataStore
 
 - [createEntity](#createentity)
 - [createEntities](#createEntities)
@@ -41,7 +41,7 @@
 
 - [executeInsideTransaction](#executeinsidetransaction)
 
-#### <a name="createentity"></a> createEntity
+### <a name="createentity"></a> createEntity
 
 ```ts
 class AbstractDataStore {
@@ -65,7 +65,7 @@ Creates a new entity `entity` of class `EntityClass` in the data store.
 
 Returns the created entity or error.
 
-#### <a name="createentity"></a> createEntities
+### <a name="createentity"></a> createEntities
 
 ```ts
 class AbstractDataStore {
@@ -91,7 +91,7 @@ If post-hook fails, the whole create operation fails.
 
 Returns the created entities or error.
 
-#### <a name="addsubentitiestoentitybyid"></a> addSubEntitiesToEntityById
+### <a name="addsubentitiestoentitybyid"></a> addSubEntitiesToEntityById
 
 ```ts
 class AbstractDataStore {
@@ -128,7 +128,7 @@ for example to notify other microservices about the operation.
 
 Returns nothing or error.
 
-#### <a name="addsubentitiestoentitybyfilters"></a> addSubEntitiesToEntityByFilters
+### <a name="addsubentitiestoentitybyfilters"></a> addSubEntitiesToEntityByFilters
 
 ```ts
 class AbstractDataStore {
@@ -165,7 +165,7 @@ for example to notify other microservices about the operation.
 
 Returns nothing or error.
 
-#### <a name="getallentities"></a> getAllEntities
+### <a name="getallentities"></a> getAllEntities
 
 ```ts
 class AbstractDataStore {
@@ -184,7 +184,7 @@ Retrieves entities of class `EntityClass` from the data store.
 
 Returns the retrieved entities or error.
 
-#### <a name="getentitycount"></a> getEntityCount
+### <a name="getentitycount"></a> getEntityCount
 
 ```ts
 class AbstractDataStore {
@@ -201,7 +201,7 @@ Retrieves the count of entities of class `EntityClass` from the data store.
 
 Returns the number of entities or error.
 
-#### <a name="getentitybyid"></a> getEntityById
+### <a name="getentitybyid"></a> getEntityById
 
 ```ts
 class AbstractDataStore {
@@ -233,7 +233,7 @@ for example to notify other microservices about the operation.
 
 Returns the entity or error.
 
-#### <a name="getentitiesbyids"></a> getEntitiesByIds
+### <a name="getentitiesbyids"></a> getEntitiesByIds
 
 ```ts
 class AbstractDataStore {
@@ -253,7 +253,7 @@ Retrieves the entities of class `EntityClass` identified by ids `_ids` from the 
 
 Returns the entities or error.
 
-#### <a name="getentitybyfilters"></a> getEntityByFilters
+### <a name="getentitybyfilters"></a> getEntityByFilters
 
 ```ts
 class AbstractDataStore {
@@ -285,7 +285,7 @@ for example to notify other microservices about the operation.
 
 Returns the entity or error.
 
-#### <a name="getentitiesbyfilters"></a> getEntitiesByFilters
+### <a name="getentitiesbyfilters"></a> getEntitiesByFilters
 
 ```ts
 class AbstractDataStore {
@@ -314,7 +314,7 @@ for example to notify other microservices about the operation.
 
 Returns the entities or error.
 
-#### <a name="updateentity"></a> updateEntity
+### <a name="updateentity"></a> updateEntity
 
 ```ts
 class AbstractDataStore {
@@ -343,7 +343,7 @@ for example to notify other microservices about the operation.
 
 Returns nothing or error.
 
-#### <a name="updateentitybyfilters"></a> updateEntityByFilters
+### <a name="updateentitybyfilters"></a> updateEntityByFilters
 
 ```ts
 class AbstractDataStore {
@@ -371,7 +371,7 @@ for example to notify other microservices about the operation.
 
 Returns nothing or error.
 
-#### <a name="updateentitiesbyfilters"></a> updateEntitiesByFilters
+### <a name="updateentitiesbyfilters"></a> updateEntitiesByFilters
 
 ```ts
 class AbstractDataStore {
@@ -388,7 +388,7 @@ Only fields present in `entityUpdate` are updated.
 
 Returns nothing or error.
 
-#### <a name="deleteallentities"></a> deleteAllEntities
+### <a name="deleteallentities"></a> deleteAllEntities
 
 ```ts
 class AbstractDataStore {
@@ -400,7 +400,7 @@ Deletes all entities of class `EntityClass` from the data store.
 
 Returns nothing or error.
 
-#### <a name="deleteentitybyid"></a> deleteEntityById
+### <a name="deleteentitybyid"></a> deleteEntityById
 
 ```ts
 class AbstractDataStore {
@@ -420,7 +420,7 @@ Deletes the entities of class `EntityClass` identified by id `_id` from the data
 
 Returns nothing or error.
 
-#### <a name="deleteentitiesbyids"></a> deleteEntitiesByIds
+### <a name="deleteentitiesbyids"></a> deleteEntitiesByIds
 
 ```ts
 class AbstractDataStore {
@@ -435,7 +435,7 @@ Deletes the entities of class `EntityClass` identified by ids `_ids` from the da
 
 Returns nothing or error.
 
-#### <a name="deleteentitybyfilters"></a> deleteEntityByFilters
+### <a name="deleteentitybyfilters"></a> deleteEntityByFilters
 
 ```ts
 class AbstractDataStore {
@@ -461,7 +461,7 @@ for example to notify other microservices about the operation.
 
 Returns nothing or error.
 
-#### <a name="deleteentitiesbyfilters"></a> deleteEntitiesByFilters
+### <a name="deleteentitiesbyfilters"></a> deleteEntitiesByFilters
 
 ```ts
 class AbstractDataStore {
@@ -476,7 +476,7 @@ Deletes the entities of class `EntityClass` matching filters `filters` from the 
 
 Returns nothing or error.
 
-#### <a name="removesubentityfromentitybyid"></a> removeSubEntityFromEntityById
+### <a name="removesubentityfromentitybyid"></a> removeSubEntityFromEntityById
 
 ```ts
 class AbstractDataStore {
@@ -504,7 +504,7 @@ for example to notify other microservices about the operation.
 
 Returns nothing or error.
 
-#### <a name="removesubentitiesfromentitybyid"></a> removeSubEntitiesFromEntityById
+### <a name="removesubentitiesfromentitybyid"></a> removeSubEntitiesFromEntityById
 
 ```ts
 class AbstractDataStore {
@@ -531,7 +531,7 @@ for example to notify other microservices about the operation.
 
 Returns nothing or error.
 
-#### <a name="removesubentityfromentitybyfilters"></a> removeSubEntityFromEntityByFilters
+### <a name="removesubentityfromentitybyfilters"></a> removeSubEntityFromEntityByFilters
 
 ```ts
 class AbstractDataStore {
@@ -559,7 +559,7 @@ for example to notify other microservices about the operation.
 
 Returns nothing or error.
 
-#### <a name="removesubentitiesfromentitybyfilters"></a> removeSubEntitiesFromEntityByFilters
+### <a name="removesubentitiesfromentitybyfilters"></a> removeSubEntitiesFromEntityByFilters
 
 ```ts
 class AbstractDataStore {
@@ -586,7 +586,7 @@ for example to notify other microservices about the operation.
 
 Returns nothing or error.
 
-#### <a name="addarrayfieldvaluestoentitybyid"></a> addArrayFieldValuesToEntityById
+### <a name="addarrayfieldvaluestoentitybyid"></a> addArrayFieldValuesToEntityById
 
 ```ts
 class AbstractDataStore {
@@ -616,7 +616,7 @@ for example to notify other microservices about the operation.
 
 Returns nothing or error.
 
-#### <a name="doesarrayfieldcontainvalueinentitybyid"></a> doesArrayFieldContainValueInEntityById
+### <a name="doesarrayfieldcontainvalueinentitybyid"></a> doesArrayFieldContainValueInEntityById
 
 ```ts
 class AbstractDataStore {
@@ -635,7 +635,7 @@ Finds an entity of class `EntityClass` by id `_id`, then checks if `arrayFieldVa
 
 Returns true, false or error.
 
-#### <a name="removearrayfieldvaluesfromentitybyid"></a> removeArrayFieldValuesFromEntityById
+### <a name="removearrayfieldvaluesfromentitybyid"></a> removeArrayFieldValuesFromEntityById
 
 ```ts
 class AbstractDataStore {
@@ -665,7 +665,7 @@ for example to notify other microservices about the operation.
 
 Returns nothing or error.
 
-#### <a name="executeinsidetransaction"></a> executeInsideTransaction
+### <a name="executeinsidetransaction"></a> executeInsideTransaction
 
 ```ts
 class AbstractDataStore {

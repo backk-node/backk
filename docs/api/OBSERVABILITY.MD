@@ -1,9 +1,9 @@
-### Observability
+## Observability
 
 - [log](#log)
 - [defaultPrometheusMeter](#defaultprometheusmeter)
 
-#### <a name="log"></a> log
+### <a name="log"></a> log
 ```ts
 function log(
   severityNumber: Severity,
@@ -23,7 +23,7 @@ enum Severity {
 
 Writes a log entry with specified severity.
 
-#### <a name="defaultprometheusmeter"></a> defaultPrometheusMeter
+### <a name="defaultprometheusmeter"></a> defaultPrometheusMeter
 
 `defaultPrometheusMeter` can used to define and then collect custom metrics from your microservice.
 For more information, see [Open Telemetry Metrics](https://www.npmjs.com/package/@opentelemetry/metrics)

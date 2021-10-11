@@ -5,7 +5,7 @@
 - [sendToRemoteService](#sendtoremoteservice)
 - [sendToRemoteServiceInsideTransaction](#sendtoremoteserviceinsidetransaction)
 
-#### <a name="callremoteservice"></a> callRemoteService
+### <a name="callremoteservice"></a> callRemoteService
 ```ts
 async function callRemoteService(
   remoteServiceFunctionUrl: string,
@@ -23,7 +23,7 @@ By default HTTP POST method is used.
 
 Returns an object, null or error.
 
-#### <a name="makehttprequest"></a> makeHttpRequest
+### <a name="makehttprequest"></a> makeHttpRequest
 ```ts
 async function makeHttpRequest(
   requestUrl: string,
@@ -39,7 +39,7 @@ interface HttpRequestOptions {
 Makes an HTTP or HTTPS request to URL `requestUrl` with given `requestBodyObject`. Request content type is `application/json`.
 The request is made using HTTP GET method by default. The method can be changed by supplying `options.httpMethod`.
 
-#### <a name="sentoremoteservice"></a> sendToRemoteService
+### <a name="sentoremoteservice"></a> sendToRemoteService
 ```ts
 async function sendToRemoteService(
   remoteServiceFunctionUrl: string,
@@ -91,7 +91,7 @@ redis://redis.default.svc.cluster.local:6379/notificationservice.default/emailNo
 
 Returns null or error.
 
-#### <a name="sentoremoteserviceinsidetransaction"></a> sendToRemoteServiceInsideTransaction
+### <a name="sentoremoteserviceinsidetransaction"></a> sendToRemoteServiceInsideTransaction
 ```ts
 async function sendToRemoteServiceInsideTransaction(sends: CallOrSendToSpec[]): PromiseErrorOr<null>
 

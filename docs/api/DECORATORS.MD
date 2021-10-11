@@ -1,4 +1,4 @@
-### <a name="api-documentation-decorators"></a> Decorators
+## <a name="api-documentation-decorators"></a> Decorators
 
 - [Service decorators](#service-decorators)
 - [Service Function Decorators](#service-function-decorators)
@@ -6,7 +6,7 @@
 - [Entity Property Decorators](#entity-property-decorators)
 - [Validation Decorators](#validation-decorators)
 
-#### <a name="service-decorators"></a> Service Decorators
+### <a name="service-decorators"></a> Service Decorators
 
 You can use following decorators for your service implementation class:
 
@@ -17,7 +17,7 @@ You can use following decorators for your service implementation class:
 | `@AllowServiceForUserRoles(roles: string[])` | Service can be accessed only by users with specific role or roles |
 | `@AllowServiceForClusterInternalUse()`       | Service can be accessed only from inside of Kubernetes cluster    |
 
-#### <a name="service-function-decorators"></a> Service Function Decorators
+### <a name="service-function-decorators"></a> Service Function Decorators
 
 You can use following decorators for you service class's functions:
 
@@ -73,7 +73,7 @@ type HttpHeaders<T extends object, U extends any> = {
 };
 ```
 
-#### <a name="entity-decorators"></a> Entity Decorators
+### <a name="entity-decorators"></a> Entity Decorators
 
 You can use following decorators for your entity classes:
 
@@ -83,7 +83,7 @@ You can use following decorators for your entity classes:
 | `@CompositeIndex(indexFields: string[], usingOption?: string, additionalSqlCreateIndexStatementOptions?: string)`       | Creates a composite index for entity database table using given fields |
 | `@UniqueCompositeIndex(indexFields: string[], usingOption?: string, additionalSqlCreateIndexStatementOptions?: string)` | Same as above but index is unique                                      |
 
-#### <a name="entity-property-decorators"></a> Entity Property Decorators
+### <a name="entity-property-decorators"></a> Entity Property Decorators
 
 You can use following decorators for the properties of your entity classes:
 
@@ -118,7 +118,7 @@ type UiProps = {
 };
 ```
 
-#### <a name="validation-decorators"></a> Validation Decorators
+### <a name="validation-decorators"></a> Validation Decorators
 
 You can use following decorators for the properties of your classes to validate the properties' value:
 

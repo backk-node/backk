@@ -1,4 +1,4 @@
-### <a name="api-documentation-base-services"></a> Base Services
+## <a name="api-documentation-base-services"></a> Base Services
 
 - [BaseService](#baseservice)
 - [CrudEntityService](#crudentityservice)
@@ -12,7 +12,7 @@
 - [StartupCheckService and StartupCheckServiceImpl](#startupcheckservice)
 - [AuditLoggingService](#auditloggingservice)
 
-#### <a name="baseservice"></a> BaseService
+### <a name="baseservice"></a> BaseService
 
 A base class for your own services.
 
@@ -47,7 +47,7 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-#### <a name="crudentityservice"></a> CrudEntityService
+### <a name="crudentityservice"></a> CrudEntityService
 
 A base class for your own resource-based services for creating, reading, updating and deleting entities.
 NOTE! It is not mandatory to use CrudEntityService as base class for you resource-based services, you can also use just `BaseService` as a base class.
@@ -77,7 +77,7 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-#### <a name="useraccountbaseservice"></a> UserAccountBaseService
+### <a name="useraccountbaseservice"></a> UserAccountBaseService
 
 Each microservice which has one or more service functions that have annotation `@AllowForSelf()`
 must implement a service extending `UserAccountBaseService`. Otherwise, an exception is thrown upon authorization.
@@ -95,7 +95,7 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-#### <a name="authorizationservice"></a>AuthorizationService
+### <a name="authorizationservice"></a>AuthorizationService
 
 Authorizes client requests based on Auhtorization header
 
@@ -121,7 +121,7 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-#### <a name="jwtauthorizationserviceimpl"></a> JwtAuthorizationServiceImpl
+### <a name="jwtauthorizationserviceimpl"></a> JwtAuthorizationServiceImpl
 
 JWT authorization service which checks if user is authorized based JWT bearer token supplied in Authorization header.
 This service requires following environment variables to be defined:
@@ -140,7 +140,7 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-#### <a name="responsecacheconfigservice"></a> ResponseCacheConfigService
+### <a name="responsecacheconfigservice"></a> ResponseCacheConfigService
 
 Caches service function call responses in Redis for a defined period of time. Caching can be customized by service function name and its argument.
 Caching is performed only for HTTP requests with GET method.
@@ -179,7 +179,7 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-#### <a name="captchaverificationservice"></a> CaptchaVerificationService
+### <a name="captchaverificationservice"></a> CaptchaVerificationService
 
 Verifies captcha send in service function call argument in `captchaToken` property:
 
@@ -207,7 +207,7 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-#### <a name="livenesscheckservice"></a> LivenessCheckService
+### <a name="livenesscheckservice"></a> LivenessCheckService
 
 This service is called by Kubernetes pod's liveness probe to check if microservice is alive.
 
@@ -241,7 +241,7 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-#### <a name="readinesscheckservice"></a> ReadinessCheckService
+### <a name="readinesscheckservice"></a> ReadinessCheckService
 
 This service is called by Kubernetes pod's readiness probe to check if microservice is ready for handling requests
 
@@ -283,7 +283,7 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-#### <a name="startupcheckservice"></a> StartupCheckService and StartupCheckServiceImpl
+### <a name="startupcheckservice"></a> StartupCheckService and StartupCheckServiceImpl
 
 This service is called by Kubernetes pod's startup probe to check if microservice is started successfully.
 
@@ -305,7 +305,7 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-#### <a name="auditloggingservice"></a> AuditLoggingService
+### <a name="auditloggingservice"></a> AuditLoggingService
 
 This service is called to log requests made to the microservice.
 

@@ -1,11 +1,11 @@
-### Initialization
+## Microservice Initialization
 
 - [initialize](#initialize)
 - [startHttpServerFor](#startHttpServerFor)
 - [startKafkaConsumerFor](#startKafkaConsumerFor)
 - [startRedisConsumerFor](#startRedisConsumerFor)
 
-#### <a name="initialize"></a> initialize
+### <a name="initialize"></a> initialize
 
 ```typescript
 async function initialize(microservice: Microservice);
@@ -13,7 +13,7 @@ async function initialize(microservice: Microservice);
 
 Initializes the microservice.
 
-#### <a name="startHttpServerFor"></a> startHttpServerFor
+### <a name="startHttpServerFor"></a> startHttpServerFor
 
 ```typescript
 async function startHttpServerFor(
@@ -44,7 +44,7 @@ Uses port defined in HTTP_SERVER_PORT environment variable or port 3000.
 Currently, only HTTP/1.1 is support (HTTP/2 support is coming).
 `initialize(microservice)` must be called before starting HTTP server.
 
-#### <a name="startKafkaConsumerFor"></a> startKafkaConsumerFor
+### <a name="startKafkaConsumerFor"></a> startKafkaConsumerFor
 
 ```typescript
 async function startKafkaConsumerFor(
@@ -66,7 +66,7 @@ Kafka host is defined in environment variable KAFKA_SERVER. If environment varia
 Consumer is listening to topic named: `<service-name>.<service-namespace>`, e.g. my-service.default or notification-service.platform
 `initialize(microservice)` must be called before starting Kafka consumer.
 
-#### <a name="startRedisConsumerFor"></a> startRedisConsumerFor
+### <a name="startRedisConsumerFor"></a> startRedisConsumerFor
 
 ```typescript
 async function startRedisConsumerFor(microservice: Microservice);

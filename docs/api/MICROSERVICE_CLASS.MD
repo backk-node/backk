@@ -1,4 +1,4 @@
-### Microservice Class
+## Microservice Class
 
 Create a new `MicroserviceImpl` class by extending the class `Microservice`.
 Add your one or more service(s) that comprise the microservice as private readonly fields of the `MicroserviceImpl` class.

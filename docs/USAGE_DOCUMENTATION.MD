@@ -1,2 +1,2 @@
 ## Usage Documentation
-- [Quick Start](#quick-start)
+- [Quick Start](usage/QUICK_START.MD)

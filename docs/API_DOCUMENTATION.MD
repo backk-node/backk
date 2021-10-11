@@ -707,6 +707,7 @@ You can use following decorators for the properties of your classes to validate 
 - [addSubEntitiesToEntityById](#addsubentitiestoentitybyid)
 - [addSubEntitiesToEntityByFilters](#addsubentitiestoentitybyfilters)
   <br/>
+
 - [getAllEntities](#getallentities)
 - [getEntityCount](#getentitycount)
 - [getEntityById](#getentitybyid)
@@ -714,25 +715,30 @@ You can use following decorators for the properties of your classes to validate 
 - [getEntityByFilters](#getentitybyfilters)
 - [getEntitiesByFilters](#getentitiesbyfilters)
   <br/>
+
 - [updateEntity](#updateentity)
 - [updateEntityByFilters](#updateentitybyfilters)
 - [updateEntitiesByFilters](#updateentitiesbyfilters)
   <br/>
+
 - [deleteAllEntities](#deleteallentities)
 - [deleteEntityById](#deleteentitybyid)
 - [deleteEntitiesByIds](#deleteentitiesbyids)
 - [deleteEntityByFilters](#deleteentitybyfilters)
 - [deleteEntitiesByFilters](#deleteentitiesbyfilters)
   <br/>
+
 - [removeSubEntityFromEntityById](#removesubentityfromentitybyid)
 - [removeSubEntitiesFromEntityById](#removesubentitiesfromentitybyid)
 - [removeSubEntityFromEntityByFilters](#removesubentityfromentitybyfilters)
 - [removeSubEntitiesFromEntityByFilters](#removesubentitiesfromentitybyfilters)
   <br/>
+
 - [addArrayFieldValuesToEntityById](#addarrayfieldvaluestoentitybyid)
 - [doesArrayFieldContainValueInEntityById](#doesarrayfieldcontainvalueinentitybyid)
 - [removeArrayFieldValuesFromEntityById](#removearrayfieldsvaluesfromentitybyid)
   <br/>
+
 - [executeInsideTransaction](#executeinsidetransaction)
 
 #### <a name="createentity"></a> createEntity

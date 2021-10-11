@@ -12,7 +12,7 @@
 - [Features](#features)
 - [Prerequisites](docs/PREREQUISITES.MD)
 - [Get Started](docs/GET_STARTED.MD)
-- [Sample Microservice](#sample-microservice)
+- [Example Backk Microservice](#example-backk-microservice)
 - [Usage Documentation](docs/USAGE_DOCUMENTATION.MD)
 - [API Documentation](docs/API_DOCUMENTATION.MD)
 - [Feedback](#feedback)
@@ -67,7 +67,7 @@
   - Cron jobs
 - Liveness, Readiness and Startup probes support
 
-## <a name="example-microservice"></a> Example Microservice
+## <a name="example-backk-microservice"></a> Example Microservice
 
 If you want to dive right into the deep end, check out the Backk example microservice [here.](https://github.com/backk-node/backk-example-project)
 

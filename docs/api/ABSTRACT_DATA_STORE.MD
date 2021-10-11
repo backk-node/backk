@@ -2,11 +2,11 @@
 
 - [createEntity](#createentity)
 - [createEntities](#createEntities)
-  <br/>
+<br/>
 
 - [addSubEntitiesToEntityById](#addsubentitiestoentitybyid)
 - [addSubEntitiesToEntityByFilters](#addsubentitiestoentitybyfilters)
-  <br/>
+<br/>
 
 - [getAllEntities](#getallentities)
 - [getEntityCount](#getentitycount)
@@ -14,30 +14,30 @@
 - [getEntitiesByIds](#getentitiesbyids)
 - [getEntityByFilters](#getentitybyfilters)
 - [getEntitiesByFilters](#getentitiesbyfilters)
-  <br/>
+<br/>
 
 - [updateEntity](#updateentity)
 - [updateEntityByFilters](#updateentitybyfilters)
 - [updateEntitiesByFilters](#updateentitiesbyfilters)
-  <br/>
+<br/>
 
 - [deleteAllEntities](#deleteallentities)
 - [deleteEntityById](#deleteentitybyid)
 - [deleteEntitiesByIds](#deleteentitiesbyids)
 - [deleteEntityByFilters](#deleteentitybyfilters)
 - [deleteEntitiesByFilters](#deleteentitiesbyfilters)
-  <br/>
+<br/>
 
 - [removeSubEntityFromEntityById](#removesubentityfromentitybyid)
 - [removeSubEntitiesFromEntityById](#removesubentitiesfromentitybyid)
 - [removeSubEntityFromEntityByFilters](#removesubentityfromentitybyfilters)
 - [removeSubEntitiesFromEntityByFilters](#removesubentitiesfromentitybyfilters)
-  <br/>
+<br/>
 
 - [addArrayFieldValuesToEntityById](#addarrayfieldvaluestoentitybyid)
 - [doesArrayFieldContainValueInEntityById](#doesarrayfieldcontainvalueinentitybyid)
 - [removeArrayFieldValuesFromEntityById](#removearrayfieldsvaluesfromentitybyid)
-  <br/>
+<br/>
 
 - [executeInsideTransaction](#executeinsidetransaction)
 

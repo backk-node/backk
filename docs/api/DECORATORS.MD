@@ -1,0 +1,229 @@
+### <a name="api-documentation-decorators"></a> Decorators
+
+- [Service decorators](#service-decorators)
+- [Service Function Decorators](#service-function-decorators)
+- [Entity Decorators](#entity-decorators)
+- [Entity Property Decorators](#entity-property-decorators)
+- [Validation Decorators](#validation-decorators)
+
+#### <a name="service-decorators"></a> Service Decorators
+
+You can use following decorators for your service implementation class:
+
+| Decorator                                    | Description                                                       |
+| -------------------------------------------- | ----------------------------------------------------------------- |
+| `@NoServiceAutoTests()`                      | Automatic integration tests are no generated for this service     |
+| `@AllowServiceForEveryUser()`                | Service can be accessed by any user                               |
+| `@AllowServiceForUserRoles(roles: string[])` | Service can be accessed only by users with specific role or roles |
+| `@AllowServiceForClusterInternalUse()`       | Service can be accessed only from inside of Kubernetes cluster    |
+
+#### <a name="service-function-decorators"></a> Service Function Decorators
+
+You can use following decorators for you service class's functions:
+
+| Decorator                                                                       | Description                                                                                                                               |
+| ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `@AllowForEveryUser()`                                                          | Service function can be accessed by any user                                                                                              |
+| `@AllowForUserRoles(roles: string[])`                                           | Service function can be accessed only by users with specific role or roles                                                                |
+| `@AllowForClusterInternalUse()`                                                 | Service function can be accessed only from inside of Kubernetes cluster                                                                   |
+| `@AllowForEveryUserForOwnResources()`                                           | Service function can be accessed by any user, but only for own resources                                                                  |
+| `@AllowForTests()`                                                              | Service function can be accessed by integration tests only                                                                                |
+| `@NoAutoTests()`                                                                | Automatic integration tests are not generated for this service function                                                                   |
+| `@CronJob(cronSchedule: CronSchedule, retryIntervalsInSecs: number[])`          | Service function is a cron job that is executed according to given cron schedule. Type definition for `CronSchedule` is below this table. |
+| `@Create()`                                                                     | Service function is used to create a resource                                                                                             |
+| `@Update(updateType: UpdateType)`                                               | Service function is used to update a resource                                                                                             |
+| `@Delete()`                                                                     | Service function is used to delete a resource                                                                                             |
+| `@ExecuteOnStartup()`                                                           | Service function is executed when microservice is started                                                                                 |
+| `@NoCaptcha()`                                                                  | This denotes that Captcha is not required when service function is creating a resource                                                    |
+| `@NoTransactionNeeded(reason: string)`                                          | Service function execution does not require a transaction due to given reason                                                             |
+| `@NoDistributedTransactionNeeded(reason: string)`                               | Service function execution does not require a distributed transaction due to given reason                                                 |
+| `@ResponseHeaders<T extends object, U extends any>(headers: HttpHeaders<T, U>)` | Given headers are sent with the service function response. Type definition for `HttpHeaders` is below this table.                         |
+| `@ResponseStatusCode(statusCode: number)`                                       | Service function response is sent with given status code                                                                                  |
+
+```ts
+type Range = {
+  start: number;
+  end: number;
+};
+
+type CronSchedule = {
+  minutes?: number | number[] | Range | 'any';
+  minuteInterval?: number;
+  hours?: number | number[] | Range | 'any';
+  hourInterval?: number;
+  daysOfMonth?: number | number[] | Range | 'any';
+  dayInterval?: number;
+
+  // 0 - 11
+  months?: number | number[] | Range | 'any';
+  monthInterval?: number;
+
+  // 0-6 (Sun-Sat)
+  daysOfWeek?: number | number[] | Range;
+  weekDayInterval?: number;
+};
+
+type HeaderValueGenerator<T extends object, U extends any> = (
+  argument: T,
+  returnValue: U
+) => string | undefined;
+
+type HttpHeaders<T extends object, U extends any> = {
+  [key: string]: string | HeaderValueGenerator<T, U> | undefined;
+};
+```
+
+#### <a name="entity-decorators"></a> Entity Decorators
+
+You can use following decorators for your entity classes:
+
+| Decorator                                                                                                               | Description                                                            |
+| ----------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `@Entity()`                                                                                                             | Denotes that this class is an entity                                   |
+| `@CompositeIndex(indexFields: string[], usingOption?: string, additionalSqlCreateIndexStatementOptions?: string)`       | Creates a composite index for entity database table using given fields |
+| `@UniqueCompositeIndex(indexFields: string[], usingOption?: string, additionalSqlCreateIndexStatementOptions?: string)` | Same as above but index is unique                                      |
+
+#### <a name="entity-property-decorators"></a> Entity Property Decorators
+
+You can use following decorators for the properties of your entity classes:
+
+| Decorator                                                                                                                                                                      | Description                                                                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `@IsExternalId()`                                                                                                                                                              | Entity property is an id property in some external system, not an id in this microservice's database                                                               |
+| `@Unique()`                                                                                                                                                                    | Entity property values must be unique in database                                                                                                                  |
+| `@NotUnique()`                                                                                                                                                                 | Entity property values are not unique in database                                                                                                                  |
+| `@Encrypted()`                                                                                                                                                                 | Entity property value is encrypted in database                                                                                                                     |
+| `@Encrypted(reason: string)`                                                                                                                                                   | Entity property value is not needed to be encrypted in database because of given reason                                                                            |
+| `@Hashed()`                                                                                                                                                                    | Entity property value is hashed in database                                                                                                                        |
+| `@NotHashed(reason: string)`                                                                                                                                                   | Entity property value is not needed to be hashed in database because of given reason                                                                               |
+| `@TestValue(testValue: any)`                                                                                                                                                   | Entity property should have this value in automatic integration tests                                                                                              |
+| `@Index(sortOrder?: SortOrder, usingOption?: string, additionalSqlCreateIndexStatementOptions?: string)`                                                                       | Entity property is indexed in database according to given sort order ('ASC' or 'DESC')                                                                             |
+| `@FetchFromRemoteService(remoteServiceFunctionUrl: string, buildRemoteServiceFunctionArgument: (arg: T, response: U) => { [key: string]: any }, options?: HttpRequestOptions)` | Entity property value is fetched from the given remote URL with given argument                                                                                     |
+| `@OneToMany(isReferenceToExternalEntity = false)`                                                                                                                              | Entity property is a one-to-many mapping to another entity                                                                                                         |
+| `@ManyToMany()`                                                                                                                                                                | Entity property is a many-to-many mapping to another entity                                                                                                        |
+| `@UiProperties(uiProperties: UiProps)`                                                                                                                                         | Entity property has the given UI properties                                                                                                                        |
+| `@Transient()`                                                                                                                                                                 | Entity property is not stored in database                                                                                                                          |
+| `@Private()`                                                                                                                                                                   | Entity property is private and cannot be accessed by clients (ie. it cannot be given in service function argument and is not visible in service function response) |
+| `@ReadWrite()`                                                                                                                                                                 | Entity property can be written and read by clients (ie. it can be given in service function argument and it is visible in service function response)               |
+| `@ReadOnly()`                                                                                                                                                                  | Entity property can only be read by clients (ie. it cannot be given in service function argument, but it is visible in service function response)                  |
+| `@ReadUpdate()`                                                                                                                                                                | Entity property can be read and given in update requests by clients (example of such property is `_id` property)                                                   |
+| `@WriteOnly()`                                                                                                                                                                 | Entity property can be only written by clients. (ie. it can be given in service function argument, but it is not visible in service function responses)            |
+| `@CreateOnly()`                                                                                                                                                                | Entity property can only be given in resource create requests by clients                                                                                           |
+| `@UpdateOnly()`                                                                                                                                                                | Entity property can only be given in resource update requests by clients                                                                                           |
+
+```ts
+type UiProps = {
+  shouldDisplay: boolean;
+  booleanValueInputType: 'switch' | 'checkbox';
+};
+```
+
+#### <a name="validation-decorators"></a> Validation Decorators
+
+You can use following decorators for the properties of your classes to validate the properties' value:
+
+| Decorator                                                                               | Description                                                                                                                       |
+| --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `@ShouldBeTrueForObject(validateObject: (object: T) => boolean, errorMessage?: string)` | This validator can used on any class property to validate using other properties of the object with the `validateObject` function |
+| `@ShouldBeTrue(validateValue: (value: any) => boolean, errorMessage?: string)`          | Validates the value of the property with `validateValue` function                                                                 |
+| **Number validation decorators**                                                        |
+| `@IsInt()`                                                                              | Checks if the value is an integer number.                                                                                         |
+| `@IsBigInt()`                                                                           | Check if the value is Big int.                                                                                                    |
+| `@IsFloat(maxDecimalPlaces: number)`                                                    | Checks if the value is a number.                                                                                                  |
+| `@IsDivisibleBy(num: number)`                                                           | Checks if the value is a number that's divisible by another.                                                                      |
+| `@IsPositive()`                                                                         | Checks if the value is a positive number greater than zero.                                                                       |
+| `@IsNegative()`                                                                         | Checks if the value is a negative number smaller than zero.                                                                       |
+| `@Min(minValue: number)`                                                                | Checks if the given number is greater than or equal to given number.                                                              |
+| `@Max(maxValue: number)`                                                                | Checks if the given number is less than or equal to given number.                                                                 |
+| `@MinMax(minValue: number, maxValue: number)`
+| **Date validation decorators** |
+| `@MinDate(date: Date)` | Checks if the value is a date that's after the specified date. |
+| `@MaxDate(date: Date)` | Checks if the value is a date that's before the specified date. |  
+| **String-type validation decorators** | |
+| `@IsBooleanString()` | Checks if a string is a boolean (e.g. is "true" or "false"). |
+| `@IsDateString()` | Alias for `@IsISO8601()`. |
+| `@IsNumberString(options?: IsNumericOptions)` | Checks if a string is a number. |
+| **String validation decorators** | |
+| `@IsAnyString()` | Value can be any string. |
+| `@IsOneOf(getPossibleValuesFunc: () => PromiseErrorOr<Many<Value>>, serviceFunctionName: string, testValue: string)` | Check that the string value is one of those returned from a call to `getPossibleValuesFunc` |
+| `@IsNoneOf(getPossibleValuesFunc: () => PromiseErrorOr<Many<Value>>, serviceFunctionName: string, testValue: string)` | Check that the string value is none of those returned from a call to `getPossibleValuesFunc` |
+| `@Contains(seed: string)` | Checks if the string contains the seed. |
+| `@NotContains(seed: string)` | Checks if the string not contains the seed. |
+| `@IsAlpha()` | Checks if the string contains only letters (a-zA-Z). |
+| `@IsAlphanumeric()` | Checks if the string contains only letters and numbers. |
+| `@IsDecimal(options?: IsDecimalOptions)` | Checks if the string is a valid decimal value. Default IsDecimalOptions are `force_decimal=False`, `decimal_digits: '1,'`, `locale: 'en-US'` |
+| `@IsAscii()` | Checks if the string contains ASCII chars only. |
+| `@IsBase32()` | Checks if a string is base32 encoded. |
+| `@IsBase64()` | Checks if a string is base64 encoded. |
+| `@IsIBAN()` | Checks if a string is a IBAN (International Bank Account Number). |
+| `@IsBIC()` | Checks if a string is a BIC (Bank Identification Code) or SWIFT code. |
+| `@IsByteLength(min: number, max?: number)` | Checks if the string's length (in bytes) falls in a range. |
+| `@IsCreditCard()` | Checks if the string is a credit card. |
+| `@IsCreditCardExpiration()` | Checks if the string is a credit card expiration date. |
+| `@IsCreditCardVerificationCode()` | Checks if the string is a credit card verification code. |
+| `@IsCurrency(options?: IsCurrencyOptions)` | Checks if the string is a valid currency amount. |
+| `@IsEthereumAddress()` | Checks if the string is an Ethereum address using basic regex. Does not validate address checksums. |
+| `@IsBtcAddress()` | Checks if the string is a valid BTC address. |
+| `@IsDataURI()` | Checks if the string is a data uri format. |
+| `@IsEmail(options?: IsEmailOptions)` | Checks if the string is an email.|
+| `@IsFQDN(options?: IsFQDNOptions)` | Checks if the string is a fully qualified domain name (e.g. domain.com). |
+| `@IsFullWidth()` | Checks if the string contains any full-width chars. |
+| `@IsHalfWidth()` | Checks if the string contains any half-width chars. |
+| `@IsVariableWidth()` | Checks if the string contains a mixture of full and half-width chars. |
+| `@IsHexColor()` | Checks if the string is a hexadecimal color. |
+| `@IsHSLColor()` | Checks if the string is an HSL color based on [CSS Colors Level 4 specification](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value). |
+| `@IsRgbColor(options?: IsRgbOptions)` | Checks if the string is a rgb or rgba color. |
+| `@IsIdentityCard(locale?: string)` | Checks if the string is a valid identity card code. |
+| `@IsPassportNumber(countryCode?: string)` | Checks if the string is a valid passport number relative to a specific country code. |
+| `@IsPostalCode(locale?: string)` | Checks if the string is a postal code. |
+| `@IsHexadecimal()` | Checks if the string is a hexadecimal number. |
+| `@IsOctal()` | Checks if the string is a octal number. |
+| `@IsMACAddress(options?: IsMACAddressOptions)` | Checks if the string is a MAC Address. |
+| `@IsIP(version?: "4"\|"6")` | Checks if the string is an IP (version 4 or 6). |
+| `@IsPort()` | Checks if the string is a valid port number. |
+| `@IsStrongPassword()` | Check if the string is a strong password. |
+| `@IsISBN(version?: "10"\|"13")` | Checks if the string is an ISBN (version 10 or 13). |
+| `@IsEAN()` | Checks if the string is an if the string is an EAN (European Article Number). |
+| `@IsISIN()` | Checks if the string is an ISIN (stock/security identifier). |
+| `@IsISO8601(options?: IsISO8601Options)` | Checks if the string is a valid ISO 8601 date format. Use the option strict = true for additional checks for a valid date. |
+| `@IsJSON()` | Checks if the string is valid JSON. |
+| `@IsJWT()` | Checks if the string is valid JWT. |
+| `@IsLowercase()` | Checks if the string is lowercase. |
+| `@IsLatLong()` | Checks if the string is a valid latitude-longitude coordinate in the format lat, long. |
+| `@IsLatitude()` | Checks if the string or number is a valid latitude coordinate. |
+| `@IsLongitude()` | Checks if the string or number is a valid longitude coordinate. |
+| `@IsMobilePhone(locale: string)` | Checks if the string is a mobile phone number. |
+| `@IsISO31661Alpha2()` | Checks if the string is a valid ISO 3166-1 alpha-2 officially assigned country code. |
+| `@IsISO31661Alpha3()` | Checks if the string is a valid ISO 3166-1 alpha-3 officially assigned country code. |
+| `@IsLocale()` | Checks if the string is a locale. |
+| `@IsPhoneNumber(region: string)` | Checks if the string is a valid phone numberusing libphonenumber-js. |
+| `@IsMongoId()` | Checks if the string is a valid hex-encoded representation of a MongoDB ObjectId. |
+| `@IsMultibyte()` | Checks if the string contains one or more multibyte chars. |
+| `@IsNumberString(options?: IsNumericOptions)` | Checks if the string is numeric. |
+| `@IsSurrogatePair()` | Checks if the string contains any surrogate pairs chars. |
+| `@IsUrl(options?: IsURLOptions)` | Checks if the string is an url. |
+| `@IsMagnetURI()` | Checks if the string is a [magnet uri format](https://en.wikipedia.org/wiki/Magnet_URI_scheme). |
+| `@IsUUID(version?: "3"\|"4"\|"5"\|"all")` | Checks if the string is a UUID (version 3, 4, 5 or all ). |
+| `@IsFirebasePushId()` | Checks if the string is a [Firebase Push ID](https://firebase.googleblog.com/2015/02/the-2120-ways-to-ensure-unique_68.html) |
+| `@IsUppercase()` | Checks if the string is uppercase. |
+| `@Length(min: number, max?: number)` | Checks if the string's length falls in a range. |
+| `@MinLength(min: number)` | Checks if the string's length is not less than given number. |
+| `@MaxLength(max: number)` | Checks if the string's length is not more than given number. |
+| `@LengthAndMatches(minLength: number, maxLength: number, regexp: RegExp)`| Check if the string's length is correct and the string matches the given regular expression |
+| `@LengthAndMatchesAll(minLength: number, maxLength: number, regexps: RegExp[])`| Check if the string's length is correct and the string matches all the given regular expressions |
+| `@MaxLengthAndMatches(maxLength: number, regexp: RegExp)`| Check if the string's length is correct and the string matches the given regular expression |
+| `@MaxLengthAndMatchesAll(maxLength: number, regexps: RegExp[])`| Check if the string's length is correct and the string matches all the given regular expressions |
+| `@IsMilitaryTime()` | Checks if the string is a valid representation of military time in the format HH:MM. |
+| `@IsHash(algorithm: string)` | Checks if the string is a hash The following types are supported:`md4`, `md5`, `sha1`, `sha256`, `sha384`, `sha512`, `ripemd128`, `ripemd160`, `tiger128`, `tiger160`, `tiger192`, `crc32`, `crc32b`. |
+| `@IsMimeType()` | Checks if the string matches to a valid [MIME type](https://en.wikipedia.org/wiki/Media_type) format |
+| `@IsSemVer()` | Checks if the string is a Semantic Versioning Specification (SemVer). |
+| `@IsISSN(options?: IsISSNOptions)` | Checks if the string is a ISSN. |
+| `@IsISRC()` | Checks if the string is a [ISRC](https://en.wikipedia.org/wiki/International_Standard_Recording_Code). |
+| `@IsRFC3339()` | Checks if the string is a valid [RFC 3339](https://tools.ietf.org/html/rfc3339) date. |
+| **Array validation decorators** | |
+| `@ArrayContains(values: any[])` | Checks if array contains all values from the given array of values. |
+| `@ArrayNotContains(values: any[])` | Checks if array does not contain any of the given values. |
+| `@ArrayMinSize(min: number)` | Checks if the array's length is greater than or equal to the specified number. |
+| `@ArrayMaxSize(max: number)` | Checks if the array's length is less or equal to the specified number. |
+| `@ArrayUnique(identifier?: (o) => any)` | Checks if all array's values are unique. Comparison for objects is reference-based. Optional function can be speciefied which return value will be used for the comparsion. |
+| `@ArrayNotUnique()` | Array's values don't need to be unique

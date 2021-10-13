@@ -10,6 +10,7 @@
 ## Table of Contents
 
 - [Features](#features)
+- [How Backk Works?](#howbackkworks)
 - [Prerequisites](docs/PREREQUISITES.MD)
 - [Get Started](docs/GET_STARTED.MD)
 - [Example Backk Microservice](#example-backk-microservice)
@@ -32,8 +33,8 @@
   - Apache Kafka
   - Redis
 - Write our microservices using Typescript and plain functions that are called by remote clients
-  - No need for learning any technology like REST API, GraphQL or gRPC
-  - Can be used for resource based or RPC based microservices
+  - No need for learning any technology like REST, GraphQL or gRPC
+  - Can be used both for resource and RPC style microservices
 - Supports multiple databases
   - PostgreSQL
   - MySQL
@@ -66,6 +67,141 @@
   - Scheduled as per client request
   - Cron jobs
 - Liveness, Readiness and Startup probes support
+
+## <a name="howbackkworks"></a> How Backk Works?
+Backk microservices are written using Node.js and Typescript. Backk microservice consists of one or more services classes with their dedicated purpose.
+Each service class can contain one or more service functions (class methods) that implement the service functionality.
+Each service function can have zero or one parameter of JavaScript object type. 
+Service function returns a value, which can be `null`, a JavaScript value that can be converted to JSON or error.
+
+Synchronously, Backk microservice can be accessed via HTTP. By default, each service and service function in Backk microservice is accessible via HTTP POST method.
+But it is possible to configure accessing service functions via HTTP GET.
+
+Asynchronously, Backk microservices can be accessed via Kafka and/or Redis. In case of Kafka, Backk microservice reads messages
+from a topic named after the microservice and message key tells the service function to execute and message value is the argument for the service function.
+In case of Redis, Backk microservice uses a list named after the microservice and pops service function calls from the list.
+
+It is possible to access the same Backk microservice both synchronously and asynchronously with all the three methods: HTTP, Kafka and Redis
+
+Let's have a short example to showcase accessing Backk microservice over HTTP.
+
+Our microservice consist of one service that is for creating and getting the created sales items:
+
+MicroserviceImpl.ts
+```ts
+import { Microservice, MySqlDataStore } from 'backk';
+
+const dataStore = new MySqlDataStore();
+
+export default class MicroserviceImpl extends Microservice {
+  private readonly salesItemService = new SalesItemService(dataStore);
+
+  constructor() {
+    super(dataStore);
+  }
+}
+```
+
+SalesItemService.ts
+```ts
+import { AbstractDataStore, CrudEntityService, Many, One, PromiseErrorOr } from 'backk';
+import { SalesItem } from './types/entities/SalesItem';
+
+export default class SalesItemService extends CrudEntityService {
+  constructor(dataStore: AbstractDataStore) {
+    super({}, dataStore);
+  }
+  
+  createSalesItem(salesItem: SalesItem): PromiseErrorOr<One<SalesItem>> {
+    this.dataStore.createEntity(SalesItem, salesItem);
+  }
+  
+  getSalesItems(): PromiseErrorOr<Many<SalesItem>> {
+    this.dataStore.getAllEntities(SalesItem);
+  }
+}
+```
+
+SalesItem.ts
+```ts
+import { _Id, Entity, IsAnyString, IsFloat, ReadWrite } from 'backk';
+
+@Entity()
+export default class SalesItem extends _Id {
+  @IsAnyString()
+  @ReadWrite()
+  name: string;
+  
+  @IsFloat()
+  @MinMax(0, Number.MAX_VALUE)
+  @ReadWrite()
+  price: number;
+}
+```
+
+Now we can create an entity with an HTTP POST call:
+```
+POST /salesItemService.createSalesItem
+Content-Type: application/json
+
+{
+  "name": "Sales item 1",
+  "price": 49.95
+}
+```
+
+And we get a response containing the created entity with `_id` assigned:
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "metadata": {}
+  "data": {
+    "_id": "1",
+    "name": "Sales item 1",
+    "price": 49.95
+  }
+}
+```
+
+Let's create another sales item:
+```
+POST /salesItemService.createSalesItem
+Content-Type: application/json
+
+{
+  "name": "Sales item 2",
+  "price": 89.95
+}
+```
+
+And then we can get the created entities with an HTTP POST call to `salesItemService.getSalesItems`:
+```
+POST /salesItemService.getSalesItems
+```
+
+And the response will be:
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  metadata: {}
+  data: [
+    {
+      "_id": "1",
+      "name": "Sales item 1",
+      "price": 49.95
+    },
+    {
+      "_id": "2",
+      "name": "Sales item 2",
+      "price": 89.95
+    }
+  ]
+}
+```
 
 ## <a name="example-backk-microservice"></a> Example Backk Microservice
 

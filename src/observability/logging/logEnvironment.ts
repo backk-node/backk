@@ -11,6 +11,7 @@ export default function logEnvironment() {
         !upperCaseEnvVariableName.includes('CIPHER') &&
         !upperCaseEnvVariableName.includes('CODE') &&
         !upperCaseEnvVariableName.includes('PASSWORD') &&
+        !upperCaseEnvVariableName.includes('TOKEN') &&
         !upperCaseEnvVariableName.includes('PASSWD') &&
         !upperCaseEnvVariableName.includes('PWD') &&
         !upperCaseEnvVariableName.includes('PASSPHRASE')

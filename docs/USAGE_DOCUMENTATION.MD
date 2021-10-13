@@ -1,2 +1,74 @@
 ## Usage Documentation
 - [Introduction](usage/INTRODUCTION.MD)
+- [Microservice Initialization]
+- [Security]
+  - [Authorization Service]
+  - Service and Service Function access control
+  - Data encryption and hashing in Data store
+  - Entity property access control
+  - Request max length checking
+  - Mandatory numeric value limitation
+  - Streaming JSON parsing
+  - Mandatory string max length validation
+  - Safer REgex handling
+  - Service function Argument validation
+  - Service Function Response validation
+  - Captcha requirement
+  - Audit logging
+  - Safe logging 
+  - Mandatory pagination
+  - Next/prev pagination
+  - SQL injection prevention
+- [Special Service Function Types]
+  - Startup Tasks
+  - Cron Jobs
+- [Executing Multiple Service Functions with One Request]
+- [Scheduling Service function execution]
+- [Caching]
+  - Caching Service Function Responses
+  - Generic Caching
+  - Generic In-Memory Caching
+- [Class composition using .type files]
+- [Observability]
+  - Logging
+    - Changing logging level
+  - Distributed Tracing with Jaeger
+  - Prometheus Metrics
+    - Default Metrics
+    - Collecting Custom Metrics
+- [Integration Testing]
+  - [Automatic Integration Tests]
+  - [Manual Integration Tests]
+- [Microservice Metadata]
+  - Backk metadata
+  - OpenAPI
+- [Documenting Microservice]
+- [Accessing Remote Services]
+  - Synchronous
+    - FetchFromRemoteService
+    - CallRemoteService
+    - makeHttpRequest
+  - Async
+    - Kafka
+    - Redis
+    - Kafka with Transaction
+  
+- [Data Store]
+  - Query Filters
+  - Post Query Operations
+    - GraphQL / JSON support
+- [Infrastructure and Platform]
+  - IaC kubernetes cluster in cloud
+  - Platform services
+    - Ingress controller (Nginx, Emissary)
+    - API Gateway (Kong, Emissary)
+    - Service Mesh (Linkerd, Istio)
+    - SSO Identity and Access Management (Keycloak)
+    - Monitoring (Prometheus + Grafana)
+    - Tracing (Jaeger)
+    - Logging (EFK stack, Fluentd + Elasticsearch + Kibana)
+    - GitOps (Flux)
+  - Platform helm chart
+- [Continuous Integration]
+- [Continuous Deployment]
+- 

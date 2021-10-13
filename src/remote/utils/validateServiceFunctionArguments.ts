@@ -12,8 +12,8 @@ export const remoteMicroserviceNameToControllerMap: { [key: string]: any } = {};
 const noOpDataStore = new NoOpDataStore();
 
 export async function validateServiceFunctionArguments(sends: CallOrSendToUrlSpec[]) {
-  await forEachAsyncSequential(sends, async ({ remoteServiceFunctionUrl, remoteServiceFunctionArgument }) => {
-    const { topic, serviceFunctionName } = parseRemoteServiceFunctionCallUrlParts(remoteServiceFunctionUrl);
+  await forEachAsyncSequential(sends, async ({ serviceFunctionUrl, serviceFunctionArgument }) => {
+    const { topic, serviceFunctionName } = parseRemoteServiceFunctionCallUrlParts(serviceFunctionUrl);
 
     const [serviceName, functionName] = serviceFunctionName.split('.');
     let controller;
@@ -55,7 +55,7 @@ export async function validateServiceFunctionArguments(sends: CallOrSendToUrlSpe
 
     const instantiatedServiceFunctionArgument = plainToClass(
       ServiceFunctionArgumentClass,
-      remoteServiceFunctionArgument
+      serviceFunctionArgument
     );
 
     try {
@@ -67,7 +67,7 @@ export async function validateServiceFunctionArguments(sends: CallOrSendToUrlSpe
       );
     } catch (error) {
       throw new Error(
-        remoteServiceFunctionUrl +
+        serviceFunctionUrl +
         ': Invalid remote service function callRemoteService argument: ' +
         JSON.stringify(error.message)
       );

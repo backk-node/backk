@@ -12,7 +12,7 @@ export default async function sendOneOrMoreToRedis(
   sends: CallOrSendToUrlSpec[],
   isTransactional: boolean
 ): PromiseErrorOr<null> {
-  const remoteServiceUrl = sends[0].remoteServiceFunctionUrl;
+  const remoteServiceUrl = sends[0].serviceFunctionUrl;
   const { server, topic } = parseRemoteServiceFunctionCallUrlParts(remoteServiceUrl);
   const password = process.env.REDIS_CACHE_PASSWORD ? `:${process.env.REDIS_CACHE_PASSWORD}@` : '';
   const redis = new Redis(`redis://${password}${server}`);
@@ -25,22 +25,22 @@ export default async function sendOneOrMoreToRedis(
 
     await forEachAsyncSequential(
       sends,
-      async ({ responseUrl, remoteServiceFunctionUrl, remoteServiceFunctionArgument }: CallOrSendToUrlSpec) => {
-        const { serviceFunctionName } = parseRemoteServiceFunctionCallUrlParts(remoteServiceFunctionUrl);
+      async ({ sendResponseTo, serviceFunctionUrl, serviceFunctionArgument }: CallOrSendToUrlSpec) => {
+        const { serviceFunctionName } = parseRemoteServiceFunctionCallUrlParts(serviceFunctionUrl);
         log(Severity.DEBUG, 'CallOrSendToSpec to remote service for execution', '', {
-          serviceFunctionCallUrl: remoteServiceFunctionUrl,
+          serviceFunctionCallUrl: serviceFunctionUrl,
           serviceFunction: serviceFunctionName
         });
 
-        defaultServiceMetrics.incrementRemoteServiceCallCountByOne(remoteServiceFunctionUrl);
+        defaultServiceMetrics.incrementRemoteServiceCallCountByOne(serviceFunctionUrl);
         await redis.rpush(
           topic,
           JSON.stringify({
             serviceFunctionName,
-            remoteServiceFunctionArgument: remoteServiceFunctionArgument,
+            remoteServiceFunctionArgument: serviceFunctionArgument,
             headers: {
               Authorization: authHeader,
-              responseUrl
+              sendResponseTo
             }
           })
         );

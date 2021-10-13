@@ -6,10 +6,10 @@ export interface CallOrSendToSpec {
   communicationMethod: CommunicationMethod;
   microserviceName: string;
   serviceFunctionName: string;
-  serviceFunctionArgument?: object;
+  serviceFunctionArgument: object;
   microserviceNamespace: string | undefined;
   server: string;
-  sendResponseTo?: CallOrSendToSpec;
+  sendResponseTo?: ResponseSendToSpec;
   options?: SendToOptions;
 }
 
@@ -22,9 +22,9 @@ export interface ResponseSendToSpec {
 }
 
 export interface CallOrSendToUrlSpec {
-  remoteServiceFunctionUrl: string;
-  remoteServiceFunctionArgument?: object;
-  responseUrl?: string;
+  serviceFunctionUrl: string;
+  serviceFunctionArgument?: object;
+  sendResponseTo?: ResponseSendToSpec;
   options?: SendToOptions;
 }
 

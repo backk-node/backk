@@ -37,8 +37,8 @@ export default async function callRemoteService(
   if (process.env.NODE_ENV === 'development') {
     await validateServiceFunctionArguments([
       {
-        remoteServiceFunctionUrl,
-        remoteServiceFunctionArgument: serviceFunctionArgument,
+        serviceFunctionUrl: remoteServiceFunctionUrl,
+        serviceFunctionArgument: serviceFunctionArgument,
       }
     ]);
     const { topic, serviceFunctionName } = parseRemoteServiceFunctionCallUrlParts(remoteServiceFunctionUrl);

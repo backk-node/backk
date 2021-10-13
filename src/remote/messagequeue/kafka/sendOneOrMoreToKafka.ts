@@ -1,17 +1,17 @@
-import { CompressionTypes, Kafka, Producer, Transaction } from "kafkajs";
-import { getNamespace } from "cls-hooked";
-import tracerProvider from "../../../observability/distributedtracinig/tracerProvider";
-import forEachAsyncSequential from "../../../utils/forEachAsyncSequential";
-import { CallOrSendToUrlSpec } from "../sendToRemoteServiceInsideTransaction";
-import log, { Severity } from "../../../observability/logging/log";
-import { CanonicalCode } from "@opentelemetry/api";
-import createBackkErrorFromError from "../../../errors/createBackkErrorFromError";
-import parseRemoteServiceFunctionCallUrlParts from "../../utils/parseRemoteServiceFunctionCallUrlParts";
-import minimumLoggingSeverityToKafkaLoggingLevelMap from "./minimumLoggingSeverityToKafkaLoggingLevelMap";
-import logCreator from "./logCreator";
-import defaultServiceMetrics from "../../../observability/metrics/defaultServiceMetrics";
-import getNamespacedMicroserviceName from "../../../utils/getNamespacedMicroserviceName";
-import { PromiseErrorOr } from "../../../types/PromiseErrorOr";
+import { CompressionTypes, Kafka, Producer, Transaction } from 'kafkajs';
+import { getNamespace } from 'cls-hooked';
+import tracerProvider from '../../../observability/distributedtracinig/tracerProvider';
+import forEachAsyncSequential from '../../../utils/forEachAsyncSequential';
+import { CallOrSendToUrlSpec } from '../sendToRemoteServiceInsideTransaction';
+import log, { Severity } from '../../../observability/logging/log';
+import { CanonicalCode } from '@opentelemetry/api';
+import createBackkErrorFromError from '../../../errors/createBackkErrorFromError';
+import parseRemoteServiceFunctionCallUrlParts from '../../utils/parseRemoteServiceFunctionCallUrlParts';
+import minimumLoggingSeverityToKafkaLoggingLevelMap from './minimumLoggingSeverityToKafkaLoggingLevelMap';
+import logCreator from './logCreator';
+import defaultServiceMetrics from '../../../observability/metrics/defaultServiceMetrics';
+import getNamespacedMicroserviceName from '../../../utils/getNamespacedMicroserviceName';
+import { PromiseErrorOr } from '../../../types/PromiseErrorOr';
 
 const kafkaServerToKafkaClientMap: { [key: string]: Kafka } = {};
 
@@ -25,7 +25,7 @@ export default async function sendOneOrMoreToKafka(
   sends: CallOrSendToUrlSpec[],
   isTransactional: boolean
 ): PromiseErrorOr<null> {
-  const { server, topic } = parseRemoteServiceFunctionCallUrlParts(sends[0].remoteServiceFunctionUrl);
+  const { server, topic } = parseRemoteServiceFunctionCallUrlParts(sends[0].serviceFunctionUrl);
 
   if (!kafkaServerToKafkaClientMap[server]) {
     kafkaServerToKafkaClientMap[server] = new Kafka({
@@ -63,10 +63,15 @@ export default async function sendOneOrMoreToKafka(
 
     await forEachAsyncSequential(
       sends,
-      async ({ responseUrl, remoteServiceFunctionUrl, options, remoteServiceFunctionArgument }: CallOrSendToUrlSpec) => {
-        const { serviceFunctionName } = parseRemoteServiceFunctionCallUrlParts(remoteServiceFunctionUrl);
+      async ({
+        sendResponseTo,
+        serviceFunctionUrl,
+        options,
+        serviceFunctionArgument
+      }: CallOrSendToUrlSpec) => {
+        const { serviceFunctionName } = parseRemoteServiceFunctionCallUrlParts(serviceFunctionUrl);
         log(Severity.DEBUG, 'Kafka producer debug: produce message', '', {
-          remoteServiceFunctionUrl,
+          serviceFunctionUrl: serviceFunctionUrl,
           serviceFunctionName
         });
 
@@ -80,7 +85,7 @@ export default async function sendOneOrMoreToKafka(
         span.setAttribute('kafka.topic', topic);
         span.setAttribute('kafka.producer.message.key', serviceFunctionName);
 
-        defaultServiceMetrics.incrementRemoteServiceCallCountByOne(remoteServiceFunctionUrl);
+        defaultServiceMetrics.incrementRemoteServiceCallCountByOne(serviceFunctionUrl);
 
         try {
           await producerOrTransaction.send({
@@ -92,8 +97,11 @@ export default async function sendOneOrMoreToKafka(
             messages: [
               {
                 key: serviceFunctionName,
-                value: JSON.stringify(remoteServiceFunctionArgument),
-                headers: { Authorization: authHeader, responseUrl: responseUrl ?? '' }
+                value: JSON.stringify(serviceFunctionArgument),
+                headers: {
+                  Authorization: authHeader,
+                  sendResponseTo: sendResponseTo ? JSON.stringify(sendResponseTo) : undefined
+                }
               }
             ]
           });
@@ -103,11 +111,11 @@ export default async function sendOneOrMoreToKafka(
           });
         } catch (error) {
           log(Severity.ERROR, 'Kafka producer error: ' + error.message, error.stack, {
-            serviceFunctionCallUrl: remoteServiceFunctionUrl,
+            serviceFunctionCallUrl: serviceFunctionUrl,
             serviceFunction: serviceFunctionName
           });
 
-          defaultServiceMetrics.incrementRemoteServiceCallErrorCountByOne(remoteServiceFunctionUrl);
+          defaultServiceMetrics.incrementRemoteServiceCallErrorCountByOne(serviceFunctionUrl);
           span.setStatus({
             code: CanonicalCode.UNKNOWN,
             message: error.message

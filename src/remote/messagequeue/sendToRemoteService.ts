@@ -41,8 +41,8 @@ export async function sendOneOrMore(
        sendResponseTo,
        options
      }) => ({
-      remoteServiceFunctionUrl: `${communicationMethod}://${server}/${microserviceName}.${microserviceNamespace}/${serviceFunctionName}`,
-      serviceFunctionArgument: serviceFunctionArgument,
+      serviceFunctionUrl: `${communicationMethod}://${server}/${microserviceName}.${microserviceNamespace}/${serviceFunctionName}`,
+      serviceFunctionArgument,
       sendResponseTo,
       options
     })

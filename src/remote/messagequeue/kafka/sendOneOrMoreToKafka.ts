@@ -2,7 +2,7 @@ import { CompressionTypes, Kafka, Producer, Transaction } from "kafkajs";
 import { getNamespace } from "cls-hooked";
 import tracerProvider from "../../../observability/distributedtracinig/tracerProvider";
 import forEachAsyncSequential from "../../../utils/forEachAsyncSequential";
-import { CallOrSendToSpec } from "../sendToRemoteServiceInsideTransaction";
+import { CallOrSendToUrlSpec } from "../sendToRemoteServiceInsideTransaction";
 import log, { Severity } from "../../../observability/logging/log";
 import { CanonicalCode } from "@opentelemetry/api";
 import createBackkErrorFromError from "../../../errors/createBackkErrorFromError";
@@ -22,7 +22,7 @@ export enum SendAcknowledgementType {
 }
 
 export default async function sendOneOrMoreToKafka(
-  sends: CallOrSendToSpec[],
+  sends: CallOrSendToUrlSpec[],
   isTransactional: boolean
 ): PromiseErrorOr<null> {
   const { server, topic } = parseRemoteServiceFunctionCallUrlParts(sends[0].remoteServiceFunctionUrl);
@@ -63,7 +63,7 @@ export default async function sendOneOrMoreToKafka(
 
     await forEachAsyncSequential(
       sends,
-      async ({ responseUrl, remoteServiceFunctionUrl, options, serviceFunctionArgument }: CallOrSendToSpec) => {
+      async ({ responseUrl, remoteServiceFunctionUrl, options, remoteServiceFunctionArgument }: CallOrSendToUrlSpec) => {
         const { serviceFunctionName } = parseRemoteServiceFunctionCallUrlParts(remoteServiceFunctionUrl);
         log(Severity.DEBUG, 'Kafka producer debug: produce message', '', {
           remoteServiceFunctionUrl,
@@ -92,7 +92,7 @@ export default async function sendOneOrMoreToKafka(
             messages: [
               {
                 key: serviceFunctionName,
-                value: JSON.stringify(serviceFunctionArgument),
+                value: JSON.stringify(remoteServiceFunctionArgument),
                 headers: { Authorization: authHeader, responseUrl: responseUrl ?? '' }
               }
             ]

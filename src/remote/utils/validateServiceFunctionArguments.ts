@@ -1,4 +1,4 @@
-import { CallOrSendToSpec } from "../messagequeue/sendToRemoteServiceInsideTransaction";
+import { CallOrSendToUrlSpec } from "../messagequeue/sendToRemoteServiceInsideTransaction";
 import forEachAsyncSequential from "../../utils/forEachAsyncSequential";
 import parseRemoteServiceFunctionCallUrlParts from "./parseRemoteServiceFunctionCallUrlParts";
 import fs from "fs";
@@ -8,19 +8,19 @@ import { plainToClass } from "class-transformer";
 import tryValidateServiceFunctionArgument from "../../validation/tryValidateServiceFunctionArgument";
 import NoOpDataStore from "../../datastore/NoOpDataStore";
 
-export const remoteServiceNameToControllerMap: { [key: string]: any } = {};
+export const remoteMicroserviceNameToControllerMap: { [key: string]: any } = {};
 const noOpDataStore = new NoOpDataStore();
 
-export async function validateServiceFunctionArguments(sends: CallOrSendToSpec[]) {
-  await forEachAsyncSequential(sends, async ({ remoteServiceFunctionUrl, serviceFunctionArgument }) => {
+export async function validateServiceFunctionArguments(sends: CallOrSendToUrlSpec[]) {
+  await forEachAsyncSequential(sends, async ({ remoteServiceFunctionUrl, remoteServiceFunctionArgument }) => {
     const { topic, serviceFunctionName } = parseRemoteServiceFunctionCallUrlParts(remoteServiceFunctionUrl);
 
     const [serviceName, functionName] = serviceFunctionName.split('.');
     let controller;
     let ServiceClass;
 
-    if (remoteServiceNameToControllerMap[`${topic}$/${serviceName}`]) {
-      controller = remoteServiceNameToControllerMap[`${topic}$/${serviceName}`];
+    if (remoteMicroserviceNameToControllerMap[`${topic}$/${serviceName}`]) {
+      controller = remoteMicroserviceNameToControllerMap[`${topic}$/${serviceName}`];
       ServiceClass = controller[serviceName].constructor;
     } else {
       let remoteServiceRootDir;
@@ -45,7 +45,7 @@ export async function validateServiceFunctionArguments(sends: CallOrSendToSpec[]
       };
 
       initializeMicroservice(controller, noOpDataStore, false, '', remoteServiceRootDir);
-      remoteServiceNameToControllerMap[`${topic}$/${serviceName}`] = controller;
+      remoteMicroserviceNameToControllerMap[`${topic}$/${serviceName}`] = controller;
     }
 
     const serviceFunctionArgumentClassName =
@@ -55,7 +55,7 @@ export async function validateServiceFunctionArguments(sends: CallOrSendToSpec[]
 
     const instantiatedServiceFunctionArgument = plainToClass(
       ServiceFunctionArgumentClass,
-      serviceFunctionArgument
+      remoteServiceFunctionArgument
     );
 
     try {

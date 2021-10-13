@@ -1,18 +1,18 @@
-import fetch from 'node-fetch';
-import log, { Severity } from '../../observability/logging/log';
-import createBackkErrorFromError from '../../errors/createBackkErrorFromError';
-import getRemoteResponseTestValue from './getRemoteResponseTestValue';
-import { getNamespace } from 'cls-hooked';
-import defaultServiceMetrics from '../../observability/metrics/defaultServiceMetrics';
-import { HttpStatusCodes } from '../../constants/constants';
+import fetch from "node-fetch";
+import log, { Severity } from "../../observability/logging/log";
+import createBackkErrorFromError from "../../errors/createBackkErrorFromError";
+import getRemoteResponseTestValue from "./getRemoteResponseTestValue";
+import { getNamespace } from "cls-hooked";
+import defaultServiceMetrics from "../../observability/metrics/defaultServiceMetrics";
+import { HttpStatusCodes } from "../../constants/constants";
 import {
-  remoteServiceNameToControllerMap,
+  remoteMicroserviceNameToControllerMap,
   validateServiceFunctionArguments
-} from '../utils/validateServiceFunctionArguments';
-import parseRemoteServiceFunctionCallUrlParts from '../utils/parseRemoteServiceFunctionCallUrlParts';
-import fs from 'fs';
-import { PromiseErrorOr } from '../../types/PromiseErrorOr';
-import { backkErrorSymbol } from '../../types/BackkError';
+} from "../utils/validateServiceFunctionArguments";
+import parseRemoteServiceFunctionCallUrlParts from "../utils/parseRemoteServiceFunctionCallUrlParts";
+import fs from "fs";
+import { PromiseErrorOr } from "../../types/PromiseErrorOr";
+import { backkErrorSymbol } from "../../types/BackkError";
 
 export interface HttpRequestOptions {
   httpMethod?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
@@ -20,10 +20,14 @@ export interface HttpRequestOptions {
 
 // noinspection FunctionTooLongJS
 export default async function callRemoteService(
-  remoteServiceFunctionUrl: string,
-  serviceFunctionArgument?: object,
+  remoteMicroserviceName: string,
+  remoteServiceFunctionName: string,
+  remoteServiceFunctionArgument?: object,
+  remoteMicroserviceNamespace = process.env.SERVICE_NAMESPACE,
   options?: HttpRequestOptions
 ): PromiseErrorOr<object | null> {
+  const server = `${remoteMicroserviceName}.${remoteMicroserviceNamespace}.svc.cluster.local`
+  const remoteServiceFunctionUrl = `http://${server}/${remoteServiceFunctionName}`;
   const clsNamespace = getNamespace('serviceFunctionExecution');
   clsNamespace?.set('remoteServiceCallCount', clsNamespace?.get('remoteServiceCallCount') + 1);
 
@@ -31,12 +35,17 @@ export default async function callRemoteService(
   defaultServiceMetrics.incrementRemoteServiceCallCountByOne(remoteServiceFunctionUrl);
 
   if (process.env.NODE_ENV === 'development') {
-    await validateServiceFunctionArguments([{ remoteServiceFunctionUrl, serviceFunctionArgument }]);
+    await validateServiceFunctionArguments([
+      {
+        remoteServiceFunctionUrl,
+        remoteServiceFunctionArgument,
+      }
+    ]);
     const { topic, serviceFunctionName } = parseRemoteServiceFunctionCallUrlParts(remoteServiceFunctionUrl);
 
     if (fs.existsSync('../' + topic) || fs.existsSync('./' + topic)) {
       const [serviceName, functionName] = serviceFunctionName.split('.');
-      const controller = remoteServiceNameToControllerMap[`${topic}$/${serviceName}`];
+      const controller = remoteMicroserviceNameToControllerMap[`${topic}$/${serviceName}`];
       const responseClassName =
         controller[`${serviceName}__BackkTypes__`].functionNameToReturnTypeNameMap[functionName];
       const ResponseClass = controller[serviceName].Types[responseClassName];
@@ -49,9 +58,9 @@ export default async function callRemoteService(
   try {
     const response = await fetch(remoteServiceFunctionUrl, {
       method: options?.httpMethod?.toLowerCase() ?? 'post',
-      body: serviceFunctionArgument ? JSON.stringify(serviceFunctionArgument) : undefined,
+      body: remoteServiceFunctionArgument ? JSON.stringify(remoteServiceFunctionArgument) : undefined,
       headers: {
-        ...(serviceFunctionArgument ? { 'Content-Type': 'application/json' } : {}),
+        ...(remoteServiceFunctionArgument ? { 'Content-Type': 'application/json' } : {}),
         Authorization: authHeader
       }
     });

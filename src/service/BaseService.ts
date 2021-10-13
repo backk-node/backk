@@ -1,6 +1,7 @@
 import { Service } from './Service';
 import AbstractDataStore from '../datastore/AbstractDataStore';
 import { ErrorNameToErrorDefinitionMap } from '../types/ErrorDefinition';
+import NoOpDataStore from "../datastore/NoOpDataStore";
 
 export default class BaseService implements Service {
   /** @internal */
@@ -9,7 +10,7 @@ export default class BaseService implements Service {
   /** @internal */
   constructor(
     private readonly errorNameToErrorDefinitionMap: ErrorNameToErrorDefinitionMap,
-    protected readonly dataStore: AbstractDataStore
+    protected readonly dataStore: AbstractDataStore = new NoOpDataStore()
   ) {
     this.Types = {};
 

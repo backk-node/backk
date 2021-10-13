@@ -96,6 +96,7 @@ const dataStore = new MySqlDataStore();
 
 export default class MicroserviceImpl extends Microservice {
   private readonly salesItemService = new SalesItemService(dataStore);
+  // If you had other services in you microservice, you would instantiate them here
 
   constructor() {
     super(dataStore);

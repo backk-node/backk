@@ -1,4 +1,6 @@
 export interface ServiceFunctionCall {
-  localOrRemoteServiceFunctionName: string;
+  serviceFunctionName: string;
   serviceFunctionArgument: any;
+  remoteMicroserviceName?: string;
+  remoteMicroserviceNamespace?: string;
 }

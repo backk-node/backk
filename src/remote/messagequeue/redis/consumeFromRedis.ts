@@ -8,6 +8,8 @@ import defaultServiceMetrics from '../../../observability/metrics/defaultService
 import getNamespacedMicroserviceName from '../../../utils/getNamespacedMicroserviceName';
 import BackkResponse from '../../../execution/BackkResponse';
 import wait from '../../../utils/wait';
+import { ResponseSendToSpec } from '../sendToRemoteServiceInsideTransaction';
+import callRemoteService from '../../http/callRemoteService';
 
 export default async function consumeFromRedis(
   controller: any,
@@ -74,13 +76,36 @@ export default async function consumeFromRedis(
       if (response.getStatusCode() >= HttpStatusCodes.INTERNAL_ERRORS_START) {
         await wait(10000);
         await sendToRemoteService(
-          'redis://' + server + '/' + topic + '/' + serviceFunctionName,
-          serviceFunctionArgument
+          'redis',
+          topic.split('.')[0],
+          serviceFunctionName,
+          serviceFunctionArgument,
+          topic.split('.')[0],
+          server
         );
       } else if (response.getStatusCode() >= HttpStatusCodes.CLIENT_ERRORS_START) {
         throw new Error(JSON.stringify(response.getResponse()));
-      } else if (headers?.responseUrl && response.getResponse()) {
-        await sendToRemoteService(headers.responseUrl as string, response);
+      } else if (headers?.sendResponseTo && response.getResponse()) {
+        const {
+          communicationMethod,
+          remoteMicroserviceName,
+          remoteServiceFunctionName,
+          remoteMicroserviceNamespace,
+          server
+        } = headers?.sendResponseTo as ResponseSendToSpec;
+
+        if (communicationMethod === 'kafka' || communicationMethod === 'redis') {
+          await sendToRemoteService(
+            communicationMethod,
+            remoteMicroserviceName,
+            remoteServiceFunctionName,
+            response,
+            remoteMicroserviceNamespace,
+            server
+          );
+        } else {
+          callRemoteService(remoteMicroserviceName, remoteServiceFunctionName, response, remoteMicroserviceNamespace);
+        }
       }
 
       const now = Date.now();

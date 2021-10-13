@@ -1,17 +1,59 @@
-import _ from 'lodash';
-import { sendOneOrMore, SendToOptions } from './sendToRemoteService';
-import parseRemoteServiceFunctionCallUrlParts from '../utils/parseRemoteServiceFunctionCallUrlParts';
+import _ from "lodash";
+import { CommunicationMethod, sendOneOrMore, SendToOptions } from "./sendToRemoteService";
+import parseRemoteServiceFunctionCallUrlParts from "../utils/parseRemoteServiceFunctionCallUrlParts";
 
 export interface CallOrSendToSpec {
+  communicationMethod: CommunicationMethod;
+  remoteMicroserviceName: string;
+  remoteServiceFunctionName: string;
+  remoteServiceFunctionArgument?: object;
+  remoteMicroserviceNamespace: string | undefined;
+  server: string;
+  sendResponseTo?: CallOrSendToSpec;
+  options?: SendToOptions;
+}
+
+export interface ResponseSendToSpec {
+  communicationMethod: CommunicationMethod;
+  remoteMicroserviceName: string;
+  remoteMicroserviceNamespace: string | undefined;
+  remoteServiceFunctionName: string;
+  server: string;
+}
+
+export interface CallOrSendToUrlSpec {
   remoteServiceFunctionUrl: string;
-  serviceFunctionArgument?: object;
+  remoteServiceFunctionArgument?: object;
   responseUrl?: string;
   options?: SendToOptions;
 }
 
 export default async function sendToRemoteServiceInsideTransaction(sends: CallOrSendToSpec[]) {
+  const foundRedisMessageBroker = sends.find((send) => send.communicationMethod !== 'kafka');
+  if (foundRedisMessageBroker) {
+    throw new Error('You can only use sendToRemoteServiceInsideTransaction with Kafka');
+  }
+
+  const sendsWithUrl = sends.map(
+    ({
+      communicationMethod,
+      server,
+      remoteMicroserviceName,
+      remoteMicroserviceNamespace,
+      remoteServiceFunctionName,
+      remoteServiceFunctionArgument,
+      sendResponseTo,
+      options
+    }) => ({
+      remoteServiceFunctionUrl: `${communicationMethod}://${server}/${remoteMicroserviceName}.${remoteMicroserviceNamespace}/${remoteServiceFunctionName}`,
+      remoteServiceFunctionArgument,
+      sendResponseTo,
+      options
+    })
+  );
+
   const uniqueSendTosByBroker = _.uniqBy(
-    sends,
+    sendsWithUrl,
     ({ remoteServiceFunctionUrl }) => parseRemoteServiceFunctionCallUrlParts(remoteServiceFunctionUrl).server
   );
 

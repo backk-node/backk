@@ -1,10 +1,10 @@
-import _ from "lodash";
-import getClassPropertyNameToPropertyTypeNameMap from "../metadata/getClassPropertyNameToPropertyTypeNameMap";
-import forEachAsyncParallel from "../utils/forEachAsyncParallel";
-import typePropertyAnnotationContainer from "../decorators/typeproperty/typePropertyAnnotationContainer";
-import callRemoteService from "../remote/http/callRemoteService";
-import getTypeInfoForTypeName from "../utils/type/getTypeInfoForTypeName";
-import { BackkError } from "../types/BackkError";
+import _ from 'lodash';
+import getClassPropertyNameToPropertyTypeNameMap from '../metadata/getClassPropertyNameToPropertyTypeNameMap';
+import forEachAsyncParallel from '../utils/forEachAsyncParallel';
+import typePropertyAnnotationContainer from '../decorators/typeproperty/typePropertyAnnotationContainer';
+import callRemoteService from '../remote/http/callRemoteService';
+import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
+import { BackkError } from '../types/BackkError';
 
 export default async function fetchFromRemoteServices(
   Type: new () => any,
@@ -31,13 +31,15 @@ export default async function fetchFromRemoteServices(
           );
 
           const [remoteResponse, error] = await callRemoteService(
-            remoteServiceFetchSpec.remoteServiceFunctionUrl,
+            remoteServiceFetchSpec.remoteMicroserviceName,
+            remoteServiceFetchSpec.remoteServiceFunctionName,
             remoteServiceFunctionArgument,
+            remoteServiceFetchSpec.remoteMicroserviceNamespace,
             remoteServiceFetchSpec.options
           );
 
           if (error) {
-            error.message = `${remoteServiceFetchSpec.remoteServiceFunctionUrl} failed: ${error.message}`;
+            error.message = `${remoteServiceFetchSpec.remoteServiceFunctionName} failed: ${error.message}`;
             throw error;
           }
 

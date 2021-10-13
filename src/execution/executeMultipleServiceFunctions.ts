@@ -1,20 +1,19 @@
-import Mustache from "mustache";
-import tryExecuteServiceMethod, { ServiceFunctionExecutionOptions } from "./tryExecuteServiceMethod";
-import forEachAsyncParallel from "../utils/forEachAsyncParallel";
-import { ServiceFunctionCall } from "./ServiceFunctionCall";
-import { ServiceFunctionCallResponse } from "./ServiceFunctionCallResponse";
-import BackkResponse from "./BackkResponse";
-import forEachAsyncSequential from "../utils/forEachAsyncSequential";
-import BaseService from "../service/BaseService";
-import isValidServiceFunctionName from "./isValidServiceFunctionName";
-import { HttpStatusCodes } from "../constants/constants";
-import { BackkError } from "../types/BackkError";
-import callRemoteService from "../remote/http/callRemoteService";
-import createBackkErrorFromErrorCodeMessageAndStatus
-  from "../errors/createBackkErrorFromErrorCodeMessageAndStatus";
-import createErrorFromErrorCodeMessageAndStatus from "../errors/createErrorFromErrorCodeMessageAndStatus";
-import { BACKK_ERRORS } from "../errors/backkErrors";
-import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
+import Mustache from 'mustache';
+import tryExecuteServiceMethod, { ServiceFunctionExecutionOptions } from './tryExecuteServiceMethod';
+import forEachAsyncParallel from '../utils/forEachAsyncParallel';
+import { ServiceFunctionCall } from './ServiceFunctionCall';
+import { ServiceFunctionCallResponse } from './ServiceFunctionCallResponse';
+import BackkResponse from './BackkResponse';
+import forEachAsyncSequential from '../utils/forEachAsyncSequential';
+import BaseService from '../service/BaseService';
+import isValidServiceFunctionName from './isValidServiceFunctionName';
+import { HttpStatusCodes } from '../constants/constants';
+import { BackkError } from '../types/BackkError';
+import callRemoteService from '../remote/http/callRemoteService';
+import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
+import createErrorFromErrorCodeMessageAndStatus from '../errors/createErrorFromErrorCodeMessageAndStatus';
+import { BACKK_ERRORS } from '../errors/backkErrors';
+import getClsNamespace from '../continuationlocalstorage/getClsNamespace';
 
 async function executeMultiple<T>(
   isConcurrent: boolean,
@@ -32,10 +31,10 @@ async function executeMultiple<T>(
 
   await forEachFunc(
     Object.entries(serviceFunctionArgument),
-    async ([serviceFunctionCallId, { localOrRemoteServiceFunctionName, serviceFunctionArgument }]: [
-      string,
-      ServiceFunctionCall
-    ]) => {
+    async ([
+      serviceFunctionCallId,
+      { remoteMicroserviceName, remoteMicroserviceNamespace, serviceFunctionName, serviceFunctionArgument }
+    ]: [string, ServiceFunctionCall]) => {
       if (possibleErrorResponse) {
         return;
       }
@@ -52,7 +51,7 @@ async function executeMultiple<T>(
         renderedServiceFunctionArgument = JSON.parse(renderedServiceFunctionArgument);
       }
 
-      if (localOrRemoteServiceFunctionName.includes('/')) {
+      if (remoteMicroserviceName) {
         if (isTransactional) {
           response.end(
             createBackkErrorFromErrorCodeMessageAndStatus(
@@ -70,7 +69,9 @@ async function executeMultiple<T>(
 
           response.writeHead(HttpStatusCodes.BAD_REQUEST);
         } else if (
-          !localOrRemoteServiceFunctionName.match(options?.multipleServiceFunctionExecution?.regExpForAllowedRemoteServiceFunctionCalls)
+          !serviceFunctionName.match(
+            options?.multipleServiceFunctionExecution?.regExpForAllowedRemoteServiceFunctionCalls
+          )
         ) {
           response.end(
             createBackkErrorFromErrorCodeMessageAndStatus(
@@ -80,10 +81,11 @@ async function executeMultiple<T>(
 
           response.writeHead(HttpStatusCodes.BAD_REQUEST);
         } else {
-          const [serviceHost, serviceFunctionName] = localOrRemoteServiceFunctionName.split('/');
-
           const [remoteResponse, error] = await callRemoteService(
-            `http://${serviceHost}.svc.cluster.local/${serviceFunctionName}`
+            remoteMicroserviceName,
+            serviceFunctionName,
+            serviceFunctionArgument,
+            remoteMicroserviceNamespace
           );
 
           response.end(remoteResponse);
@@ -92,7 +94,7 @@ async function executeMultiple<T>(
       } else {
         await tryExecuteServiceMethod(
           controller,
-          localOrRemoteServiceFunctionName,
+          serviceFunctionName,
           renderedServiceFunctionArgument,
           headers,
           'POST',
@@ -141,8 +143,7 @@ export default async function executeMultipleServiceFunctions(
     throw createErrorFromErrorCodeMessageAndStatus({
       ...BACKK_ERRORS.INVALID_ARGUMENT,
       message:
-        BACKK_ERRORS.INVALID_ARGUMENT.message +
-        'unknown service(s) or function(s) or invalid argument(s)'
+        BACKK_ERRORS.INVALID_ARGUMENT.message + 'unknown service(s) or function(s) or invalid argument(s)'
     });
   }
 

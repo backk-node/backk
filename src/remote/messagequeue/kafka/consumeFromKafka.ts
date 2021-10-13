@@ -12,11 +12,13 @@ import BackkResponse from '../../../execution/BackkResponse';
 import wait from '../../../utils/wait';
 import minimumLoggingSeverityToKafkaLoggingLevelMap from './minimumLoggingSeverityToKafkaLoggingLevelMap';
 import logCreator from './logCreator';
+import { ResponseSendToSpec } from '../sendToRemoteServiceInsideTransaction';
+import callRemoteService from '../../http/callRemoteService';
 
 export default async function consumeFromKafka(
   controller: any,
   host: string | undefined,
-  port: string |undefined,
+  port: string | undefined,
   defaultTopic: string = getNamespacedMicroserviceName(),
   defaultTopicConfig?: Omit<ITopicConfig, 'topic'>,
   additionalTopics?: string[]
@@ -213,13 +215,41 @@ export default async function consumeFromKafka(
           if (response.getStatusCode() >= HttpStatusCodes.INTERNAL_ERRORS_START) {
             await wait(10000);
             await sendToRemoteService(
-              'kafka://' + server + '/' + defaultTopic + '/' + serviceFunctionName,
-              serviceFunctionArgument
+              'kafka',
+              defaultTopic.split('.')[0],
+              serviceFunctionName,
+              serviceFunctionArgument,
+              defaultTopic.split('.')[1],
+              server
             );
           } else if (response.getStatusCode() >= HttpStatusCodes.CLIENT_ERRORS_START) {
             throw new Error(JSON.stringify(response.getResponse()));
-          } else if (headers?.responseUrl && response) {
-            await sendToRemoteService(headers.responseUrl as string, response);
+          } else if (headers?.sendResponseTo && response) {
+            const {
+              communicationMethod,
+              remoteMicroserviceName,
+              remoteServiceFunctionName,
+              remoteMicroserviceNamespace,
+              server
+            } = (headers?.sendResponseTo as unknown) as ResponseSendToSpec;
+
+            if (communicationMethod === 'kafka' || communicationMethod === 'redis') {
+              await sendToRemoteService(
+                communicationMethod,
+                remoteMicroserviceName,
+                remoteServiceFunctionName,
+                response,
+                remoteMicroserviceNamespace,
+                server
+              );
+            } else {
+              callRemoteService(
+                remoteMicroserviceName,
+                remoteServiceFunctionName,
+                response,
+                remoteMicroserviceNamespace
+              );
+            }
           }
         }
       });

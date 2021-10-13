@@ -1,18 +1,24 @@
 import { CompressionTypes } from "kafkajs";
 import { getNamespace } from "cls-hooked";
-import { CallOrSendToSpec } from "./sendToRemoteServiceInsideTransaction";
+import { CallOrSendToSpec, ResponseSendToSpec } from "./sendToRemoteServiceInsideTransaction";
 import sendOneOrMoreToKafka, { SendAcknowledgementType } from "./kafka/sendOneOrMoreToKafka";
 import sendOneOrMoreToRedis from "./redis/sendOneOrMoreToRedis";
-import parseRemoteServiceFunctionCallUrlParts from "../utils/parseRemoteServiceFunctionCallUrlParts";
 import { validateServiceFunctionArguments } from "../utils/validateServiceFunctionArguments";
 import { PromiseErrorOr } from "../../types/PromiseErrorOr";
+import getKafkaServerFromEnv from "./kafka/getKafkaServerFromEnv";
+import getRedisServerFromEnv from "./redis/getRedisServerFromEnv";
 
 export interface SendToOptions {
   compressionType?: CompressionTypes;
   sendAcknowledgementType?: SendAcknowledgementType;
 }
 
-export async function sendOneOrMore(sends: CallOrSendToSpec[], isTransactional: boolean): PromiseErrorOr<null> {
+export type CommunicationMethod = 'http' | 'kafka' | 'redis';
+
+export async function sendOneOrMore(
+  sends: CallOrSendToSpec[],
+  isTransactional: boolean
+): PromiseErrorOr<null> {
   const clsNamespace = getNamespace('serviceFunctionExecution');
 
   if (clsNamespace?.get('isInsidePostHook')) {
@@ -24,33 +30,66 @@ export async function sendOneOrMore(sends: CallOrSendToSpec[], isTransactional: 
     clsNamespace?.set('remoteServiceCallCount', clsNamespace?.get('remoteServiceCallCount') + 1);
   }
 
+  const sendsWithUrl = sends.map(
+    ({
+       communicationMethod,
+       server,
+       remoteMicroserviceName,
+       remoteMicroserviceNamespace,
+       remoteServiceFunctionName,
+       remoteServiceFunctionArgument,
+       sendResponseTo,
+       options
+     }) => ({
+      remoteServiceFunctionUrl: `${communicationMethod}://${server}/${remoteMicroserviceName}.${remoteMicroserviceNamespace}/${remoteServiceFunctionName}`,
+      remoteServiceFunctionArgument,
+      sendResponseTo,
+      options
+    })
+  );
+
   if (process.env.NODE_ENV === 'development') {
-    await validateServiceFunctionArguments(sends);
+    await validateServiceFunctionArguments(sendsWithUrl);
   }
 
-  const { scheme } = parseRemoteServiceFunctionCallUrlParts(sends[0].remoteServiceFunctionUrl);
-
-  if (scheme === 'kafka') {
-    return sendOneOrMoreToKafka(sends, isTransactional);
-  } else if (scheme === 'redis') {
-    return sendOneOrMoreToRedis(sends, isTransactional);
+  if (sends[0].communicationMethod === 'kafka') {
+    return sendOneOrMoreToKafka(sendsWithUrl, isTransactional);
+  } else if (sends[0].communicationMethod === 'redis') {
+    return sendOneOrMoreToRedis(sendsWithUrl, isTransactional);
   } else {
-    throw new Error('Only URL schemes kafka:// and redis:// are supported');
+    throw new Error('Unsupported communication method: ' + sends[0].communicationMethod);
   }
 }
 
 export default async function sendToRemoteService(
-  remoteServiceFunctionUrl: string,
-  serviceFunctionArgument: object,
-  responseUrl?: string,
+  communicationMethod: 'kafka' | 'redis',
+  remoteMicroserviceName: string,
+  remoteServiceFunctionName: string,
+  remoteServiceFunctionArgument: object,
+  remoteMicroserviceNamespace = process.env.SERVICE_NAMESPACE,
+  server?: string,
+  sendResponseTo?: ResponseSendToSpec,
   options?: SendToOptions
 ): PromiseErrorOr<null> {
+  let finalServer = server;
+
+  if (!finalServer) {
+    if (communicationMethod === 'kafka') {
+      finalServer = getKafkaServerFromEnv();
+    } else {
+      finalServer = getRedisServerFromEnv();
+    }
+  }
   return sendOneOrMore(
     [
       {
-        remoteServiceFunctionUrl,
-        serviceFunctionArgument,
-        responseUrl,
+        communicationMethod,
+        remoteMicroserviceName,
+        remoteMicroserviceNamespace,
+        remoteServiceFunctionName,
+        remoteServiceFunctionArgument,
+        server: finalServer,
+        sendResponseTo,
         options
       }
     ],

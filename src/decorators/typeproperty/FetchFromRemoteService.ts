@@ -1,9 +1,11 @@
 import typeAnnotationContainer from './typePropertyAnnotationContainer';
-import { HttpRequestOptions } from "../../remote/http/callRemoteService";
+import { HttpRequestOptions } from '../../remote/http/callRemoteService';
 
 export default function FetchFromRemoteService<T, U>(
-  remoteServiceFunctionUrl: string,
+  remoteMicroserviceName: string,
+  remoteServiceFunctionName: string,
   buildRemoteServiceFunctionArgument: (arg: T, response: U) => { [key: string]: any },
+  remoteMicroserviceNamespace = process.env.SERVICE_NAMESPACE,
   options?: HttpRequestOptions
 ) {
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -11,7 +13,9 @@ export default function FetchFromRemoteService<T, U>(
     typeAnnotationContainer.setTypePropertyAsFetchedFromRemoteService(
       object.constructor,
       propertyName,
-      remoteServiceFunctionUrl,
+      remoteMicroserviceName,
+      remoteMicroserviceNamespace,
+      remoteServiceFunctionName,
       buildRemoteServiceFunctionArgument,
       options
     );

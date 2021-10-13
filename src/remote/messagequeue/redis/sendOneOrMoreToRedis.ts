@@ -1,15 +1,15 @@
-import Redis from 'ioredis';
-import { CallOrSendToSpec } from '../sendToRemoteServiceInsideTransaction';
-import parseRemoteServiceFunctionCallUrlParts from '../../utils/parseRemoteServiceFunctionCallUrlParts';
-import { getNamespace } from 'cls-hooked';
-import forEachAsyncSequential from '../../../utils/forEachAsyncSequential';
-import log, { Severity } from '../../../observability/logging/log';
-import createBackkErrorFromError from '../../../errors/createBackkErrorFromError';
-import defaultServiceMetrics from '../../../observability/metrics/defaultServiceMetrics';
-import { PromiseErrorOr } from '../../../types/PromiseErrorOr';
+import Redis from "ioredis";
+import { CallOrSendToUrlSpec } from "../sendToRemoteServiceInsideTransaction";
+import parseRemoteServiceFunctionCallUrlParts from "../../utils/parseRemoteServiceFunctionCallUrlParts";
+import { getNamespace } from "cls-hooked";
+import forEachAsyncSequential from "../../../utils/forEachAsyncSequential";
+import log, { Severity } from "../../../observability/logging/log";
+import createBackkErrorFromError from "../../../errors/createBackkErrorFromError";
+import defaultServiceMetrics from "../../../observability/metrics/defaultServiceMetrics";
+import { PromiseErrorOr } from "../../../types/PromiseErrorOr";
 
 export default async function sendOneOrMoreToRedis(
-  sends: CallOrSendToSpec[],
+  sends: CallOrSendToUrlSpec[],
   isTransactional: boolean
 ): PromiseErrorOr<null> {
   const remoteServiceUrl = sends[0].remoteServiceFunctionUrl;
@@ -25,7 +25,7 @@ export default async function sendOneOrMoreToRedis(
 
     await forEachAsyncSequential(
       sends,
-      async ({ responseUrl, remoteServiceFunctionUrl, serviceFunctionArgument }: CallOrSendToSpec) => {
+      async ({ responseUrl, remoteServiceFunctionUrl, remoteServiceFunctionArgument }: CallOrSendToUrlSpec) => {
         const { serviceFunctionName } = parseRemoteServiceFunctionCallUrlParts(remoteServiceFunctionUrl);
         log(Severity.DEBUG, 'CallOrSendToSpec to remote service for execution', '', {
           serviceFunctionCallUrl: remoteServiceFunctionUrl,
@@ -37,7 +37,7 @@ export default async function sendOneOrMoreToRedis(
           topic,
           JSON.stringify({
             serviceFunctionName,
-            serviceFunctionArgument,
+            remoteServiceFunctionArgument: remoteServiceFunctionArgument,
             headers: {
               Authorization: authHeader,
               responseUrl

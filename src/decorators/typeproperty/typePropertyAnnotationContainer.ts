@@ -1,7 +1,9 @@
 import { HttpRequestOptions } from "../../remote/http/callRemoteService";
 
 export type RemoteServiceFetchSpec = {
-  remoteServiceFunctionUrl: string,
+  remoteMicroserviceName: string,
+  remoteMicroserviceNamespace?: string,
+  remoteServiceFunctionName: string,
   buildRemoteServiceFunctionArgument: (arg: any, response: any) => { [key: string]: any },
   options?: HttpRequestOptions
 };
@@ -111,12 +113,16 @@ class TypePropertyAnnotationContainer {
   setTypePropertyAsFetchedFromRemoteService(
     Type: Function,
     propertyName: string,
-    remoteServiceFunctionUrl: string,
+    remoteMicroserviceName: string,
+    remoteMicroserviceNamespace: string | undefined,
+    remoteServiceFunctionName: string,
     buildRemoteServiceFunctionArgument: (arg: any, response: any) => { [key: string]: any },
     options?: HttpRequestOptions
   ) {
     this.typePropertyNameToRemoteServiceFetchSpecMap[`${Type.name}${propertyName}`] = {
-      remoteServiceFunctionUrl,
+      remoteMicroserviceName,
+      remoteMicroserviceNamespace,
+      remoteServiceFunctionName,
       buildRemoteServiceFunctionArgument,
       options
     };

@@ -227,27 +227,27 @@ export default async function consumeFromKafka(
           } else if (headers?.sendResponseTo && response) {
             const {
               communicationMethod,
-              remoteMicroserviceName,
-              remoteServiceFunctionName,
-              remoteMicroserviceNamespace,
+              microserviceName,
+              serviceFunctionName,
+              microserviceNamespace,
               server
             } = (headers?.sendResponseTo as unknown) as ResponseSendToSpec;
 
             if (communicationMethod === 'kafka' || communicationMethod === 'redis') {
               await sendToRemoteService(
                 communicationMethod,
-                remoteMicroserviceName,
-                remoteServiceFunctionName,
+                microserviceName,
+                serviceFunctionName,
                 response,
-                remoteMicroserviceNamespace,
+                microserviceNamespace,
                 server
               );
             } else {
               callRemoteService(
-                remoteMicroserviceName,
-                remoteServiceFunctionName,
+                microserviceName,
+                serviceFunctionName,
                 response,
-                remoteMicroserviceNamespace
+                microserviceNamespace
               );
             }
           }

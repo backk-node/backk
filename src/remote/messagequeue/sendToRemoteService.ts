@@ -34,15 +34,15 @@ export async function sendOneOrMore(
     ({
        communicationMethod,
        server,
-       remoteMicroserviceName,
-       remoteMicroserviceNamespace,
-       remoteServiceFunctionName,
-       remoteServiceFunctionArgument,
+       microserviceName,
+       microserviceNamespace,
+       serviceFunctionName,
+       serviceFunctionArgument,
        sendResponseTo,
        options
      }) => ({
-      remoteServiceFunctionUrl: `${communicationMethod}://${server}/${remoteMicroserviceName}.${remoteMicroserviceNamespace}/${remoteServiceFunctionName}`,
-      remoteServiceFunctionArgument,
+      remoteServiceFunctionUrl: `${communicationMethod}://${server}/${microserviceName}.${microserviceNamespace}/${serviceFunctionName}`,
+      serviceFunctionArgument: serviceFunctionArgument,
       sendResponseTo,
       options
     })
@@ -63,10 +63,10 @@ export async function sendOneOrMore(
 
 export default async function sendToRemoteService(
   communicationMethod: 'kafka' | 'redis',
-  remoteMicroserviceName: string,
-  remoteServiceFunctionName: string,
-  remoteServiceFunctionArgument: object,
-  remoteMicroserviceNamespace = process.env.SERVICE_NAMESPACE,
+  microserviceName: string,
+  serviceFunctionName: string,
+  serviceFunctionArgument: object,
+  microserviceNamespace = process.env.SERVICE_NAMESPACE,
   server?: string,
   sendResponseTo?: ResponseSendToSpec,
   options?: SendToOptions
@@ -84,10 +84,10 @@ export default async function sendToRemoteService(
     [
       {
         communicationMethod,
-        remoteMicroserviceName,
-        remoteMicroserviceNamespace,
-        remoteServiceFunctionName,
-        remoteServiceFunctionArgument,
+        microserviceName,
+        microserviceNamespace,
+        serviceFunctionName,
+        serviceFunctionArgument,
         server: finalServer,
         sendResponseTo,
         options

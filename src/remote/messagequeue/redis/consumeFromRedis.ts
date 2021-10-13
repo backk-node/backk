@@ -88,23 +88,23 @@ export default async function consumeFromRedis(
       } else if (headers?.sendResponseTo && response.getResponse()) {
         const {
           communicationMethod,
-          remoteMicroserviceName,
-          remoteServiceFunctionName,
-          remoteMicroserviceNamespace,
+          microserviceName,
+          serviceFunctionName,
+          microserviceNamespace,
           server
         } = headers?.sendResponseTo as ResponseSendToSpec;
 
         if (communicationMethod === 'kafka' || communicationMethod === 'redis') {
           await sendToRemoteService(
             communicationMethod,
-            remoteMicroserviceName,
-            remoteServiceFunctionName,
+            microserviceName,
+            serviceFunctionName,
             response,
-            remoteMicroserviceNamespace,
+            microserviceNamespace,
             server
           );
         } else {
-          callRemoteService(remoteMicroserviceName, remoteServiceFunctionName, response, remoteMicroserviceNamespace);
+          callRemoteService(microserviceName, serviceFunctionName, response, microserviceNamespace);
         }
       }
 

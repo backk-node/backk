@@ -20,14 +20,14 @@ export interface HttpRequestOptions {
 
 // noinspection FunctionTooLongJS
 export default async function callRemoteService(
-  remoteMicroserviceName: string,
-  remoteServiceFunctionName: string,
-  remoteServiceFunctionArgument?: object,
-  remoteMicroserviceNamespace = process.env.SERVICE_NAMESPACE,
+  microserviceName: string,
+  serviceFunctionName: string,
+  serviceFunctionArgument?: object,
+  microserviceNamespace = process.env.SERVICE_NAMESPACE,
   options?: HttpRequestOptions
 ): PromiseErrorOr<object | null> {
-  const server = `${remoteMicroserviceName}.${remoteMicroserviceNamespace}.svc.cluster.local`
-  const remoteServiceFunctionUrl = `http://${server}/${remoteServiceFunctionName}`;
+  const server = `${microserviceName}.${microserviceNamespace}.svc.cluster.local`
+  const remoteServiceFunctionUrl = `http://${server}/${serviceFunctionName}`;
   const clsNamespace = getNamespace('serviceFunctionExecution');
   clsNamespace?.set('remoteServiceCallCount', clsNamespace?.get('remoteServiceCallCount') + 1);
 
@@ -38,7 +38,7 @@ export default async function callRemoteService(
     await validateServiceFunctionArguments([
       {
         remoteServiceFunctionUrl,
-        remoteServiceFunctionArgument,
+        remoteServiceFunctionArgument: serviceFunctionArgument,
       }
     ]);
     const { topic, serviceFunctionName } = parseRemoteServiceFunctionCallUrlParts(remoteServiceFunctionUrl);
@@ -58,9 +58,9 @@ export default async function callRemoteService(
   try {
     const response = await fetch(remoteServiceFunctionUrl, {
       method: options?.httpMethod?.toLowerCase() ?? 'post',
-      body: remoteServiceFunctionArgument ? JSON.stringify(remoteServiceFunctionArgument) : undefined,
+      body: serviceFunctionArgument ? JSON.stringify(serviceFunctionArgument) : undefined,
       headers: {
-        ...(remoteServiceFunctionArgument ? { 'Content-Type': 'application/json' } : {}),
+        ...(serviceFunctionArgument ? { 'Content-Type': 'application/json' } : {}),
         Authorization: authHeader
       }
     });

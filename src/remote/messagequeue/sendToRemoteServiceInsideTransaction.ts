@@ -4,10 +4,10 @@ import parseRemoteServiceFunctionCallUrlParts from "../utils/parseRemoteServiceF
 
 export interface CallOrSendToSpec {
   communicationMethod: CommunicationMethod;
-  remoteMicroserviceName: string;
-  remoteServiceFunctionName: string;
-  remoteServiceFunctionArgument?: object;
-  remoteMicroserviceNamespace: string | undefined;
+  microserviceName: string;
+  serviceFunctionName: string;
+  serviceFunctionArgument?: object;
+  microserviceNamespace: string | undefined;
   server: string;
   sendResponseTo?: CallOrSendToSpec;
   options?: SendToOptions;
@@ -15,9 +15,9 @@ export interface CallOrSendToSpec {
 
 export interface ResponseSendToSpec {
   communicationMethod: CommunicationMethod;
-  remoteMicroserviceName: string;
-  remoteMicroserviceNamespace: string | undefined;
-  remoteServiceFunctionName: string;
+  microserviceName: string;
+  microserviceNamespace: string | undefined;
+  serviceFunctionName: string;
   server: string;
 }
 
@@ -38,15 +38,15 @@ export default async function sendToRemoteServiceInsideTransaction(sends: CallOr
     ({
       communicationMethod,
       server,
-      remoteMicroserviceName,
-      remoteMicroserviceNamespace,
-      remoteServiceFunctionName,
-      remoteServiceFunctionArgument,
+      microserviceName,
+      microserviceNamespace,
+      serviceFunctionName,
+      serviceFunctionArgument,
       sendResponseTo,
       options
     }) => ({
-      remoteServiceFunctionUrl: `${communicationMethod}://${server}/${remoteMicroserviceName}.${remoteMicroserviceNamespace}/${remoteServiceFunctionName}`,
-      remoteServiceFunctionArgument,
+      remoteServiceFunctionUrl: `${communicationMethod}://${server}/${microserviceName}.${microserviceNamespace}/${serviceFunctionName}`,
+      serviceFunctionArgument: serviceFunctionArgument,
       sendResponseTo,
       options
     })

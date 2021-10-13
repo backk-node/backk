@@ -85,7 +85,8 @@ It is possible to access the same Backk microservice both synchronously and asyn
 
 Let's have a short example to showcase accessing Backk microservice over HTTP.
 
-Our microservice consist of one service that is for creating and getting the created sales items:
+Our microservice consist of one service that is for creating and getting the created sales items, 
+and it is using MySQL as a persistent data store.
 
 MicroserviceImpl.ts
 ```ts
@@ -105,7 +106,7 @@ export default class MicroserviceImpl extends Microservice {
 SalesItemService.ts
 ```ts
 import { AbstractDataStore, CrudEntityService, Many, One, PromiseErrorOr } from 'backk';
-import { SalesItem } from './types/entities/SalesItem';
+import SalesItem from './types/entities/SalesItem';
 
 export default class SalesItemService extends CrudEntityService {
   constructor(dataStore: AbstractDataStore) {

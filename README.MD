@@ -125,11 +125,11 @@ export default class SalesItemService extends CrudEntityService {
 
 SalesItem.ts
 ```ts
-import { _Id, Entity, IsAnyString, IsFloat, ReadWrite } from 'backk';
+import { _Id, Entity, IsAscii, IsFloat, ReadWrite } from 'backk';
 
 @Entity()
 export default class SalesItem extends _Id {
-  @IsAnyString()
+  @IsAscii()
   @ReadWrite()
   name: string;
   

@@ -100,7 +100,7 @@ export default async function sendOneOrMoreToKafka(
                 value: JSON.stringify(serviceFunctionArgument),
                 headers: {
                   Authorization: authHeader,
-                  sendResponseTo: sendResponseTo ? JSON.stringify(sendResponseTo) : undefined
+                  ...(sendResponseTo ? { sendResponseTo: JSON.stringify(sendResponseTo) } : {})
                 }
               }
             ]

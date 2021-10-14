@@ -71,7 +71,7 @@
 ## <a name="howbackkworks"></a> How Backk Works?
 Backk microservices are written using Node.js and Typescript. Backk microservice consists of one or more services classes with their dedicated purpose.
 Each service class can contain one or more service functions (class methods) that implement the service functionality.
-Each service function can have zero or one parameter of JavaScript object type. 
+Each service function can have zero or one parameter of JavaScript Class type. 
 Service function returns a value, which can be `null`, a JavaScript value that can be converted to JSON or error.
 
 Synchronously, Backk microservice can be accessed via HTTP. By default, each service and service function in Backk microservice is accessible via HTTP POST method.
@@ -133,12 +133,12 @@ export default class SalesItem extends _Id {
   @IsAscii()
   @Length(1, 128)
   @ReadWrite()
-  name: string;
+  name!: string;
   
   @IsFloat()
   @MinMax(0, Number.MAX_VALUE)
   @ReadWrite()
-  price: number;
+  price!: number;
 }
 ```
 

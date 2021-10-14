@@ -106,12 +106,12 @@ export default class SalesItem extends _Id {
   @IsAscii()
   @Length(1, 128)
   @ReadWrite()
-  name: string;
+  name!: string;
   
   @IsFloat()
   @MinMax(0, Number.MAX_VALUE)
   @ReadWrite()
-  price: number;
+  price!: number;
 }
 ```
 
@@ -139,7 +139,10 @@ property to the clients of the microservice. The following access mode decorator
 - `@CreateOnly()`
 - `@UpdateOnly()`
 
-### Implement first service function: deleteAllSalesItems
+The exclamation mark (!) after property names is needed because properties are not initialized in constructor.
+Otherwise, you will get a TypeScript compiler warnings.
+
+### Implement deleteAllSalesItems
 
 Let´s practice Test driven development (TDD) for our first service function to showcase that Backk is ready
 configured for unit testing with Jest.
@@ -211,11 +214,10 @@ There are following possible authorization decorators available for use:
 - `@AllowForMicroserviceInternalUse()`
 - `@AllowForTests()`
 
-### Implement the second service function: createSalesItem
+### Implement createSalesItem
 
 SalesItemService.spec.ts
 ```ts
-
 describe('SalesItemService', () => {
   describe('createSalesItem', () => {
     it('should call the data store´s createEntity method once with SalesItem class as first parameter and sales item entity as second parameter and should return the entity.', async () => {
@@ -240,4 +242,108 @@ describe('SalesItemService', () => {
 })
 ```
 
+SalesItemServiceImpl.ts
+```ts
+import {  AllowForUserRoles, PromiseErrorOr } from 'backk';
+import SalesItemService from './SalesItemService';
+import SalesItem from './types/entities/SalesItem';
 
+export default class SalesItemServiceImpl extends SalesItemService {
+  @AllowForUserRoles(['admin', 'salesAdmin'])
+  createSalesItem(salesItem: SalesItem): PromiseErrorOr<null> {
+    return this.dataStore.createEntity(SalesItem, salesItem);
+  }
+}
+```
+
+Creating a new sales item is only allowed for logged-in users with either `admin` or `salesAdmin` role.
+
+### Implement getSalesItem
+
+We skip the unit test writing for the rest of the SalesItemService implementation.
+
+```ts
+import { AllowForEveryUser, PromiseErrorOr, SqlExpression } from 'backk';
+import SalesItemService from './SalesItemService';
+import SalesItem from './types/entities/SalesItem';
+
+export default class SalesItemServiceImpl extends SalesItemService {
+  @AllowForEveryUser()
+  getSalesItems({ nameSubString }: GetSalesItemsArg): PromiseErrorOr<Many<SalesItem>> {
+    const filter = new SqlExpression('name LIKE :nameSubString', {
+      nameSubString: nameSubString ? `%${nameSubString}%` : undefined
+    });
+    
+    const postQueryOperations = new DefaultPostQueryOperations();
+
+    return this.dataStore.getEntitiesByFilters(SalesItem, [filter], postQueryOperations, true);
+  }
+}
+```
+
+Here is the implementation for the service function argument class. Service function arguments must be Javascript
+classes and their properties need same kind of validation as entity class properties need. This is needed to ensure
+that only valid values are supplied to service function.
+
+GetSalesItemsArg.ts
+import { IsAscii, MaxLength } from 'backk';
+
+```ts
+export default class GetSalesItemsArg {
+  @IsAscii()
+  @MaxLength(128)
+  nameSubString: string;
+}
+```
+
+For data store's `getEntitiesByFilters` you need to supply `postQueryOperations`.
+They are needed and used to define what response fields are wanted, how returned entities are sorted and paginated.
+
+Here is the definition of `PostQueryOperations` interface:
+```ts
+interface PostQueryOperations extends Projection, SortBys {
+  paginations?: Pagination[];
+  currentPageTokens?: CurrentPageToken[];
+}
+
+interface Projection {
+  includeResponseFields?: string[];
+  excludeResponseFields?: string[];
+}
+
+interface SortBys {
+  sortBys?: SortBy[];
+}
+
+class SortBy {
+  subEntityPath?: string = '';
+  fieldName!: string;
+  sortDirection!: 'ASC' | 'DESC';
+}
+
+class Pagination {
+  subEntityPath?: string = '';
+  pageNumber!: number;
+  pageSize!: number;
+}
+```
+
+
+### Implement rest of the SalesItemService
+
+```ts
+import { AllowForEveryUser, PromiseErrorOr } from 'backk';
+import SalesItemService from './SalesItemService';
+import SalesItem from './types/entities/SalesItem';
+
+export default class SalesItemServiceImpl extends SalesItemService {
+  @AllowForEveryUser()
+  getSalesItems(arg: GetSalesItemsArg): PromiseErrorOr<Many<SalesItem>> {
+    return this.dataStore.getEntitiesByFilters()
+  }
+  
+  getSalesItem(arg: _Id): PromiseErrorOr<One<SalesItem>>;
+  updateSalesItem(arg: SalesItem): PromiseErrorOr<null>;
+  deleteSalesItem(arg: _Id): PromiseErrorOr<null>;
+}
+```

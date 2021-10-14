@@ -190,22 +190,10 @@ X
 (src/decorators/typeproperty/Transient.ts,d/e/dec5b1be8739c121dc9d6f00dc824271d36ac9b8
 r
 Bsrc/types/postqueryoperations/_IdsAndDefaultPostQueryOperations.ts,f/b/fb84f5299ce4d72fbc12a8e4a6787b9eff81f90f
-a
-1src/types/postqueryoperations/CurrentPageToken.ts,7/4/744a63285f0359584b4d2cd4dc5546d3193d344a
-b
-2src/types/postqueryoperations/DefaultPagination.ts,0/b/0bb4a0e17f3e2d8c19f270152e57e839e0105452
-k
-;src/types/postqueryoperations/DefaultPostQueryOperations.ts,8/7/8772a20276f7cad94f18c51c1ceeede8757a64b4
 _
 /src/types/postqueryoperations/DefaultSorting.ts,5/3/53647cac50df867804871a6810364caf6269f56d
 l
 <src/types/postqueryoperations/DefaultSortingAndPagination.ts,c/9/c9f32f7b9bf4b6be3e39a5228f3126e764b03783
-[
-+src/types/postqueryoperations/Projection.ts,3/6/3667547d467d112689eefd466587901db6898146
-W
-'src/types/postqueryoperations/SortBy.ts,d/2/d2d895756923ee59ff0e6e9f2d848460499a5151
-X
-(src/types/postqueryoperations/SortBys.ts,3/2/32515eac21cbe023c8c5b851306b1cf6fb773ee7
 X
 (src/types/userdefinedfilters/OrFilter.ts,b/f/bf5b3b8fe1519788e16c4bd40996fc2fde6a0335
 a
@@ -420,8 +408,6 @@ N
 src/datastore/hooks/PreHook.ts,2/9/29c10715c3cb41f8c1d6374438c15ecb4585a428
 O
 src/datastore/hooks/PostHook.ts,5/b/5b3637908f89509b2d93c0cccb4faf9813c90f12
-d
-4src/types/postqueryoperations/PostQueryOperations.ts,7/c/7c051fb0c5b1f68f12d7170c30d0742218ec30a7
 U
 %src/datastore/AbstractSqlDataStore.ts,4/a/4a53d6f8742845084c6f1241fac40af293a2c1aa
 d
@@ -450,8 +436,6 @@ k
 ;src/errors/createBackkErrorFromErrorMessageAndStatusCode.ts,3/f/3f91cbf61f981da36b338ef6e33082fa2bd42f99
 c
 3src/observability/metrics/defaultPrometheusMeter.ts,f/4/f48cea031a89acea4159adb25350f76868696671
-[
-+src/types/postqueryoperations/Pagination.ts,9/f/9f8d60eefcc6adf96d6425826857a862cce56841
 Q
 !src/datastore/MongoDbDataStore.ts,7/f/7f6815388428de13693ae11762a77f1789593f07
 U

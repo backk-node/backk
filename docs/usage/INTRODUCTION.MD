@@ -22,6 +22,26 @@ its return value should be `PromiseErrorOr<null>`. If your service function retu
 `PromiseErrorOr<One<E>>`, where `E` is type of the entity. If you service function returns multiple entities, its return
 type should `PromiseErrorOr<Many<E>>`, where `E` is type of the entity. Any service function can always return an error.
 
+```ts
+type PromiseErrorOr<T> = Promise<[T | null | undefined, BackkError | null | undefined]>;
+
+type Many<T> = {
+  metadata: {
+    currentPageTokens: CurrentPageToken[] | undefined;
+    [key: string]: any;
+  };
+  data: T[];
+};
+
+type One<T> = {
+  metadata: {
+    currentPageTokens: CurrentPageToken[] | undefined;
+    [key: string]: any;
+  };
+  data: T;
+};
+```
+
 Backk generates automatically integration tests for your service. If you want to benefit from them, it is important in which order, you
 define the service functions. They should be defined in order in which they should be tested. 
 
@@ -121,7 +141,7 @@ property to the clients of the microservice. The following access mode decorator
 
 ### Implement first service function: deleteAllSalesItems
 
-Let´s use Test driven development (TDD) for our first service function to showcase that Backk is ready
+Let´s practice Test driven development (TDD) for our first service function to showcase that Backk is ready
 configured for unit testing with Jest.
 
 First we will write our spec file to specify the functionality of the `deleteAllEntities` method:
@@ -143,12 +163,12 @@ describe('SalesItemService', () => {
       dataStore.deleteAllEntities = jest.fn().mockReturnValue(Promise.resolve([null, null]));
       
       // WHEN
-      const [returnValue, error] = await salesItemService.deleteAllEntities();
+      const [entity, error] = await salesItemService.deleteAllEntities();
       
       // THEN
       expect(dataStore.deleteAllEntities).toHaveBeenCalledTimes(1);
       expect(dataStore.deleteAllEntities).toHaveBeenCalledWith(SalesItem);
-      expect(returnValue).toBeNull();
+      expect(entity).toBeNull();
       expect(error).toBeNull();
     })
   })
@@ -190,4 +210,34 @@ There are following possible authorization decorators available for use:
 - `@AllowForKubeClusterInternalUse()`
 - `@AllowForMicroserviceInternalUse()`
 - `@AllowForTests()`
+
+### Implement the second service function: createSalesItem
+
+SalesItemService.spec.ts
+```ts
+
+describe('SalesItemService', () => {
+  describe('createSalesItem', () => {
+    it('should call the data store´s createEntity method once with SalesItem class as first parameter and sales item entity as second parameter and should return the entity.', async () => {
+      // GIVEN
+      const salesItem = {
+        name: 'Sales item 1',
+        price: 50
+      };
+      
+      dataStore.createEntity = jest.fn().mockReturnValue(Promise.resolve([salesItem, null]));
+      
+      // WHEN
+      const [createdSalesItem, error] = await salesItemService.createSalesItem(salesItem);
+      
+      // THEN
+      expect(dataStore.createEntity).toHaveBeenCalledTimes(1);
+      expect(dataStore.createEntity).toHaveBeenCalledWith(SalesItem, salesItem);
+      expect(createdSalesItem).toBe(salesItem);
+      expect(error).toBeNull();
+    })
+  })
+})
+```
+
 

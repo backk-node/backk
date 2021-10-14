@@ -1,6 +1,6 @@
 import _Id from "../../types/id/_Id";
 import CrudEntityService from "../crudentity/CrudEntityService";
-import AllowForMicroserviceInternalUse from "../../decorators/service/function/AllowForServiceInternalUse";
+import AllowForMicroserviceInternalUse from "../../decorators/service/function/AllowForMicroserviceInternalUse";
 import { PromiseErrorOr } from "../../types/PromiseErrorOr";
 import { One } from "../../datastore/AbstractDataStore";
 import Subject from "../../types/useraccount/Subject";

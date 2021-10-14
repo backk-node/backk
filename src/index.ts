@@ -35,16 +35,16 @@ export { PromiseErrorOr } from './types/PromiseErrorOr';
 // Decorators
 
 // Service decorators
-export { default as AllowServiceForClusterInternalUse } from './decorators/service/AllowServiceForClusterInternalUse';
+export { default as AllowServiceForKubeClusterInternalUse } from './decorators/service/AllowServiceForKubeClusterInternalUse';
 export { default as AllowServiceForEveryUser } from './decorators/service/AllowServiceForEveryUser';
 export { default as AllowServiceForUserRoles } from './decorators/service/AllowServiceForUserRoles';
 export { default as NoServiceAutoTests } from './decorators/service/NoServiceAutoTests';
 
 // Service function decorators
-export { default as AllowForClusterInternalUse } from './decorators/service/function/AllowForClusterInternalUse';
+export { default as AllowForKubeClusterInternalUse } from './decorators/service/function/AllowForKubeClusterInternalUse';
 export { default as AllowForEveryUser } from './decorators/service/function/AllowForEveryUser';
 export { default as AllowForEveryUserForOwnResources } from './decorators/service/function/AllowForEveryUserForOwnResources';
-export { default as AllowForServiceInternalUse } from './decorators/service/function/AllowForServiceInternalUse';
+export { default as AllowForMicroserviceInternalUse } from './decorators/service/function/AllowForMicroserviceInternalUse';
 export { default as AllowForTests } from './decorators/service/function/AllowForTests';
 export { default as AllowForUserRoles } from './decorators/service/function/AllowForUserRoles';
 export { default as Create } from './decorators/service/function/Create';

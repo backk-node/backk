@@ -1,6 +1,6 @@
 import serviceAnnotationContainer from "./serviceAnnotationContainer";
 
-export default function AllowServiceForClusterInternalUse() {
+export default function AllowServiceForKubeClusterInternalUse() {
   return function(serviceClass: Function) {
     serviceAnnotationContainer.addServiceAllowedForClusterInternalUse(serviceClass);
   }

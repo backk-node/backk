@@ -5,7 +5,7 @@ import MongoDbQuery from "./mongodb/MongoDbQuery";
 import SqlExpression from "./sql/expressions/SqlExpression";
 import { PromiseErrorOr } from "../types/PromiseErrorOr";
 
-export default class NoOpDataStore extends AbstractDataStore {
+export default class NullDataStore extends AbstractDataStore {
   constructor() {
     super('');
   }

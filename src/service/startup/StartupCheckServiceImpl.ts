@@ -3,7 +3,7 @@ import StartupCheckService from './StartupCheckService';
 import createBackkErrorFromErrorMessageAndStatusCode from '../../errors/createBackkErrorFromErrorMessageAndStatusCode';
 import initializeDatabase, { isDbInitialized } from '../../datastore/sql/operations/ddl/initializeDatabase';
 import { HttpStatusCodes } from '../../constants/constants';
-import AllowForClusterInternalUse from '../../decorators/service/function/AllowForClusterInternalUse';
+import AllowForKubeClusterInternalUse from '../../decorators/service/function/AllowForClusterInternalUse';
 import scheduleJobsForExecution, { scheduledJobs } from '../../scheduling/scheduleJobsForExecution';
 import { PromiseErrorOr } from '../../types/PromiseErrorOr';
 import AllowForEveryUser from "../../decorators/service/function/AllowForEveryUser";

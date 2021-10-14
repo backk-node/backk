@@ -1,6 +1,6 @@
 ## <a name="api-documentation-decorators"></a> Decorators
 
-- [Service decorators](#service-decorators)
+- [Service Decorators](#service-decorators)
 - [Service Function Decorators](#service-function-decorators)
 - [Entity Decorators](#entity-decorators)
 - [Entity Property Decorators](#entity-property-decorators)
@@ -15,7 +15,7 @@ You can use following decorators for your service implementation class:
 | `@NoServiceAutoTests()`                      | Automatic integration tests are no generated for this service     |
 | `@AllowServiceForEveryUser()`                | Service can be accessed by any user                               |
 | `@AllowServiceForUserRoles(roles: string[])` | Service can be accessed only by users with specific role or roles |
-| `@AllowServiceForClusterInternalUse()`       | Service can be accessed only from inside of Kubernetes cluster    |
+| `@AllowServiceForKubeClusterInternalUse()`   | Service can be accessed only from inside of Kubernetes cluster    |
 
 ### <a name="service-function-decorators"></a> Service Function Decorators
 
@@ -25,7 +25,8 @@ You can use following decorators for you service class's functions:
 | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | `@AllowForEveryUser()`                                                          | Service function can be accessed by any user                                                                                              |
 | `@AllowForUserRoles(roles: string[])`                                           | Service function can be accessed only by users with specific role or roles                                                                |
-| `@AllowForClusterInternalUse()`                                                 | Service function can be accessed only from inside of Kubernetes cluster                                                                   |
+| `@AllowForKubeClusterInternalUse()`                                             | Service function can be accessed only from inside of Kubernetes cluster                                                                   |
+| `@AllowForMicroserviceInternalUse()`                                            | Service function can be accessed only inside the Backk microservice.                                                                   |
 | `@AllowForEveryUserForOwnResources()`                                           | Service function can be accessed by any user, but only for own resources                                                                  |
 | `@AllowForTests()`                                                              | Service function can be accessed by integration tests only                                                                                |
 | `@NoAutoTests()`                                                                | Automatic integration tests are not generated for this service function                                                                   |

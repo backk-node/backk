@@ -29,7 +29,7 @@ SalesItemService.ts
 ```ts
 import { _Id, CrudEntityService, Many, One, PromiseErrorOr } from 'backk';
 import GetSalesItemsArg from './types/args/GetSalesItemsArg';
-import { SalesItem } from './types/entities/SalesItem';
+import SalesItem from './types/entities/SalesItem';
 
 export default abstract class SalesItemService extends CrudEntityService {
   abstract deleteAllSalesItems(): PromiseErrorOr<null>;
@@ -100,20 +100,74 @@ class, it needs to be annotated with `@Entity()` decorator. The name of the enti
 the table in the database.
 
 For each property in the entity class, you need define a validator or validators. For `string` type properties,
-you need the define a string validator, for example `@IsAcii()`. If you accept any string value, you should annotate
+you need to define a string validator, for example `@IsAcii()`. If you accept any string value, you should annotate
 the string property with `@IsAnyString()` decorator. Additionally, you need to define what is the maximum length of
 accepted string. You can use `@MaxLength` or `@Length()` decorator. The latter of which also defines the minimum length of 
 the string. Limiting the maximum length of the string is crucial to prevent possible DoS (Denial of Service) attacks.
 
 For number type properties, you must define one of following:
 `@IsInt()`, `@IsFloat` or `@IsBigInt()`. In addition to that, you need to define the allowed range of values with
-`@MinMax()` decorator. If some of the needed validators is missing, Backk will throw an exception about that.
+`@MinMax()` decorator. If some needed validators is missing, Backk will throw an exception about that.
 
+For each property you must define the access mode of the property. The access mode defines the visibility of the 
+property to the clients of the microservice. The following access mode decorators are available:
+- `@Private()`    
+- `@ReadWrite()`  
+- `@ReadOnly()`   
+- `@ReadUpdate()`
+- `@WriteOnly()`  
+- `@CreateOnly()`
+- `@UpdateOnly()`
 
 ### Implement first service function: deleteAllSalesItems
+
+Let´s use Test driven development (TDD) for our first service function to showcase that Backk is ready
+configured for unit testing with Jest.
+
+First we will write our spec file to specify the functionality of the `deleteAllEntities` method:
+
+SalesItemServiceImpl.spec.ts
+
+```ts
+import { NullDataStore } from 'backk';
+import SalesItemService from './SalesItemService';
+import SalesItem from './types/entities/SalesItem';
+
+const dataStore = new NullDataStore();
+const salesItemService = new SalesItemService(dataStore);
+
+describe('SalesItemService', () => {
+  describe('deleteAllEntities', () => {
+    it('should call the data store´s deleteAllEntities method once with SalesItem entity class as parameter and return null without error', async () => {
+      // GIVEN
+      dataStore.deleteAllEntities = jest.fn().mockReturnValue(Promise.resolve([null, null]));
+      
+      // WHEN
+      const [returnValue, error] = await salesItemService.deleteAllEntities();
+      
+      // THEN
+      expect(dataStore.deleteAllEntities).toHaveBeenCalledTimes(1);
+      expect(dataStore.deleteAllEntities).toHaveBeenCalledWith(SalesItem);
+      expect(returnValue).toBeNull();
+      expect(error).toBeNull();
+    })
+  })
+})
+```
+
+Let's test our unit test by executing:
+```bash
+npm test
+```
+
+Test will fail because we havent implemented the `deleteAllEntities` function in `SalesItemServiceImpl` class.
+Let´s implement the function:
+
 SalesItemServiceImpl.ts
 ```ts
+import { AllowForTests, PromiseErrorOr } from 'backk';
 import SalesItemService from './SalesItemService';
+import SalesItem from './types/entities/SalesItem';
 
 export default class SalesItemServiceImpl extends SalesItemService {
   @AllowForTests()
@@ -122,4 +176,18 @@ export default class SalesItemServiceImpl extends SalesItemService {
   }
 }
 ```
+
+Now we can execute `npm test` again and make our unit test to pass.
+
+Each Backk service function must have an authorization annotation for improved security reasons.
+For the above service function, we use `@AllowForTests` decorator to indicate that this service function
+can only be accessed when executing tests, it cannot be accessed by any outside clients at all.
+
+There are following possible authorization decorators available for use:
+- `@AllowForEveryUser()`
+- `@AllowForEveryUserForOwnResources()`
+- `@AllowForUserRoles(roles: string[])`
+- `@AllowForKubeClusterInternalUse()`
+- `@AllowForMicroserviceInternalUse()`
+- `@AllowForTests()`
 

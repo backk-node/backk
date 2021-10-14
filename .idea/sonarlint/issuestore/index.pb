@@ -110,8 +110,6 @@ j
 :src/datastore/utils/tryEnsureProperPageIsRequested.spec.ts,2/8/289d6bd9fc06ded7953cee422116358c9ae4bbba
 ^
 .src/datastore/utils/createCurrentPageTokens.ts,3/0/30e1b4265306c85caed765c7acb95cbbcaf661b9
-N
-src/datastore/NoOpDataStore.ts,d/4/d4fbafa222a9687efe39170226da0985b8caca37
 u
 Esrc/datastore/sql/operations/dql/transformresults/createResultMaps.ts,3/f/3fbbd19c688e2dbe02eb791de6d6556f1b977204
 e

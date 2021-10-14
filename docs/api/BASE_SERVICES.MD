@@ -37,7 +37,7 @@ Implement your own service class by extending `BaseService` class.
 When calling base class constructor, you must provide:
 
 - error definitions for your service (or empty object, if your service does not raise any errors)
-- data store used by your service (if you are not using a data store, provide an instance of `NoOpDataStore`)
+- data store used by your service (if you are not using a data store, provide an instance of `NullDataStore`)
 
 Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
 
@@ -67,7 +67,7 @@ Implement your own service class by extending `CrudEntityService` class.
 When calling base class constructor, you must provide:
 
 - error definitions for your service (or empty object, if your service does not raise any errors)
-- data store used by your service (if you are not using a data store, provide an instance of `NoOpDataStore`)
+- data store used by your service (if you are not using a data store, provide an instance of `NullDataStore`)
 
 Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
 

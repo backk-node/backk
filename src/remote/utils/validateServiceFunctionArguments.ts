@@ -6,10 +6,10 @@ import generateClassFromSrcFile from "../../typescript/generator/generateClassFr
 import initializeMicroservice from "../../microservice/initializeMicroservice";
 import { plainToClass } from "class-transformer";
 import tryValidateServiceFunctionArgument from "../../validation/tryValidateServiceFunctionArgument";
-import NoOpDataStore from "../../datastore/NoOpDataStore";
+import NullDataStore from "../../datastore/NullDataStore";
 
 export const remoteMicroserviceNameToControllerMap: { [key: string]: any } = {};
-const noOpDataStore = new NoOpDataStore();
+const noOpDataStore = new NullDataStore();
 
 export async function validateServiceFunctionArguments(sends: CallOrSendToUrlSpec[]) {
   await forEachAsyncSequential(sends, async ({ serviceFunctionUrl, serviceFunctionArgument }) => {

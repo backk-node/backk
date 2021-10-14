@@ -468,8 +468,6 @@ E
 docs/PREREQUISITES.MD,7/1/71b175673ee1e11b95221df3ed611687ff16551b
 O
 docs/api/ABSTRACT_DATA_STORE.MD,9/f/9f9a3f8c3e178256b2e64e8fd9b35a9e4d2c1bd4
-F
-docs/api/DECORATORS.MD,3/8/385961cbc58f02c6c17d000017268dafc936bf47
 H
 docs/api/FILE_READING.MD,1/3/1342c3a860c9cdd9cd8b250114dad6c43f12a43e
 N
@@ -498,8 +496,6 @@ f
 +src/observability/logging/logEnvironment.ts,e/2/e2977c9c028b7a5f9f113c1370453b46c7aab27a
 d
 4src/postman/writeTestsPostmanCollectionExportFile.ts,8/7/87e4fabf982d3fcb19cf6b5bd33aacaa35eb79bb
-9
-	README.MD,9/6/968e80af9562e09cebe594968b130076952eafe1
 Z
 *src/utils/getNamespacedMicroserviceName.ts,8/2/8220ef18c4557bd142c660a02e8b7967733f45fb
 P

@@ -131,6 +131,7 @@ import { _Id, Entity, IsAscii, IsFloat, ReadWrite } from 'backk';
 @Entity()
 export default class SalesItem extends _Id {
   @IsAscii()
+  @Length(1, 128)
   @ReadWrite()
   name: string;
   

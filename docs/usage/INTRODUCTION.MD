@@ -1,18 +1,18 @@
 ## Introduction
 
-Here we are going to build a small Backk microservice for handling sales items to showcase main Backk features.
+Here we are going to build a Backk microservice for handling sales items to showcase main Backk features.
 For getting your Backk development environment setup, please follow instructions in [Get Started](../GET_STARTED.MD) section.
 
 ### Create Your First Service
 
-You should place your services under `src/services` directory in Backk microservice project.
+Backk microservice consist of one or more services. You should place your services under `src/services` directory in the Backk microservice project.
 It is recommended to have a dedicated directory for each service. If multiple services share common code, it
-should be placed in separate directory, for example `src/services/common` or `src/services/shared`.
+should be placed in a separate shared directory, for example `src/services/common` or `src/services/shared`.
 
 Let's create a `SalesItemService` service class for handling sales items. The service class file should be placed in
 `src/services/salesitem` directory in Backk microservice project. You extend your service class from [BaseService](../api/BASE_SERVICES.MD#baseservice)
 or [CrudEntityService](../api/BASE_SERVICES.MD#crudentityservice). In this case, when we are performing CRUD operations on a resource (or entity) it is natural
-to use `CrudEntityService` as base service.
+to use `CrudEntityService` as base service. 
 
 In the `SalesItemService` class, we write the service functions that we want to implement.
 Each service function can have either zero or exactly one argument, and the argument must be a JavaScript object.
@@ -70,17 +70,45 @@ If you service requires multiple data store, your service is not probably a micr
 you service to smaller pieces, so that each microservice requires only one data store to operate on.
 
 For `CrudEntityService`, you need to give two parameters:
-- map of error definitions (or empty object if service does not raise any specific own errors)
+- map of error definitions (or an empty object if the service does not raise any errors specific to business logic in your service functions)
 - dataStore
 
 ### Create Sales Item entity
 We need to create the Sales item entity class so that we can use it in our sales item service implementation.
-Let's create `SalesItem` class in directory `src/services/salesitem/types/entities`.
+Let's create `SalesItem` class in directory `src/services/salesitem/types/entities`:
 
 SalesItem.ts
 ```ts
+import { _Id, Entity, IsAscii, IsFloat, ReadWrite } from 'backk';
 
+@Entity()
+export default class SalesItem extends _Id {
+  @IsAscii()
+  @Length(1, 128)
+  @ReadWrite()
+  name: string;
+  
+  @IsFloat()
+  @MinMax(0, Number.MAX_VALUE)
+  @ReadWrite()
+  price: number;
+}
 ```
+
+Entity class is a blueprint for items to be stored in the data store (database). When you create an entity
+class, it needs to be annotated with `@Entity()` decorator. The name of the entity class will be the name of
+the table in the database.
+
+For each property in the entity class, you need define a validator or validators. For `string` type properties,
+you need the define a string validator, for example `@IsAcii()`. If you accept any string value, you should annotate
+the string property with `@IsAnyString()` decorator. Additionally, you need to define what is the maximum length of
+accepted string. You can use `@MaxLength` or `@Length()` decorator. The latter of which also defines the minimum length of 
+the string. Limiting the maximum length of the string is crucial to prevent possible DoS (Denial of Service) attacks.
+
+For number type properties, you must define one of following:
+`@IsInt()`, `@IsFloat` or `@IsBigInt()`. In addition to that, you need to define the allowed range of values with
+`@MinMax()` decorator. If some of the needed validators is missing, Backk will throw an exception about that.
+
 
 ### Implement first service function: deleteAllSalesItems
 SalesItemServiceImpl.ts

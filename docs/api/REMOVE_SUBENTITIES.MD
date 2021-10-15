@@ -1,4 +1,4 @@
-## Remove Sub-entities
+## Remove Sub-Entities
 
 - [removeSubEntityFromEntityById](#removesubentityfromentitybyid)
 - [removeSubEntitiesFromEntityById](#removesubentitiesfromentitybyid)

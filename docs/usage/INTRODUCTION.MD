@@ -299,84 +299,29 @@ export default class GetSalesItemsArg {
 For data store's `getEntitiesByFilters` you need to supply `postQueryOperations`.
 They are needed and used to define what response fields are wanted, how returned entities are sorted and paginated.
 
-Here is the definition of `PostQueryOperations` interface:
-```ts
-interface PostQueryOperations extends Projection, SortBys {
-  paginations?: Pagination[];
-  currentPageTokens?: CurrentPageToken[];
-}
-
-interface Projection {
-  includeResponseFields?: string[];
-  excludeResponseFields?: string[];
-}
-
-interface SortBys {
-  sortBys?: SortBy[];
-}
-
-class SortBy {
-  constructor(subEntityPath: string, fieldName: string, sortDirection: 'ASC' | 'DESC');
-  subEntityPath?: string = '';
-  fieldName!: string;
-  sortDirection!: 'ASC' | 'DESC';
-}
-
-class Pagination {
-  subEntityPath?: string = '';
- 
-  @MinMax(1, 100)
-  pageNumber!: number;
-
-  @MinMax(1, 100)
-  pageSize!: number;
-}
-
-class CurrentPageToken {
-  subEntityPath!: string;
-  currentPageToken!: string;
-}
-```
 
 In this example, we are using the default post query operations provided by the class `DefaultPostQueryOperations`.
 You can provide an instance of your own class matching the `PostQueryOperations` interface, or you can get this
 information from client. In the example above, one way to get that information from client is to extend the `GetSalesItemsArg` class from `DefaultPostQueryOperations`
-or your own class.
+or your own class (which can extend from `DefaultPostQueryOperations`, for example).
 
 ```ts
 class DefaultPostQueryOperations implements PostQueryOperations {
-  constructor(pageSize: number = 50) {
+  constructor(pageNumber: number = 1, pageSize: number = 50) {
     this.paginations = [new Pagination('*', 1, pageSize)]
   }
-
-  @ArrayMinSize(0)
-  @ArrayMaxSize(500)
-  @ArrayUnique()
+  
   includeResponseFields?: string[] = [];
-
-  @ArrayMinSize(0)
-  @ArrayMaxSize(500)
-  @ArrayUnique()
   excludeResponseFields?: string[] = [];
- 
-  @ArrayMinSize(0)
-  @ArrayMaxSize(25)
   sortBys: SortBy[] = [new SortBy('*', '_id', 'ASC'), new SortBy('*', 'id', 'ASC')];
-
-  @ArrayMinSize(0)
-  @ArrayMaxSize(25)
   paginations: Pagination[];
-
-  @ArrayMinSize(0)
-  @ArrayMaxSize(25)
   currentPageTokens: CurrentPageToken[] = []
 }
 ```
 
 Using an instance of `DefaultPostQueryOperations` will return all entity fields (this is because empty array for `includeResponseFields` means that all fields are returned)
 No fields are excluded from the response and entities and their sub-entities are sorted by `_id` or `id` fields.
-The response will contain the first page of results where page size is given by the `pageSize` argument for the `DefaultPostQueryOperations` class constructor.
-
+The response will contain the `pageNumber` page of results with page size `pageSize` as given in arguments of the `DefaultPostQueryOperations` class constructor.
 
 ### Implement rest of the SalesItemService
 
@@ -386,13 +331,16 @@ import SalesItemService from './SalesItemService';
 import SalesItem from './types/entities/SalesItem';
 
 export default class SalesItemServiceImpl extends SalesItemService {
-  @AllowForEveryUser()
-  getSalesItems(arg: GetSalesItemsArg): PromiseErrorOr<Many<SalesItem>> {
-    return this.dataStore.getEntitiesByFilters()
+  getSalesItem({ _id }: _Id): PromiseErrorOr<One<SalesItem>> {
+    return this.dataStore.getEntityById(SalesItem, _id);
   }
   
-  getSalesItem(arg: _Id): PromiseErrorOr<One<SalesItem>>;
-  updateSalesItem(arg: SalesItem): PromiseErrorOr<null>;
-  deleteSalesItem(arg: _Id): PromiseErrorOr<null>;
+  updateSalesItem(salesItem: SalesItem): PromiseErrorOr<null> {
+    return this.dataStore.updateEntity(SalesItem, salesItem);  
+  }
+  
+  deleteSalesItem({ _id }: _Id): PromiseErrorOr<null> {
+    return this.dataStore.deleteEntityById(SalesItem, _id);
+  }
 }
 ```

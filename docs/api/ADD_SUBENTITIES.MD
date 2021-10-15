@@ -1,4 +1,4 @@
-## Add Sub-entities
+## Add Sub-Entities
 
 - [addSubEntitiesToEntityById](#addsubentitiestoentitybyid)
 - [addSubEntitiesToEntityByFilters](#addsubentitiestoentitybyfilters)

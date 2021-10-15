@@ -1,4 +1,4 @@
-## Add/Check/Remove Entity Array Field Values
+## Add/Check/Remove Entity's Primitive Array Field Values
 
 - [addArrayFieldValuesToEntityById](#addarrayfieldvaluestoentitybyid)
 - [doesArrayFieldContainValueInEntityById](#doesarrayfieldcontainvalueinentitybyid)

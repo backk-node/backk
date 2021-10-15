@@ -354,3 +354,8 @@ npm run start:dev
 
 Wait your microservice to start. Launch Postman and in Postman import following `generated/integrationtests/integrationTestsPostmanCollection.json`
 file to Postman. Now you can run the tests in the Postman collection in Postman.
+
+You can also run integrations test from command line:
+```ts
+npm run integrationtest:dev
+```

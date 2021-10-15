@@ -328,8 +328,6 @@ Z
 *src/service/startup/StartupCheckService.ts,3/c/3c94b7ecf864ecb2fae8f2b6958fb46cc906661c
 S
 #src/service/LivenessCheckService.ts,c/0/c0b72675266582882b63fbd507b754b2a82b8cd7
-P
- src/initialization/initialize.ts,c/7/c7341d070a67a1a3d1c6ff90302db1cb5090555d
 u
 Esrc/decorators/service/function/serviceFunctionAnnotationContainer.ts,6/f/6f969f85640cfffcf6ed8d82aff088220b97d615
 Q
@@ -464,12 +462,8 @@ W
 0src/configuration/reloadLoggingConfigOnChange.ts,0/9/09451dff59aadaf3b899ceb762e17b8d7116f249
 \
 ,src/decorators/service/function/TestSetup.ts,e/e/eea76718fe98d368508cdea5deaf4d2f3633eed8
-P
- src/observability/logging/log.ts,9/0/9060b5fd2ebac332af3b034c09f90effc59f95d2
 f
 6src/observability/logging/audit/createAuditLogEntry.ts,9/3/93ee41cdce181e9e3b24f2cec0e1636fca8d4985
-[
-+src/observability/logging/logEnvironment.ts,e/2/e2977c9c028b7a5f9f113c1370453b46c7aab27a
 d
 4src/postman/writeTestsPostmanCollectionExportFile.ts,8/7/87e4fabf982d3fcb19cf6b5bd33aacaa35eb79bb
 Z

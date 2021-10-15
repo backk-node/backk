@@ -1,6 +1,6 @@
 import typePropertyAnnotationContainer from '../decorators/typeproperty/typePropertyAnnotationContainer';
 
-const subPropertyNamesWhoseValuesShouldBeEncrypted = [
+export const subPropertyNamesWhoseValuesShouldBeEncrypted = [
   'username',
   'user_name',
   'displayname',
@@ -31,6 +31,7 @@ const subPropertyNamesWhoseValuesShouldBeEncrypted = [
   'driverslicense',
   'drivers_license',
   'passport',
+  'pass port',
   'socialsecurity',
   'social_security',
   'licenseplate',

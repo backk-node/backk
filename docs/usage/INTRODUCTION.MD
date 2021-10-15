@@ -72,6 +72,16 @@ export default class SalesItemServiceImpl extends SalesItemService {
 }
 ```
 
+Add your service to `microservice.ts`:
+
+```ts
+import SalesItemServiceImpl from './services/salesitem/SalesItemServiceImpl';
+
+class MicroserviceImpl extends Microservice {
+  private readonly salesItemService = new SalesItemServiceImpl();
+}
+```
+
 ### Create service constructor
 SalesItemServiceImpl.ts
 ```ts

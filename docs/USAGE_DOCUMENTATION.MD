@@ -1,24 +1,6 @@
 ## Usage Documentation
 - [Introduction](usage/INTRODUCTION.MD)
-- [Microservice Initialization]
-- [Security]
-  - [Authorization Service]
-  - Service and Service Function access control
-  - Data encryption and hashing in Data store
-  - Entity property access control
-  - Request max length checking
-  - Mandatory numeric value limitation
-  - Streaming JSON parsing
-  - Mandatory string max length validation
-  - Safer REgex handling
-  - Service function Argument validation
-  - Service Function Response validation
-  - Captcha requirement
-  - Audit logging
-  - Safe logging 
-  - Mandatory pagination
-  - Next/prev pagination
-  - SQL injection prevention
+- [Microservice Initialization](usage/INITIALIZATION.MD)
 - [Special Service Function Types]
   - Startup Tasks
   - Cron Jobs
@@ -71,4 +53,21 @@
   - Platform helm chart
 - [Continuous Integration]
 - [Continuous Deployment]
-- 
+- [Security]
+  - [Authorization Service]
+  - Service and Service Function access control
+  - Data encryption and hashing in Data store
+  - Entity property access control
+  - Request max length checking
+  - Mandatory numeric value limitation
+  - Streaming JSON parsing
+  - Mandatory string max length validation
+  - Safer REgex handling
+  - Service function Argument validation
+  - Service Function Response validation
+  - Captcha requirement
+  - Audit logging
+  - Safe logging
+  - Mandatory pagination
+  - Next/prev pagination
+  - SQL injection prevention

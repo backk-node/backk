@@ -146,7 +146,7 @@ export { default as tryGetValuesByXPathFromXmlFile } from './file/tryGetValuesBy
 
 // Observability
 export { default as initializeDefaultJaegerTracing } from './observability/distributedtracinig/initializeDefaultJaegerTracing';
-export { Severity, default as log } from './observability/logging/log';
+export { logEntryWhitelist, Severity, default as log } from './observability/logging/log';
 export { default as defaultPrometheusMeter } from './observability/metrics/defaultPrometheusMeter';
 
 // Access remote services

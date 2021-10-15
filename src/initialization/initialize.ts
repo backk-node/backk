@@ -13,7 +13,7 @@ import changePackageJsonNameProperty from '../utils/changePackageJsonNamePropert
 
 export default async function initialize(
   microservice: Microservice,
-  commandLineArgs?: string[],
+  commandLineArgs: string[],
   shouldGeneratePostmanIntegrationTestsOnRestartInDevEnv = true
 ) {
   if (

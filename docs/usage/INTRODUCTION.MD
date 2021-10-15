@@ -344,3 +344,13 @@ export default class SalesItemServiceImpl extends SalesItemService {
   }
 }
 ```
+
+### Run Integration Tests with Postman
+
+Start your created Backk microservice:
+```ts
+npm run start:dev
+```
+
+Wait your microservice to start. Launch Postman and in Postman import following `generated/integrationtests/integrationTestsPostmanCollection.json`
+file to Postman. Now you can run the tests in the Postman collection in Postman.

@@ -16,7 +16,7 @@ import { Lengths, Values } from "../../constants/constants";
 import CurrentPageToken from "./CurrentPageToken";
 
 export default class DefaultPostQueryOperations implements PostQueryOperations {
-  constructor(pageSize: number = Values._50) {
+  constructor(pageNumber: number = 1, pageSize: number = Values._50) {
     this.paginations = [new Pagination('*', 1, pageSize)]
   }
 
@@ -34,7 +34,7 @@ export default class DefaultPostQueryOperations implements PostQueryOperations {
   @MaxLengthAndMatches(Lengths._512, /^[a-zA-Z_]([a-zA-Z0-9_.])+$/, { each: true }, true)
   @IsArray()
   @ArrayMinSize(0)
-  @ArrayMaxSize(Values._500)
+  @ArrayMaxSize(Values._100)
   @ArrayUnique()
   excludeResponseFields?: string[] = [];
 
@@ -51,7 +51,7 @@ export default class DefaultPostQueryOperations implements PostQueryOperations {
   @ValidateNested({ each: true })
   @IsArray()
   @ArrayMinSize(0)
-  @ArrayMaxSize(Values._25)
+  @ArrayMaxSize(Values._100)
   paginations: Pagination[];
 
   @IsOptional()
@@ -59,6 +59,6 @@ export default class DefaultPostQueryOperations implements PostQueryOperations {
   @ValidateNested({ each: true })
   @IsArray()
   @ArrayMinSize(0)
-  @ArrayMaxSize(Values._25)
+  @ArrayMaxSize(Values._100)
   currentPageTokens: CurrentPageToken[] = []
 }

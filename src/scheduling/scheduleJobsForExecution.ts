@@ -28,7 +28,7 @@ export default async function scheduleJobsForExecution(
         await dataStore.tryReserveDbConnectionFromPool();
         [scheduledJobs] = await dataStore.getAllEntities(
           __Backk__JobScheduling,
-          new DefaultPostQueryOperations(Number.MAX_SAFE_INTEGER),
+          new DefaultPostQueryOperations(1, Number.MAX_SAFE_INTEGER),
           false
         );
         dataStore.tryReleaseDbConnectionBackToPool();

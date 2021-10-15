@@ -4,7 +4,7 @@
 - [CrudEntityService](#crudentityservice)
 - [UserAccountBaseService](#useraccountbaseservice)
 - [AuthorizationService](#authorizationservice)
-- [JwtAuhtorizationServiceImpl](#jwtauthorizationserviceimpl)
+- [JwtAuthorizationServiceImpl](#jwtauthorizationserviceimpl)
 - [ResponseCacheConfigService](#responsecacheconfigservice)
 - [CaptchaVerificationService](#captchaverificationservice)
 - [LivenessCheckService](#livenesscheckservice)

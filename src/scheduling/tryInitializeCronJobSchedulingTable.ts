@@ -22,7 +22,7 @@ export default async function tryInitializeCronJobSchedulingTable(dataStore: Abs
           const [entity, error] = await dataStore.getEntityByFilters(
             __Backk__CronJobScheduling,
             {serviceFunctionName },
-            new DefaultPostQueryOperations(Number.MAX_SAFE_INTEGER),
+            new DefaultPostQueryOperations(1, Number.MAX_SAFE_INTEGER),
             false
           );
 

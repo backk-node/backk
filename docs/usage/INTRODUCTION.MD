@@ -276,7 +276,7 @@ export default class SalesItemServiceImpl extends SalesItemService {
     
     const postQueryOperations = new DefaultPostQueryOperations();
 
-    return this.dataStore.getEntitiesByFilters(SalesItem, [filter], postQueryOperations, true);
+    return this.dataStore.getEntitiesByFilters(SalesItem, [filter], postQueryOperations, false);
   }
 }
 ```
@@ -316,6 +316,7 @@ interface SortBys {
 }
 
 class SortBy {
+  constructor(subEntityPath: string, fieldName: string, sortDirection: 'ASC' | 'DESC');
   subEntityPath?: string = '';
   fieldName!: string;
   sortDirection!: 'ASC' | 'DESC';
@@ -323,10 +324,58 @@ class SortBy {
 
 class Pagination {
   subEntityPath?: string = '';
+ 
+  @MinMax(1, 100)
   pageNumber!: number;
+
+  @MinMax(1, 100)
   pageSize!: number;
 }
+
+class CurrentPageToken {
+  subEntityPath!: string;
+  currentPageToken!: string;
+}
 ```
+
+In this example, we are using the default post query operations provided by the class `DefaultPostQueryOperations`.
+You can provide an instance of your own class matching the `PostQueryOperations` interface, or you can get this
+information from client. In the example above, one way to get that information from client is to extend the `GetSalesItemsArg` class from `DefaultPostQueryOperations`
+or your own class.
+
+```ts
+class DefaultPostQueryOperations implements PostQueryOperations {
+  constructor(pageSize: number = 50) {
+    this.paginations = [new Pagination('*', 1, pageSize)]
+  }
+
+  @ArrayMinSize(0)
+  @ArrayMaxSize(500)
+  @ArrayUnique()
+  includeResponseFields?: string[] = [];
+
+  @ArrayMinSize(0)
+  @ArrayMaxSize(500)
+  @ArrayUnique()
+  excludeResponseFields?: string[] = [];
+ 
+  @ArrayMinSize(0)
+  @ArrayMaxSize(25)
+  sortBys: SortBy[] = [new SortBy('*', '_id', 'ASC'), new SortBy('*', 'id', 'ASC')];
+
+  @ArrayMinSize(0)
+  @ArrayMaxSize(25)
+  paginations: Pagination[];
+
+  @ArrayMinSize(0)
+  @ArrayMaxSize(25)
+  currentPageTokens: CurrentPageToken[] = []
+}
+```
+
+Using an instance of `DefaultPostQueryOperations` will return all entity fields (this is because empty array for `includeResponseFields` means that all fields are returned)
+No fields are excluded from the response and entities and their sub-entities are sorted by `_id` or `id` fields.
+The response will contain the first page of results where page size is given by the `pageSize` argument for the `DefaultPostQueryOperations` class constructor.
 
 
 ### Implement rest of the SalesItemService

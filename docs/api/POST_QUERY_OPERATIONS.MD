@@ -75,3 +75,7 @@ class DefaultPostQueryOperations implements PostQueryOperations {
   currentPageTokens: CurrentPageToken[] = []
 }
 ```
+
+Sub-entity path defines the entity for which post query operation is dedicated.
+Empty sub-entity path means the root entity and sub-entity path `'*'` means all sub-entity paths including the root entity.
+Sub-entity path is given with dot notation, for example: `orders.orderItems`

@@ -3,11 +3,11 @@ import shouldEncryptValue from "../../../crypt/shouldEncryptValue";
 import encrypt from "../../../crypt/encrypt";
 
 export default class SqlExpression {
-  constructor(readonly expression: string, readonly values?: object, readonly subEntityPath = '') {}
+  constructor(readonly sqlExpression: string, readonly values?: object, readonly subEntityPath = '') {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   toSqlString(): string {
-    return this.expression;
+    return this.sqlExpression;
   }
 
   getValues(): object | undefined {

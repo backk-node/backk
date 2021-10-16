@@ -1,30 +1,14 @@
 ## Usage Documentation
 - [Introduction](usage/INTRODUCTION.MD)
 - [Microservice Initialization](usage/INITIALIZATION.MD)
-- [Special Service Function Types]
-  - Startup Tasks
-  - Cron Jobs
-- [Executing Multiple Service Functions with One Request]
-- [Scheduling Service function execution]
-- [Caching]
-  - Caching Service Function Responses
-  - Generic Caching
-  - Generic In-Memory Caching
-- [Class composition using .type files]
-- [Observability]
-  - Logging
-    - Changing logging level
-  - Distributed Tracing with Jaeger
-  - Prometheus Metrics
-    - Default Metrics
-    - Collecting Custom Metrics
-- [Integration Testing]
-  - [Automatic Integration Tests]
-  - [Manual Integration Tests]
-- [Microservice Metadata]
-  - Backk metadata
-  - OpenAPI
-- [Documenting Microservice]
+- [Creating Entity Classes](usage/CREATING_ENTITY_CLASSES.MD)
+  - [Class composition using .type files]
+- Creating Service Function Argument Classes
+- [Data Store]
+  - Method Groups 
+  - Query Filters
+  - Post Query Operations
+    - GraphQL / JSON support
 - [Accessing Remote Services]
   - Synchronous
     - FetchFromRemoteService
@@ -34,11 +18,32 @@
     - Kafka
     - Redis
     - Kafka with Transaction
-  
-- [Data Store]
-  - Query Filters
-  - Post Query Operations
-    - GraphQL / JSON support
+- [Special Service Function Types]
+  - Startup Tasks
+  - Cron Jobs
+- [Executing Multiple Service Functions within One Request]
+- [Scheduling Service function execution]
+- [Caching]
+  - Caching Service Function Responses
+  - Generic Caching
+  - Generic In-Memory Caching
+- [Microservice Metadata]
+  - Backk metadata
+  - OpenAPI
+- [Documenting Microservice]
+- [Observability]
+  - Implement liveness, readiness and startup checks  
+  - Logging
+  - Changing logging level
+  - Distributed Tracing with Jaeger
+  - Prometheus Metrics
+    - Default Metrics
+    - Collecting Custom Metrics
+- [Integration Testing]
+  - [Automatic Integration Tests]
+  - [Manual Integration Tests]
+- Kubernetes Deployment
+  - Helm Charts
 - [Infrastructure and Platform]
   - IaC kubernetes cluster in cloud
   - Platform services

@@ -1,10 +1,10 @@
 ## Query Filters
 
-Some of the `AbstractDataStore` require query filters.
-Query filters are defined using following types:
+Some of the `AbstractDataStore` method require query filters.
+Query filters are defined using following type:
 
 ```ts
-filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object
+type QueryFilters = Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object
 ```
 
 ### Common Equality Filters
@@ -108,10 +108,12 @@ User defined filters are filters that clients can specify in service function ca
 Example of using user defined filters to query sales items:
 
 ```ts
-abstract class SalesItemService extends CrudEntityService {
-  abstract getSalesItemsByUserDefinedFilters(
-    arg: GetSalesItemsByUserDefinedFiltersArg
-  ): PromiseErrorOr<Many<SalesItem>>;
+class SalesItemService extends CrudEntityService {
+ getSalesItemsByUserDefinedFilters(
+   { filters }: GetSalesItemsByUserDefinedFiltersArg
+  ): PromiseErrorOr<Many<SalesItem>> {
+   return this.dataStore.getEntitiesByFilters(SalesItem, filters, new DefaultPostQueryOperations(), false);
+ }
 }
 
 class GetSalesItemsByUserDefinedFiltersArg {

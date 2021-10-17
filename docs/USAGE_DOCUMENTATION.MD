@@ -2,8 +2,7 @@
 - [Introduction](usage/INTRODUCTION.MD)
 - [Microservice Initialization](usage/INITIALIZATION.MD)
 - [Creating Entity Classes](usage/CREATING_ENTITY_CLASSES.MD)
-  - [Class composition using .type files]
-- Creating Service Function Argument Classes
+- [Creating Service Function Argument and Response Classes](usage/ARGUMENT_RESPONSE_CLASSES.MD)
 - [Data Store]
   - Method Groups 
   - Query Filters

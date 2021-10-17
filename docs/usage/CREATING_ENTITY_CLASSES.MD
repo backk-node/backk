@@ -55,24 +55,51 @@ class UserAccount extends BaseUserAccount {
 }
 ```
 
-Number type properties must be annotated with one of following decorators otherwise an exception will be thrown: -`IsInt()` -`IsFloat()` -`IsBigInt()`
+Number type properties must be annotated with one of following decorators otherwise an exception will be thrown:
+
+- `IsInt()`
+- `IsFloat()`
+- `IsBigInt()`
 
 String type properties must be annotated with one of the string validators or with `IsAnyString()` decorator, otherwise an exception will be thrown.
 
 String and integer type properties must be annotated with one of following to validate the uniqueness of values in the database,
-otherwise an execption will be thrown: -`@Unique()` -`@NotUnique()`
+otherwise an execption will be thrown:
 
-The possible value range of number type properties must be validated with following decorators or an exception will be thrown: -`@Min()` and `@Max()` -`@MinMax()`
+- `@Unique()`
+- `@NotUnique()`
 
-The maximum lenght of string type properties must validated with following decorators or an exception will be thrown: -`@MaxLength()` -`@Length()`
+The possible value range of number type properties must be validated with following decorators or an exception will be thrown:
 
-Each entity property having a sub-entity array type must have one of following decorators or an exception will be thrown: -`@OneToMany()` -`@ManyToMany()`
+- `@Min()` and `@Max()`
+- `@MinMax()`
 
-Each array type property that IS NOT read-only must have the following decorators or an exception will be thrown: -`@ArrayMinSize()` -`@ArrayMaxSize()`
+The maximum length of string type properties must be validated with following decorators or an exception will be thrown:
+
+- `@MaxLength()`
+- `@Length()`
+
+Each entity property having a sub-entity array type must have one of following decorators or an exception will be thrown:
+
+- `@OneToMany()`
+- `@ManyToMany()`
+
+Each array type property that IS NOT read-only must have the following decorators or an exception will be thrown:
+
+- `@ArrayMinSize()`
+- `@ArrayMaxSize()`
 
 Each entity property must be annotated with property access mode decorator or an exception will be thrown.
 Access mode defines how the property can be accessed by the microservice clients. Private properties cannot be accessed by clients
-and read-write properties offer full access. Access mode decorators are: -`@Private()` -`@ReadWrite()` -`@ReadOnly()` -`@ReadUpdate()` -`@WriteOnly()` -`@CreateOnly()` -`@UpdateOnly()`
+and read-write properties offer full access. Access mode decorators are:
+
+- `@Private()`
+- `@ReadWrite()`
+- `@ReadOnly()`
+- `@ReadUpdate()`
+- `@WriteOnly()`
+- `@CreateOnly()`
+- `@UpdateOnly()`
 
 You can document entity property by writing a comment above it:
 
@@ -117,14 +144,13 @@ npm run generateTypes
 ```
 
 Possible operations for class property composition:
-| Operation | Description |
-|-----------|-------------|
-| `...Pick<OtherEntityClass, 'propertyName1' | 'propertyName2' ...>;` | Picks the listed properties from `OtherEntityClass`|
-| `...Omit<OtherEntityClass, 'propertyName1' | 'propertyName2' ...>;` | Picks all except the listed properties from `OtherEntityClass` |
-| `...OtherEntityClass;` | Picks all properties from `OtherEntityClass`|
-| `...Private<Pick<OtherEntityClass, 'propertyName1' | 'propertyName2' ...>;>` | Picks the listed properties from `OtherEntityClass` and annotates them with `@Private` decorator |
-| `...ReadWrite<Pick<OtherEntityClass, 'propertyName1' | 'propertyName2' ...>;>` | Picks the listed properties from `OtherEntityClass` and annotates them with `@RreadWrite` decorator |
-| `...ReadOnly<Pick<OtherEntityClass, 'propertyName1' | 'propertyName2' ...>;>` | Picks the listed properties from `OtherEntityClass` and annotates them with `@ReadOnly` decorator |
-| `...NonNullable<Pick<OtherEntityClass, 'propertyName1' | 'propertyName2' ...>;>` | Picks the listed properties from `OtherEntityClass` and makes the non-nullable |
 
-
+| Operation                                                                                        | Description                                                                                         |
+| ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| <code>...Pick<OtherEntityClass, 'propertyName1' &#124; 'propertyName2' ...>;</code>              | Picks the listed properties from `OtherEntityClass`                                                 |
+| <code>...Omit<OtherEntityClass, 'propertyName1' &#124; 'propertyName2' ...>;</code>              | Picks all except the listed properties from `OtherEntityClass`                                      |
+| <code>...OtherEntityClass;</code>                                                                | Picks all properties from `OtherEntityClass`                                                        |
+| <code>...Private<Pick<OtherEntityClass, 'propertyName1' &#124; 'propertyName2' ...>>;</code>     | Picks the listed properties from `OtherEntityClass` and annotates them with `@Private` decorator    |
+| <code>...ReadWrite<Pick<OtherEntityClass, 'propertyName1' &#124; 'propertyName2' ...>>;</code>   | Picks the listed properties from `OtherEntityClass` and annotates them with `@RreadWrite` decorator |
+| <code>...ReadOnly<Pick<OtherEntityClass, 'propertyName1' &#124; 'propertyName2' ...>>;</code>    | Picks the listed properties from `OtherEntityClass` and annotates them with `@ReadOnly` decorator   |
+| <code>...NonNullable<Pick<OtherEntityClass, 'propertyName1' &#124; 'propertyName2' ...>>;</code> | Picks the listed properties from `OtherEntityClass` and makes the non-nullable                      |

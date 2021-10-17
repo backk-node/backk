@@ -71,6 +71,8 @@ When you need to filter the entities queried from the data store, you can use [Q
 With query filters you can filter both root entities and their sub-entities.
 
 ### <a name="post-query-operations"></a> Post Query Operations
+Every data store operation involving querying entities requires/allows to provide [post query operations](../api/POST_QUERY_OPERATIONS.MD).
+Backk offers also [GraphQL/JSON query style support](../api/POST_QUERY_OPERATIONS.MD#graphql-json-support) for specifying what fields should be included in query response.
 
 
 #### <a name="graphql-json-support></a> GraphQL/JSON support

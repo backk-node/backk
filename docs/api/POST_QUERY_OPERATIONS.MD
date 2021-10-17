@@ -108,6 +108,8 @@ Sub-entity path defines the entity for which post query operation is dedicated.
 Empty sub-entity path means the root entity and sub-entity path `'*'` means all sub-entity paths including the root entity.
 Sub-entity path is given with dot notation, for example: `orders.orderItems`
 
+### <a name="graphql-json-support"></a> GraphQL and JSON support for including/excluding response fields
+
 `includeResponseFields` and `excludeResponseFields` can contain a GraphQL query format string, for example:
 
 ```
@@ -116,8 +118,9 @@ postQueryOperations.includeResponseFields = `{
   createdAtTimestamp
   orderItems {
     salesItems {
-    _id
-    title
+      _id
+      title
+    }
   }
 }`
 ```
@@ -132,8 +135,9 @@ postQueryOperations.includeResponseFields = JSON.stringfy({
   createdAtTimestamp: true
   orderItems: {
     salesItems: {
-    _id: true
-    title: true
+      _id: true
+      title: true
+    }
   }
 });
 ```

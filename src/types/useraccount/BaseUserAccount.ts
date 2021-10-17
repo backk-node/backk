@@ -1,4 +1,4 @@
-import _IdAndCaptcha from "../id/_IdAndCaptcha";
+import _IdAndCaptcha from "../_id/_IdAndCaptcha";
 import Unique from "../../decorators/typeproperty/Unique";
 import { IsString, MaxLength } from "class-validator";
 import IsUndefined from "../../decorators/typeproperty/IsUndefined";

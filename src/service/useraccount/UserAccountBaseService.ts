@@ -1,4 +1,4 @@
-import _Id from "../../types/id/_Id";
+import _Id from "../../types/_id/_Id";
 import CrudEntityService from "../crudentity/CrudEntityService";
 import AllowForMicroserviceInternalUse from "../../decorators/service/function/AllowForMicroserviceInternalUse";
 import { PromiseErrorOr } from "../../types/PromiseErrorOr";

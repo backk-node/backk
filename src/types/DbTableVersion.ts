@@ -1,6 +1,6 @@
 import Entity from "../decorators/entity/Entity";
 import MaxLengthAndMatches from "../decorators/typeproperty/MaxLengthAndMatches";
-import _IdAndVersion from "./id/_IdAndVersion";
+import _IdAndVersion from "./_id/_IdAndVersion";
 import Unique from "../decorators/typeproperty/Unique";
 import { IsString } from "class-validator";
 import { Lengths } from "../constants/constants";

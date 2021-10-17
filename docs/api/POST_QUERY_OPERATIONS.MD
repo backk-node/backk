@@ -111,7 +111,7 @@ Sub-entity path is given with dot notation, for example: `orders.orderItems`
 `includeResponseFields` and `excludeResponseFields` can contain a GraphQL query format string, for example:
 
 ```
-includeResponseFields = `{
+postQueryOperations.includeResponseFields = `{
   _id
   createdAtTimestamp
   orderItems {
@@ -127,7 +127,7 @@ It is easier for clients to maintain query object as plain JavaScript object ins
 For example:
 
 ```
-includeResponseFields = {
+postQueryOperations.includeResponseFields = JSON.stringfy({
   _id: true,
   createdAtTimestamp: true
   orderItems: {
@@ -135,5 +135,5 @@ includeResponseFields = {
     _id: true
     title: true
   }
-}
+});
 ```

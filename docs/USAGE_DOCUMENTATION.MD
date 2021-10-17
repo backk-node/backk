@@ -3,12 +3,8 @@
 - [Microservice Initialization](usage/INITIALIZATION.MD)
 - [Creating Entity Classes](usage/CREATING_ENTITY_CLASSES.MD)
 - [Creating Service Function Argument and Response Classes](usage/ARGUMENT_RESPONSE_CLASSES.MD)
-- [Data Store]
-  - Method Groups 
-  - Query Filters
-  - Post Query Operations
-    - GraphQL / JSON support
-- [Accessing Remote Services]
+- [Data Store](usage/DATA_STORE.MD)
+- [Accessing Remote Services](usage/REMOTE_SERVICE_ACCESS.MD)
   - Synchronous
     - FetchFromRemoteService
     - CallRemoteService

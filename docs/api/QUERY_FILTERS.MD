@@ -100,3 +100,142 @@ Below example of `SqlInExpression` will check that root entity's `_id` field has
 ```ts
 new SqlInExpression('_id', salesItemIds);
 ```
+
+### User Defined Filters
+
+User defined filters are filters that clients can specify in service function call arguments.
+
+Example of using user defined filters to query sales items:
+
+```ts
+abstract class SalesItemService extends CrudEntityService {
+  abstract getSalesItemsByUserDefinedFilters(
+    arg: GetSalesItemsByUserDefinedFiltersArg
+  ): PromiseErrorOr<Many<SalesItem>>;
+}
+
+class GetSalesItemsByUserDefinedFiltersArg {
+  @ArrayMinSize(1)
+  @ArrayMaxSize(10)
+  @TestValue([
+    {
+      fieldName: 'title',
+      operator: '=',
+      value: 'abc'
+    }
+  ])
+  filters!: UserDefinedFilter[];
+}
+```
+
+```ts
+class UserDefinedFilter {
+  subEntityPath?: string = '';
+  fieldName?: string;
+
+  fieldFunction?:
+    | 'ABS'
+    | 'CEILING'
+    | 'FLOOR'
+    | 'ROUND'
+    | 'LENGTH'
+    | 'LOWER'
+    | 'LTRIM'
+    | 'RTRIM'
+    | 'TRIM'
+    | 'UPPER'
+    | 'DAY'
+    | 'HOUR'
+    | 'MINUTE'
+    | 'MONTH'
+    | 'QUARTER'
+    | 'SECOND'
+    | 'WEEK'
+    | 'WEEKDAY'
+    | 'YEAR';
+
+  operator?:
+    | '='
+    | '!='
+    | '>'
+    | '<'
+    | '>='
+    | '<='
+    | 'IN'
+    | 'NOT IN'
+    | 'LIKE'
+    | 'NOT LIKE'
+    | 'IS NULL'
+    | 'IS NOT NULL'
+    | 'OR';
+
+  value: any;
+
+  orFilters?: OrFilter[];
+}
+
+class OrFilter {
+  fieldName!: string;
+
+  fieldFunction?:
+    | 'ABS'
+    | 'CEILING'
+    | 'FLOOR'
+    | 'ROUND'
+    | 'LENGTH'
+    | 'LOWER'
+    | 'LTRIM'
+    | 'RTRIM'
+    | 'TRIM'
+    | 'UPPER'
+    | 'DAY'
+    | 'HOUR'
+    | 'MINUTE'
+    | 'MONTH'
+    | 'QUARTER'
+    | 'SECOND'
+    | 'WEEK'
+    | 'WEEKDAY'
+    | 'YEAR';
+
+  operator?:
+    | '='
+    | '!='
+    | '>'
+    | '<'
+    | '>='
+    | '<='
+    | 'IN'
+    | 'NOT IN'
+    | 'LIKE'
+    | 'NOT LIKE'
+    | 'IS NULL'
+    | 'IS NOT NULL'
+    | 'OR';
+
+  value: any;
+}
+```
+It is not possible to query entity fields that don't have read access mode specified.
+
+If you want to limit the queried fields, you can extend the `UserDefinedFilter` class:
+
+```ts
+class SalesItemUserDefinedFilter extends UserDefinedFilter {
+  subEntityPath?: string = '';
+  fieldName?: 'title' | 'description';
+}
+
+class GetSalesItemsByUserDefinedFiltersArg {
+  @ArrayMinSize(1)
+  @ArrayMaxSize(10)
+  @TestValue([
+    {
+      fieldName: 'title',
+      operator: '=',
+      value: 'abc'
+    }
+  ])
+  filters!: SalesItemUserDefinedFilter[];
+}
+```

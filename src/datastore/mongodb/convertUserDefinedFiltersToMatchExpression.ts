@@ -178,6 +178,7 @@ function getWhereExpression(userDefinedFilter: UserDefinedFilter) {
   }
 }
 
+// TODO: Don't allow READ-DENIED fields to be queried
 export default function convertUserDefinedFiltersToMatchExpression(
   userDefinedFilters: UserDefinedFilter[]
 ): object {

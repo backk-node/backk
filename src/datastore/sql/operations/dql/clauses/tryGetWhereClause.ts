@@ -23,6 +23,7 @@ export default function tryGetWhereClause<T>(
       .map((filter) => (filter as SqlExpression).toSqlString())
       .join(' AND ');
 
+    // TODO: Don't allow READ-DENIED fields to be queried
     const userDefinedFiltersSql = filters
       .filter((filter) => filter instanceof UserDefinedFilter)
       .map((filter, index) => {

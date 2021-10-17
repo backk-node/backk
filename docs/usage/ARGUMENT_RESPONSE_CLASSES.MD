@@ -56,7 +56,7 @@ PayOrderArg.type
 
 ```ts
 class PayOrderArg {
-...NonNullable<Pick<Order, '_id' | 'paymentGateway' | 'transactionId' | 'transactionTimestamp' | 'paymentAmount'>>
+...NonNullable<Pick<Order, '_id' | 'paymentGateway' | 'transactionId' | 'transactionTimestamp' | 'paymentAmount'>>;
 }
 ```
 

@@ -75,7 +75,7 @@ interface SendToOptions {
 }
 
 enum CompressionTypes {
-  None = 0,
+  None = 0, // Default
   GZIP = 1,
   Snappy = 2,
   LZ4 = 3,
@@ -85,7 +85,7 @@ enum CompressionTypes {
 enum SendAcknowledgementType {
   NONE,
   LEADER_ONLY,
-  ALL_REPLICAS = -1
+  ALL_REPLICAS = -1 // Default
 }
 ```
 Sends a request to a remote Backk microservice `microserviceName`'s service function `serviceFunctionName` via a message queue as denoted by `communicationMethod` (Kafka or Redis).
@@ -129,7 +129,7 @@ interface SendToOptions {
 }
 
 enum CompressionTypes {
-  None = 0,
+  None = 0, // Default
   GZIP = 1,
   Snappy = 2,
   LZ4 = 3,
@@ -139,7 +139,7 @@ enum CompressionTypes {
 enum SendAcknowledgementType {
   NONE,
   LEADER_ONLY,
-  ALL_REPLICAS = -1
+  ALL_REPLICAS = -1 // Default
 }
 ```
 

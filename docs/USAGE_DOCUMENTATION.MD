@@ -9,9 +9,7 @@
 - [Executing Multiple Service Functions within One Request](usage/MULTIPLE_SERVICE_FUNCTION_CALLS.MD)
 - [Scheduling Service Function Execution](usage/SCHEDULING_SERVICE_FUNCTION_EXECUTION.MD)
 - [Caching](usage/CACHING.MD)
-- [Microservice Metadata]
-  - Backk metadata
-  - OpenAPI
+- [Microservice Metadata](usage/MICROSERVICE_METADATA.MD)
 - [Documenting Microservice]
 - [Observability]
   - Implement liveness, readiness and startup checks  

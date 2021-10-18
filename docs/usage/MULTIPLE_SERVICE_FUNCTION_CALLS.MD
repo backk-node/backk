@@ -1,7 +1,6 @@
 ## Executing Multiple Service Functions within One Request
-It is possible to execute multiple service function calls from one HTTP request.
-
-When starting the HTTP server, `options` can be provided to allow multiple service function execution:
+It is possible to execute multiple service function calls from one HTTP request. By default, this feature is not enabled, 
+but when starting the HTTP server using `startHttpServerFor`, `options` can be provided to allow multiple service function execution:
 
 ```ts
 function startHttpServerFor(
@@ -33,6 +32,10 @@ When you want to execute multiple service functions, you should send the HTTP re
 
 For the HTTP request body, you should specify the to be executed service functions and their arguments as JSON object:
 
+```
+POST /executeMultipleInParallelInsideTransaction
+```
+
 ```json
 {
   "shirtSalesItems": {
@@ -52,6 +55,10 @@ For the HTTP request body, you should specify the to be executed service functio
 
 If the service function exists in a remote Backk microservice, you need to specify the remote Backk
 microservice name (and namespace, if it is not same). For example:
+
+```
+POST /executeMultipleInParallelInsideTransaction
+```
 
 ```json
 {

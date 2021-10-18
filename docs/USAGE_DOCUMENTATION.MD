@@ -5,9 +5,7 @@
 - [Creating Service Function Argument and Response Classes](usage/ARGUMENT_RESPONSE_CLASSES.MD)
 - [Data Store](usage/DATA_STORE.MD)
 - [Accessing Remote Services](usage/REMOTE_SERVICE_ACCESS.MD)
-- [Special Service Function Types]
-  - Startup Tasks
-  - Cron Jobs
+- [Special Service Function Types](usage/SPECIAL_SERVICE_FUNCTION_TYPES)
 - [Executing Multiple Service Functions within One Request]
 - [Scheduling Service function execution]
 - [Caching]

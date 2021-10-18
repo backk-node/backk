@@ -8,8 +8,10 @@
 ### <a name="callremoteservice"></a> callRemoteService
 ```ts
 async function callRemoteService(
-  remoteServiceFunctionUrl: string,
+  microserviceName: string,
+  serviceFunctionName: string,
   serviceFunctionArgument?: object,
+  microserviceNamespace = process.env.SERVICE_NAMESPACE,
   options?: HttpRequestOptions
 ): PromiseErrorOr<object | null>
 
@@ -18,8 +20,9 @@ interface HttpRequestOptions {
 }
 ```
 
-Calls a remote Backk service at URL `remoteServiceFunctionUrl` with argument `serviceFunctionArgument`.
-By default HTTP POST method is used.
+Calls a remote Backk microservice `microserviceName` and executes remote service function `serviceFunctionName` with argument `serviceFunctionArgument`.
+The remote Backk microservice Kunbernetes namespace is defined using `microserviceNamespace` argument.
+The HTTP method used can be defined in `options`. By default, HTTP POST method is used.
 
 Returns an object, null or error.
 

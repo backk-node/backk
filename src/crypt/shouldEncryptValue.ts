@@ -100,11 +100,23 @@ export const subPropertyNamesWhoseValuesShouldBeEncrypted = [
   'identitynumber',
   'identity_number',
   'insurancenumber',
-  'insurance_number'
+  'insurance_number',
+  'ethnic',
+  'political_party',
+  'politicalparty',
+  'religion',
+  'labour_union',
+  'labor_union',
+  'labourunion',
+  'laborunion',
+  'salary',
+  'benefit',
+  'genetic'
 ];
 
 const propertyNamesWhoseValuesShouldBeEncrypted = [
   'user',
+  'race',
   'ssn',
   'cvc',
   'cvv',

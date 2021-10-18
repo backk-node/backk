@@ -1,14 +1,15 @@
-import _ from "lodash";
-import { CommunicationMethod, sendOneOrMore, SendToOptions } from "./sendToRemoteService";
-import parseRemoteServiceFunctionCallUrlParts from "../utils/parseRemoteServiceFunctionCallUrlParts";
+import _ from 'lodash';
+import { CommunicationMethod, sendOneOrMore, SendToOptions } from './sendToRemoteService';
+import parseRemoteServiceFunctionCallUrlParts from '../utils/parseRemoteServiceFunctionCallUrlParts';
+import getKafkaServerFromEnv from './kafka/getKafkaServerFromEnv';
 
-export interface CallOrSendToSpec {
+export interface RemoteCallOrSendToSpec {
   communicationMethod: CommunicationMethod;
   microserviceName: string;
   serviceFunctionName: string;
   serviceFunctionArgument: object;
-  microserviceNamespace: string | undefined;
-  server: string;
+  microserviceNamespace?: string;
+  server?: string;
   sendResponseTo?: ResponseSendToSpec;
   options?: SendToOptions;
 }
@@ -28,7 +29,7 @@ export interface CallOrSendToUrlSpec {
   options?: SendToOptions;
 }
 
-export default async function sendToRemoteServiceInsideTransaction(sends: CallOrSendToSpec[]) {
+export default async function sendToRemoteServiceInsideTransaction(sends: RemoteCallOrSendToSpec[]) {
   const foundRedisMessageBroker = sends.find((send) => send.communicationMethod !== 'kafka');
   if (foundRedisMessageBroker) {
     throw new Error('You can only use sendToRemoteServiceInsideTransaction with Kafka');
@@ -45,7 +46,8 @@ export default async function sendToRemoteServiceInsideTransaction(sends: CallOr
       sendResponseTo,
       options
     }) => ({
-      remoteServiceFunctionUrl: `${communicationMethod}://${server}/${microserviceName}.${microserviceNamespace}/${serviceFunctionName}`,
+      remoteServiceFunctionUrl: `${communicationMethod}://${server ??
+        getKafkaServerFromEnv()}/${microserviceName}.${microserviceNamespace}/${serviceFunctionName}`,
       serviceFunctionArgument: serviceFunctionArgument,
       sendResponseTo,
       options

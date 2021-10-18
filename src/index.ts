@@ -154,7 +154,7 @@ export { HttpRequestOptions, default as callRemoteService } from './remote/http/
 export { default as makeHttpRequest } from './remote/http/makeHttpRequest';
 export { SendToOptions, default as sendToRemoteService } from './remote/messagequeue/sendToRemoteService';
 export {
-  CallOrSendToSpec,
+  RemoteCallOrSendToSpec,
   default as sendToRemoteServiceInsideTransaction
 } from './remote/messagequeue/sendToRemoteServiceInsideTransaction';
 

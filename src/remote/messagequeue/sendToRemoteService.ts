@@ -1,6 +1,6 @@
 import { CompressionTypes } from "kafkajs";
 import { getNamespace } from "cls-hooked";
-import { CallOrSendToSpec, ResponseSendToSpec } from "./sendToRemoteServiceInsideTransaction";
+import { RemoteCallOrSendToSpec, ResponseSendToSpec } from "./sendToRemoteServiceInsideTransaction";
 import sendOneOrMoreToKafka, { SendAcknowledgementType } from "./kafka/sendOneOrMoreToKafka";
 import sendOneOrMoreToRedis from "./redis/sendOneOrMoreToRedis";
 import { validateServiceFunctionArguments } from "../utils/validateServiceFunctionArguments";
@@ -16,7 +16,7 @@ export interface SendToOptions {
 export type CommunicationMethod = 'http' | 'kafka' | 'redis';
 
 export async function sendOneOrMore(
-  sends: CallOrSendToSpec[],
+  sends: RemoteCallOrSendToSpec[],
   isTransactional: boolean
 ): PromiseErrorOr<null> {
   const clsNamespace = getNamespace('serviceFunctionExecution');

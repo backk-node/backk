@@ -478,8 +478,6 @@ T
 $src/execution/ServiceFunctionCall.ts,d/7/d769150ff5903b8b45f738b13d835f55b8282547
 X
 (src/execution/fetchFromRemoteServices.ts,9/f/9f67fbcce7e8a77bfaaf0c281f22e576957cce6f
-R
-"src/remote/http/makeHttpRequest.ts,6/3/638d167128ba5c5cb0465430a3e6af7d84b27653
 b
 2src/observability/metrics/defaultServiceMetrics.ts,7/3/7373b368b8eccc9c3c9b2ccadaf739d7e3676b38
 n

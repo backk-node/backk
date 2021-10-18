@@ -10,7 +10,6 @@
   - [Send Multiple Request to Remote Backk Services via Kafka inside Transaction](#sendtokafkainsidetransaction)
 
 ### <a name="synchronous"></a> Accessing Remote Services Synchronously
-
 There are three different ways to synchronously access remote services from your current Backk microservice.
 First way is to a declarative fetch of sub-entities from another Backk microservice.
 The second way is to call another Backk microservice to synchronously fetch data.
@@ -68,9 +67,85 @@ By default, it is the same as microservice calling the remote microservice.
 
 `callRemoteService` accepts fifth argument where HTTP method can be specified, default is POST.
 
+#### <a name="makehttprequest"></a> Make HTTP Requests
+Accessing non-Backk microservices and HTTP endpoints from Backk microservice is easy using `makeHttpRequest` function.
+`makeHttpRequest` will accept `requestUrl` argument and a JavaScript object as request body. The HTTP request
+is always made with content type `application/json`. Current request´s authorization header is added to the new request.
+Making HTTPS request is not possible. You should not use HTTPS, but instead configure Kubernetes service mesh mTLS 
+between microservices and Kubernetes cluster external services.
 
-#### <a name="makehttprequest"></a> Call Backk Remote Services
+```ts
+function makeHttpRequest(
+  requestUrl: string,
+  requestBodyObject?: object,
+  options?: HttpRequestOptions
+): PromiseErrorOr<object | null>
 
-### <a name="ssynchronous"></a> Accessing Remote Services Asynchronously
+interface HttpRequestOptions {
+  httpMethod?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+}
+```
+
+### <a name="synchronous"></a> Accessing Remote Services Asynchronously
+There are three different ways to access asynchronously remote Backk services from your Backk microservice.
+
+First way is to access them by sending a remote service function call request to Kafka, 
+the second way is to access them by sending a remote service function call request to Redis.
+
+The third way is to access multiple remote Backk services via Kafka inside a transaction.
 
 #### <a name="sendtokafka"></a> Send to Remote Backk Service via Kafka
+Sending service function call request to a remote Backk microservice can be achieved with a call to `sendToRemoteService` function.
+In the below example a service function call request for service function `refundService.refundOrder` in
+Backk microservice named `refund-service` is sent to Kafka with service function argument containing the `orderId`
+
+```ts
+sendToRemoteService('kafka', 'refund-service', `refundService.refundOrder`, { orderId: _id })
+```
+
+As the fifth argument to `sendToRemoteService` function, the Kubernetes namespace of target remote Backk microservice
+can be specified. The default value is the same namespace as for current microservice.
+
+The sixth argument of `sendToRemoteService` function specifies the Kafka server in the form of <hostname>:<port>
+By default, the Kafka server info is extracted from environment variables `KAFKA_HOST` and `KAFKA_PORT`.
+
+The seventh argument of `sendToRemoteService` function specifies the remote service function request for the
+response of the async remote service function call.
+
+#### <a name="sendtoredis"></a> Send to Remote Backk Service via Redis
+Sending service function call request to a remote Backk microservice can be achieved with a call to `sendToRemoteService` function.
+In the below example a service function call request for service function `refundService.refundOrder` in
+Backk microservice named `refund-service` is sent to Redis with service function argument containing the `orderId`
+
+```ts
+sendToRemoteService('redis', 'refund-service', `refundService.refundOrder`, { orderId: _id })
+```
+
+As the fifth argument to `sendToRemoteService` function, the Kubernetes namespace of target remote Backk microservice
+can be specified. The default value is the same namespace as for current microservice.
+
+The sixth argument of `sendToRemoteService` function specifies the Redis server in the form of <hostname>:<port>
+By default, the Redis server info is extracted from environment variables `REDIS_HOST` and `REDIS_PORT`.
+
+The seventh argument of `sendToRemoteService` function specifies the remote service function request for the
+response of the async remote service function call.
+
+#### <a name="sendtokafkainsidetransaction"></a> Send Multiple Request to Remote Backk Services via Kafka inside Transaction
+This is for sending multiple remote service function call requests simultaneously inside transaction to Kafka.
+All the remote service function call requests must happen to the same Kafka server.
+Transactions are not supported by Redis.
+
+```ts
+function sendToRemoteServiceInsideTransaction(sends: RemoteCallOrSendToSpec[]);
+
+interface RemoteCallOrSendToSpec {
+  communicationMethod: 'kafka';
+  microserviceName: string;
+  serviceFunctionName: string;
+  serviceFunctionArgument: object;
+  microserviceNamespace?: string;
+  server?: string;
+  sendResponseTo?: ResponseSendToSpec;
+  options?: SendToOptions;
+}
+```

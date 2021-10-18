@@ -72,14 +72,10 @@ X
 (src/decorators/typeproperty/NotUnique.ts,e/9/e9cad3ca105770d90d0a9351c46cf99524fb3429
 a
 1src/decorators/typeproperty/IsStringOrObjectId.ts,3/d/3dcbdab0b32d613001d9e23af1a82e227482dadd
-X
-(src/scheduling/entities/JobScheduling.ts,9/b/9b9457714c11119b32f245c1df42a2d1000b2031
 U
 %src/decorators/typeproperty/Unique.ts,8/5/8595c03632477464d5e1c45a4c91d58239483129
 b
 2src/decorators/entity/entityAnnotationContainer.ts,4/5/45e2edeb9f9919c0b080fa6fa451797fffa4ea35
-Z
-*src/scheduling/scheduleJobsForExecution.ts,2/f/2f68d5f99daa43c58dc30d5ddcb2f3bb7858f8da
 b
 2src/decorators/typeproperty/MaxLengthAndMatches.ts,0/6/06518166539b4d1e5f42be7f5bef44c2b8b28551
 t
@@ -204,8 +200,6 @@ Z
 *src/utils/changePackageJsonNameProperty.ts,4/d/4de71c93b5442fda6f6491b5f45624f6dbdf5957
 c
 3src/postman/getServiceFunctionExampleReturnValue.ts,0/4/047d096565075e7de84417852baecf401ae35cc0
-Q
-!src/scheduling/scheduleCronJob.ts,f/d/fdce8306d871683b9118b4f0c193c5d57578fe6d
 N
 src/execution/BackkResponse.ts,0/d/0d970f6b89700cd16c71c4ffb4557d25a2565e2c
 d
@@ -300,8 +294,6 @@ Y
 )src/metadata/getTypePropertyAccessType.ts,2/a/2afeaa4377acb0c921130bd950da3dc7e08db618
 U
 %src/metadata/getValidationMetadata.ts,7/7/772bc03673358c8a15701690eae0bc87afe4b9e6
-Y
-)src/scheduling/tryScheduleJobExecution.ts,2/3/23fcc302ed066feb49193824bdbb201ea215a4c6
 U
 %src/metadata/types/ServiceMetadata.ts,2/a/2a124f7e1ccd06de80242f478e3bbc82039af313
 T
@@ -322,8 +314,6 @@ u
 Esrc/decorators/service/function/serviceFunctionAnnotationContainer.ts,6/f/6f969f85640cfffcf6ed8d82aff088220b97d615
 Q
 !src/authorization/tryAuthorize.ts,a/c/acee2d5666d8396aede63fb00bbb02229cbebd33
-^
-.src/scheduling/scheduleCronJobsForExecution.ts,0/7/07d0700ee09268cdb174c1505e3f60caf50c2b30
 S
 #src/openapi/writeOpenApiSpecFile.ts,f/2/f2fd425c36694198fd59a76c96f5848e5bf5657c
 c
@@ -444,8 +434,6 @@ C
 docs/GET_STARTED.MD,c/8/c841c6a68c176a73f38f5dc87c8a0631e97748fb
 `
 0src/authorization/JwtAuthorizationServiceImpl.ts,b/8/b82cefea0a7f99d8d7473b1072daa5b71ffb5527
-W
-'src/cache/ResponseCacheConfigService.ts,f/5/f536a6ae2fa1e1e3dd77350602218dbd8a243ff3
 `
 0src/configuration/reloadLoggingConfigOnChange.ts,0/9/09451dff59aadaf3b899ceb762e17b8d7116f249
 \

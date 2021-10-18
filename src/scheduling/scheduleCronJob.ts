@@ -42,12 +42,11 @@ export async function scheduleCronJob(
                 tryExecuteServiceMethod(
                   controller,
                   serviceFunctionName,
-                  serviceFunctionArgument ?? {},
+                  { serviceFunctionArgument, _jobId: jobId } ?? {},
                   {},
                   'POST',
                   new BackkResponse(),
-                  true,
-                  undefined
+                  true
                 )
               );
             });

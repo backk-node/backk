@@ -7,11 +7,8 @@
 - [Accessing Remote Services](usage/REMOTE_SERVICE_ACCESS.MD)
 - [Special Service Function Types](usage/SPECIAL_SERVICE_FUNCTION_TYPES)
 - [Executing Multiple Service Functions within One Request](usage/MULTIPLE_SERVICE_FUNCTION_CALLS.MD)
-- [Scheduling Service Function Execution]
-- [Caching]
-  - Caching Service Function Responses
-  - Generic Caching
-  - Generic In-Memory Caching
+- [Scheduling Service Function Execution](usage/SCHEDULING_SERVICE_FUNCTION_EXECUTION.MD)
+- [Caching](usage/CACHING.MD)
 - [Microservice Metadata]
   - Backk metadata
   - OpenAPI

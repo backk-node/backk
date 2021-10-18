@@ -71,7 +71,7 @@ By default, it is the same as microservice calling the remote microservice.
 Accessing non-Backk microservices and HTTP endpoints from Backk microservice is easy using `makeHttpRequest` function.
 `makeHttpRequest` will accept `requestUrl` argument and a JavaScript object as request body. The HTTP request
 is always made with content type `application/json`. Current request´s authorization header is added to the new request.
-Making HTTPS request is not possible. You should not use HTTPS, but instead configure Kubernetes service mesh mTLS 
+Making HTTPS request is possible, but you should not use HTTPS, but instead configure Kubernetes service mesh mTLS 
 between microservices and Kubernetes cluster external services.
 
 ```ts

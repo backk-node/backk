@@ -21,7 +21,7 @@ interface HttpRequestOptions {
 ```
 
 Calls a remote Backk microservice `microserviceName` and executes remote service function `serviceFunctionName` with argument `serviceFunctionArgument`.
-The remote Backk microservice Kunbernetes namespace is defined using `microserviceNamespace` argument.
+The remote Backk microservice Kubernetes namespace is defined using `microserviceNamespace` argument.
 The HTTP method used can be defined in `options`. By default, HTTP POST method is used.
 
 Returns an object, null or error.
@@ -40,16 +40,34 @@ interface HttpRequestOptions {
 ```
 
 Makes an HTTP or HTTPS request to URL `requestUrl` with given `requestBodyObject`. Request content type is `application/json`.
+Authorization header is automatically added to the made HTTP request.
 The request is made using HTTP GET method by default. The method can be changed by supplying `options.httpMethod`.
 
 ### <a name="sentoremoteservice"></a> sendToRemoteService
+
 ```ts
+import { CommunicationMethod } from "./sendToRemoteService";
+
 async function sendToRemoteService(
-  remoteServiceFunctionUrl: string,
+  communicationMethod: 'kafka' | 'redis',
+  microserviceName: string,
+  serviceFunctionName: string,
   serviceFunctionArgument: object,
-  responseUrl?: string,
+  microserviceNamespace = process.env.SERVICE_NAMESPACE,
+  server?: string,
+  sendResponseTo?: ResponseSendToSpec,
   options?: SendToOptions
 ): PromiseErrorOr<null>
+
+interface ResponseSendToSpec {
+  communicationMethod: CommunicationMethod;
+  microserviceName: string;
+  microserviceNamespace: string | undefined;
+  serviceFunctionName: string;
+  server: string;
+}
+
+type CommunicationMethod = 'http' | 'kafka' | 'redis'
 
 interface SendToOptions {
   compressionType?: CompressionTypes;
@@ -70,40 +88,40 @@ enum SendAcknowledgementType {
   ALL_REPLICAS = -1
 }
 ```
+Sends a request to a remote Backk microservice `microserviceName`'s service function `serviceFunctionName` via a message queue as denoted by `communicationMethod` (Kafka or Redis).
 
-Sends a request to a remote service via a message queue (Kafka or Redis).
-To send a request to a remote service via Kafka, following format `remoteServiceFunctionUrl` must be used:
-
-```
-kafka://<kafka-host>:<kafka-port>/<microservice-name>.<microservice-namespace>/<serviceFunctionName>
-
-For example:
-kafka://kafka.default.svc.cluster.local:9092/notificationservice.default/emailNotificationService.sendEmail
-```
-
-To send a request to a remote service via Redis, following format `remoteServiceFunctionUrl` must be used:
-```
-redis://<redis-host>:<redis-port>/<microservice-name>.<microservice-namespace>/<serviceFunctionName>
-
-For example:
-redis://redis.default.svc.cluster.local:6379/notificationservice.default/emailNotificationService.sendEmail
-```
-
-`responseUrl` defines the URL where remote service sends its response to the request.
+The remote Backk microservice Kubernetes namespace is defined using `microserviceNamespace` argument.
+`server` defines the Kafka/Redis server host and port in form of <hostname>:<port>. By default, the server
+defined with following environment variables: `KAFKA_HOST`, `KAFKA_PORT`, `REDIS_HOST` and `REDIS_PORT`.
+`sendResponseTo` defines the where remote service sends its response to the request.
 `options` apply only to sending a message to remote service via Kafka.
 
 Returns null or error.
 
 ### <a name="sentoremoteserviceinsidetransaction"></a> sendToRemoteServiceInsideTransaction
 ```ts
-async function sendToRemoteServiceInsideTransaction(sends: CallOrSendToSpec[]): PromiseErrorOr<null>
+async function sendToRemoteServiceInsideTransaction(sends: RemoteCallOrSendToSpec[]): PromiseErrorOr<null>
 
-interface CallOrSendToSpec {
-  remoteServiceFunctionUrl: string;
-  serviceFunctionArgument?: object;
-  responseUrl?: string;
+interface RemoteCallOrSendToSpec {
+  communicationMethod: 'kafka';
+  microserviceName: string;
+  serviceFunctionName: string;
+  serviceFunctionArgument: object;
+  microserviceNamespace?: string;
+  server?: string;
+  sendResponseTo?: ResponseSendToSpec;
   options?: SendToOptions;
 }
+
+interface ResponseSendToSpec {
+  communicationMethod: CommunicationMethod;
+  microserviceName: string;
+  microserviceNamespace: string | undefined;
+  serviceFunctionName: string;
+  server: string;
+}
+
+type CommunicationMethod = 'http' | 'kafka' | 'redis'
 
 interface SendToOptions {
   compressionType?: CompressionTypes;
@@ -125,16 +143,11 @@ enum SendAcknowledgementType {
 }
 ```
 
-Sends multiple requests to a remote service(s) via a message queue (Kafka).
-To send a request to a remote service via Kafka, following format `remoteServiceFunctionUrl` must be used:
+Sends multiple requests to a remote services as specified in `sends` via a message queue (Kafka) inside a transaction.
 
-```
-kafka://<kafka-host>:<kafka-port>/<microservice-name>.<microservice-namespace>/<serviceFunctionName>
-
-For example:
-kafka://kafka.default.svc.cluster.local:9092/notificationservice.default/emailNotificationService.sendEmail
-```
-
-`responseUrl` defines the URL where remote service sends its response to the request.
+`server` defines the Kafka server host and port in form of <hostname>:<port>. By default, the server
+defined with following environment variables: `KAFKA_HOST`, `KAFKA_PORT`.
+`sendResponseTo` defines the  where remote service sends its response to the request.
+`options` defines compression and send acknowledgements type.
 
 Returns null or error.

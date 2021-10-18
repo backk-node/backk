@@ -296,8 +296,6 @@ I
 src/errors/backkErrors.ts,9/d/9de565af347d623f5e99e6a6ab0d8ad581e1dc6d
 P
  src/microservice/Microservice.ts,b/2/b203b2517f9ead474bfd9ed8b4aa05bb628a6597
-X
-(src/initialization/startHttpServerFor.ts,e/1/e11cea5463788a01b778bc66472ff1fa166aeb06
 Y
 )src/metadata/getTypePropertyAccessType.ts,2/a/2afeaa4377acb0c921130bd950da3dc7e08db618
 U
@@ -470,10 +468,6 @@ a
 1src/remote/messagequeue/redis/consumeFromRedis.ts,9/5/9541c525ce91b27a824e0fc5c6ebbac210511c63
 a
 1src/remote/messagequeue/kafka/consumeFromKafka.ts,e/2/e236cb3878b06d9ac3d16895a3fe2c553382926c
-`
-0src/execution/executeMultipleServiceFunctions.ts,d/4/d4d12c723aacc7da131331d4a853a2b0f225a2db
-T
-$src/execution/ServiceFunctionCall.ts,d/7/d769150ff5903b8b45f738b13d835f55b8282547
 X
 (src/execution/fetchFromRemoteServices.ts,9/f/9f67fbcce7e8a77bfaaf0c281f22e576957cce6f
 b

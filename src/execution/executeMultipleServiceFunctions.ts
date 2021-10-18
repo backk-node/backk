@@ -14,6 +14,7 @@ import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackk
 import createErrorFromErrorCodeMessageAndStatus from '../errors/createErrorFromErrorCodeMessageAndStatus';
 import { BACKK_ERRORS } from '../errors/backkErrors';
 import getClsNamespace from '../continuationlocalstorage/getClsNamespace';
+import getMicroserviceName from "../utils/getMicroserviceName";
 
 async function executeMultiple<T>(
   isConcurrent: boolean,
@@ -33,7 +34,7 @@ async function executeMultiple<T>(
     Object.entries(serviceFunctionArgument),
     async ([
       serviceFunctionCallId,
-      { remoteMicroserviceName, remoteMicroserviceNamespace, serviceFunctionName, serviceFunctionArgument }
+      { microserviceName, microserviceNamespace, serviceFunctionName, serviceFunctionArgument }
     ]: [string, ServiceFunctionCall]) => {
       if (possibleErrorResponse) {
         return;
@@ -51,7 +52,7 @@ async function executeMultiple<T>(
         renderedServiceFunctionArgument = JSON.parse(renderedServiceFunctionArgument);
       }
 
-      if (remoteMicroserviceName) {
+      if (microserviceName && microserviceName !== getMicroserviceName()) {
         if (isTransactional) {
           response.end(
             createBackkErrorFromErrorCodeMessageAndStatus(
@@ -82,10 +83,10 @@ async function executeMultiple<T>(
           response.writeHead(HttpStatusCodes.BAD_REQUEST);
         } else {
           const [remoteResponse, error] = await callRemoteService(
-            remoteMicroserviceName,
+            microserviceName,
             serviceFunctionName,
             serviceFunctionArgument,
-            remoteMicroserviceNamespace
+            microserviceNamespace
           );
 
           response.end(remoteResponse);

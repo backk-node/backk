@@ -6,8 +6,8 @@
 - [Data Store](usage/DATA_STORE.MD)
 - [Accessing Remote Services](usage/REMOTE_SERVICE_ACCESS.MD)
 - [Special Service Function Types](usage/SPECIAL_SERVICE_FUNCTION_TYPES)
-- [Executing Multiple Service Functions within One Request]
-- [Scheduling Service function execution]
+- [Executing Multiple Service Functions within One Request](usage/MULTIPLE_SERVICE_FUNCTION_CALLS.MD)
+- [Scheduling Service Function Execution]
 - [Caching]
   - Caching Service Function Responses
   - Generic Caching

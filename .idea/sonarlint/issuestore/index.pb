@@ -444,8 +444,6 @@ W
 'docs/api/MICROSERVICE_INITIALIZATION.MD,7/3/731ce54e9b15c990f2d2a4166230eb6b1ee8fa72
 I
 docs/api/OBSERVABILITY.MD,d/e/de26c745d47694e67ee89b5bac1664b649d90a96
-Q
-!docs/api/REMOTE_SERVICE_ACCESS.MD,b/0/b0685b4ca6fc0ba042874203e366ff0320bb9359
 C
 docs/GET_STARTED.MD,c/8/c841c6a68c176a73f38f5dc87c8a0631e97748fb
 `
@@ -484,9 +482,5 @@ R
 "src/remote/http/makeHttpRequest.ts,6/3/638d167128ba5c5cb0465430a3e6af7d84b27653
 b
 2src/observability/metrics/defaultServiceMetrics.ts,7/3/7373b368b8eccc9c3c9b2ccadaf739d7e3676b38
-e
-5src/decorators/typeproperty/FetchFromRemoteService.ts,7/4/748f74847fd0f98e5bfef277f1921ce711d5ee3f
 n
 >src/decorators/typeproperty/typePropertyAnnotationContainer.ts,c/8/c810282510d9ae8ef1f187c69f3bc3db0d6976fb
-T
-$src/remote/http/callRemoteService.ts,4/e/4e5f54640166ccdf6297f9fee279284c902e04de

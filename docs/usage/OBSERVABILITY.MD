@@ -67,7 +67,7 @@ Example log entry:
 }
 ```
 
-Resource object contains following:
+`Resource` object contains following:
 
 | Property            | Description                                      |
 | ------------------- | ------------------------------------------------ |
@@ -76,6 +76,9 @@ Resource object contains following:
 | service.instance.id | Kubernetes Pod name for Backk microservice       |
 | service.version     | Backk Microservice version                       |
 | node.name           | Kubernetes Worker Node name where Pod is running |
+
+`Attributes` object contains always `isoTimestamp` of the log event and any other attributes as was supplied
+to `log` function in `attributes` argument.
 
 #### <a name="changeloglevel"></a> Changing Log Level
 

@@ -61,7 +61,7 @@ Example log entry:
     "service.namespace": "default",
     "service.instance.id": "backk-example-microservice-87ffab3-xx567",
     "service.version": "1.0.53",
-    "node.name": ""
+    "node.name": "my-kube-cluster-worker-node-04"
   },
   "Attributes": { "isoTimestamp": "2021-10-19T09:34:13.446Z+03:00" }
 }

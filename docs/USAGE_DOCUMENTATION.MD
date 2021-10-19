@@ -14,8 +14,7 @@
 - [Observability](usage/OBSERVABILITY.MD)
 - [Integration Testing](usage/INTEGRATION_TESTING.MD)
 - [Kubernetes Deployment](usage/KUBERNETES_DEPLOYMENT.MD)
-  
-- [Infrastructure and Platform]
+- [Infrastructure and Platform](usage/INFRA_PLATFORM.MD)
   - IaC kubernetes cluster in cloud
   - Platform services
     - Ingress controller (Nginx, Emissary)

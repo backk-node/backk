@@ -11,14 +11,7 @@
 - [Caching](usage/CACHING.MD)
 - [Microservice Metadata](usage/MICROSERVICE_METADATA.MD)
 - [Documenting Microservice](usage/DOCUMENTING_MICROSERVICE.MD)
-- [Observability]
-  - Implement liveness, readiness and startup checks  
-  - Logging
-  - Changing logging level
-  - Distributed Tracing with Jaeger
-  - Prometheus Metrics
-    - Default Metrics
-    - Collecting Custom Metrics
+- [Observability](usage/OBSERVABILITY.MD)
 - [Integration Testing]
   - [Automatic Integration Tests]
   - [Manual Integration Tests]

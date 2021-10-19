@@ -114,12 +114,11 @@ For example:
 const includeResponseFields = ['_id', 'orderItems._id']
 ```
 
-If you specify the only the name of the sub-entity, then all sub-entity fields will be automatically
+If you specify  only the name of the sub-entity, then all sub-entity fields will be automatically
 included:
 ```ts
 const includeResponseFields = ['_id', 'orderItems']
 ```
-
 
 ### <a name="graphql-json-support"></a> GraphQL and JSON support for including/excluding response fields
 

@@ -13,8 +13,8 @@
 - [Documenting Microservice](usage/DOCUMENTING_MICROSERVICE.MD)
 - [Observability](usage/OBSERVABILITY.MD)
 - [Integration Testing](usage/INTEGRATION_TESTING.MD)
-- Kubernetes Deployment
-  - Helm Charts
+- [Kubernetes Deployment](usage/KUBERNETES_DEPLOYMENT.MD)
+  
 - [Infrastructure and Platform]
   - IaC kubernetes cluster in cloud
   - Platform services

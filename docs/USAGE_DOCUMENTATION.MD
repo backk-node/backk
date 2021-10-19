@@ -10,7 +10,7 @@
 - [Scheduling Service Function Execution](usage/SCHEDULING_SERVICE_FUNCTION_EXECUTION.MD)
 - [Caching](usage/CACHING.MD)
 - [Microservice Metadata](usage/MICROSERVICE_METADATA.MD)
-- [Documenting Microservice]
+- [Documenting Microservice](usage/DOCUMENTING_MICROSERVICE.MD)
 - [Observability]
   - Implement liveness, readiness and startup checks  
   - Logging

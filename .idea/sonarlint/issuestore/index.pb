@@ -222,8 +222,6 @@ D
 src/types/Version.ts,9/e/9e0a76b58ecb694d1a02b1c2ec208d2be77ba2d6
 f
 6src/validation/setClassPropertyValidationDecorators.ts,1/6/1695db580a3d226e4d4a006535a80da6c561053a
-Z
-*src/postman/createPostmanCollectionItem.ts,0/4/04b6ca3341973e79516b19b840e72f5d46010297
 `
 0src/datastore/mongodb/removePrivateProperties.ts,f/d/fd98c80881f265234a8e88e35ac03c0638253713
 `
@@ -244,8 +242,6 @@ Y
 )src/metadata/getTypePropertyAccessType.ts,2/a/2afeaa4377acb0c921130bd950da3dc7e08db618
 U
 %src/metadata/getValidationMetadata.ts,7/7/772bc03673358c8a15701690eae0bc87afe4b9e6
-U
-%src/metadata/types/ServiceMetadata.ts,2/a/2a124f7e1ccd06de80242f478e3bbc82039af313
 T
 $src/metadata/getTypeDocumentation.ts,2/6/26a6d12a1ca8310b923d1b053d798c1316f1e3cb
 X
@@ -268,8 +264,6 @@ c
 3src/validation/setNestedTypeValidationDecorators.ts,a/2/a2731d0d863b33cc1f7ed5f81e935b9751e3b2c2
 P
  src/metadata/getNestedClasses.ts,5/7/5741819f904c43dfa42fd8f190fcbb9214bdf87b
-X
-(src/metadata/generateServicesMetadata.ts,1/c/1c07d967f31c20ff05a217e12bf580a7a42e2bff
 b
 2src/decorators/service/AllowServiceForUserRoles.ts,d/e/de1cb8597b57bdcae7561eb644d6dba6c89a725a
 q
@@ -314,8 +308,6 @@ Y
 )src/decorators/registerCustomDecorator.ts,b/2/b237259ab8cf95607e9c4d9d54dd46c159bf4b58
 l
 <src/microservice/getMicroserviceServiceNameByServiceClass.ts,6/6/669693a65c7c54b6a969ed3461ddecfb14d344ad
-Z
-*src/microservice/initializeMicroservice.ts,1/1/1162f5fb3b946952726e351e5b6fcea12aed21a8
 e
 5src/scheduling/entities/__Backk__CronJobScheduling.ts,1/5/1587a30d7ac309ada12826f83b3beb5f0642294f
 a
@@ -376,8 +368,6 @@ N
 docs/api/MICROSERVICE_CLASS.MD,1/e/1ee74b159ced5b554357ec42e7bb2c2079388415
 W
 'docs/api/MICROSERVICE_INITIALIZATION.MD,7/3/731ce54e9b15c990f2d2a4166230eb6b1ee8fa72
-I
-docs/api/OBSERVABILITY.MD,d/e/de26c745d47694e67ee89b5bac1664b649d90a96
 C
 docs/GET_STARTED.MD,c/8/c841c6a68c176a73f38f5dc87c8a0631e97748fb
 `
@@ -396,8 +386,6 @@ P
  src/utils/getMicroserviceName.ts,8/5/858e4c569eb323ab07d080c32caf8ce0ac4e9a53
 j
 :src/remote/utils/parseRemoteServiceFunctionCallUrlParts.ts,a/5/a561c9580c6e13f3634b5ea01a48c933b81f6652
-J
-src/service/BaseService.ts,9/e/9e1ed5e644e731aaca4364d0285f49366a3c673a
 \
 ,src/remote/messagequeue/kafka/sendToKafka.ts,d/b/dbc342d1558a8147774c6129db7744957422c5ed
 a
@@ -478,8 +466,6 @@ c
 +src/observability/logging/logEnvironment.ts,e/2/e2977c9c028b7a5f9f113c1370453b46c7aab27a
 L
 docs/usage/INITIALIZATION.MD,a/6/a62c3ffd197112147d4150ed91dffaa363ed9b7b
-I
-docs/api/BASE_SERVICES.MD,3/3/33d3d9570e36ce5015d1d2f15ee752b88474a3f3
 {
 Ksrc/types/_id/_IdAndCaptchaAndCreatedAtTimestampAndLastModifiedTimestamp.ts,e/e/eeb62b957f8577b8250e79133c49a2b08b0abf41
 N

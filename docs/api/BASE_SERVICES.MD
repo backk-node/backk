@@ -163,7 +163,8 @@ export default abstract class ResponseCacheConfigService {
 
 This service requires following environment variables to be defined:
 
-- `REDIS_CACHE_SERVER` which denotes the Redis server in form <host>:<port>
+- `REDIS_CACHE_HOST` which denotes the Redis cache server host
+- `REDIS_CACHE_PORT` which denotes the Redis cache server port
 - `REDIS_CACHE_PASSWORD` which denotes the Redis server password
 
 Implement a class that extends the `ResponseCacheConfigService` class and provide implementations for functions:

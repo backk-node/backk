@@ -113,7 +113,7 @@ export default function generateServicesMetadata<T>(
             .functionNameToReturnTypeNameMap[functionName];
 
           const functionStr = service[functionName].toString();
-          const errors = Object.entries(service.errors as ErrorNameToErrorDefinitionMap ?? [])
+          const errors = Object.entries(service.errorNameToErrorDefinitionMap as ErrorNameToErrorDefinitionMap ?? [])
             .filter(([errorName]) => functionStr.includes(errorName))
             .map(([, errorDefinition]) => errorDefinition);
 

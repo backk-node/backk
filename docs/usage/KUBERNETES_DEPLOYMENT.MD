@@ -23,11 +23,25 @@ helm install
 helm upgrade
 ```
 
-### Kubernetes Development Lab Deployment
-Implement [Flux GitOps](https://fluxcd.io/) in Development lab(s). 
+### Kubernetes Development Environment Deployment
+Implement [Flux GitOps](https://fluxcd.io/) in Development environments(s). 
 
 You should build your Backk microservice with CI pipeline which creates and publish a packaged Helm Chart
 with specific version.
 
 After you have built your Backk microservice, modify the Backk microservice version in the Git repository for the wanted development lab.
 Wait for a while and new version of your Backk microservice will be deployed automatically via GitOps to the development lab.
+
+### Kubernetes CI Environment Deployment
+Implement [Flux GitOps](https://fluxcd.io/) in CI environments, so that new version of Backk microservices
+are automatically updated to CI environment after successful build in main branch.
+
+### Kubernetes Staging Environment Deployment
+Implement [Flux GitOps](https://fluxcd.io/) in staging environments, so that newest versions of Backk microservices
+are automatically updated at specified intervals (e.g. once in a week) to staging environment
+for longer period functional and especially non-functional verification.
+
+### Kubernetes Production Environment Deployment
+Implement [Flux GitOps](https://fluxcd.io/) in production environments, so that newer versions of Backk microservices
+are either automatically or manually updated at specified intervals (e.g. once in a week) to production environment only after successful longer period (e.g. 1 week) functional and non-functional
+verification in the staging environment.

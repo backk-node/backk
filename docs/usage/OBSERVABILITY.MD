@@ -2,7 +2,7 @@
 
 - [Implement Liveness, Readiness and Startup Checks for Kubernetes Container Probes](#probes)
 - [Logging](#logging)
-  - [Changing Logging Level](#changeloglevel)
+  - [Changing Logging Level](#changelogginglevel)
 - [Distributed Tracing with Jaeger](#distributedtracing)
 - [Prometheus Metrics](#metrics)
   - [Default Metrics](#defaultmetrics)
@@ -77,15 +77,65 @@ Example log entry:
 | service.version     | Backk Microservice version                       |
 | node.name           | Kubernetes Worker Node name where Pod is running |
 
-`Attributes` object contains always `isoTimestamp` of the log event and any other attributes as was supplied
+`Attributes` object contains always `isoTimestamp` of the log event and any other attributes that were supplied
 to `log` function in `attributes` argument.
 
-#### <a name="changeloglevel"></a> Changing Log Level
+#### <a name="changelogginglevel"></a> Changing Logging Level
+The default logging level is `INFO`.
+
+You can change the logging level by edit your Backk microservice's Kubernetes ConfigMap:
+```bash
+kubectl edit configmap <your-microservice-name>
+```
+
+In the text editor, change the default `INFO` value to one of the following:
+- `DEBUG`
+- `WARN`
+- `ERROR`
+- `FATAL`
+
+Save and close the editor. The new logging level should now be effective.
 
 ### <a name="distributedtracing"></a> Distributed Tracing with Jaeger
+
+Distributed tracing is automatically enabled in the Backk microservice by calling
+`initializeDefaultJaegerTracing` function in the `src/main.ts` file.
+
+Distributed tracing is configured with `JAEGER_AGENT_HOST` environment variable which
+specifies the hostname of the Jaeger agent.
 
 ### <a name="metrics"></a> Prometheus Metrics
 
 #### <a name="defaultmetrics"></a> Default Metrics
+
+Backk microservice collects by default following metrics:
+- process_start_timestamp_since_epoch_in_seconds
+- process_active_requests_total_count
+- process_open_file_descriptors_count
+- process_active_handles_total_count
+- process_cpu_usage_percentage
+- container_memory_usage_megabytes
+- container_memory_limit_megabytes
+- garbage_collection_event_count
+- all_service_function_calls
+- service_function_calls (per service function)
+- service_function_call_cache_hits (per service function)
+- cached_service_function_call_responses (per service function)
+- authorization_failures
+- http_5xx_errors
+- http_client_errors
+- db_operation_errors
+- db_failure_duration_in_secs
+- service_function_processing_time
+- db_operation_processing_time
+- kafka_consumer_errors
+- kafka_consumer_request_timeouts
+- kafka_consumer_offset_lag
+- remote_service_calls
+- remote_service_call_errors
+- sync_remote_service_call_http_5xx_error_responses
+- sync_remote_service_call_auth_failures
+- redis_consumer_error_count
+- redis_consumer_queue_length
 
 #### <a name="custommetrics"></a> Custom Metrics

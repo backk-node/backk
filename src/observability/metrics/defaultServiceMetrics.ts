@@ -131,20 +131,20 @@ class DefaultServiceMetrics {
     });
 
     this.remoteServiceCallErrorCounter = meter.createCounter('remote_service_call_errors', {
-      description: 'Number of remote service callRemoteService errors'
+      description: 'Number of remote service remote service call errors'
     });
 
     this.syncRemoteServiceHttp5xxErrorResponseCounter = meter.createCounter(
       'sync_remote_service_call_http_5xx_error_responses',
       {
-        description: 'Number of synchronous remote service callRemoteService HTTP 5xx errorMessageOnPreHookFuncExecFailure responses'
+        description: 'Number of synchronous remote service callRemoteService HTTP 5xx error responses'
       }
     );
 
     this.syncRemoteServiceCallAuthFailureCounter = meter.createCounter(
       'sync_remote_service_call_auth_failures',
       {
-        description: 'Number of synchronous (HTTP) remote service callRemoteService authorization failures'
+        description: 'Number of synchronous (HTTP) remote service call authorization failures'
       }
     );
 

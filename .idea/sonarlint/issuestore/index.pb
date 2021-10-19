@@ -342,18 +342,10 @@ $src/file/tryGetObjectsFromCsvFile.ts,3/0/3007bb4c0b5546f8f7a00bd879d413c37581e
 .src/file/tryGetValuesByJsonPathFromJsonFile.ts,4/7/478eafdeda05ad8301b5f4a5fbc78bdd007a277b
 Z
 *src/file/tryGetValuesByXPathFromXmlFile.ts,9/9/995739107b82bef2036cc07e8f7f0e7d9ee11312
-w
-Gsrc/observability/distributedtracinig/initializeDefaultJaegerTracing.ts,5/f/5f3199e9c932d37e47604ff31aa6d843c94be7f3
-g
-7src/observability/distributedtracinig/tracerProvider.ts,f/a/fa0d0ba475f8377e4245208d3d22ba45b9d09114
-j
-:src/observability/metrics/defaultSystemAndNodeJsMetrics.ts,a/9/a9d275087b478f88f0e9eb315ea2cac5d2dfa9c1
 ^
 .src/errors/createErrorMessageWithStatusCode.ts,1/6/16c55c9d4f5a17047b3ddfabaa5458b5464aaa1d
 k
 ;src/errors/createBackkErrorFromErrorMessageAndStatusCode.ts,3/f/3f91cbf61f981da36b338ef6e33082fa2bd42f99
-c
-3src/observability/metrics/defaultPrometheusMeter.ts,f/4/f48cea031a89acea4159adb25350f76868696671
 Q
 !src/datastore/MongoDbDataStore.ts,7/f/7f6815388428de13693ae11762a77f1789593f07
 U
@@ -372,8 +364,6 @@ C
 docs/GET_STARTED.MD,c/8/c841c6a68c176a73f38f5dc87c8a0631e97748fb
 `
 0src/authorization/JwtAuthorizationServiceImpl.ts,b/8/b82cefea0a7f99d8d7473b1072daa5b71ffb5527
-`
-0src/configuration/reloadLoggingConfigOnChange.ts,0/9/09451dff59aadaf3b899ceb762e17b8d7116f249
 \
 ,src/decorators/service/function/TestSetup.ts,e/e/eea76718fe98d368508cdea5deaf4d2f3633eed8
 f
@@ -394,8 +384,6 @@ a
 1src/remote/messagequeue/kafka/consumeFromKafka.ts,e/2/e236cb3878b06d9ac3d16895a3fe2c553382926c
 X
 (src/execution/fetchFromRemoteServices.ts,9/f/9f67fbcce7e8a77bfaaf0c281f22e576957cce6f
-b
-2src/observability/metrics/defaultServiceMetrics.ts,7/3/7373b368b8eccc9c3c9b2ccadaf739d7e3676b38
 n
 >src/decorators/typeproperty/typePropertyAnnotationContainer.ts,c/8/c810282510d9ae8ef1f187c69f3bc3db0d6976fb
 d
@@ -462,8 +450,6 @@ Z
 0src/datastore/sql/expressions/SqlInExpression.ts,0/e/0ed136e9c64ee1f0e0c0445be948d2b30bb6130f
 c
 3src/datastore/sql/expressions/SqlNotInExpression.ts,5/c/5cf20beb85813763ad8386c9a326bb9054c97d00
-[
-+src/observability/logging/logEnvironment.ts,e/2/e2977c9c028b7a5f9f113c1370453b46c7aab27a
 L
 docs/usage/INITIALIZATION.MD,a/6/a62c3ffd197112147d4150ed91dffaa363ed9b7b
 {
@@ -538,8 +524,6 @@ Z
 *src/decorators/service/function/CronJob.ts,a/8/a88bb6510ffce012c9290828e536a4fcac1de31e
 \
 ,docs/usage/SPECIAL_SERVICE_FUNCTION_TYPES.MD,c/3/c382d7df5090b56087c9ac25a73d6bb5ca410105
-P
- src/initialization/initialize.ts,c/7/c7341d070a67a1a3d1c6ff90302db1cb5090555d
 [
 +src/initialization/startKafkaConsumerFor.ts,a/6/a6790e1ac5b1a86b85de2129e1093e8426a9be37
 X

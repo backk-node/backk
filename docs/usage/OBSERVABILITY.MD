@@ -139,3 +139,25 @@ Backk microservice collects by default following metrics:
 - redis_consumer_queue_length
 
 #### <a name="custommetrics"></a> Custom Metrics
+
+Custom metrics can be created using `defaultPrometheusMeter`.
+
+For example:
+
+```ts
+import { defaultPrometheusMeter } from 'backk';
+
+const counter = defaultPrometheusMeter.createCounter('metric_name', {
+  description: 'Example of a counter'
+});
+
+const labels = { pid: process.pid };
+
+// Create a BoundInstrument associated with specified label values.
+const boundCounter = counter.bind(labels);
+
+boundCounter.add(10);
+```
+
+Follow [OpenTelemetry metrics documentation](https://www.npmjs.com/package/@opentelemetry/metrics) to how
+to create additional metrics for your Backk microservice.

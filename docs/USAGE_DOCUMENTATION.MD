@@ -12,9 +12,7 @@
 - [Microservice Metadata](usage/MICROSERVICE_METADATA.MD)
 - [Documenting Microservice](usage/DOCUMENTING_MICROSERVICE.MD)
 - [Observability](usage/OBSERVABILITY.MD)
-- [Integration Testing]
-  - [Automatic Integration Tests]
-  - [Manual Integration Tests]
+- [Integration Testing](usage/INTEGRATION_TESTING.MD)
 - Kubernetes Deployment
   - Helm Charts
 - [Infrastructure and Platform]

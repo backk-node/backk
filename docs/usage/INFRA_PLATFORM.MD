@@ -23,7 +23,11 @@ Terraform provide tutorials and ready-made code for deploying Kubernetes cluster
 - [Provision a GKE Cluster (Google Cloud)](https://learn.hashicorp.com/tutorials/terraform/gke?in=terraform/kubernetes)
 - [Deploy Federated Multi-Cloud Kubernetes Clusters](https://learn.hashicorp.com/tutorials/terraform/multicloud-kubernetes?in=terraform/kubernetes)
 
-Another possibility is to use a comprehensive solution, for example [Rancher](https://rancher.com/), to deploy and manage multiple Kubernetes clusters
+You may want to expose your Kubernetes cluster to internet. To achieve that, you may need to configure
+additional steps to above solutions in order to enable the internet access, for example, configuration of AWS Internet Gateway
+or Google Cloud NAT.
+
+Another possibility is to use a comprehensive enterprise solution, for example [Rancher](https://rancher.com/), to deploy and manage multiple Kubernetes clusters
 
 ### <a name="platformservices"></a> Platform Services
 After deploying Kubernetes cluster in the cloud, you need to build and deploy a platform for your
@@ -79,4 +83,11 @@ For application deployments, a GitOps solution is needed. [Flux](https://fluxcd.
 is also a [CNCF Incubating project](https://landscape.cncf.io/).
 
 #### <a name="messagequeue"></a> Message Queue (Kafka and/or Redis)
+You may want to deploy a message queue or queues in your platform so that software systems and applications deployed 
+Kubernetes cluster can communicate with each other.
+
+### <a name="platformdeployment"></a> Platform Deployment to Kubernetes Cluster
+The above-mentioned platform services can be installed using `backk-platform`(https://github.com/backk-node/backk-platform) as a helm chart template
+for your own platform deployment.
+
 

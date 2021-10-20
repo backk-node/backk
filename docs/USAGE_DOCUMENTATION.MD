@@ -15,7 +15,7 @@
 - [Integration Testing](usage/INTEGRATION_TESTING.MD)
 - [Kubernetes Deployment](usage/KUBERNETES_DEPLOYMENT.MD)
 - [Infrastructure and Platform](usage/INFRA_PLATFORM.MD)
-- [Continuous Integration]
+- [Continuous Integration](usage/CI.MD)
 - [Continuous Deployment]
 - [Security]
   - [Authorization Service]

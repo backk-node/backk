@@ -23,6 +23,8 @@ Terraform provide tutorials and ready-made code for deploying Kubernetes cluster
 - [Provision a GKE Cluster (Google Cloud)](https://learn.hashicorp.com/tutorials/terraform/gke?in=terraform/kubernetes)
 - [Deploy Federated Multi-Cloud Kubernetes Clusters](https://learn.hashicorp.com/tutorials/terraform/multicloud-kubernetes?in=terraform/kubernetes)
 
+Another possibility is to use a comprehensive solution, for example [Rancher](https://rancher.com/), to deploy and manage multiple Kubernetes clusters
+
 ### <a name="platformservices"></a> Platform Services
 After deploying Kubernetes cluster in the cloud, you need to build and deploy a platform for your
 Software systems and applications. The platform will consist of several SW components that are shared
@@ -77,3 +79,4 @@ For application deployments, a GitOps solution is needed. [Flux](https://fluxcd.
 is also a [CNCF Incubating project](https://landscape.cncf.io/).
 
 #### <a name="messagequeue"></a> Message Queue (Kafka and/or Redis)
+

@@ -16,7 +16,7 @@
 - [Kubernetes Deployment](usage/KUBERNETES_DEPLOYMENT.MD)
 - [Infrastructure and Platform](usage/INFRA_PLATFORM.MD)
 - [Continuous Integration](usage/CI.MD)
-- [Continuous Deployment]
+- [Continuous Deployment](usage/CD.MD)
 - [Security]
   - [Authorization Service]
   - Service and Service Function access control

@@ -9,7 +9,7 @@
 
 ### Implement your own CI pipeline
 
-You should have following steps in you CI pipeline:
+You should have the following steps in your CI pipeline:
 - Checkout code from source control
 - Execute in Node container:
   - Install dependencies with command `npm install`

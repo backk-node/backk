@@ -248,7 +248,7 @@ const packageObj = JSON.parse(packageJson);
 
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'integration') {
   if (!process.env.NODE_NAME) {
-    throw new Error('NODE_NAME environment variable must be defined');
+    throw new Error('NODE_ENV environment variable must be defined');
   }
 
   if (!process.env.SERVICE_NAMESPACE) {

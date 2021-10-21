@@ -4,7 +4,7 @@
 
 <h1 align="center">Backk<br/></h1>
 <h2 align="center">Node.js framework for creating secure cloud-native microservices for Kubernetes in Typescript</h2>
-<h3 align="center">An task-oriented replacement for REST, GraphQ and RPC</h3>
+<h3 align="center">A task-oriented replacement for REST, GraphQL and RPC</h3>
 <h4 align="center"><i>:construction_worker: :building_construction: Backk is currently in alpha phase</i></h4>
 
 ## Table of Contents
@@ -16,6 +16,8 @@
 - [Example Backk Microservice](#example-backk-microservice)
 - [Usage Documentation](docs/USAGE_DOCUMENTATION.MD)
 - [API Documentation](docs/API_DOCUMENTATION.MD)
+- [Security Features](docs/SECURITY_FEATURES.MD)
+- [OWASP TOP 10 Checklist](docs/OWASP_TOP_TEN_CHECKLIST.MD)
 - [Feedback](#feedback)
   - [Report a Bug](#report-bug)
   - [Report a Security Vulnerability](#report-security-vulnerability)
@@ -48,12 +50,12 @@
   - Validations
 - Automatic database schema generation
 - Security
-  - OAuth 2.0 Auhtorization support
-  - Captcha Verification support
+  - OAuth 2.0 Authorization support
+  - Captcha verification support
   - Automatic password hashing using Argon2 algorithm
   - Automatic PII encryption/decryption
   - Mandatory validation required by Entity field type
-    - e.g. string field must have a maximum length validation
+    - e.g. string fields must have a maximum length validation
 - Redis Response Cache support
 - Automatic microservice documentation generation
   - TypeDoc

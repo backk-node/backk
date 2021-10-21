@@ -4,6 +4,7 @@
 - [Creating Entity Classes](usage/CREATING_ENTITY_CLASSES.MD)
 - [Creating Service Function Argument and Response Classes](usage/ARGUMENT_RESPONSE_CLASSES.MD)
 - [Data Store](usage/DATA_STORE.MD)
+- [Security](usage/SECURITY.MD)
 - [Accessing Remote Services](usage/REMOTE_SERVICE_ACCESS.MD)
 - [Special Service Function Types](usage/SPECIAL_SERVICE_FUNCTION_TYPES)
 - [Executing Multiple Service Functions within One Request](usage/MULTIPLE_SERVICE_FUNCTION_CALLS.MD)
@@ -17,21 +18,3 @@
 - [Infrastructure and Platform](usage/INFRA_PLATFORM.MD)
 - [Continuous Integration](usage/CI.MD)
 - [Continuous Deployment](usage/CD.MD)
-- [Security]
-  - [Authorization Service]
-  - Service and Service Function access control
-  - Data encryption and hashing in Data store
-  - Entity property access control
-  - Request max length checking
-  - Mandatory numeric value limitation
-  - Streaming JSON parsing
-  - Mandatory string max length validation
-  - Safer REgex handling
-  - Service function Argument validation
-  - Service Function Response validation
-  - Captcha requirement
-  - Audit logging
-  - Safe logging
-  - Mandatory pagination
-  - Next/prev pagination
-  - SQL injection prevention

@@ -43,3 +43,75 @@
  - Are initialization vectors ignored, reused, or not generated sufficiently secure for the cryptographic mode of operation? Is an insecure mode of operation such as ECB in use? Is encryption used when authenticated encryption is more appropriate?
    - By default, and when possible, Backk uses a randomly generated initialization vector for encryption of data: `randomBytes(16)`
    - ECB is not used, Backk microservice's encryption algorithm is AES-256-CBC
+
+ - Are passwords being used as cryptographic keys in absence of a password base key derivation function?
+   - No, in production environment Backk microservice's encryption key is a generated random string of at least 32 characters long
+
+ - Is randomness used for cryptographic purposes that was not designed to meet cryptographic requirements? Even if the correct function is chosen, does it need to be seeded by the developer, and if not, has the developer over-written the strong seeding functionality built into it with a seed that lacks sufficient entropy/unpredictability?
+   - No
+
+ - Are deprecated hash functions such as MD5 or SHA1 in use, or are non-cryptographic hash functions used when cryptographic hash functions are needed?
+   - MD5 or SHA1 is not used, Argon2 is used for hashing passwords
+ 
+ - Are deprecated cryptographic padding methods such as PCKS number 1 v1.5 in use?
+   - No
+
+ - Are cryptographic error messages or side channel information exploitable, for example in the form of padding oracle attacks?
+   - Not known
+
+### A03:2021 – Injection
+
+ - User-supplied data is not validated, filtered, or sanitized by the application
+   - Backk validates all input data (service function arguments) using mandatory validation annotations
+   
+ - Dynamic queries or non-parameterized calls without context-aware escaping are used directly in the interpreter
+   - Backk uses ORM and SQL prepared statements to implement it
+   - Dynamic SQL queries cannot be supplied by clients
+
+ - Hostile data is used within object-relational mapping (ORM) search parameters to extract additional, sensitive records
+   - ?
+
+ - Hostile data is directly used or concatenated. The SQL or command contains the structure and malicious data in dynamic queries, commands, or stored procedures.
+   - ?
+
+### A04:2021 – Insecure Design
+
+ - Establish and use a secure development lifecycle with AppSec professionals to help evaluate and design security and privacy-related controls
+
+ - Establish and use a library of secure design patterns or paved road ready to use components
+
+ - Use threat modeling for critical authentication, access control, business logic, and key flows
+
+ - Integrate security language and controls into user stories
+
+ - Integrate plausibility checks at each tier of your application (from frontend to backend)
+
+ - Write unit and integration tests to validate that all critical flows are resistant to the threat model. Compile use-cases and misuse-cases for each tier of your application.
+
+ - Segregate tier layers on the system and network layers depending on the exposure and protection needs
+   - Use Kubernetes namespaces and Network Policies between them. Implement authorization between services with a service mesh
+
+ - Segregate tenants robustly by design throughout all tiers
+
+ - Limit resource consumption by user or service
+   - Backk microservice defines default request rate limiting for services exposed to external clients
+   - Each Backk microservice has limits set on CPU and memory usage
+
+### A05:2021 – Security Misconfiguration
+ 
+ - Missing appropriate security hardening across any part of the application stack or improperly configured permissions on cloud services.
+
+ - Unnecessary features are enabled or installed (e.g., unnecessary ports, services, pages, accounts, or privileges).
+
+ - Default accounts and their passwords are still enabled and unchanged.
+
+ - Error handling reveals stack traces or other overly informative error messages to users.
+   - In production environment, Backk microservices never send clients stack traces.
+
+ - For upgraded systems, the latest security features are disabled or not configured securely.
+
+ - The security settings in the application servers, application frameworks (e.g., Struts, Spring, ASP.NET), libraries, databases, etc., are not set to secure values.
+
+ - The server does not send security headers or directives, or they are not set to secure values.
+
+ - The software is out of date or vulnerable (see A06:2021-Vulnerable and Outdated Components).

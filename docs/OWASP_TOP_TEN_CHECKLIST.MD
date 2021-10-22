@@ -38,7 +38,7 @@
    - Each Backk microservice request response has Strict Transport Security header set with max-age to max integer value
 
  - Is the received server certificate and the trust chain properly validated
-   - What does this mean?
+   - 
 
  - Are initialization vectors ignored, reused, or not generated sufficiently secure for the cryptographic mode of operation? Is an insecure mode of operation such as ECB in use? Is encryption used when authenticated encryption is more appropriate?
    - By default, and when possible, Backk uses a randomly generated initialization vector for encryption of data: `randomBytes(16)`
@@ -69,10 +69,11 @@
    - Dynamic SQL queries cannot be supplied by clients
 
  - Hostile data is used within object-relational mapping (ORM) search parameters to extract additional, sensitive records
-   - ?
+   - Backk microservice does not allow user defined (= client originated) dynamic queries to query any non-readable entity fields
 
  - Hostile data is directly used or concatenated. The SQL or command contains the structure and malicious data in dynamic queries, commands, or stored procedures.
-   - ?
+   - Backk microservice will always check the service function response object or the first object in the object array that it matches the validations and property types of the specific class. In this way, it is not easy for malicious data in queries to result in sensitive data exposed in query response.
+ 
 
 ### A04:2021 – Insecure Design
 
@@ -100,10 +101,13 @@
 ### A05:2021 – Security Misconfiguration
  
  - Missing appropriate security hardening across any part of the application stack or improperly configured permissions on cloud services.
+   - Backk microservice runs in a distro-less container with non-root user. Privilege escalation is not allowed and all linux capabilities are dropped by default
 
- - Unnecessary features are enabled or installed (e.g., unnecessary ports, services, pages, accounts, or privileges).
+ - Unnecessary features are enabled or installed (e.g., unnecessary ports, services, pages, accounts, or privileges)
+   - Backk microservice runs in a distro-less container with non-root user. Privilege escalation is not allowed and all linux capabilities are dropped by default
 
  - Default accounts and their passwords are still enabled and unchanged.
+   - Backk microservice database user passwords are randomly generated upon installation with Helm chart
 
  - Error handling reveals stack traces or other overly informative error messages to users.
    - In production environment, Backk microservices never send clients stack traces.
@@ -111,7 +115,15 @@
  - For upgraded systems, the latest security features are disabled or not configured securely.
 
  - The security settings in the application servers, application frameworks (e.g., Struts, Spring, ASP.NET), libraries, databases, etc., are not set to secure values.
+   - Databases are secured with password and mTLS by service mesh. Redis cache is secured by authentication in production.
 
  - The server does not send security headers or directives, or they are not set to secure values.
+   - Backk microservice sends HTTP response headers:
+     - X-Content-Type-Options: nosniff
+     - Strict-Transport-Security: max-age: <max-integer-value>; includeSubDomains
+     - X-Frame-Options: DENY
+     - Content-Security-Policy: frame-ancestors 'none'
+     - Content-Type: application/json
+     - If caching is not specifically enabled and configured, following header is set: Cache-Control: no-store
 
  - The software is out of date or vulnerable (see A06:2021-Vulnerable and Outdated Components).

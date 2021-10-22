@@ -699,12 +699,16 @@ export default async function tryExecuteServiceMethod(
     if (ttl) {
       if (typeof resp.setHeader === 'function') {
         resp.setHeader('Cache-Control', 'max-age=' + ttl);
+      } else {
+        resp.setHeader('Cache-Control', 'no-store');
       }
     }
 
     if (typeof resp.setHeader === 'function') {
       resp.setHeader('X-content-type-options', 'nosniff');
       resp.setHeader('Strict-Transport-Security', 'max-age=' + MAX_INT_VALUE + '; includeSubDomains');
+      resp.setHeader('X-Frame-Options', 'DENY');
+      resp.setHeader('Content-Security-Policy', "frame-ancestors 'none'");
     }
 
     Object.entries(

@@ -178,3 +178,43 @@ Found "Critical" and "High" level vulnerabilities should trigger a creation of i
 
 - Does not correctly invalidate Session IDs. User sessions or authentication tokens (mainly single sign-on (SSO) tokens) aren't properly invalidated during logout or a period of inactivity.
   - Keycloak support single logout (SLO)
+
+### A08:2021 – Software and Data Integrity Failures
+
+- Use digital signatures or similar mechanisms to verify the software or data is from the expected source and has not been altered.
+  - Backk microservice helm charts defines the container image tags with both version and digest (SHA256)
+
+- Ensure libraries and dependencies, such as npm or Maven, are consuming trusted repositories. If you have a higher risk profile, consider hosting an internal known-good repository that's vetted.
+
+- Ensure that a software supply chain security tool, such as OWASP Dependency Check or OWASP CycloneDX, is used to verify that components do not contain known vulnerabilities
+  - Backk recommends Continuous Vulnerability Scan pipeline as part of DevSecOps, where each latest microservice container is scanned for possible vulnerabilities at regular intervals (e.g. every night)
+
+- Ensure that there is a review process for code and configuration changes to minimize the chance that malicious code or configuration could be introduced into your software pipeline.
+  - Rely on your source code repository tools, like GitLab Merge request or GitHub pull request for committing to the main branch.
+  - You should require that at least two independent reviews by two independent reviewers are done for each merge/pull request
+  - Consider hiring a security expert in your product unit who will review software and configuration changes from only security point of view.
+  - Never allow the user himself/herself to approve his/hers own merge/pull request
+
+- Ensure that your CI/CD pipeline has proper segregation, configuration, and access control to ensure the integrity of the code flowing through the build and deploy processes.
+  - Microservice CI pipeline is included inside the microservice's Git repository and reviewers need to check for merge/pull requests that inappropriate changes are not made to the microservice CI pipeline.
+  - Staging CD pipeline should be secured in own Git repository where only authorized personnel can trigger production changes
+  - Production CD pipeline should be secured in own Git repository where only authorized personnel can trigger production changes
+  - Production GitOps repo should be secured so that only authorized personnel can access that repo.
+
+- Ensure that unsigned or unencrypted serialized data is not sent to untrusted clients without some form of integrity check or digital signature to detect tampering or replay of the serialized data
+
+### A09:2021 – Security Logging and Monitoring Failures
+
+- Auditable events, such as logins, failed logins, and high-value transactions, are not logged.
+
+- Warnings and errors generate no, inadequate, or unclear log messages.
+
+- Logs of applications and APIs are not monitored for suspicious activity.
+
+Logs are only stored locally.
+
+Appropriate alerting thresholds and response escalation processes are not in place or effective.
+
+Penetration testing and scans by dynamic application security testing (DAST) tools (such as OWASP ZAP) do not trigger alerts.
+
+The application cannot detect, escalate, or alert for active attacks in real-time or near real-time.

@@ -97,7 +97,7 @@ export default class MicroserviceImpl extends Microservice {
 
 ### <a name="authorizationservice"></a>AuthorizationService
 
-Authorizes client requests based on Auhtorization header
+Authorizes client requests based on Authorization header
 
 ```typescript
 export default abstract class AuthorizationService {

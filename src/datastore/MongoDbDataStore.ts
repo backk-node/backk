@@ -879,13 +879,12 @@ export default class MongoDbDataStore extends AbstractDataStore {
       const rootUserDefinedFilters = rootFilters.filter((filter) => !(filter instanceof MongoDbQuery));
       const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbQuery);
 
-      const userDefinedFiltersMatchExpression = convertUserDefinedFiltersToMatchExpression(
+      const userDefinedFiltersMatchExpression = convertUserDefinedFiltersToMatchExpression( EntityClass,
+        this.getTypes(),
         rootUserDefinedFilters as UserDefinedFilter[]
       );
 
       const mongoDbQueriesMatchExpression = convertMongoDbQueriesToMatchExpression(
-        EntityClass,
-        this.getTypes(),
         rootMongoDbQueries as Array<MongoDbQuery<T>>
       );
 
@@ -1370,6 +1369,8 @@ export default class MongoDbDataStore extends AbstractDataStore {
       const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbQuery);
 
       const userDefinedFiltersMatchExpression = convertUserDefinedFiltersToMatchExpression(
+        EntityClass,
+        this.getTypes(),
         rootUserDefinedFilters as UserDefinedFilter[]
       );
 
@@ -1472,6 +1473,8 @@ export default class MongoDbDataStore extends AbstractDataStore {
       const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbQuery);
 
       const userDefinedFiltersMatchExpression = convertUserDefinedFiltersToMatchExpression(
+        EntityClass,
+        this.getTypes(),
         rootUserDefinedFilters as UserDefinedFilter[]
       );
 
@@ -1624,6 +1627,8 @@ export default class MongoDbDataStore extends AbstractDataStore {
       const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbQuery);
 
       const userDefinedFiltersMatchExpression = convertUserDefinedFiltersToMatchExpression(
+        EntityClass,
+        this.getTypes(),
         rootUserDefinedFilters as UserDefinedFilter[]
       );
 
@@ -1711,6 +1716,8 @@ export default class MongoDbDataStore extends AbstractDataStore {
       const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbQuery);
 
       const userDefinedFiltersMatchExpression = convertUserDefinedFiltersToMatchExpression(
+        EntityClass,
+        this.getTypes(),
         rootUserDefinedFilters as UserDefinedFilter[]
       );
 

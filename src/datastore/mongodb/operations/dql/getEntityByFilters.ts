@@ -80,6 +80,8 @@ export default async function getEntityByFilters<T extends BackkEntity>(
     const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbQuery);
 
     const userDefinedFiltersMatchExpression = convertUserDefinedFiltersToMatchExpression(
+      EntityClass,
+      dataStore.getTypes(),
       rootUserDefinedFilters as UserDefinedFilter[]
     );
 

@@ -60,6 +60,8 @@ export default async function removeSimpleSubEntityByIdFromEntityByFilters<T ext
     const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbQuery);
 
     const userDefinedFiltersMatchExpression = convertUserDefinedFiltersToMatchExpression(
+      EntityClass,
+      dataStore.getTypes(),
       rootUserDefinedFilters as UserDefinedFilter[]
     );
 

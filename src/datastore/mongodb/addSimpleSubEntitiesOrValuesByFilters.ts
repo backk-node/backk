@@ -55,6 +55,8 @@ export default async function addSimpleSubEntitiesOrValuesByFilters<
     const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbQuery);
 
     const userDefinedFiltersMatchExpression = convertUserDefinedFiltersToMatchExpression(
+      EntityClass,
+      dataStore.getTypes(),
       rootUserDefinedFilters as UserDefinedFilter[]
     );
 

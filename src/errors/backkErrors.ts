@@ -87,5 +87,10 @@ export const BACKK_ERRORS = {
     errorCode: '17',
     message: 'User is not authenticated',
     statusCode: HttpStatusCodes.UNAUTHORIZED
-  }
+  },
+  INVALID_HTTP_METHOD: {
+    errorCode: '17',
+    message: 'Invalid HTTP method. HTTP method must be POST or GET',
+    statusCode: HttpStatusCodes.METHOD_NOT_ALLOWED
+  },
 };

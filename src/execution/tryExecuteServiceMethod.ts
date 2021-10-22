@@ -72,12 +72,16 @@ export default async function tryExecuteServiceMethod(
   options?: ServiceFunctionExecutionOptions
 ): Promise<void | object> {
   let storedError;
-  let subject;
+  let subject: string | undefined;
   let response: any;
   // eslint-disable-next-line prefer-const
   let [serviceName, functionName] = serviceFunctionName.split('.');
 
   try {
+    if (httpMethod !== 'GET' && httpMethod !== 'POST') {
+      throw createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.INVALID_HTTP_METHOD);
+    }
+
     if (
       options?.multipleServiceFunctionExecution?.isAllowed &&
       isExecuteMultipleRequest(serviceFunctionName)
@@ -288,14 +292,15 @@ export default async function tryExecuteServiceMethod(
     const authorizationService = getMicroserviceServiceByServiceClass(microservice, AuthorizationService);
     const authHeader = headers.authorization;
 
-    // TODO: audit logging enabled by a decorator for service function
+    // TODO audit logging enabled by a decorator for service function
     subject = await tryAuthorize(
       microservice[serviceName],
       functionName,
       serviceFunctionArgument,
       authHeader,
       authorizationService,
-      userService
+      userService,
+      isClusterInternalCall
     );
 
     const ServiceClass = microservice[serviceName].constructor;
@@ -439,13 +444,6 @@ export default async function tryExecuteServiceMethod(
             if (!userService) {
               throw new Error(
                 'User account service is missing. You must implement a captcha verification service class that extends UserAccountBaseService and instantiate your class and store in a field in MicroserviceImpl class'
-              );
-            }
-
-            const subject: string | undefined = await authorizationService.getSubject(authHeader);
-            if (!subject) {
-              throw createBackkErrorFromErrorCodeMessageAndStatus(
-                BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED
               );
             }
 

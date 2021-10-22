@@ -1,13 +1,10 @@
-import createErrorFromErrorMessageAndThrowError from "../errors/createErrorFromErrorMessageAndThrowError";
-import serviceAnnotationContainer from "../decorators/service/serviceAnnotationContainer";
-import serviceFunctionAnnotationContainer
-  from "../decorators/service/function/serviceFunctionAnnotationContainer";
-import BaseService from "../service/BaseService";
-import UserAccountBaseService from "../service/useraccount/UserAccountBaseService";
-import createErrorMessageWithStatusCode from "../errors/createErrorMessageWithStatusCode";
-import defaultServiceMetrics from "../observability/metrics/defaultServiceMetrics";
-import { HttpStatusCodes } from "../constants/constants";
-import { BACKK_ERRORS } from "../errors/backkErrors";
+import serviceAnnotationContainer from '../decorators/service/serviceAnnotationContainer';
+import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
+import BaseService from '../service/BaseService';
+import UserAccountBaseService from '../service/useraccount/UserAccountBaseService';
+import defaultServiceMetrics from '../observability/metrics/defaultServiceMetrics';
+import { BACKK_ERRORS } from '../errors/backkErrors';
+import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
 
 export default async function tryAuthorize(
   service: BaseService,
@@ -15,8 +12,9 @@ export default async function tryAuthorize(
   serviceFunctionArgument: any,
   authHeader: string | string[] | undefined,
   authorizationService: any,
-  usersService: UserAccountBaseService | undefined
-): Promise<void | string> {
+  usersService: UserAccountBaseService | undefined,
+  isClusterInternalCall: boolean
+): Promise<undefined | string> {
   const ServiceClass = service.constructor;
 
   if (!authorizationService) {
@@ -25,28 +23,33 @@ export default async function tryAuthorize(
     );
   }
 
-  const serviceFunctionName = `${ServiceClass.name.charAt(0).toLowerCase() + ServiceClass.name.slice(1)}.${
-    functionName
-  }`;
-
-  // TODO check that X-Original-Uri is not set to public URI for this microservice
-  // TODO if authHeader is missing and X-Original-Uri is set, return 401 Unauthorized
   if (authHeader === undefined) {
-    if (
-      serviceAnnotationContainer.isServiceAllowedForClusterInternalUse(ServiceClass) ||
-      serviceFunctionAnnotationContainer.isServiceFunctionAllowedForClusterInternalUse(
-        ServiceClass,
-        functionName)
-    ) {
-      return;
+    if (isClusterInternalCall) {
+      if (
+        serviceAnnotationContainer.isServiceAllowedForClusterInternalUse(ServiceClass) ||
+        serviceFunctionAnnotationContainer.isServiceFunctionAllowedForClusterInternalUse(
+          ServiceClass,
+          functionName
+        )
+      ) {
+        return;
+      }
+    } else {
+      throw createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.USER_NOT_AUTHENTICATED);
     }
   } else {
     if (
       serviceAnnotationContainer.isServiceAllowedForEveryUser(ServiceClass) ||
-      serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUserForOwnResources(ServiceClass, functionName) ||
+      serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUserForOwnResources(
+        ServiceClass,
+        functionName
+      ) ||
       serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUser(ServiceClass, functionName)
     ) {
-      return;
+      const subject = await authorizationService.getSubject(authHeader);
+      if (subject) {
+        return subject;
+      }
     }
 
     let allowedRoles: string[] = [];
@@ -58,11 +61,10 @@ export default async function tryAuthorize(
     if (await authorizationService.hasUserRoleIn(allowedRoles, authHeader)) {
       return;
     }
-
   }
 
   if (
-    process.env.NODE_ENV === 'development' &&
+    process.env.NODE_ENV !== 'production' &&
     (serviceFunctionAnnotationContainer.isServiceFunctionAllowedForTests(ServiceClass, functionName) ||
       serviceAnnotationContainer.isServiceAllowedForClusterInternalUse(ServiceClass) ||
       serviceFunctionAnnotationContainer.isServiceFunctionAllowedForClusterInternalUse(
@@ -74,11 +76,5 @@ export default async function tryAuthorize(
   }
 
   defaultServiceMetrics.incrementAuthorizationFailuresByOne();
-
-  createErrorFromErrorMessageAndThrowError(
-    createErrorMessageWithStatusCode(
-      `Error code: ${BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED.errorCode}:${BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED.message}`,
-      HttpStatusCodes.FORBIDDEN
-    )
-  );
+  throw createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED);
 }

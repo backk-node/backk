@@ -234,8 +234,6 @@ W
 package.json,7/0/7030d0b2f71b999ff89a343de08c414af32fc93a
 P
  src/assertions/assertIsNumber.ts,7/0/7025f149ce85dcda7d6d0dff399c05434803dd7b
-I
-src/errors/backkErrors.ts,9/d/9de565af347d623f5e99e6a6ab0d8ad581e1dc6d
 P
  src/microservice/Microservice.ts,b/2/b203b2517f9ead474bfd9ed8b4aa05bb628a6597
 Y
@@ -360,8 +358,6 @@ W
 'docs/api/MICROSERVICE_INITIALIZATION.MD,7/3/731ce54e9b15c990f2d2a4166230eb6b1ee8fa72
 C
 docs/GET_STARTED.MD,c/8/c841c6a68c176a73f38f5dc87c8a0631e97748fb
-`
-0src/authorization/JwtAuthorizationServiceImpl.ts,b/8/b82cefea0a7f99d8d7473b1072daa5b71ffb5527
 \
 ,src/decorators/service/function/TestSetup.ts,e/e/eea76718fe98d368508cdea5deaf4d2f3633eed8
 f
@@ -520,8 +516,6 @@ Z
 ,docs/usage/SPECIAL_SERVICE_FUNCTION_TYPES.MD,c/3/c382d7df5090b56087c9ac25a73d6bb5ca410105
 [
 +src/initialization/startKafkaConsumerFor.ts,a/6/a6790e1ac5b1a86b85de2129e1093e8426a9be37
-X
-(src/initialization/startHttpServerFor.ts,e/1/e11cea5463788a01b778bc66472ff1fa166aeb06
 Y
 )src/execution/isExecuteMultipleRequest.ts,d/2/d2482742299ac42fc87a8f2123cf69f65806b61b
 T

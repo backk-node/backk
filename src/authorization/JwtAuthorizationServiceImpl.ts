@@ -50,8 +50,12 @@ export default class JwtAuthorizationServiceImpl extends AuthorizationService {
         }
       }
 
-      const jwtClaims = verify(jwt, this.signSecretOrPublicKey);
-      return _.get(jwtClaims, 'sub');
+      try {
+        const jwtClaims = verify(jwt, this.signSecretOrPublicKey);
+        return _.get(jwtClaims, 'sub');
+      } catch {
+        return Promise.resolve(undefined);
+      }
     }
 
     return undefined;
@@ -75,9 +79,13 @@ export default class JwtAuthorizationServiceImpl extends AuthorizationService {
         }
       }
 
-      const jwtClaims = verify(jwt, this.signSecretOrPublicKey);
-      const assignedUserRoles = _.get(jwtClaims, this.rolesClaimPath);
-      return roles.some((role) => assignedUserRoles.includes(role));
+      try {
+        const jwtClaims = verify(jwt, this.signSecretOrPublicKey);
+        const assignedUserRoles = _.get(jwtClaims, this.rolesClaimPath);
+        return roles.some((role) => assignedUserRoles.includes(role));
+      } catch {
+        return false;
+      }
     }
 
     return false;

@@ -44,8 +44,8 @@ class ServiceFunctionAnnotationContainer {
     this.serviceFunctionNameToAllowedUserRolesMap[`${serviceClass.name}${functionName}`] = roles;
   }
 
-  addServiceFunctionAllowedForEveryUser(serviceClass: Function, functionName: string) {
-    this.serviceFunctionNameToIsAllowedForEveryUserMap[`${serviceClass.name}${functionName}`] = true;
+  addServiceFunctionAllowedForEveryUser(serviceClass: Function, functionName: string, allowDespiteUserIdInArg: boolean) {
+    this.serviceFunctionNameToIsAllowedForEveryUserMap[`${serviceClass.name}${functionName}`] = allowDespiteUserIdInArg;
   }
 
   addServiceFunctionAllowedForClusterInternalUse(serviceClass: Function, functionName: string) {
@@ -177,6 +177,20 @@ class ServiceFunctionAnnotationContainer {
       if (
         this.serviceFunctionNameToIsAllowedForEveryUserMap[`${proto.constructor.name}${functionName}`] !==
         undefined
+      ) {
+        return true;
+      }
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    return false;
+  }
+
+  isServiceFunctionAllowedForEveryUserDespiteOfUserIdInArg(serviceClass: Function, functionName: string) {
+    let proto = Object.getPrototypeOf(new (serviceClass as new () => any)());
+    while (proto !== Object.prototype) {
+      if (
+        this.serviceFunctionNameToIsAllowedForEveryUserMap[`${proto.constructor.name}${functionName}`]
       ) {
         return true;
       }

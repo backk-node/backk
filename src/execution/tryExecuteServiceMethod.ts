@@ -306,6 +306,14 @@ export default async function tryExecuteServiceMethod(
     const ServiceClass = microservice[serviceName].constructor;
     const dataStore = (microservice[serviceName] as BaseService).getDataStore();
 
+    if ((serviceFunctionArgument.userId || serviceFunctionArgument.userAccountId) &&
+      !serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUserDespiteOfUserIdInArg(
+        ServiceClass,
+        functionName
+      )) {
+      throw new Error(serviceName + '.' + functionName + ': argument contains userId or userAccountId and @AllowForEveryUser() annotation. Do you mean to use @AllowForEveryUserForOwnResources() annotation instead? If not, you must annotate this function with @AllowForEveryUser(true)')
+    }
+
     let instantiatedServiceFunctionArgument: any;
     if (serviceFunctionArgumentTypeName) {
       instantiatedServiceFunctionArgument = plainToClass(

@@ -11,8 +11,6 @@ A
 package-lock.json,f/a/fa288d1472d29beccb489a676f68739ad365fc47
 _
 /src/continuationlocalstorage/getClsNamespace.ts,7/6/762601a647d8d7d2b07fdc24143126a159b37a33
-d
-4src/decorators/service/function/AllowForEveryUser.ts,8/3/83ff187a7fbb3434e468019f76ea81486266353e
 `
 0src/decorators/service/function/AllowForTests.ts,f/e/fed35f5a00aecdff94c63ec387c4297938b7e219
 d
@@ -242,8 +240,6 @@ Z
 *src/service/startup/StartupCheckService.ts,3/c/3c94b7ecf864ecb2fae8f2b6958fb46cc906661c
 S
 #src/service/LivenessCheckService.ts,c/0/c0b72675266582882b63fbd507b754b2a82b8cd7
-u
-Esrc/decorators/service/function/serviceFunctionAnnotationContainer.ts,6/f/6f969f85640cfffcf6ed8d82aff088220b97d615
 S
 #src/openapi/writeOpenApiSpecFile.ts,f/2/f2fd425c36694198fd59a76c96f5848e5bf5657c
 c

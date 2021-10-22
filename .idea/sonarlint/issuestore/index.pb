@@ -186,8 +186,6 @@ l
 <src/types/postqueryoperations/DefaultSortingAndPagination.ts,c/9/c9f32f7b9bf4b6be3e39a5228f3126e764b03783
 G
 src/types/BackkError.ts,0/f/0ff54873c02da10e848e21977cfe0d78b02e4abe
-V
-&src/utils/type/isPropertyReadDenied.ts,3/e/3e09e44904a571a9e8462ddcfed67cf2fb00f70a
 L
 src/types/ErrorDefinition.ts,b/d/bdddc5a4ea19c1d1a503ef76b0bc3261f648deba
 D
@@ -342,8 +340,6 @@ Z
 .src/errors/createErrorMessageWithStatusCode.ts,1/6/16c55c9d4f5a17047b3ddfabaa5458b5464aaa1d
 k
 ;src/errors/createBackkErrorFromErrorMessageAndStatusCode.ts,3/f/3f91cbf61f981da36b338ef6e33082fa2bd42f99
-Q
-!src/datastore/MongoDbDataStore.ts,7/f/7f6815388428de13693ae11762a77f1789593f07
 U
 %.github/workflows/codeql-analysis.yml,c/3/c3aa8b7f1c613e43d3bb9d5ac52ac6603d945e89
 I
@@ -468,12 +464,8 @@ z
 Jsrc/typescript/generator/generateTypescriptFilesFromTypeDefinitionFiles.ts,b/7/b7cca6f35d8c9e702c044fe7ac7e1ca1c9ceaf0f
 U
 %docs/usage/CREATING_ENTITY_CLASSES.MD,4/5/45d0923487764b71976755a25af35702628fac56
-a
-1src/types/userdefinedfilters/UserDefinedFilter.ts,9/a/9a8098f30e153651029e5eb0cdf7f77d91e39b32
 X
 (src/types/userdefinedfilters/OrFilter.ts,b/f/bf5b3b8fe1519788e16c4bd40996fc2fde6a0335
-T
-$src/utils/type/findSubEntityClass.ts,d/4/d4f3074e9132d3f9c9ac8bb94346ed0a93f67b73
 m
 =src/datastore/sql/operations/dql/clauses/tryGetWhereClause.ts,6/0/60b51931e05a83dbb8d87448b5ff466c0e48bf19
 O

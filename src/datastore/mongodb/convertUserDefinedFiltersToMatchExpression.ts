@@ -1,4 +1,6 @@
 import UserDefinedFilter from '../../types/userdefinedfilters/UserDefinedFilter';
+import findSubEntityClass from '../../utils/type/findSubEntityClass';
+import isPropertyReadDenied from '../../utils/type/isPropertyReadDenied';
 
 function convertSqlLikeExpressionToRegExp(likeExpression: string, isCaseSensitive = false) {
   return new RegExp(
@@ -178,15 +180,25 @@ function getWhereExpression(userDefinedFilter: UserDefinedFilter) {
   }
 }
 
-// TODO: Don't allow READ-DENIED fields to be queried
 export default function convertUserDefinedFiltersToMatchExpression(
+  EntityClass: new () => any,
+  Types: any,
   userDefinedFilters: UserDefinedFilter[]
 ): object {
   return userDefinedFilters.reduce((matchExpressions, userDefinedFilter) => {
+    const SubEntityClass = findSubEntityClass(userDefinedFilter.subEntityPath ?? '', EntityClass, Types);
+    if (
+      SubEntityClass &&
+      userDefinedFilter.fieldName &&
+      isPropertyReadDenied(SubEntityClass, userDefinedFilter.fieldName)
+    ) {
+      return matchExpressions;
+    }
+
     if (userDefinedFilter.operator === 'OR' && userDefinedFilter.orFilters) {
       return {
         $or: userDefinedFilter.orFilters.map((orFilter) =>
-          convertUserDefinedFiltersToMatchExpression([orFilter])
+          convertUserDefinedFiltersToMatchExpression(EntityClass, Types, [orFilter])
         )
       };
     }

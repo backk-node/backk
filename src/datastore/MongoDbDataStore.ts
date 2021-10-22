@@ -884,6 +884,8 @@ export default class MongoDbDataStore extends AbstractDataStore {
       );
 
       const mongoDbQueriesMatchExpression = convertMongoDbQueriesToMatchExpression(
+        EntityClass,
+        this.getTypes(),
         rootMongoDbQueries as Array<MongoDbQuery<T>>
       );
 

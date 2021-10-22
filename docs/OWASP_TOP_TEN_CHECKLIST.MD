@@ -125,5 +125,56 @@
      - Content-Security-Policy: frame-ancestors 'none'
      - Content-Type: application/json
      - If caching is not specifically enabled and configured, following header is set: Cache-Control: no-store
+     - Access-Control-Allow-Origin: https://<api-gateway-fqdn>
+
 
  - The software is out of date or vulnerable (see A06:2021-Vulnerable and Outdated Components).
+   - Backk recommends Continuous Vulnerability Scan pipeline as part of DevSecOps, where each latest microservice container is scanned for possible vulnerabilities at regular intervals (e.g. every night)
+   
+   
+### A06:2021 – Vulnerable and Outdated Components
+
+- If you do not know the versions of all components you use (both client-side and server-side). This includes components you directly use as well as nested dependencies.
+
+- If the software is vulnerable, unsupported, or out of date. This includes the OS, web/application server, database management system (DBMS), applications, APIs and all components, runtime environments, and libraries.
+
+- If you do not scan for vulnerabilities regularly and subscribe to security bulletins related to the components you use.
+
+- If you do not fix or upgrade the underlying platform, frameworks, and dependencies in a risk-based, timely fashion. This commonly happens in environments when patching is a monthly or quarterly task under change control, leaving organizations open to days or months of unnecessary exposure to fixed vulnerabilities.
+
+- If software developers do not test the compatibility of updated, upgraded, or patched libraries.
+
+- If you do not secure the components’ configurations (see A05:2021-Security Misconfiguration).
+
+For all above:  Backk recommends Continuous Vulnerability Scan pipeline as part of DevSecOps, where each latest microservice container is scanned for possible vulnerabilities at regular intervals (e.g. every night).
+Found "Critical" and "High" level vulnerabilities should trigger a creation of issue that should be fixed with appropriate schedule.
+
+### A07:2021 – Identification and Authentication Failures
+
+- Permits automated attacks such as credential stuffing, where the attacker has a list of valid usernames and passwords.
+  - Ensure that you can deny this with your selected IAM service (e.g. Keycloak) 
+  
+- Permits brute force or other automated attacks.
+  - Ensure that you can deny this with your selected IAM service (e.g. Keycloak) 
+  - You need to configure temporary account locking to happen after several consecutive failed login attempts
+
+- Permits default, weak, or well-known passwords, such as "Password1" or "admin/admin"
+  - Configure required password complexity policy in your IAM service (e.g. Keycloak) 
+
+- Uses weak or ineffective credential recovery and forgot-password processes, such as "knowledge-based answers," which cannot be made safe.
+  - Ensure that this is not allowed in your IAM service (e.g. Keycloak)
+
+- Uses plain text, encrypted, or weakly hashed passwords data stores.
+  - Keycloak IAM uses secure hashing algorithm and you can even provide your own algorithm if needed
+
+- Has missing or ineffective multi-factor authentication.
+  - Keycloak IAM can be configured to require multi-factor authentication.
+
+- Exposes session identifier in the URL.
+  - No, Keycloak uses cookie
+
+- Reuse session identifier after successful login.
+  - No
+
+- Does not correctly invalidate Session IDs. User sessions or authentication tokens (mainly single sign-on (SSO) tokens) aren't properly invalidated during logout or a period of inactivity.
+  - Keycloak support single logout (SLO)

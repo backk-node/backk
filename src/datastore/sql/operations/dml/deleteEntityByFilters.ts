@@ -80,7 +80,7 @@ export default async function deleteEntityByFilters<T extends object>(
       }
     }
 
-    const whereClause = tryGetWhereClause(dataStore, '', filters as any);
+    const whereClause = tryGetWhereClause(EntityClass, dataStore, '', filters as any);
     const filterValues = getFilterValues(filters as any);
 
     await Promise.all([

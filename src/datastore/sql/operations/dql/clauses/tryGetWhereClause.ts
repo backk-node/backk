@@ -2,8 +2,11 @@ import SqlExpression from '../../../expressions/SqlExpression';
 import UserDefinedFilter from '../../../../../types/userdefinedfilters/UserDefinedFilter';
 import convertUserDefinedFilterToSqlExpression from '../utils/convertUserDefinedFilterToSqlExpression';
 import AbstractSqlDataStore from '../../../../AbstractSqlDataStore';
+import findSubEntityClass from "../../../../../utils/type/findSubEntityClass";
+import isPropertyReadDenied from "../../../../../utils/type/isPropertyReadDenied";
 
 export default function tryGetWhereClause<T>(
+  EntityClass: new() => T,
   dataStore: AbstractSqlDataStore,
   subEntityPath: string,
   filters?: (SqlExpression | UserDefinedFilter)[]
@@ -32,6 +35,10 @@ export default function tryGetWhereClause<T>(
           (subEntityPath === '' && !filter.subEntityPath) ||
           filter.subEntityPath === '*'
         ) {
+          const SubEntityClass = findSubEntityClass(filter.subEntityPath ?? '', EntityClass, dataStore.getTypes());
+          if (SubEntityClass && isPropertyReadDenied(SubEntityClass, (filter as any).fieldName)) {
+            return undefined;
+          }
           return convertUserDefinedFilterToSqlExpression(filter as UserDefinedFilter, index);
         }
 

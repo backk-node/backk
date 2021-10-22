@@ -1,19 +1,19 @@
-import entityAnnotationContainer from '../../../../../decorators/entity/entityAnnotationContainer';
-import getClassPropertyNameToPropertyTypeNameMap from '../../../../../metadata/getClassPropertyNameToPropertyTypeNameMap';
-import { Projection } from '../../../../../types/postqueryoperations/Projection';
-import shouldIncludeField from '../utils/columns/shouldIncludeField';
-import getTypeInfoForTypeName from '../../../../../utils/type/getTypeInfoForTypeName';
-import isEntityTypeName from '../../../../../utils/type/isEntityTypeName';
-import tryGetWhereClause from './tryGetWhereClause';
-import tryGetSortClause from './tryGetOrderByClause';
-import getPaginationClause from './getPaginationClause';
-import SqlExpression from '../../../expressions/SqlExpression';
-import UserDefinedFilter from '../../../../../types/userdefinedfilters/UserDefinedFilter';
-import AbstractSqlDataStore from '../../../../AbstractSqlDataStore';
-import SortBy from '../../../../../types/postqueryoperations/SortBy';
-import Pagination from '../../../../../types/postqueryoperations/Pagination';
-import typePropertyAnnotationContainer from '../../../../../decorators/typeproperty/typePropertyAnnotationContainer';
-import EntityCountRequest from '../../../../../types/EntityCountRequest';
+import entityAnnotationContainer from "../../../../../decorators/entity/entityAnnotationContainer";
+import getClassPropertyNameToPropertyTypeNameMap
+  from "../../../../../metadata/getClassPropertyNameToPropertyTypeNameMap";
+import { Projection } from "../../../../../types/postqueryoperations/Projection";
+import shouldIncludeField from "../utils/columns/shouldIncludeField";
+import getTypeInfoForTypeName from "../../../../../utils/type/getTypeInfoForTypeName";
+import isEntityTypeName from "../../../../../utils/type/isEntityTypeName";
+import tryGetWhereClause from "./tryGetWhereClause";
+import tryGetSortClause from "./tryGetOrderByClause";
+import getPaginationClause from "./getPaginationClause";
+import SqlExpression from "../../../expressions/SqlExpression";
+import UserDefinedFilter from "../../../../../types/userdefinedfilters/UserDefinedFilter";
+import AbstractSqlDataStore from "../../../../AbstractSqlDataStore";
+import SortBy from "../../../../../types/postqueryoperations/SortBy";
+import Pagination from "../../../../../types/postqueryoperations/Pagination";
+import EntityCountRequest from "../../../../../types/EntityCountRequest";
 import isPropertyReadDenied from "../../../../../utils/type/isPropertyReadDenied";
 
 // noinspection OverlyComplexFunctionJS
@@ -60,7 +60,7 @@ export default function getJoinClauses(
         // noinspection ReuseOfLocalVariableJS
         logicalSubEntityTableName = tableAliasPath + '_' + joinSpec.entityFieldName.toLowerCase();
 
-        const whereClause = tryGetWhereClause(dataStore, joinEntityPath, filters);
+        const whereClause = tryGetWhereClause(RootEntityClass, dataStore, joinEntityPath, filters);
         const sortClause = tryGetSortClause(dataStore, joinEntityPath, sortBys, RootEntityClass, Types);
         const joinTableAlias = dataStore.schema + '_' + logicalSubEntityTableName;
 
@@ -164,7 +164,7 @@ export default function getJoinClauses(
           return '';
         }
 
-        const whereClause = tryGetWhereClause(dataStore, joinEntityPath, filters);
+        const whereClause = tryGetWhereClause(RootEntityClass, dataStore, joinEntityPath, filters);
         const joinTableAlias = dataStore.schema + '_' + logicalSubEntityTableName;
         const outerSortBys = tryGetSortClause(
           dataStore,

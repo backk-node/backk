@@ -49,7 +49,7 @@ export default async function deleteEntitiesByFilters<T extends object>(
       (filters as any).push(new SqlEquals({ [userAccountIdFieldName]: userAccountId }));
     }
 
-    const whereClause = tryGetWhereClause(dataStore, '', filters as any);
+    const whereClause = tryGetWhereClause(EntityClass, dataStore, '', filters as any);
     const filterValues = getFilterValues(filters as any);
 
     await Promise.all([

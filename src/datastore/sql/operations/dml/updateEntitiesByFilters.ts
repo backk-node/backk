@@ -51,7 +51,7 @@ export default async function updateEntitiesByFilters<T extends BackkEntity>(
       (filters as any).push(new SqlEquals({ [userAccountIdFieldName]: userAccountId }));
     }
 
-    const whereClause = tryGetWhereClause(dataStore, '', filters as any);
+    const whereClause = tryGetWhereClause(EntityClass, dataStore, '', filters as any);
     const filterValues = getFilterValues(filters as any);
 
     const setStatements = Object.keys(update).map(

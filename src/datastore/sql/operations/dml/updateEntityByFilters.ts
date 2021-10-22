@@ -74,7 +74,7 @@ export default async function updateEntityByFilters<T extends BackkEntity>(
 
     await tryExecuteEntityPreHooks(options?.entityPreHooks ?? [], currentEntity);
 
-    const whereClause = tryGetWhereClause(dataStore, '', filters as any);
+    const whereClause = tryGetWhereClause(EntityClass, dataStore, '', filters as any);
     const filterValues = getFilterValues(filters as any);
 
     const setStatements = Object.keys(update).map(

@@ -60,7 +60,7 @@ export default function getSqlSelectStatementParts<T>(
     outerSortBys.length > 0 ? `ORDER BY ${outerSortBys.filter((outerSortBy) => outerSortBy).join(', ')}` : '';
 
   const filterValues = getFilterValues(filters);
-  const rootWhereClause = tryGetWhereClause(dataStore, '', filters);
+  const rootWhereClause = tryGetWhereClause(EntityClass, dataStore, '', filters);
   const rootSortClause = tryGetSortClause(dataStore, '', sortBys, EntityClass, Types);
   const rootPaginationClause = getPaginationClause('', paginations);
 

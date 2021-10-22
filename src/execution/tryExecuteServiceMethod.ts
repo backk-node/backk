@@ -288,6 +288,7 @@ export default async function tryExecuteServiceMethod(
     const authorizationService = getMicroserviceServiceByServiceClass(microservice, AuthorizationService);
     const authHeader = headers.authorization;
 
+    // TODO: audit logging enabled by a decorator for service function
     subject = await tryAuthorize(
       microservice[serviceName],
       functionName,

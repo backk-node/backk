@@ -206,15 +206,30 @@ Found "Critical" and "High" level vulnerabilities should trigger a creation of i
 ### A09:2021 – Security Logging and Monitoring Failures
 
 - Auditable events, such as logins, failed logins, and high-value transactions, are not logged.
+  - Ensure that needed events are properly logged by your IAM service (e.g. Keycloak)
+  - Backk microservice must define AuditLogService implementation to enable audit logging.
+  - Backk microservice audit logs events related to service function calls for a service that extends `UserAccountBaseService`
+  - Backk microservice can audit log service function calls by annotating service function with `@AuditLog()` decorator.
 
 - Warnings and errors generate no, inadequate, or unclear log messages.
+  - Backk generates a log entry for all errors that are not client errors
 
 - Logs of applications and APIs are not monitored for suspicious activity.
 
-Logs are only stored locally.
+- Logs are only stored locally.
+  - Backk platform stores microservice logs to Elasticsearch in Kubernetes cluster.
 
-Appropriate alerting thresholds and response escalation processes are not in place or effective.
+- Appropriate alerting thresholds and response escalation processes are not in place or effective.
+  - System operators should create proper alerting using Prometheus AlertManager and forward alerts to an appropriate system like PagerDuty
 
-Penetration testing and scans by dynamic application security testing (DAST) tools (such as OWASP ZAP) do not trigger alerts.
+- Penetration testing and scans by dynamic application security testing (DAST) tools (such as OWASP ZAP) do not trigger alerts.
+  - OWASP ZAP API scan should be done as part of Backk microservice CI pipeline.
 
-The application cannot detect, escalate, or alert for active attacks in real-time or near real-time.
+- The application cannot detect, escalate, or alert for active attacks in real-time or near real-time.
+  - System operators should create proper alerting using Prometheus AlertManager and forward alerts to an appropriate system like PagerDuty
+
+### A10:2021 – Server-Side Request Forgery (SSRF)
+
+- SSRF flaws occur whenever a web application is fetching a remote resource without validating the user-supplied URL
+  - Enforce proper policies for Kubernetes cluster service mesh egress
+  - When Backk microservice receives URL in input that is used for server side fetch, it must be validated against allowed URLs list.

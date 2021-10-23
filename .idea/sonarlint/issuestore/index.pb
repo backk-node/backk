@@ -220,8 +220,6 @@ W
 package.json,7/0/7030d0b2f71b999ff89a343de08c414af32fc93a
 P
  src/assertions/assertIsNumber.ts,7/0/7025f149ce85dcda7d6d0dff399c05434803dd7b
-P
- src/microservice/Microservice.ts,b/2/b203b2517f9ead474bfd9ed8b4aa05bb628a6597
 Y
 )src/metadata/getTypePropertyAccessType.ts,2/a/2afeaa4377acb0c921130bd950da3dc7e08db618
 U
@@ -460,8 +458,6 @@ e
 5src/decorators/typeproperty/FetchFromRemoteService.ts,7/4/748f74847fd0f98e5bfef277f1921ce711d5ee3f
 R
 "src/remote/http/makeHttpRequest.ts,6/3/638d167128ba5c5cb0465430a3e6af7d84b27653
-<
-src/index.ts,c/5/c5fb850250c7443c48a6c12b5cf6916773da31f1
 T
 $src/remote/http/callRemoteService.ts,4/e/4e5f54640166ccdf6297f9fee279284c902e04de
 R
@@ -484,8 +480,6 @@ Z
 *src/decorators/service/function/CronJob.ts,a/8/a88bb6510ffce012c9290828e536a4fcac1de31e
 \
 ,docs/usage/SPECIAL_SERVICE_FUNCTION_TYPES.MD,c/3/c382d7df5090b56087c9ac25a73d6bb5ca410105
-[
-+src/initialization/startKafkaConsumerFor.ts,a/6/a6790e1ac5b1a86b85de2129e1093e8426a9be37
 Y
 )src/execution/isExecuteMultipleRequest.ts,d/2/d2482742299ac42fc87a8f2123cf69f65806b61b
 T

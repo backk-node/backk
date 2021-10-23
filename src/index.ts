@@ -1,11 +1,5 @@
 export * from './constants/constants';
 
-// Initialize
-export { default as initialize } from './initialization/initialize';
-export { default as startHttpServerFor } from './initialization/startHttpServerFor';
-export { default as startKafkaConsumerFor } from './initialization/startKafkaConsumerFor';
-export { default as startRedisConsumerFor } from './initialization/startRedisConsumerFor';
-
 // Microservice
 export { default as Microservice } from './microservice/Microservice';
 

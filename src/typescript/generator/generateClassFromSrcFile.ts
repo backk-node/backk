@@ -6,8 +6,12 @@ import types from '../../types/types';
 
 export default function generateClassFromSrcFile(typeName: string, remoteServiceRootDir = '') {
   if ((types as any)[typeName]) {
-    // TODO check that typeName cannot be found in src folder, because it is overlapping with built-in backk type
-    return (types as any)[typeName];
+    try {
+      const srcFilePathName = getSrcFilePathNameForTypeName(typeName, remoteServiceRootDir);
+    } catch {
+      return (types as any)[typeName];
+    }
+    throw new Error("Type '" + typeName + "' is a reserved Backk built-in type, use another type name for this type");
   }
 
   const srcFilePathName = getSrcFilePathNameForTypeName(typeName, remoteServiceRootDir);

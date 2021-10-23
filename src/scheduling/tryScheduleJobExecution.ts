@@ -4,9 +4,6 @@ import __Backk__JobScheduling from "./entities/__Backk__JobScheduling";
 import { BackkError } from "../types/BackkError";
 import { validateOrReject } from "class-validator";
 import getValidationErrors from "../validation/getValidationErrors";
-import createErrorFromErrorMessageAndThrowError from "../errors/createErrorFromErrorMessageAndThrowError";
-import createErrorMessageWithStatusCode from "../errors/createErrorMessageWithStatusCode";
-import { HttpStatusCodes } from "../constants/constants";
 import { plainToClass } from "class-transformer";
 import JobScheduling from "./entities/JobScheduling";
 import { scheduleCronJob } from "./scheduleCronJob";
@@ -15,6 +12,8 @@ import { BACKK_ERRORS } from "../errors/backkErrors";
 import emptyError from "../errors/emptyError";
 import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
 import { One } from "../datastore/AbstractDataStore";
+import createBackkErrorFromErrorCodeMessageAndStatus
+  from "../errors/createBackkErrorFromErrorCodeMessageAndStatus";
 
 export default async function tryScheduleJobExecution(
   controller: any,
@@ -30,12 +29,10 @@ export default async function tryScheduleJobExecution(
       forbidNonWhitelisted: true
     });
   } catch (validationErrors) {
-    const errorMessage =
-      `Error code ${BACKK_ERRORS.INVALID_ARGUMENT.errorCode}:${BACKK_ERRORS.INVALID_ARGUMENT.message}:` +
-      getValidationErrors(validationErrors);
-    createErrorFromErrorMessageAndThrowError(
-      createErrorMessageWithStatusCode(errorMessage, HttpStatusCodes.BAD_REQUEST)
-    );
+    throw createBackkErrorFromErrorCodeMessageAndStatus({
+      ...BACKK_ERRORS.INVALID_ARGUMENT,
+      message: BACKK_ERRORS.INVALID_ARGUMENT.message + getValidationErrors(validationErrors)
+    });
   }
 
   const {
@@ -72,7 +69,14 @@ export default async function tryScheduleJobExecution(
   const retryIntervalsInSecsStr = retryIntervalsInSecs.join(',');
   const serviceFunctionArgumentStr = serviceFunctionArgument ? JSON.stringify(serviceFunctionArgument) : '';
   const scheduledExecutionTimestampAsDate = new Date(Date.parse(scheduledExecutionTimestamp));
-  // TODO check that seconds are zero, because 1 min granularity only allowed
+
+  if (scheduledExecutionTimestampAsDate.getSeconds() !== 0) {
+    throw createBackkErrorFromErrorCodeMessageAndStatus({
+      ...BACKK_ERRORS.INVALID_ARGUMENT,
+      message: BACKK_ERRORS.INVALID_ARGUMENT.message + "Seconds in 'scheduledExecutionTimestamp' must be zero"
+    });
+  }
+
   const dataStore = (controller[serviceName] as BaseService).getDataStore();
   // eslint-disable-next-line @typescript-eslint/camelcase
   let entity: One<__Backk__JobScheduling> | null | undefined;

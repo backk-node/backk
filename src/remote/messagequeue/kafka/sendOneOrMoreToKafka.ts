@@ -13,7 +13,7 @@ import defaultServiceMetrics from '../../../observability/metrics/defaultService
 import getNamespacedMicroserviceName from '../../../utils/getNamespacedMicroserviceName';
 import { PromiseErrorOr } from '../../../types/PromiseErrorOr';
 
-const kafkaServerToKafkaClientMap: { [key: string]: Kafka } = {};
+export const kafkaServerToKafkaClientMap: { [key: string]: Kafka } = {};
 
 export enum SendAcknowledgementType {
   NONE,

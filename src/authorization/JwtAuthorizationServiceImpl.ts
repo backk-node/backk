@@ -97,15 +97,7 @@ export default class JwtAuthorizationServiceImpl extends AuthorizationService {
   }
 
   private async tryGetPublicKey(): Promise<string> {
-    let agent;
-
-    if (this.authServerPublicKeyUrl.startsWith('https://')) {
-      agent = new https.Agent({
-        rejectUnauthorized: false
-      });
-    }
-
-    const response = await fetch(this.authServerPublicKeyUrl, { agent });
+    const response = await fetch(this.authServerPublicKeyUrl);
     const responseBodyObject = await response.json();
     return _.get(responseBodyObject, this.publicKeyPath);
   }

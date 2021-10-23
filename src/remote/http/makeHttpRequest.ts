@@ -16,20 +16,10 @@ export default async function makeHttpRequest(
 ): PromiseErrorOr<object | null> {
   const clsNamespace = getNamespace('serviceFunctionExecution');
   clsNamespace?.set('remoteServiceCallCount', clsNamespace?.get('remoteServiceCallCount') + 1);
-
-  let agent;
-
-  if (requestUrl.startsWith('https://')) {
-    agent = new https.Agent({
-      rejectUnauthorized: false
-    });
-  }
-
   const authHeader = getNamespace('serviceFunctionExecution')?.get('authHeader');
 
   try {
     const response = await fetch(requestUrl, {
-      agent,
       method: options?.httpMethod?.toLowerCase() ?? 'get',
       body: requestBodyObject ? JSON.stringify(requestBodyObject) : undefined,
       headers: {

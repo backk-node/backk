@@ -11,8 +11,6 @@ A
 package-lock.json,f/a/fa288d1472d29beccb489a676f68739ad365fc47
 _
 /src/continuationlocalstorage/getClsNamespace.ts,7/6/762601a647d8d7d2b07fdc24143126a159b37a33
-`
-0src/decorators/service/function/AllowForTests.ts,f/e/fed35f5a00aecdff94c63ec387c4297938b7e219
 d
 4src/decorators/service/function/AllowForUserRoles.ts,7/5/754251d4fed56a1d69dd227e152edfcecc5379ca
 Y
@@ -252,8 +250,6 @@ q
 Asrc/decorators/service/function/NoDistributedTransactionNeeded.ts,4/c/4cda45819b5c546ff0002016234bde9fdff440ac
 Y
 )src/decorators/service/function/Update.ts,f/b/fbac1f5f3bfe8376906475aafd65211d321c7ed8
-b
-2src/decorators/service/function/ResponseHeaders.ts,3/1/3172561fe52ce4cd3bcd9f210fee5a09f8f1a1e2
 e
 5src/decorators/service/function/ResponseStatusCode.ts,5/5/55d04dd711e2223ac78db1fd6b21079553dedab4
 W
@@ -344,8 +340,6 @@ C
 docs/GET_STARTED.MD,c/8/c841c6a68c176a73f38f5dc87c8a0631e97748fb
 \
 ,src/decorators/service/function/TestSetup.ts,e/e/eea76718fe98d368508cdea5deaf4d2f3633eed8
-f
-6src/observability/logging/audit/createAuditLogEntry.ts,9/3/93ee41cdce181e9e3b24f2cec0e1636fca8d4985
 d
 4src/postman/writeTestsPostmanCollectionExportFile.ts,8/7/87e4fabf982d3fcb19cf6b5bd33aacaa35eb79bb
 Z
@@ -484,8 +478,6 @@ S
 #docs/usage/REMOTE_SERVICE_ACCESS.MD,e/6/e6a30d0d166d73d944dd261b9ec9fba066a5637e
 O
 src/crypt/shouldEncryptValue.ts,3/f/3f2ba731a8bc5d501165efd198daeabda62d2c2e
-P
- src/observability/logging/log.ts,9/0/9060b5fd2ebac332af3b034c09f90effc59f95d2
 W
 'src/scheduling/defaultRetryIntervals.ts,a/c/acef35a3c59f362638e09c8171917638c60c8912
 Z

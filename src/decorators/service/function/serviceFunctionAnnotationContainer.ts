@@ -4,6 +4,11 @@ import { UpdateType } from './Update';
 import { PostTestSpec } from './PostTests';
 import { TestSetupSpec } from './TestSetup';
 
+type AuditLog = {
+  shouldLog: (argument: any, returnValue: any) => boolean;
+  attributesToLog: (argument: any, returnValue: any) => { [key: string]: any };
+};
+
 class ServiceFunctionAnnotationContainer {
   private readonly serviceFunctionNameToHasNoCaptchaAnnotationMap: { [key: string]: boolean } = {};
   private readonly serviceFunctionNameToIsAllowedForEveryUserMap: { [key: string]: boolean } = {};
@@ -21,6 +26,7 @@ class ServiceFunctionAnnotationContainer {
   private readonly serviceFunctionNameToUpdateTypeMap: { [key: string]: UpdateType } = {};
   private readonly serviceFunctionNameToResponseHeadersMap: { [key: string]: HttpHeaders<any, any> } = {};
   private readonly serviceFunctionNameToHasNoAutoTestMap: { [key: string]: boolean } = {};
+  private readonly serviceFunctionNameToAuditLogMap: { [key: string]: AuditLog } = {};
 
   private readonly serviceFunctionNameToExpectedResponseFieldPathNameToFieldValueMapMap: {
     [key: string]: { [key: string]: any };
@@ -44,16 +50,28 @@ class ServiceFunctionAnnotationContainer {
     this.serviceFunctionNameToAllowedUserRolesMap[`${serviceClass.name}${functionName}`] = roles;
   }
 
-  addServiceFunctionAllowedForEveryUser(serviceClass: Function, functionName: string, allowDespiteUserIdInArg: boolean) {
-    this.serviceFunctionNameToIsAllowedForEveryUserMap[`${serviceClass.name}${functionName}`] = allowDespiteUserIdInArg;
+  addServiceFunctionAllowedForEveryUser(
+    serviceClass: Function,
+    functionName: string,
+    allowDespiteUserIdInArg: boolean
+  ) {
+    this.serviceFunctionNameToIsAllowedForEveryUserMap[
+      `${serviceClass.name}${functionName}`
+    ] = allowDespiteUserIdInArg;
   }
 
   addServiceFunctionAllowedForClusterInternalUse(serviceClass: Function, functionName: string) {
     this.serviceFunctionNameToIsAllowedForClusterInternalUseMap[`${serviceClass.name}${functionName}`] = true;
   }
 
-  addServiceFunctionAllowedForEveryUserForOwnResources(serviceClass: Function, functionName: string, userAccountIdFieldName: string) {
-    this.serviceFunctionNameToUserAccountIdFieldName[`${serviceClass.name}${functionName}`] = userAccountIdFieldName;
+  addServiceFunctionAllowedForEveryUserForOwnResources(
+    serviceClass: Function,
+    functionName: string,
+    userAccountIdFieldName: string
+  ) {
+    this.serviceFunctionNameToUserAccountIdFieldName[
+      `${serviceClass.name}${functionName}`
+    ] = userAccountIdFieldName;
   }
 
   addServiceFunctionAllowedForServiceInternalUse(serviceClass: Function, functionName: string) {
@@ -138,6 +156,18 @@ class ServiceFunctionAnnotationContainer {
     ] = serviceFunctionsOrSpecsToExecute;
   }
 
+  addServiceFunctionAuditLog(
+    serviceClass: Function,
+    functionName: string,
+    shouldLog: (argument: any, returnValue: any) => boolean,
+    attributesToLog: (argument: any, returnValue: any) => { [key: string]: any }
+  ) {
+    this.serviceFunctionNameToAuditLogMap[`${serviceClass.name}${functionName}`] = {
+      shouldLog,
+      attributesToLog
+    };
+  }
+
   expectServiceFunctionReturnValueToContainInTests(
     serviceClass: Function,
     functionName: string,
@@ -189,9 +219,7 @@ class ServiceFunctionAnnotationContainer {
   isServiceFunctionAllowedForEveryUserDespiteOfUserIdInArg(serviceClass: Function, functionName: string) {
     let proto = Object.getPrototypeOf(new (serviceClass as new () => any)());
     while (proto !== Object.prototype) {
-      if (
-        this.serviceFunctionNameToIsAllowedForEveryUserMap[`${proto.constructor.name}${functionName}`]
-      ) {
+      if (this.serviceFunctionNameToIsAllowedForEveryUserMap[`${proto.constructor.name}${functionName}`]) {
         return true;
       }
       proto = Object.getPrototypeOf(proto);
@@ -463,7 +491,9 @@ class ServiceFunctionAnnotationContainer {
   getPostTestSpecs(serviceClass: Function, functionName: string): PostTestSpec[] | undefined {
     let proto = Object.getPrototypeOf(new (serviceClass as new () => any)());
     while (proto !== Object.prototype) {
-      if (this.serviceFunctionNameToPostTestSpecsMap[`${proto.constructor.name}${functionName}`] !== undefined) {
+      if (
+        this.serviceFunctionNameToPostTestSpecsMap[`${proto.constructor.name}${functionName}`] !== undefined
+      ) {
         return this.serviceFunctionNameToPostTestSpecsMap[`${proto.constructor.name}${functionName}`];
       }
       proto = Object.getPrototypeOf(proto);
@@ -477,6 +507,18 @@ class ServiceFunctionAnnotationContainer {
     while (proto !== Object.prototype) {
       if (this.serviceFunctionNameToTestSetupMap[`${proto.constructor.name}${functionName}`] !== undefined) {
         return this.serviceFunctionNameToTestSetupMap[`${proto.constructor.name}${functionName}`];
+      }
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    return undefined;
+  }
+
+  getAuditLog(serviceClass: Function, functionName: string): AuditLog | undefined {
+    let proto = Object.getPrototypeOf(new (serviceClass as new () => any)());
+    while (proto !== Object.prototype) {
+      if (this.serviceFunctionNameToAuditLogMap[`${proto.constructor.name}${functionName}`] !== undefined) {
+        return this.serviceFunctionNameToAuditLogMap[`${proto.constructor.name}${functionName}`];
       }
       proto = Object.getPrototypeOf(proto);
     }

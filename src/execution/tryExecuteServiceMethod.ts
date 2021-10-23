@@ -76,6 +76,7 @@ export default async function tryExecuteServiceMethod(
   let response: any;
   // eslint-disable-next-line prefer-const
   let [serviceName, functionName] = serviceFunctionName.split('.');
+  const ServiceClass = microservice[serviceName].constructor;
 
   try {
     if (httpMethod !== 'GET' && httpMethod !== 'POST') {
@@ -292,7 +293,6 @@ export default async function tryExecuteServiceMethod(
     const authorizationService = getMicroserviceServiceByServiceClass(microservice, AuthorizationService);
     const authHeader = headers.authorization;
 
-    // TODO audit logging enabled by a decorator for service function
     subject = await tryAuthorize(
       microservice[serviceName],
       functionName,
@@ -303,15 +303,21 @@ export default async function tryExecuteServiceMethod(
       isClusterInternalCall
     );
 
-    const ServiceClass = microservice[serviceName].constructor;
     const dataStore = (microservice[serviceName] as BaseService).getDataStore();
 
-    if ((serviceFunctionArgument.userId || serviceFunctionArgument.userAccountId) &&
+    if (
+      (serviceFunctionArgument.userId || serviceFunctionArgument.userAccountId) &&
       !serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUserDespiteOfUserIdInArg(
         ServiceClass,
         functionName
-      )) {
-      throw new Error(serviceName + '.' + functionName + ': argument contains userId or userAccountId and @AllowForEveryUser() annotation. Do you mean to use @AllowForEveryUserForOwnResources() annotation instead? If not, you must annotate this function with @AllowForEveryUser(true)')
+      )
+    ) {
+      throw new Error(
+        serviceName +
+          '.' +
+          functionName +
+          ': argument contains userId or userAccountId and @AllowForEveryUser() annotation. Do you mean to use @AllowForEveryUserForOwnResources() annotation instead? If not, you must annotate this function with @AllowForEveryUser(true)'
+      );
     }
 
     let instantiatedServiceFunctionArgument: any;
@@ -761,7 +767,12 @@ export default async function tryExecuteServiceMethod(
       resp.end(JSON.stringify(createBackkErrorFromError(errorOrBackkError)));
     }
   } finally {
-    if (microservice[serviceName] instanceof UserAccountBaseService || subject) {
+    const auditLog = serviceFunctionAnnotationContainer.getAuditLog(ServiceClass, functionName);
+
+    if (
+      microservice[serviceName] instanceof UserAccountBaseService ||
+      auditLog?.shouldLog(serviceFunctionArgument, response)
+    ) {
       const auditLogEntry = createAuditLogEntry(
         subject ?? serviceFunctionArgument?.subject ?? '',
         (headers['x-forwarded-for'] ?? '') as string,
@@ -772,7 +783,7 @@ export default async function tryExecuteServiceMethod(
         storedError?.message,
         microservice[serviceName] instanceof UserAccountBaseService
           ? serviceFunctionArgument
-          : { _id: response?._id }
+          : { ...(auditLog?.attributesToLog(serviceFunctionArgument, response) ?? {}), _id: response?._id }
       );
       await getMicroserviceServiceByServiceClass(microservice, AuditLoggingService)?.log(auditLogEntry);
     }

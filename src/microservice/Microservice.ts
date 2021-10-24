@@ -115,7 +115,7 @@ export default class Microservice {
       try {
         if (request.method === 'GET') {
           const argumentInJsonQueryParameter = request.url?.split('?arg=').pop();
-          serviceFunctionArgument = JSON.parse(argumentInJsonQueryParameter ?? '');
+          serviceFunctionArgument = argumentInJsonQueryParameter ? JSON.parse(argumentInJsonQueryParameter) : undefined;
         } else {
           // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
           // @ts-ignore
@@ -138,7 +138,7 @@ export default class Microservice {
       tryExecuteServiceMethod(
         this,
         request.url?.split('/').pop() ?? '',
-        serviceFunctionArgument,
+        serviceFunctionArgument ?? null,
         request.headers,
         request.method ?? '',
         response,

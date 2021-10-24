@@ -90,7 +90,7 @@ export default class Microservice {
       );
     }
 
-    const server = createServer(async (request, response) => {
+    const server = createServer((request, response) => {
       request.setEncoding('utf8');
 
       const contentLength = request.headers['content-length']
@@ -110,16 +110,44 @@ export default class Microservice {
         return;
       }
 
+      const isClusterInternalCall = !request.url?.includes(
+        process.env.API_GATEWAY_PATH ?? throwException('API_GATEWAY_PATH environment variable is not defined')
+      );
+
       let serviceFunctionArgument;
 
       try {
         if (request.method === 'GET') {
           const argumentInJsonQueryParameter = request.url?.split('?arg=').pop();
-          serviceFunctionArgument = argumentInJsonQueryParameter ? JSON.parse(argumentInJsonQueryParameter) : undefined;
+          serviceFunctionArgument = argumentInJsonQueryParameter
+            ? JSON.parse(argumentInJsonQueryParameter)
+            : undefined;
         } else {
           // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
           // @ts-ignore
-          serviceFunctionArgument = await bfj.parse(request);
+          serviceFunctionArgument = bfj
+            .parse(request)
+            .then((serviceFunctionArgument: any) =>
+              tryExecuteServiceMethod(
+                this,
+                request.url?.split('/').pop() ?? '',
+                serviceFunctionArgument ?? null,
+                request.headers,
+                request.method ?? '',
+                response,
+                isClusterInternalCall,
+                options
+              )
+            )
+            .catch((error: any) => {
+              const backkError = createBackkErrorFromErrorCodeMessageAndStatus({
+                ...BACKK_ERRORS.INVALID_ARGUMENT,
+                message: BACKK_ERRORS.INVALID_ARGUMENT.message + error.message
+              });
+              response.writeHead(backkError.statusCode, { 'Content-Type': 'application/json' });
+              response.end(JSON.stringify(backkError));
+            });
+          return;
         }
       } catch (error) {
         const backkError = createBackkErrorFromErrorCodeMessageAndStatus({
@@ -130,10 +158,6 @@ export default class Microservice {
         response.end(JSON.stringify(backkError));
         return;
       }
-
-      const isClusterInternalCall = !request.url?.includes(
-        process.env.API_GATEWAY_PATH ?? throwException('API_GATEWAY_PATH environment variable is not defined')
-      );
 
       tryExecuteServiceMethod(
         this,

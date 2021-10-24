@@ -306,7 +306,7 @@ export default async function tryExecuteServiceMethod(
     const dataStore = (microservice[serviceName] as BaseService).getDataStore();
 
     if (
-      (serviceFunctionArgument.userId || serviceFunctionArgument.userAccountId) &&
+      (serviceFunctionArgument?.userId || serviceFunctionArgument?.userAccountId) &&
       !serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUserDespiteOfUserIdInArg(
         ServiceClass,
         functionName

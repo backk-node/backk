@@ -580,10 +580,6 @@ j
 :src/datastore/sql/operations/dql/clauses/getJoinClauses.ts,c/0/c0395ef130033b9a9fbcec0e456a7c3c6bf7d18e
 t
 Dsrc/datastore/sql/operations/dql/utils/getSqlSelectStatementParts.ts,e/4/e404c3130e2a21eedadfd489b586591c6c3b3745
-s
-Csrc/decorators/service/function/AllowForEveryUserForOwnResources.ts,b/0/b02f5f40cc9c8c54e4877bbf2ddff28051594269
-d
-4src/decorators/service/function/AllowForEveryUser.ts,8/3/83ff187a7fbb3434e468019f76ea81486266353e
 `
 0src/decorators/service/function/AllowForTests.ts,f/e/fed35f5a00aecdff94c63ec387c4297938b7e219
 f
@@ -594,8 +590,6 @@ b
 2src/decorators/service/function/ResponseHeaders.ts,3/1/3172561fe52ce4cd3bcd9f210fee5a09f8f1a1e2
 [
 +src/decorators/service/function/AuditLog.ts,1/6/16b78d438d6bdb5eb179ed6ff0ce913640672c97
-u
-Esrc/decorators/service/function/serviceFunctionAnnotationContainer.ts,6/f/6f969f85640cfffcf6ed8d82aff088220b97d615
 Z
 *src/microservice/initializeMicroservice.ts,1/1/1162f5fb3b946952726e351e5b6fcea12aed21a8
 ^

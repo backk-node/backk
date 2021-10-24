@@ -219,13 +219,13 @@ class ServiceFunctionAnnotationContainer {
   isServiceFunctionAllowedForEveryUserDespiteOfUserIdInArg(serviceClass: Function, functionName: string) {
     let proto = Object.getPrototypeOf(new (serviceClass as new () => any)());
     while (proto !== Object.prototype) {
-      if (this.serviceFunctionNameToIsAllowedForEveryUserMap[`${proto.constructor.name}${functionName}`]) {
-        return true;
+      if (this.serviceFunctionNameToIsAllowedForEveryUserMap[`${proto.constructor.name}${functionName}`] !== undefined) {
+        return this.serviceFunctionNameToIsAllowedForEveryUserMap[`${proto.constructor.name}${functionName}`];
       }
       proto = Object.getPrototypeOf(proto);
     }
 
-    return false;
+    return undefined;
   }
 
   isServiceFunctionAllowedForClusterInternalUse(serviceClass: Function, functionName: string) {

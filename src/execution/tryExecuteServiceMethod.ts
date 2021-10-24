@@ -307,16 +307,16 @@ export default async function tryExecuteServiceMethod(
 
     if (
       (serviceFunctionArgument?.userId || serviceFunctionArgument?.userAccountId) &&
-      !serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUserDespiteOfUserIdInArg(
+      serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUserDespiteOfUserIdInArg(
         ServiceClass,
         functionName
-      )
+      ) === false
     ) {
       throw new Error(
         serviceName +
           '.' +
           functionName +
-          ': argument contains userId or userAccountId and @AllowForEveryUser() annotation. Do you mean to use @AllowForEveryUserForOwnResources() annotation instead? If not, you must annotate this function with @AllowForEveryUser(true)'
+          ": argument contains 'userId' or 'userAccountId' and @AllowForEveryUser() annotation. Do you mean to use @AllowForEveryUserForOwnResources() annotation instead? If not, you must annotate this function with @AllowForEveryUser(true)"
       );
     }
 

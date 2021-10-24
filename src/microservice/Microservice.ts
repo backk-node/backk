@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
-import bfj from 'bfj';
+import bfj from 'bfj-pksilen';
 import AbstractDataStore from '../datastore/AbstractDataStore';
 import log, { Severity } from '../observability/logging/log';
 import initializeMicroservice from './initializeMicroservice';
@@ -119,33 +119,11 @@ export default class Microservice {
       try {
         if (request.method === 'GET') {
           const argumentInJsonQueryParameter = request.url?.split('?arg=').pop();
-          serviceFunctionArgument = argumentInJsonQueryParameter
-            ? JSON.parse(argumentInJsonQueryParameter)
-            : undefined;
+          serviceFunctionArgument = argumentInJsonQueryParameter ? JSON.parse(argumentInJsonQueryParameter) : undefined;
         } else {
-          bfj
-            .parse(request)
-            .then((serviceFunctionArgument: any) =>
-              tryExecuteServiceMethod(
-                this,
-                request.url?.split('/').pop() ?? '',
-                serviceFunctionArgument ?? null,
-                request.headers,
-                request.method ?? '',
-                response,
-                isClusterInternalCall,
-                options
-              )
-            )
-            .catch((error: any) => {
-              const backkError = createBackkErrorFromErrorCodeMessageAndStatus({
-                ...BACKK_ERRORS.INVALID_ARGUMENT,
-                message: BACKK_ERRORS.INVALID_ARGUMENT.message + error.message
-              });
-              response.writeHead(backkError.statusCode, { 'Content-Type': 'application/json' });
-              response.end(JSON.stringify(backkError));
-            });
-          return;
+          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+          // @ts-ignore
+          serviceFunctionArgument = bfj.parse(request);
         }
       } catch (error) {
         const backkError = createBackkErrorFromErrorCodeMessageAndStatus({
@@ -156,6 +134,7 @@ export default class Microservice {
         response.end(JSON.stringify(backkError));
         return;
       }
+
 
       tryExecuteServiceMethod(
         this,

@@ -7,7 +7,7 @@ import types from '../../types/types';
 export default function generateClassFromSrcFile(typeName: string, remoteServiceRootDir = '') {
   if ((types as any)[typeName]) {
     try {
-      const srcFilePathName = getSrcFilePathNameForTypeName(typeName, remoteServiceRootDir);
+      getSrcFilePathNameForTypeName(typeName, remoteServiceRootDir, false);
     } catch {
       return (types as any)[typeName];
     }

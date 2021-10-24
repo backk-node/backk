@@ -54,7 +54,7 @@ export function hasBackkSrcFilenameForTypeName(typeName: string) {
   return !!foundFilePathName;
 }
 
-export default function getSrcFilePathNameForTypeName(typeName: string, serviceRootDir: string = ''): string {
+export default function getSrcFilePathNameForTypeName(typeName: string, serviceRootDir: string = '', searchNodeModulesBackkSrcDir = true): string {
   if (typeName.includes(':')) {
     // noinspection AssignmentToFunctionParameterJS
     typeName = typeName.split(':')[1];
@@ -65,8 +65,11 @@ export default function getSrcFilePathNameForTypeName(typeName: string, serviceR
   );
 
   let backkSrcFilePathNames: string[] = [];
-  if (existsSync(process.cwd() + '/node_modules/backk/lib/src')) {
-    backkSrcFilePathNames = getFileNamesRecursively(process.cwd() + '/node_modules/backk/lib/src');
+
+  if (searchNodeModulesBackkSrcDir) {
+    if (existsSync(process.cwd() + '/node_modules/backk/lib/src')) {
+      backkSrcFilePathNames = getFileNamesRecursively(process.cwd() + '/node_modules/backk/lib/src');
+    }
   }
 
   const foundFilePathNames = [...srcFilePathNames, ...backkSrcFilePathNames].filter(

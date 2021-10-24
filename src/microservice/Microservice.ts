@@ -123,9 +123,7 @@ export default class Microservice {
             ? JSON.parse(argumentInJsonQueryParameter)
             : undefined;
         } else {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-          // @ts-ignore
-          serviceFunctionArgument = bfj
+          bfj
             .parse(request)
             .then((serviceFunctionArgument: any) =>
               tryExecuteServiceMethod(

@@ -90,7 +90,7 @@ export default class Microservice {
       );
     }
 
-    const server = createServer((request, response) => {
+    const server = createServer(async (request, response) => {
       request.setEncoding('utf8');
 
       const contentLength = request.headers['content-length']

@@ -5,8 +5,8 @@ import shouldIncludeField from './shouldIncludeField';
 import getTypeInfoForTypeName from '../../../../../../utils/type/getTypeInfoForTypeName';
 import isEntityTypeName from '../../../../../../utils/type/isEntityTypeName';
 import AbstractSqlDataStore from '../../../../../AbstractSqlDataStore';
-import EntityCountRequest from "../../../../../../types/EntityCountRequest";
-import isPropertyReadDenied from "../../../../../../utils/type/isPropertyReadDenied";
+import EntityCountRequest from '../../../../../../types/EntityCountRequest';
+import isPropertyReadDenied from '../../../../../../utils/type/isPropertyReadDenied';
 
 export default function getFieldsForEntity(
   dataStore: AbstractSqlDataStore,
@@ -19,15 +19,13 @@ export default function getFieldsForEntity(
   isInternalCall = false,
   tableAlias = EntityClass.name.toLowerCase()
 ) {
-  let entityPropertyNameToPropertyTypeNameMap = getClassPropertyNameToPropertyTypeNameMap(
-    EntityClass as any
-  );
+  let entityPropertyNameToPropertyTypeNameMap = getClassPropertyNameToPropertyTypeNameMap(EntityClass as any);
 
   if (isInternalCall) {
     entityPropertyNameToPropertyTypeNameMap = {
       ...entityPropertyNameToPropertyTypeNameMap,
       _id: 'string'
-    }
+    };
   }
 
   const shouldReturnEntityCount = !!entityCountRequests?.find(
@@ -39,14 +37,13 @@ export default function getFieldsForEntity(
     entityPropertyNameToPropertyTypeNameMap = {
       ...entityPropertyNameToPropertyTypeNameMap,
       _count: 'integer'
-    }
+    };
   }
 
   Object.entries(entityPropertyNameToPropertyTypeNameMap).forEach(
     ([entityPropertyName, entityPropertyTypeName]: [string, any]) => {
       if (
-        (!isInternalCall &&
-          isPropertyReadDenied(EntityClass, entityPropertyName)) ||
+        (!isInternalCall && isPropertyReadDenied(EntityClass, entityPropertyName)) ||
         typePropertyAnnotationContainer.isTypePropertyTransient(EntityClass, entityPropertyName)
       ) {
         return;
@@ -79,17 +76,15 @@ export default function getFieldsForEntity(
 
           const relationEntityName = (tableAlias + '_' + entityPropertyName).toLowerCase();
 
-          fields.push(
-            `${dataStore.schema}_${relationEntityName}.${idFieldName} AS ${relationEntityName}_${idFieldName}`
-          );
+          fields.push(`${relationEntityName}.${idFieldName} AS ${relationEntityName}_${idFieldName}`);
 
           const singularFieldName = entityPropertyName.slice(0, -1).toLowerCase();
 
           fields.push(
-            `${dataStore.schema}_${relationEntityName}.${singularFieldName} AS ${relationEntityName}_${singularFieldName}`
+            `${relationEntityName}.${singularFieldName} AS ${relationEntityName}_${singularFieldName}`
           );
 
-          fields.push(`${dataStore.schema}_${relationEntityName}.id AS ${relationEntityName}_id`);
+          fields.push(`${relationEntityName}.id AS ${relationEntityName}_id`);
         }
       } else {
         if (shouldIncludeField(entityPropertyName, fieldPath, projection, shouldReturnEntityCount)) {
@@ -99,15 +94,11 @@ export default function getFieldsForEntity(
             entityPropertyName.endsWith('Id')
           ) {
             fields.push(
-              `CAST(${
-                dataStore.schema
-              }_${tableAlias}.${entityPropertyName.toLowerCase()} AS ${dataStore.getIdColumnCastType()}) AS ${tableAlias}_${entityPropertyName.toLowerCase()}`
+              `CAST(${tableAlias}.${entityPropertyName.toLowerCase()} AS ${dataStore.getIdColumnCastType()}) AS ${tableAlias}_${entityPropertyName.toLowerCase()}`
             );
           } else {
             fields.push(
-              `${
-                dataStore.schema
-              }_${tableAlias}.${entityPropertyName.toLowerCase()} AS ${tableAlias}_${entityPropertyName.toLowerCase()}`
+              `${tableAlias}.${entityPropertyName.toLowerCase()} AS ${tableAlias}_${entityPropertyName.toLowerCase()}`
             );
           }
         }

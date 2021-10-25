@@ -42,7 +42,7 @@ export default async function getEntitiesCount<T>(
     );
 
     const tableName = getTableName(EntityClass.name);
-    const tableAlias = dataStore.schema + '_' + EntityClass.name.toLowerCase();
+    const tableAlias = EntityClass.name.toLowerCase();
 
     const sqlStatement = [
       `SELECT COUNT(*) as count FROM ${dataStore.schema}.${tableName} AS ${tableAlias}`,

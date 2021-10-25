@@ -62,7 +62,7 @@ export default function getJoinClauses(
 
         const whereClause = tryGetWhereClause(RootEntityClass, dataStore, joinEntityPath, filters);
         const sortClause = tryGetSortClause(dataStore, joinEntityPath, sortBys, RootEntityClass, Types);
-        const joinTableAlias = dataStore.schema + '_' + logicalSubEntityTableName;
+        const joinTableAlias = logicalSubEntityTableName;
 
         const outerSortBys = tryGetSortClause(
           dataStore,
@@ -81,8 +81,6 @@ export default function getJoinClauses(
         const whereClausePart =
           joinSpec.subEntityForeignIdFieldName.toLowerCase() +
           ' = ' +
-          dataStore.schema +
-          '_' +
           tableAliasPath +
           '.' +
           joinSpec.entityIdFieldName.toLowerCase();
@@ -103,21 +101,15 @@ export default function getJoinClauses(
           (sortClause ? ' ' + sortClause : '') +
           (paginationClause ? ' ' + paginationClause : '') +
           ') AS ' +
-          dataStore.schema +
-          '_' +
           logicalSubEntityTableName.toLowerCase();
 
         joinClausePart += ' ON ';
 
         joinClausePart +=
-          dataStore.schema +
-          '_' +
           tableAliasPath +
           '.' +
           joinSpec.entityIdFieldName.toLowerCase() +
-          ' = ' +
-          dataStore.schema +
-          '_' +
+          ' = '
           logicalSubEntityTableName.toLowerCase() +
           '.' +
           joinSpec.subEntityForeignIdFieldName.toLowerCase();
@@ -165,7 +157,7 @@ export default function getJoinClauses(
         }
 
         const whereClause = tryGetWhereClause(RootEntityClass, dataStore, joinEntityPath, filters);
-        const joinTableAlias = dataStore.schema + '_' + logicalSubEntityTableName;
+        const joinTableAlias = logicalSubEntityTableName;
         const outerSortBys = tryGetSortClause(
           dataStore,
           joinEntityPath,
@@ -206,8 +198,6 @@ export default function getJoinClauses(
         joinClausePart += dataStore.schema + '.' + associationTableName.toLowerCase();
         joinClausePart += ' ON ';
         joinClausePart +=
-          dataStore.schema +
-          '_' +
           tableAliasPath +
           '._id' +
           ' = ' +
@@ -226,8 +216,6 @@ export default function getJoinClauses(
           (sortClause ? ' ' + sortClause : '') +
           (paginationClause ? ' ' + paginationClause : '') +
           ') AS ' +
-          dataStore.schema +
-          '_' +
           logicalSubEntityTableName.toLowerCase() +
           ' ON ' +
           dataStore.schema +
@@ -236,8 +224,6 @@ export default function getJoinClauses(
           '.' +
           subEntityForeignIdFieldName.toLowerCase() +
           ' = ' +
-          dataStore.schema +
-          '_' +
           logicalSubEntityTableName.toLowerCase() +
           '._id';
 

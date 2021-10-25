@@ -101,7 +101,7 @@ export default async function getEntityByFilters<T>(
     );
 
     const tableName = getTableName(EntityClass.name);
-    const tableAlias = dataStore.schema + '_' + EntityClass.name.toLowerCase();
+    const tableAlias = EntityClass.name.toLowerCase();
 
     const shouldReturnRootEntityCount = !!options?.entityCountRequests?.find(
       (entityCountRequest) =>

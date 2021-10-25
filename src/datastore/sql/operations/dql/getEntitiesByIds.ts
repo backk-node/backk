@@ -76,7 +76,7 @@ export default async function getEntitiesByIds<T>(
     const idFieldName = entityMetadata._id ? '_id' : 'id';
     const idPlaceholders = _ids.map((_, index) => dataStore.getValuePlaceholder(index + 1)).join(', ');
     const tableName = getTableName(EntityClass.name);
-    const tableAlias = dataStore.schema + '_' + EntityClass.name.toLowerCase();
+    const tableAlias = EntityClass.name.toLowerCase();
 
     const shouldReturnRootEntityCount = !!entityCountRequests?.find(
       (entityCountRequest) =>

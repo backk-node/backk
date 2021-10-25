@@ -114,8 +114,6 @@ f
 6src/datastore/sql/operations/ddl/shouldInitializeDb.ts,d/3/d379e42349ec71560cd4733df4a1c3a22b8c9a0a
 f
 6src/datastore/sql/operations/ddl/initializeDatabase.ts,0/e/0ea45dd67226acec248fa09323994e71c3fb19b3
-O
-src/datastore/MySqlDataStore.ts,8/f/8f134bc4a4f1e8125d58c46d089a814d427d922b
 o
 ?src/datastore/mongodb/addSimpleSubEntitiesOrValuesByEntityId.ts,8/8/88e920a687a284c67420a0fbabc686f839492011
 
@@ -282,8 +280,6 @@ N
 src/datastore/hooks/PreHook.ts,2/9/29c10715c3cb41f8c1d6374438c15ecb4585a428
 O
 src/datastore/hooks/PostHook.ts,5/b/5b3637908f89509b2d93c0cccb4faf9813c90f12
-U
-%src/datastore/AbstractSqlDataStore.ts,4/a/4a53d6f8742845084c6f1241fac40af293a2c1aa
 d
 4src/decorators/typeproperty/ShouldBeTrueForObject.ts,9/5/95d4ec8d2c61210883e6c6323ff8501debdfbfa6
 [

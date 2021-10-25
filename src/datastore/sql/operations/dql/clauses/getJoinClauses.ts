@@ -81,7 +81,7 @@ export default function getJoinClauses(
         const whereClausePart =
           joinSpec.subEntityForeignIdFieldName.toLowerCase() +
           ' = ' +
-          tableAliasPath +
+          '"' + tableAliasPath + '"' +
           '.' +
           joinSpec.entityIdFieldName.toLowerCase();
 

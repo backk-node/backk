@@ -147,7 +147,7 @@ export default class PostgreSqlDataStore extends AbstractSqlDataStore {
   }
 
   getUpdateForClause(tableAlias: string): string {
-    return `FOR UPDATE OF ${tableAlias}`;
+    return `FOR UPDATE OF "${tableAlias}"`;
   }
 
   castAsBigint(columnName: string): string {

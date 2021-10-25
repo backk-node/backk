@@ -94,11 +94,11 @@ export default function getFieldsForEntity(
             entityPropertyName.endsWith('Id')
           ) {
             fields.push(
-              `CAST(${tableAlias}.${entityPropertyName.toLowerCase()} AS ${dataStore.getIdColumnCastType()}) AS ${tableAlias}_${entityPropertyName.toLowerCase()}`
+              `CAST("${tableAlias}".${entityPropertyName.toLowerCase()} AS ${dataStore.getIdColumnCastType()}) AS ${tableAlias}_${entityPropertyName.toLowerCase()}`
             );
           } else {
             fields.push(
-              `${tableAlias}.${entityPropertyName.toLowerCase()} AS ${tableAlias}_${entityPropertyName.toLowerCase()}`
+              `"${tableAlias}".${entityPropertyName.toLowerCase()} AS ${tableAlias}_${entityPropertyName.toLowerCase()}`
             );
           }
         }

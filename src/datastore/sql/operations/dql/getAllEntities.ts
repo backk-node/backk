@@ -81,7 +81,7 @@ export default async function getAllEntities<T extends BackkEntity>(
         } FROM ${dataStore.schema}.${tableName}${whereClause}`,
       rootSortClause,
       rootPaginationClause,
-      `) AS ${tableAlias}`,
+      `) AS "${tableAlias}"`,
       joinClauses,
       outerSortClause,
       isSelectForUpdate ? dataStore.getUpdateForClause(tableAlias) : undefined

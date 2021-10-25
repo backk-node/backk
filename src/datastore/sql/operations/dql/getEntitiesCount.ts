@@ -45,7 +45,7 @@ export default async function getEntitiesCount<T>(
     const tableAlias = EntityClass.name.toLowerCase();
 
     const sqlStatement = [
-      `SELECT COUNT(*) as count FROM ${dataStore.schema}.${tableName} AS ${tableAlias}`,
+      `SELECT COUNT(*) as count FROM ${dataStore.schema}.${tableName} AS "${tableAlias}"`,
       rootWhereClause
     ]
       .filter((sqlPart) => sqlPart)

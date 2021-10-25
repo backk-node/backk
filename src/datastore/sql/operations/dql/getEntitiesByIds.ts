@@ -98,7 +98,7 @@ export default async function getEntitiesByIds<T>(
       `WHERE ${idFieldName} IN (${idPlaceholders}${additionalWhereExpression}`,
       rootSortClause,
       rootPaginationClause,
-      `) AS ${tableAlias}`,
+      `) AS "${tableAlias}"`,
       joinClauses,
       outerSortClause,
       isSelectForUpdate ? dataStore.getUpdateForClause(tableAlias) : undefined

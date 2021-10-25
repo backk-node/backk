@@ -110,7 +110,7 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
       rootWhereClause,
       rootSortClause,
       rootPaginationClause,
-      `) AS ${tableAlias}`,
+      `) AS "${tableAlias}"`,
       joinClauses,
       outerSortClause,
       isSelectForUpdate ? dataStore.getUpdateForClause(tableAlias) : undefined

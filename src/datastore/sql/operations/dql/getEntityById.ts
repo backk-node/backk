@@ -120,7 +120,7 @@ export default async function getEntityById<T extends BackkEntity>(
       } FROM ${dataStore.schema}.${tableName}`,
       `WHERE ${idFieldName} = ${dataStore.getValuePlaceholder(
         1
-      )}${additionalWhereExpression} LIMIT 1) AS ${tableAlias}`,
+      )}${additionalWhereExpression} LIMIT 1) AS "${tableAlias}"`,
       joinClauses,
       outerSortClause,
       isSelectForUpdate ? dataStore.getUpdateForClause(tableAlias) : undefined

@@ -100,8 +100,8 @@ export default function getJoinClauses(
           (whereClause ? ' ' + whereClause + ' AND ' + whereClausePart : ' WHERE ' + whereClausePart) +
           (sortClause ? ' ' + sortClause : '') +
           (paginationClause ? ' ' + paginationClause : '') +
-          ') AS ' +
-          logicalSubEntityTableName.toLowerCase();
+          ') AS "' +
+          logicalSubEntityTableName.toLowerCase() + '"';
 
         joinClausePart += ' ON ';
 
@@ -215,8 +215,8 @@ export default function getJoinClauses(
           (whereClause ? ' ' + whereClause + ' AND ' + whereClausePart : ' WHERE ' + whereClausePart) +
           (sortClause ? ' ' + sortClause : '') +
           (paginationClause ? ' ' + paginationClause : '') +
-          ') AS ' +
-          logicalSubEntityTableName.toLowerCase() +
+          ') AS "' +
+          logicalSubEntityTableName.toLowerCase() + '"' +
           ' ON ' +
           dataStore.schema +
           '.' +

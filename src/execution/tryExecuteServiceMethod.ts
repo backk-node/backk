@@ -767,7 +767,7 @@ export default async function tryExecuteServiceMethod(
       resp.end(JSON.stringify(createBackkErrorFromError(errorOrBackkError)));
     }
   } finally {
-    const auditLog = serviceFunctionAnnotationContainer.getAuditLog(ServiceClass, functionName);
+    const auditLog = ServiceClass ? serviceFunctionAnnotationContainer.getAuditLog(ServiceClass, functionName) : undefined;
 
     if (
       microservice[serviceName] instanceof UserAccountBaseService ||

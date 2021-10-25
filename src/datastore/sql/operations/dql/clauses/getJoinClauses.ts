@@ -109,7 +109,7 @@ export default function getJoinClauses(
           tableAliasPath +
           '.' +
           joinSpec.entityIdFieldName.toLowerCase() +
-          ' = '
+          ' = ' +
           logicalSubEntityTableName.toLowerCase() +
           '.' +
           joinSpec.subEntityForeignIdFieldName.toLowerCase();

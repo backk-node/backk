@@ -76,7 +76,7 @@ export default async function tryExecuteServiceMethod(
   let response: any;
   // eslint-disable-next-line prefer-const
   let [serviceName, functionName] = serviceFunctionName.split('.');
-  const ServiceClass = microservice[serviceName].constructor;
+  const ServiceClass = microservice[serviceName]?.constructor;
 
   try {
     if (httpMethod !== 'GET' && httpMethod !== 'POST') {

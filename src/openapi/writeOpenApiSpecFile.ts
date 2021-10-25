@@ -12,6 +12,7 @@ import isReadFunction from '../service/crudentity/utils/isReadFunction';
 import getServiceFunctionTestArgument from '../postman/getServiceFunctionTestArgument';
 import getServiceFunctionExampleReturnValue from '../postman/getServiceFunctionExampleReturnValue';
 import { ErrorDef } from '../datastore/hooks/EntityPreHook';
+import getNamespacedMicroserviceName from "../utils/getNamespacedMicroserviceName";
 
 function getErrorContent(errorDef: ErrorDef) {
   return {
@@ -542,13 +543,13 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
       process.env.NODE_ENV === 'development'
         ? [
             {
-              url: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${process.env.API_GATEWAY_PATH}`,
+              url: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${getNamespacedMicroserviceName()}`,
               description: 'Local development server'
             }
           ]
         : [
             {
-              url: `https://${process.env.API_GATEWAY_FQDN}${process.env.API_GATEWAY_PATH}`,
+              url: `https://${process.env.API_GATEWAY_FQDN}/${getNamespacedMicroserviceName()}`,
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               description: process.env.NODE_ENV!.toUpperCase() + process.env.NODE_ENV!.slice(1) + ' server'
             }
@@ -569,21 +570,21 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
 
   if (process.env.CI_API_GATEWAY_FQDN) {
     openApiSpec.servers.push({
-      url: `https://${process.env.CI_API_GATEWAY_FQDN}${process.env.API_GATEWAY_PATH}`,
+      url: `https://${process.env.CI_API_GATEWAY_FQDN}/${getNamespacedMicroserviceName()}`,
       description: 'CI server'
     });
   }
 
   if (process.env.STAGING_API_GATEWAY_FQDN) {
     openApiSpec.servers.push({
-      url: `https://${process.env.STAGING_API_GATEWAY_FQDN}${process.env.API_GATEWAY_PATH}`,
+      url: `https://${process.env.STAGING_API_GATEWAY_FQDN}/${getNamespacedMicroserviceName()}`,
       description: 'Staging server'
     });
   }
 
   if (process.env.PRODUCTION_API_GATEWAY_FQDN) {
     openApiSpec.servers.push({
-      url: `https://${process.env.PRODUCTION_API_GATEWAY_FQDN}${process.env.API_GATEWAY_PATH}`,
+      url: `https://${process.env.PRODUCTION_API_GATEWAY_FQDN}/${getNamespacedMicroserviceName()}`,
       description: 'Production server'
     });
   }

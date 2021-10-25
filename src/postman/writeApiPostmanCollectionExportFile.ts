@@ -10,6 +10,7 @@ import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
 import getServiceFunctionExampleReturnValue from './getServiceFunctionExampleReturnValue';
 import throwException from '../utils/exception/throwException';
+import getNamespacedMicroserviceName from "../utils/getNamespacedMicroserviceName";
 
 export default function writeApiPostmanCollectionExportFile<T>(
   controller: T,
@@ -117,11 +118,11 @@ export default function writeApiPostmanCollectionExportFile<T>(
           method: 'POST',
           url: {
             raw: `http://localhost:${process.env.HTTP_SERVER_PORT ??
-              3000}/${process.env.API_GATEWAY_PATH}/metadataService.getServicesMetadata`,
+              3000}/${getNamespacedMicroserviceName()}/metadataService.getServicesMetadata`,
             protocol: 'http',
             host: ['localhost'],
             port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,
-            path: [process.env.API_GATEWAY_PATH, 'metadataService.getServicesMetadata']
+            path: [getNamespacedMicroserviceName(), 'metadataService.getServicesMetadata']
           }
         }
       },

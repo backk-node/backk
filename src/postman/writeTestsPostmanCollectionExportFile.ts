@@ -21,6 +21,7 @@ import isCreateFunction from '../service/crudentity/utils/isCreateFunction';
 import CrudEntityService from '../service/crudentity/CrudEntityService';
 import path from 'path';
 import throwException from "../utils/exception/throwException";
+import getNamespacedMicroserviceName from "../utils/getNamespacedMicroserviceName";
 
 export default function writeTestsPostmanCollectionExportFile<T>(
   controller: T,
@@ -610,11 +611,11 @@ export default function writeTestsPostmanCollectionExportFile<T>(
         request: {
           method: 'POST',
           url: {
-            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${process.env.API_GATEWAY_PATH}/metadataService.getServicesMetadata`,
+            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${getNamespacedMicroserviceName()}/metadataService.getServicesMetadata`,
             protocol: 'http',
             host: ['localhost'],
             port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,
-            path: [process.env.API_GATEWAY_PATH, 'metadataService.getServicesMetadata']
+            path: [getNamespacedMicroserviceName(), 'metadataService.getServicesMetadata']
           }
         }
       },
@@ -623,11 +624,11 @@ export default function writeTestsPostmanCollectionExportFile<T>(
         request: {
           method: 'POST',
           url: {
-            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${process.env.API_GATEWAY_PATH}/metadataService.getOpenApiSpec`,
+            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${getNamespacedMicroserviceName()}/metadataService.getOpenApiSpec`,
             protocol: 'http',
             host: ['localhost'],
             port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,
-            path: [process.env.API_GATEWAY_PATH, 'metadataService.getOpenApiSpec']
+            path: [getNamespacedMicroserviceName(), 'metadataService.getOpenApiSpec']
           }
         }
       },

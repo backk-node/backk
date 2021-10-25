@@ -110,16 +110,16 @@ export default class Microservice {
         return;
       }
 
-      const isClusterInternalCall = !request.url?.includes(
-        process.env.API_GATEWAY_PATH ?? throwException('API_GATEWAY_PATH environment variable is not defined')
-      );
+      const isClusterInternalCall = !request.url?.includes(getNamespacedMicroserviceName());
 
       let serviceFunctionArgument;
 
       try {
         if (request.method === 'GET') {
           const argumentInJsonQueryParameter = request.url?.split('?arg=').pop();
-          serviceFunctionArgument = argumentInJsonQueryParameter ? JSON.parse(argumentInJsonQueryParameter) : undefined;
+          serviceFunctionArgument = argumentInJsonQueryParameter
+            ? JSON.parse(argumentInJsonQueryParameter)
+            : undefined;
         } else {
           // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
           // @ts-ignore
@@ -134,7 +134,6 @@ export default class Microservice {
         response.end(JSON.stringify(backkError));
         return;
       }
-
 
       tryExecuteServiceMethod(
         this,

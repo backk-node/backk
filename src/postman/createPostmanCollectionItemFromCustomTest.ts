@@ -2,6 +2,7 @@ import _ from "lodash";
 import throwException from "../utils/exception/throwException";
 import { sign } from "jsonwebtoken";
 import { Base64 } from "js-base64";
+import getNamespacedMicroserviceName from "../utils/getNamespacedMicroserviceName";
 
 export default function createPostmanCollectionItemFromCustomTest({
   testTemplate: { authJwtSubject, authJwtRole, testTemplateName, serviceFunctionName, argument, responseStatusCode, responseTests }
@@ -72,7 +73,7 @@ export default function createPostmanCollectionItemFromCustomTest({
               }
             },
       url: {
-        raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${process.env.API_GATEWAY_PATH}/` + serviceFunctionName,
+        raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${getNamespacedMicroserviceName()}/` + serviceFunctionName,
         protocol: 'http',
         host: ['localhost'],
         port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,

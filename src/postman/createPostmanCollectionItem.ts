@@ -1,6 +1,7 @@
 import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
 import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
 import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
+import getNamespacedMicroserviceName from "../utils/getNamespacedMicroserviceName";
 
 function getNestedTypeNames(typeMetadata: object, types: any, nestedTypeNames: string[]) {
   Object.values(typeMetadata ?? {}).forEach((typeName) => {
@@ -137,11 +138,11 @@ export default function createPostmanCollectionItem(
               }
             },
       url: {
-        raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${process.env.API_GATEWAY_PATH}/` + serviceMetadata.serviceName + '.' + functionMetadata.functionName,
+        raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${getNamespacedMicroserviceName()}/` + serviceMetadata.serviceName + '.' + functionMetadata.functionName,
         protocol: 'http',
         host: ['localhost'],
         port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,
-        path: [process.env.API_GATEWAY_PATH, serviceMetadata.serviceName + '.' + functionMetadata.functionName]
+        path: [getNamespacedMicroserviceName(), serviceMetadata.serviceName + '.' + functionMetadata.functionName]
       }
     },
     response: [],

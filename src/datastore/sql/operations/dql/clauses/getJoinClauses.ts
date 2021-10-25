@@ -106,11 +106,11 @@ export default function getJoinClauses(
         joinClausePart += ' ON ';
 
         joinClausePart +=
-          tableAliasPath +
+          '"' + tableAliasPath + '"' +
           '.' +
           joinSpec.entityIdFieldName.toLowerCase() +
           ' = ' +
-          logicalSubEntityTableName.toLowerCase() +
+          '"' + logicalSubEntityTableName.toLowerCase() + '"' +
           '.' +
           joinSpec.subEntityForeignIdFieldName.toLowerCase();
 
@@ -198,7 +198,7 @@ export default function getJoinClauses(
         joinClausePart += dataStore.schema + '.' + associationTableName.toLowerCase();
         joinClausePart += ' ON ';
         joinClausePart +=
-          tableAliasPath +
+          '"' + tableAliasPath + '"' +
           '._id' +
           ' = ' +
           dataStore.schema +
@@ -224,7 +224,7 @@ export default function getJoinClauses(
           '.' +
           subEntityForeignIdFieldName.toLowerCase() +
           ' = ' +
-          logicalSubEntityTableName.toLowerCase() +
+          '"' + logicalSubEntityTableName.toLowerCase() + '"' +
           '._id';
 
         return joinClausePart;

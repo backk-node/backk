@@ -33,6 +33,11 @@ export default class MySqlDataStore extends AbstractSqlDataStore {
   async isDbReady(): Promise<boolean> {
     try {
       await this.tryExecuteSqlWithoutCls(
+        `SET SESSION SQL_MODE=ANSI_QUOTES`,
+        undefined,
+        false
+      );
+      await this.tryExecuteSqlWithoutCls(
         `SELECT * FROM ${this.schema.toLowerCase()}.__backk_db_initialization`,
         undefined,
         false

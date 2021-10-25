@@ -112,8 +112,6 @@ f
 6src/remote/messagequeue/redis/getRedisServerFromEnv.ts,1/e/1edb681c7538be6211718331c4bc401f58059d12
 f
 6src/datastore/sql/operations/ddl/shouldInitializeDb.ts,d/3/d379e42349ec71560cd4733df4a1c3a22b8c9a0a
-f
-6src/datastore/sql/operations/ddl/initializeDatabase.ts,0/e/0ea45dd67226acec248fa09323994e71c3fb19b3
 o
 ?src/datastore/mongodb/addSimpleSubEntitiesOrValuesByEntityId.ts,8/8/88e920a687a284c67420a0fbabc686f839492011
 
@@ -432,8 +430,6 @@ e
 5src/decorators/typeproperty/FetchFromRemoteService.ts,7/4/748f74847fd0f98e5bfef277f1921ce711d5ee3f
 T
 $src/remote/http/callRemoteService.ts,4/e/4e5f54640166ccdf6297f9fee279284c902e04de
-R
-"src/datastore/AbstractDataStore.ts,f/4/f4558eca7b6689c835badee5ef621c5595dedca7
 Q
 !docs/api/REMOTE_SERVICE_ACCESS.MD,b/0/b0685b4ca6fc0ba042874203e366ff0320bb9359
 S

@@ -90,7 +90,7 @@ export default class Microservice {
       );
     }
 
-    const server = createServer((request, response) => {
+    const server = createServer(async (request, response) => {
       request.setEncoding('utf8');
 
       const contentLength = request.headers['content-length']
@@ -123,7 +123,7 @@ export default class Microservice {
         } else {
           // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
           // @ts-ignore
-          serviceFunctionArgument = bfj.parse(request);
+          serviceFunctionArgument = await bfj.parse(request);
         }
       } catch (error) {
         const backkError = createBackkErrorFromErrorCodeMessageAndStatus({

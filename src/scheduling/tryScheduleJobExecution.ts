@@ -1,4 +1,4 @@
-import BaseService from "../service/BaseService";
+import BaseService from "../services/BaseService";
 // eslint-disable-next-line @typescript-eslint/camelcase
 import __Backk__JobScheduling from "./entities/__Backk__JobScheduling";
 import { BackkError } from "../types/BackkError";

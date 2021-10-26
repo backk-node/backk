@@ -7,7 +7,7 @@ import { BackkEntity } from '../types/entities/BackkEntity';
 import { PostQueryOperations } from '../types/postqueryoperations/PostQueryOperations';
 import forEachAsyncParallel from '../utils/forEachAsyncParallel';
 import UserDefinedFilter from '../types/userdefinedfilters/UserDefinedFilter';
-import BaseService from '../service/BaseService';
+import BaseService from '../services/BaseService';
 import { SubEntity } from '../types/entities/SubEntity';
 import __Backk__CronJobScheduling from '../scheduling/entities/__Backk__CronJobScheduling';
 import __Backk__JobScheduling from '../scheduling/entities/__Backk__JobScheduling';

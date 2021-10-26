@@ -1,5 +1,5 @@
 import AbstractDataStore from "../datastore/AbstractDataStore";
-import BaseService from "../service/BaseService";
+import BaseService from "../services/BaseService";
 import forEachAsyncSequential from "../utils/forEachAsyncSequential";
 import serviceFunctionAnnotationContainer
   from "../decorators/service/function/serviceFunctionAnnotationContainer";

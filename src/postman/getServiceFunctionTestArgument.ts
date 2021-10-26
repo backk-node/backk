@@ -13,8 +13,8 @@ import getCustomValidationConstraint from '../validation/getCustomValidationCons
 import entityAnnotationContainer from '../decorators/entity/entityAnnotationContainer';
 import getSampleStringValue from './getSampleStringValue';
 import { ValidationTypes } from 'class-validator';
-import isCreateFunction from '../service/crudentity/utils/isCreateFunction';
-import isUpdateFunction from '../service/crudentity/utils/isUpdateFunction';
+import isCreateFunction from '../services/crudentity/utils/isCreateFunction';
+import isUpdateFunction from '../services/crudentity/utils/isUpdateFunction';
 
 export default function getServiceFunctionTestArgument(
   ServiceClass: Function,

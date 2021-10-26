@@ -5,7 +5,7 @@ import { ServiceFunctionCall } from './ServiceFunctionCall';
 import { ServiceFunctionCallResponse } from './ServiceFunctionCallResponse';
 import BackkResponse from './BackkResponse';
 import forEachAsyncSequential from '../utils/forEachAsyncSequential';
-import BaseService from '../service/BaseService';
+import BaseService from '../services/BaseService';
 import isValidServiceFunctionName from './isValidServiceFunctionName';
 import { HttpStatusCodes } from '../constants/constants';
 import { BackkError } from '../types/BackkError';

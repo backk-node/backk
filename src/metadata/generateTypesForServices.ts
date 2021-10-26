@@ -1,4 +1,4 @@
-import BaseService from '../service/BaseService';
+import BaseService from '../services/BaseService';
 import generateClassFromSrcFile from '../typescript/generator/generateClassFromSrcFile';
 import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
 

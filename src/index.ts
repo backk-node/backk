@@ -7,14 +7,14 @@ export { default as Microservice } from './microservice/Microservice';
 export { default as AuthorizationService } from './authorization/AuthorizationService';
 export { default as ResponseCacheConfigService } from './cache/ResponseCacheConfigService';
 export { default as CaptchaVerificationService } from './captcha/CaptchaVerificationService';
-export { default as CrudEntityService } from './service/crudentity/CrudEntityService';
-export { default as StartupCheckService } from './service/startup/StartupCheckService';
-export { default as UserAccountBaseService } from './service/useraccount/UserAccountBaseService';
-export { default as BaseService } from './service/BaseService';
-export { default as LivenessCheckService } from './service/LivenessCheckService';
-export { default as ReadinessCheckService } from './service/ReadinessCheckService';
+export { default as CrudEntityService } from './services/crudentity/CrudEntityService';
+export { default as StartupCheckService } from './services/startup/StartupCheckService';
+export { default as UserAccountBaseService } from './services/useraccount/UserAccountBaseService';
+export { default as BaseService } from './services/BaseService';
+export { default as LivenessCheckService } from './services/LivenessCheckService';
+export { default as ReadinessCheckService } from './services/ReadinessCheckService';
 export { default as AuditLoggingService } from './observability/logging/audit/AuditLoggingService';
-export { default as StartupCheckServiceImpl } from './service/startup/StartupCheckServiceImpl';
+export { default as StartupCheckServiceImpl } from './services/startup/StartupCheckServiceImpl';
 export { default as JwtAuthorizationServiceImpl } from './authorization/JwtAuthorizationServiceImpl';
 export {
   UserOperationResult,

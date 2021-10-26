@@ -1,7 +1,7 @@
 import serviceAnnotationContainer from '../decorators/service/serviceAnnotationContainer';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
-import BaseService from '../service/BaseService';
-import UserAccountBaseService from '../service/useraccount/UserAccountBaseService';
+import BaseService from '../services/BaseService';
+import UserAccountBaseService from '../services/useraccount/UserAccountBaseService';
 import defaultServiceMetrics from '../observability/metrics/defaultServiceMetrics';
 import { BACKK_ERRORS } from '../errors/backkErrors';
 import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import BaseService from '../service/BaseService';
+import BaseService from '../services/BaseService';
 import generateServicesMetadata from '../metadata/generateServicesMetadata';
 import parseServiceFunctionNameToArgAndReturnTypeNameMaps from '../typescript/parser/parseServiceFunctionNameToArgAndReturnTypeNameMaps';
 import getSrcFilePathNameForTypeName from '../utils/file/getSrcFilePathNameForTypeName';
@@ -15,6 +15,7 @@ import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
 import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
 import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
+import generateClients from "../client/generateClients";
 
 function addNestedTypes(privateTypeNames: Set<string>, typeName: string, types: { [p: string]: object }) {
   Object.values(types[typeName] ?? {}).forEach((typeName) => {
@@ -401,6 +402,13 @@ export default function initializeMicroservice(
 
     if (process.env.NODE_ENV === 'development' && shouldGeneratePostmanIntegrationTestsOnRestartInDevEnv) {
       writeTestsPostmanCollectionExportFile(microservice, servicesMetadata);
+    }
+
+    if (command === '--generateClientsOnly') {
+      if (process.env.NODE_ENV !== 'development') {
+        throw new Error('Client generation allowed in dev environment only');
+      }
+      generateClients();
     }
 
     if (command === '--generateApiSpecsOnly') {

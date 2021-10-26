@@ -4,7 +4,7 @@ import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
 import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
 import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
 import { HttpStatusCodes } from '../constants/constants';
-import isCreateFunction from '../service/crudentity/utils/isCreateFunction';
+import isCreateFunction from '../services/crudentity/utils/isCreateFunction';
 
 export default function getServiceFunctionTests(
   ServiceClass: Function,

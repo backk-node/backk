@@ -1,16 +1,16 @@
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
-import BaseService from '../service/BaseService';
+import BaseService from '../services/BaseService';
 import { ServiceMetadata } from './types/ServiceMetadata';
 import getClassPropertyNameToPropertyTypeNameMap from './getClassPropertyNameToPropertyTypeNameMap';
 import { FunctionMetadata } from './types/FunctionMetadata';
 import getValidationMetadata from './getValidationMetadata';
 import getTypeDocumentation from './getTypeDocumentation';
 import getTypePropertyAccessType from './getTypePropertyAccessType';
-import CrudEntityService from '../service/crudentity/CrudEntityService';
-import assertFunctionNamesAreValidForCrudEntityService from '../service/crudentity/assertFunctionNamesAreValidForCrudEntityService';
+import CrudEntityService from '../services/crudentity/CrudEntityService';
+import assertFunctionNamesAreValidForCrudEntityService from '../services/crudentity/assertFunctionNamesAreValidForCrudEntityService';
 import AbstractDataStore from '../datastore/AbstractDataStore';
 import entityAnnotationContainer from '../decorators/entity/entityAnnotationContainer';
-import isCreateFunction from '../service/crudentity/utils/isCreateFunction';
+import isCreateFunction from '../services/crudentity/utils/isCreateFunction';
 import { ErrorNameToErrorDefinitionMap } from "../types/ErrorDefinition";
 
 export default function generateServicesMetadata<T>(

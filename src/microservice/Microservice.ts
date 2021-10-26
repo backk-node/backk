@@ -6,7 +6,7 @@ import log, { Severity } from '../observability/logging/log';
 import initializeMicroservice from './initializeMicroservice';
 import changePackageJsonNameProperty from '../utils/changePackageJsonNameProperty';
 import initializeCls from '../continuationlocalstorage/initializeCls';
-import StartupCheckService from '../service/startup/StartupCheckService';
+import StartupCheckService from '../services/startup/StartupCheckService';
 import logEnvironment from '../observability/logging/logEnvironment';
 import defaultSystemAndNodeJsMetrics from '../observability/metrics/defaultSystemAndNodeJsMetrics';
 import initializeDatabase from '../datastore/sql/operations/ddl/initializeDatabase';
@@ -46,11 +46,11 @@ export default class Microservice {
       log(Severity.ERROR, `Microservice crashed with exception: ${error.message}`, error.stack ?? '');
     });
 
-    if (commandLineArgs?.[2] && commandLineArgs?.[2] !== '--generateApiSpecsOnly') {
+    if (commandLineArgs?.[2] && commandLineArgs?.[2] !== '--generateApiSpecsOnly' && commandLineArgs?.[2] !== '--generateClientsOnly') {
       console.error(
         'Invalid command line parameter: ' +
           commandLineArgs?.[2] +
-          '\nSupported command line parameters are:\n--generateApiSpecsOnly'
+          '\nSupported command line parameters are:\n--generateApiSpecsOnly\n--generateClientsOnly'
       );
       process.exit(1);
     }
@@ -62,7 +62,7 @@ export default class Microservice {
       commandLineArgs?.[2] ?? ''
     );
 
-    if (commandLineArgs?.[2] === '--generateApiSpecsOnly') {
+    if (commandLineArgs?.[2] === '--generateApiSpecsOnly' || commandLineArgs?.[2] === '--generateClientsOnly') {
       process.exit(0);
     }
 

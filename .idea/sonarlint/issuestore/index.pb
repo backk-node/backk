@@ -45,9 +45,6 @@ W
 'src/decorators/typeproperty/IsBigInt.ts,5/6/5601f6ce2117b68a95c31f6348a0615676cc09b3
 e
 5src/decorators/typeproperty/MaxLengthAndMatchesAll.ts,e/c/ec895cc05a93d6b2a1d02424ebed0deb14d3add0
-:
-
-.gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302
 >
 lib/index.d.ts,c/e/cecf50ad545002db5f8b54f63378dbfce02ad1d2
 L
@@ -56,8 +53,6 @@ H
 src/utils/getTimeZone.ts,1/6/16d1d232a69ea07083ffa7a567ad88d0c94b85f7
 X
 (src/utils/file/getTypeFilePathNameFor.ts,a/1/a1d3ba0db74970b8a405cf30c59d455da47664a1
-S
-#src/utils/file/getSourceFileName.ts,2/b/2b65dec05283a22149e7996cb36aa32c437d6efd
 h
 8lib/typescript/parser/parseTypescriptLinesForTypeName.js,5/e/5e223ef1421c5600bfc688ef806195d9fd587dda
 X
@@ -128,8 +123,6 @@ R
 "src/utils/type/isEntityTypeName.ts,7/7/77f233f9d8aa69d2a30a0f26909118a0d6ec4618
 P
  src/utils/type/isEnumTypeName.ts,4/a/4ab0347d80ba81424f175eac0980b52258bb8502
-c
-3src/typescript/parser/parseEnumValuesFromSrcFile.ts,0/b/0b73f87f9e7724615b646f10c621dcaa09e49382
 X
 (src/utils/type/getTypeInfoForTypeName.ts,5/a/5a598c1f84dcd1f73f8f2a53b13cf1449483a796
 F
@@ -172,10 +165,6 @@ c
 3src/postman/getServiceFunctionExampleReturnValue.ts,0/4/047d096565075e7de84417852baecf401ae35cc0
 N
 src/execution/BackkResponse.ts,0/d/0d970f6b89700cd16c71c4ffb4557d25a2565e2c
-h
-8src/typescript/parser/parseTypescriptLinesForTypeName.ts,a/a/aa07351c4fb11b1e1bb5806683662e4e5baf0f2a
-B
-src/types/id/Id.ts,b/9/b949c16f90a7fcc28028abebb079862076bd3791
 q
 Asrc/types/postqueryoperations/_IdAndDefaultPostQueryOperations.ts,4/1/4185d8b652cb7c03737be82c797ccdf74bc54938
 P
@@ -314,8 +303,6 @@ C
 ,src/decorators/service/function/TestSetup.ts,e/e/eea76718fe98d368508cdea5deaf4d2f3633eed8
 d
 4src/postman/writeTestsPostmanCollectionExportFile.ts,8/7/87e4fabf982d3fcb19cf6b5bd33aacaa35eb79bb
-Z
-*src/utils/getNamespacedMicroserviceName.ts,8/2/8220ef18c4557bd142c660a02e8b7967733f45fb
 P
  src/utils/getMicroserviceName.ts,8/5/858e4c569eb323ab07d080c32caf8ce0ac4e9a53
 j
@@ -340,8 +327,6 @@ F
 src/utils/promiseOf.ts,5/c/5c7e4d720aaef441eedf3a2d5e3f964455f11020
 F
 docs/api/DECORATORS.MD,3/8/385961cbc58f02c6c17d000017268dafc936bf47
-^
-.src/service/startup/StartupCheckServiceImpl.ts,d/0/d09c8c7d8f284fa58e7de1db9ebf36a56b5ca0c1
 a
 1src/service/useraccount/UserAccountBaseService.ts,2/f/2f5fea06785115f9fa55576e09e832ffae3ab081
 b
@@ -414,8 +399,6 @@ X
 (src/types/_id/_IdAndCaptchaAndVersion.ts,e/e/ee5fadee2d7865ad4e7cb2956a45551d19e52fe1
 m
 =src/types/_id/_IdAndCaptchaAndVersionAndCreatedAtTimestamp.ts,c/d/cd4d78066b4a6ee300a3f64a1770535b4bca3421
-z
-Jsrc/typescript/generator/generateTypescriptFilesFromTypeDefinitionFiles.ts,b/7/b7cca6f35d8c9e702c044fe7ac7e1ca1c9ceaf0f
 U
 %docs/usage/CREATING_ENTITY_CLASSES.MD,4/5/45d0923487764b71976755a25af35702628fac56
 X
@@ -428,8 +411,6 @@ W
 'docs/usage/ARGUMENT_RESPONSE_CLASSES.MD,e/c/ecea065309b787617fb62934b6eaffcd93243907
 e
 5src/decorators/typeproperty/FetchFromRemoteService.ts,7/4/748f74847fd0f98e5bfef277f1921ce711d5ee3f
-T
-$src/remote/http/callRemoteService.ts,4/e/4e5f54640166ccdf6297f9fee279284c902e04de
 Q
 !docs/api/REMOTE_SERVICE_ACCESS.MD,b/0/b0685b4ca6fc0ba042874203e366ff0320bb9359
 S
@@ -566,12 +547,8 @@ b
 2src/decorators/service/function/ResponseHeaders.ts,3/1/3172561fe52ce4cd3bcd9f210fee5a09f8f1a1e2
 [
 +src/decorators/service/function/AuditLog.ts,1/6/16b78d438d6bdb5eb179ed6ff0ce913640672c97
-Z
-*src/microservice/initializeMicroservice.ts,1/1/1162f5fb3b946952726e351e5b6fcea12aed21a8
 ^
 .src/initialization/tryExecuteOnStartupTasks.ts,b/f/bfc801c413813f1457bebd7c5ca6aa5b91ed625e
-I
-src/microservice/bfj.d.ts,5/7/57760276a1505a1330653439f51928f426bbbdea
 I
 src/errors/backkErrors.ts,9/d/9de565af347d623f5e99e6a6ab0d8ad581e1dc6d
 `
@@ -588,3 +565,43 @@ o
 ?src/remote/messagequeue/sendToRemoteServiceInsideTransaction.ts,8/5/85b6b92b6f40a0f38a1f3277c423ff3749ff443d
 Y
 )src/scheduling/tryScheduleJobExecution.ts,2/3/23fcc302ed066feb49193824bdbb201ea215a4c6
+B
+src/types/types.ts,c/a/ca15b85bec71704fc4a189e0d28db77b74c7e5a2
+d
+4src/decorators/service/function/AllowForEveryUser.ts,8/3/83ff187a7fbb3434e468019f76ea81486266353e
+s
+Csrc/decorators/service/function/AllowForEveryUserForOwnResources.ts,b/0/b02f5f40cc9c8c54e4877bbf2ddff28051594269
+u
+Esrc/decorators/service/function/serviceFunctionAnnotationContainer.ts,6/f/6f969f85640cfffcf6ed8d82aff088220b97d615
+A
+package-lock.json,f/a/fa288d1472d29beccb489a676f68739ad365fc47
+=
+tsconfig.json,6/1/61ebb9fd6e8cf9082658121d5d81e297791dacd0
+i
+9src/metadata/getClassPropertyNameToPropertyTypeNameMap.ts,2/c/2c99dfa7222fffc105b2ccf51868d172e945c789
+O
+src/decorators/entity/Entity.ts,d/0/d07e73e8f0c7baf16e6131aa8fc28c57eaf1a87d
+t
+Dsrc/datastore/sql/operations/dql/utils/columns/getFieldsForEntity.ts,c/9/c9f3d11cdee06c617b298a647f7c0e7c1fcc5a1f
+m
+=src/datastore/sql/operations/dql/clauses/tryGetWhereClause.ts,6/0/60b51931e05a83dbb8d87448b5ff466c0e48bf19
+j
+:src/datastore/sql/operations/dql/clauses/getJoinClauses.ts,c/0/c0395ef130033b9a9fbcec0e456a7c3c6bf7d18e
+l
+<src/datastore/sql/operations/dql/clauses/tryGetProjection.ts,b/1/b12bbe05b366083f128662a09caa8d23cca09699
+T
+$src/datastore/PostgreSqlDataStore.ts,1/9/19c7770c2a7dd99299bd1c49a5bffaf057af287d
+a
+1src/datastore/sql/operations/dql/getEntityById.ts,8/b/8b15ab504106c0c8ce4fd49312dd90de15d5b496
+U
+%src/datastore/AbstractSqlDataStore.ts,4/a/4a53d6f8742845084c6f1241fac40af293a2c1aa
+R
+"src/datastore/AbstractDataStore.ts,f/4/f4558eca7b6689c835badee5ef621c5595dedca7
+f
+6src/datastore/sql/operations/ddl/initializeDatabase.ts,0/e/0ea45dd67226acec248fa09323994e71c3fb19b3
+O
+src/datastore/MySqlDataStore.ts,8/f/8f134bc4a4f1e8125d58c46d089a814d427d922b
+<
+package.json,7/0/7030d0b2f71b999ff89a343de08c414af32fc93a
+P
+ src/microservice/Microservice.ts,b/2/b203b2517f9ead474bfd9ed8b4aa05bb628a6597

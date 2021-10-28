@@ -1,3 +1,5 @@
+import Microservice from "../microservice/Microservice";
+
 export interface RequestProcessor {
-  startProcessingRequests(): void
+  startProcessingRequests(microservice: Microservice): void
 }

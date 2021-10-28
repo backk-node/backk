@@ -80,6 +80,6 @@ export default class Microservice {
     reloadLoggingConfigOnChange();
     log(Severity.INFO, 'Microservice initialized', '');
 
-    requestProcessors.forEach(requestProcessor => requestProcessor.startProcessingRequests());
+    requestProcessors.forEach(requestProcessor => requestProcessor.startProcessingRequests(this));
   }
 }

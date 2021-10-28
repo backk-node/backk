@@ -5,7 +5,7 @@ import { RequestProcessor } from './RequestProcessor';
 import tryExecuteServiceMethod, {
   ServiceFunctionExecutionOptions
 } from '../execution/tryExecuteServiceMethod';
-import { HttpVersion } from '../microservice/Microservice';
+import Microservice, { HttpVersion } from '../microservice/Microservice';
 import { createServer } from 'http';
 import throwException from '../utils/exception/throwException';
 import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
@@ -19,7 +19,7 @@ export default class HttpServer implements RequestProcessor {
     private readonly httpVersion: HttpVersion = 1
   ) {}
 
-  startProcessingRequests(): void {
+  startProcessingRequests(microservice: Microservice): void {
     const server = createServer(async (request, response) => {
       request.setEncoding('utf8');
 
@@ -66,7 +66,7 @@ export default class HttpServer implements RequestProcessor {
       }
 
       tryExecuteServiceMethod(
-        this,
+        microservice,
         request.url?.split('/').pop() ?? '',
         serviceFunctionArgument ?? null,
         request.headers,

@@ -620,8 +620,6 @@ Z
 *src/scheduling/scheduleJobsForExecution.ts,2/f/2f68d5f99daa43c58dc30d5ddcb2f3bb7858f8da
 X
 (src/requestprocessor/RequestProcessor.ts,8/0/80b44487b867e3a7fb89e23bce1cf91bf695e146
-R
-"src/requestprocessor/HttpServer.ts,8/6/869e973a694b88bc90d4f845180c81727430030e
 U
 %src/requestprocessor/KafkaConsumer.ts,5/4/54978fb9386e91d4df80e1e6e7893e36b797a7a4
 R

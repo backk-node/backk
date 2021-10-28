@@ -6,7 +6,7 @@ import removeSingleSubEntitiesWithNullProperties from './removeSingleSubEntities
 import { PostQueryOperations } from '../../../../../types/postqueryoperations/PostQueryOperations';
 import Pagination from '../../../../../types/postqueryoperations/Pagination';
 import convertTinyIntegersToBooleans from './convertTinyIntegersToBooleans';
-import AbstractDataStore from '../../../../AbstractDataStore';
+import DataStore from '../../../../DataStore';
 import { Values } from "../../../../../constants/constants";
 import EntityCountRequest from "../../../../../types/EntityCountRequest";
 
@@ -17,7 +17,7 @@ function getMappedRows(
   rows: any[],
   resultMaps: any[],
   EntityClass: new () => any,
-  dataStore: AbstractDataStore,
+  dataStore: DataStore,
   startIndex?: number,
   endIndex?: number
 ) {
@@ -44,7 +44,7 @@ export default function transformRowsToObjects<T>(
   rows: any[],
   EntityClass: { new (): T },
   { paginations, includeResponseFields, excludeResponseFields }: PostQueryOperations,
-  dataStore: AbstractDataStore,
+  dataStore: DataStore,
   entityCountRequests?: EntityCountRequest[],
   isInternalCall = false
 ) {

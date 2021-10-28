@@ -4,7 +4,7 @@ import createErrorMessageWithStatusCode from '../errors/createErrorMessageWithSt
 import getValidationErrors from './getValidationErrors';
 import { HttpStatusCodes } from '../constants/constants';
 import isCreateFunction from '../services/crudentity/utils/isCreateFunction';
-import AbstractDataStore from '../datastore/AbstractDataStore';
+import DataStore from '../datastore/DataStore';
 import { BACKK_ERRORS } from '../errors/backkErrors';
 
 function filterOutManyToManyIdErrors(validationErrors: ValidationError[]) {
@@ -39,7 +39,7 @@ function getValidationErrorConstraintsCount(validationErrors: ValidationError[])
 export default async function tryValidateServiceFunctionArgument(
   ServiceClass: Function,
   functionName: string,
-  dataStore: AbstractDataStore | undefined,
+  dataStore: DataStore | undefined,
   serviceFunctionArgument: object
 ): Promise<void> {
   try {

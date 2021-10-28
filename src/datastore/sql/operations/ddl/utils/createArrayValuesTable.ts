@@ -1,11 +1,11 @@
-import AbstractDataStore from '../../../../AbstractDataStore';
+import DataStore from '../../../../DataStore';
 
 export default async function createArrayValuesTable(
   schema: string | undefined,
   entityName: string,
   fieldName: string,
   sqlColumnType: string,
-  dataStore: AbstractDataStore
+  dataStore: DataStore
 ) {
   const foreignIdFieldName = entityName.charAt(0).toLowerCase() + entityName.slice(1) + 'Id';
   const arrayValueFieldName = fieldName.slice(0, -1);

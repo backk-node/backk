@@ -1,7 +1,7 @@
 import { registerDecorator, ValidationOptions } from 'class-validator';
 import { Value } from '../../types/Value';
 import { PromiseErrorOr } from '../../types/PromiseErrorOr';
-import { Many } from "../../datastore/AbstractDataStore";
+import { Many } from "../../datastore/DataStore";
 
 export default function IsOneOf(
   getPossibleValuesFunc: () => PromiseErrorOr<Many<Value>>,

@@ -1,4 +1,4 @@
-import AbstractDataStore from "../datastore/AbstractDataStore";
+import DataStore from "../datastore/DataStore";
 import { CronJob } from "cron";
 import findAsyncSequential from "../utils/findAsyncSequential";
 import wait from "../utils/wait";
@@ -14,7 +14,7 @@ const scheduledJobs: { [key: string]: CronJob } = {};
 export async function scheduleCronJob(
   scheduledExecutionTimestampAsDate: Date,
   retryIntervalsInSecs: number[],
-  dataStore: AbstractDataStore,
+  dataStore: DataStore,
   jobId: string,
   controller: any,
   serviceFunctionName: string,

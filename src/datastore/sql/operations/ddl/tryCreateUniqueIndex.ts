@@ -1,8 +1,8 @@
-import AbstractDataStore from '../../../AbstractDataStore';
+import DataStore from '../../../DataStore';
 import tryCreateIndex from './tryCreateIndex';
 
 export default async function tryCreateUniqueIndex(
-  dataStore: AbstractDataStore,
+  dataStore: DataStore,
   indexName: string,
   schema: string | undefined,
   indexFields: string[]

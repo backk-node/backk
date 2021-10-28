@@ -1,10 +1,10 @@
-import AbstractDataStore from '../../../AbstractDataStore';
+import DataStore from '../../../DataStore';
 import tryAlterTable from './tryAlterTable';
 import tryCreateTable from './tryCreateTable';
 import entityAnnotationContainer from "../../../../decorators/entity/entityAnnotationContainer";
 
 export default async function tryAlterOrCreateTable(
-  dataStore: AbstractDataStore,
+  dataStore: DataStore,
   entityName: string,
   EntityClass: Function,
   schema: string | undefined

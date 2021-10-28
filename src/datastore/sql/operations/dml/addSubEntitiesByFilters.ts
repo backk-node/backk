@@ -30,7 +30,7 @@ import MongoDbQuery from '../../../mongodb/MongoDbQuery';
 import SqlExpression from '../../expressions/SqlExpression';
 import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
 import getEntityByFilters from '../dql/getEntityByFilters';
-import { One } from '../../../AbstractDataStore';
+import { One } from '../../../DataStore';
 import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
 import throwIf from "../../../../utils/exception/throwIf";
 import { getNamespace } from "cls-hooked";

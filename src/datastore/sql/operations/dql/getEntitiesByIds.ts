@@ -11,7 +11,7 @@ import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
 import { getNamespace } from 'cls-hooked';
 import getClassPropertyNameToPropertyTypeNameMap from '../../../../metadata/getClassPropertyNameToPropertyTypeNameMap';
 import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
-import { Many } from '../../../AbstractDataStore';
+import { Many } from '../../../DataStore';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from '../../../utils/tryEnsurePreviousOrNextPageIsRequested';
 import EntityCountRequest from '../../../../types/EntityCountRequest';

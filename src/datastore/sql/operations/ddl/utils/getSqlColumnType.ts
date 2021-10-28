@@ -1,9 +1,9 @@
-import AbstractDataStore from '../../../../AbstractDataStore';
+import DataStore from '../../../../DataStore';
 import getMaxLengthValidationConstraint from '../../../../../validation/getMaxLengthValidationConstraint';
 import typePropertyAnnotationContainer from '../../../../../decorators/typeproperty/typePropertyAnnotationContainer';
 
 export default function getSqlColumnType(
-  dataStore: AbstractDataStore,
+  dataStore: DataStore,
   EntityClass: Function,
   fieldName: string,
   baseFieldTypeName: string

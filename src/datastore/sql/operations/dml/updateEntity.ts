@@ -31,7 +31,7 @@ import { EntityPreHook } from '../../../hooks/EntityPreHook';
 import tryExecuteEntityPreHooks from '../../../hooks/tryExecuteEntityPreHooks';
 import { PreHook } from "../../../hooks/PreHook";
 import tryExecutePreHooks from "../../../hooks/tryExecutePreHooks";
-import { One } from "../../../AbstractDataStore";
+import { One } from "../../../DataStore";
 import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
 import throwIf from "../../../../utils/exception/throwIf";
 import { getNamespace } from "cls-hooked";

@@ -27,7 +27,7 @@ import { EntityPreHook } from '../../../hooks/EntityPreHook';
 import tryExecuteEntityPreHooks from '../../../hooks/tryExecuteEntityPreHooks';
 import { HttpStatusCodes } from '../../../../constants/constants';
 import findSubEntityClass from '../../../../utils/type/findSubEntityClass';
-import { One } from '../../../AbstractDataStore';
+import { One } from '../../../DataStore';
 import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
 import throwIf from "../../../../utils/exception/throwIf";
 import { getNamespace } from "cls-hooked";

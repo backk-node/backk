@@ -7,7 +7,7 @@ import updateDbLocalTransactionCount from './utils/updateDbLocalTransactionCount
 import getTableName from '../../../utils/getTableName';
 import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
 import { getNamespace } from 'cls-hooked';
-import { Many } from '../../../AbstractDataStore';
+import { Many } from '../../../DataStore';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from '../../../utils/tryEnsurePreviousOrNextPageIsRequested';

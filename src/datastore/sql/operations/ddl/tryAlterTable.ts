@@ -1,6 +1,6 @@
 import forEachAsyncParallel from '../../../../utils/forEachAsyncParallel';
 import typePropertyAnnotationContainer from '../../../../decorators/typeproperty/typePropertyAnnotationContainer';
-import AbstractDataStore, { Field } from '../../../AbstractDataStore';
+import DataStore, { Field } from '../../../DataStore';
 import getEnumSqlColumnType from './utils/getEnumSqlColumnType';
 import getSqlColumnType from './utils/getSqlColumnType';
 import setSubEntityInfo from './utils/setSubEntityInfo';
@@ -13,7 +13,7 @@ import isEnumTypeName from '../../../../utils/type/isEnumTypeName';
 import entityAnnotationContainer from '../../../../decorators/entity/entityAnnotationContainer';
 
 export default async function tryAlterTable(
-  dataStore: AbstractDataStore,
+  dataStore: DataStore,
   entityName: string,
   EntityClass: Function,
   schema: string | undefined,

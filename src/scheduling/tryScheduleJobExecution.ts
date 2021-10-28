@@ -11,7 +11,7 @@ import createErrorFromErrorCodeMessageAndStatus from "../errors/createErrorFromE
 import { BACKK_ERRORS } from "../errors/backkErrors";
 import emptyError from "../errors/emptyError";
 import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
-import { One } from "../datastore/AbstractDataStore";
+import { One } from "../datastore/DataStore";
 import createBackkErrorFromErrorCodeMessageAndStatus
   from "../errors/createBackkErrorFromErrorCodeMessageAndStatus";
 

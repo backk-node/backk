@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import AbstractDataStore, { Many } from "../datastore/AbstractDataStore";
+import DataStore, { Many } from "../datastore/DataStore";
 import findAsyncSequential from '../utils/findAsyncSequential';
 import wait from '../utils/wait';
 import __Backk__JobScheduling from './entities/__Backk__JobScheduling';
@@ -13,7 +13,7 @@ export let scheduledJobs: Many<__Backk__JobScheduling> | null | undefined = null
 
 export default async function scheduleJobsForExecution(
   controller: any | undefined,
-  dataStore: AbstractDataStore
+  dataStore: DataStore
 ) {
   if (!controller) {
     return false;

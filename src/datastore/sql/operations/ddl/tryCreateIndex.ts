@@ -1,8 +1,8 @@
-import AbstractDataStore from '../../../AbstractDataStore';
+import DataStore from '../../../DataStore';
 import entityAnnotationContainer from '../../../../decorators/entity/entityAnnotationContainer';
 
 export default async function tryCreateIndex(
-  dataStore: AbstractDataStore,
+  dataStore: DataStore,
   indexName: string,
   schema: string | undefined,
   indexFields: string[],

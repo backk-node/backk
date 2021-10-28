@@ -32,7 +32,7 @@ import createBackkErrorFromErrorCodeMessageAndStatus from '../../../../errors/cr
 import { BACKK_ERRORS } from '../../../../errors/backkErrors';
 import tryExecutePostHook from '../../../hooks/tryExecutePostHook';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
-import { One } from '../../../AbstractDataStore';
+import { One } from '../../../DataStore';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from '../../../utils/tryEnsurePreviousOrNextPageIsRequested';
 import EntityCountRequest from '../../../../types/EntityCountRequest';

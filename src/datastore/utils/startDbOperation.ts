@@ -1,7 +1,7 @@
 import log, { Severity } from "../../observability/logging/log";
-import AbstractDataStore from "../AbstractDataStore";
+import DataStore from "../DataStore";
 
-export default function startDbOperation(dataStore: AbstractDataStore, dataStoreOperationName: string): number {
+export default function startDbOperation(dataStore: DataStore, dataStoreOperationName: string): number {
   log(Severity.DEBUG, 'Database manager operation', dataStore.constructor.name + '.' + dataStoreOperationName);
   return Date.now();
 }

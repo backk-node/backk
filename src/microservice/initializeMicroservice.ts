@@ -8,7 +8,7 @@ import setNestedTypeValidationDecorators from '../validation/setNestedTypeValida
 import writeTestsPostmanCollectionExportFile from '../postman/writeTestsPostmanCollectionExportFile';
 import generateTypesForServices from '../metadata/generateTypesForServices';
 import getNestedClasses from '../metadata/getNestedClasses';
-import AbstractDataStore from '../datastore/AbstractDataStore';
+import DataStore from '../datastore/DataStore';
 import log, { Severity } from '../observability/logging/log';
 import writeOpenApiSpecFile from '../openapi/writeOpenApiSpecFile';
 import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
@@ -314,7 +314,7 @@ export function generateInternalServicesMetadata(microservice: any) {
 
 export default function initializeMicroservice(
   microservice: any,
-  dataStore: AbstractDataStore,
+  dataStore: DataStore,
   shouldGeneratePostmanIntegrationTestsOnRestartInDevEnv: boolean,
   command: string,
   remoteServiceRootDir = ''

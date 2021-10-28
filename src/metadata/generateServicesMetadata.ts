@@ -8,14 +8,14 @@ import getTypeDocumentation from './getTypeDocumentation';
 import getTypePropertyAccessType from './getTypePropertyAccessType';
 import CrudEntityService from '../services/crudentity/CrudEntityService';
 import assertFunctionNamesAreValidForCrudEntityService from '../services/crudentity/assertFunctionNamesAreValidForCrudEntityService';
-import AbstractDataStore from '../datastore/AbstractDataStore';
+import DataStore from '../datastore/DataStore';
 import entityAnnotationContainer from '../decorators/entity/entityAnnotationContainer';
 import isCreateFunction from '../services/crudentity/utils/isCreateFunction';
 import { ErrorNameToErrorDefinitionMap } from "../types/ErrorDefinition";
 
 export default function generateServicesMetadata<T>(
   microservice: T,
-  dataStore: AbstractDataStore,
+  dataStore: DataStore,
   remoteServiceRootDir = ''
 ): ServiceMetadata[] {
   // noinspection FunctionWithMoreThanThreeNegationsJS

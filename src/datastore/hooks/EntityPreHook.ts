@@ -2,7 +2,7 @@ import { BackkEntity } from '../../types/entities/BackkEntity';
 import { SubEntity } from '../../types/entities/SubEntity';
 import { PromiseErrorOr } from '../../types/PromiseErrorOr';
 import { BackkError } from '../../types/BackkError';
-import { Many, One } from "../AbstractDataStore";
+import { Many, One } from "../DataStore";
 
 export interface ErrorDef {
   errorCode: string;

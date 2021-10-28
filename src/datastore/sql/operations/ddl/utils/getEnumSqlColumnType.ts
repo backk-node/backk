@@ -1,8 +1,8 @@
 import parseEnumValuesFromSrcFile from '../../../../../typescript/parser/parseEnumValuesFromSrcFile';
 import getSrcFilePathNameForTypeName from '../../../../../utils/file/getSrcFilePathNameForTypeName';
-import AbstractDataStore from "../../../../AbstractDataStore";
+import DataStore from "../../../../DataStore";
 
-export default function getEnumSqlColumnType(dataStore: AbstractDataStore, baseFieldTypeName: string) {
+export default function getEnumSqlColumnType(dataStore: DataStore, baseFieldTypeName: string) {
   let enumValues: string[];
   if (baseFieldTypeName[0] === '(') {
     enumValues = baseFieldTypeName.slice(1).split(/[|)]/);

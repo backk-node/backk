@@ -1,7 +1,7 @@
-import AbstractDataStore from '../AbstractDataStore';
+import DataStore from '../DataStore';
 import defaultServiceMetrics from '../../observability/metrics/defaultServiceMetrics';
 
-export default function recordDbOperationDuration(dataStore: AbstractDataStore, startTimeInMillis: number) {
+export default function recordDbOperationDuration(dataStore: DataStore, startTimeInMillis: number) {
   const dbOperationProcessingTimeInMillis = Date.now() - startTimeInMillis;
   defaultServiceMetrics.incrementDbOperationProcessingTimeInSecsBucketCounterByOne(
     dataStore.getDataStoreType(),

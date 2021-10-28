@@ -1,4 +1,4 @@
-import AbstractDataStore from '../../../AbstractDataStore';
+import DataStore from '../../../DataStore';
 import forEachAsyncSequential from '../../../../utils/forEachAsyncSequential';
 import entityAnnotationContainer from '../../../../decorators/entity/entityAnnotationContainer';
 import tryAlterOrCreateTable from './tryAlterOrCreateTable';
@@ -20,7 +20,7 @@ import getClsNamespace from '../../../../continuationlocalstorage/getClsNamespac
 
 let isMongoDBInitialized = false;
 
-export async function isDbInitialized(dataStore: AbstractDataStore) {
+export async function isDbInitialized(dataStore: DataStore) {
   if (process.env.NODE_ENV === 'development') {
     return true;
   }
@@ -56,7 +56,7 @@ export async function isDbInitialized(dataStore: AbstractDataStore) {
 
 export default async function initializeDatabase(
   microservice: any | undefined,
-  dataStore: AbstractDataStore
+  dataStore: DataStore
 ): Promise<boolean> {
   if (!(await dataStore.isDbReady())) {
     return false;

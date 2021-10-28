@@ -4,7 +4,7 @@ import createErrorMessageWithStatusCode from '../../errors/createErrorMessageWit
 import { HttpStatusCodes } from '../../constants/constants';
 import { BackkEntity } from '../../types/entities/BackkEntity';
 import { SubEntity } from '../../types/entities/SubEntity';
-import { One } from "../AbstractDataStore";
+import { One } from "../DataStore";
 
 export default async function tryExecutePostHook<T extends BackkEntity | SubEntity>(
   postHook: PostHook<T>,

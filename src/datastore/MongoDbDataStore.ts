@@ -1,6 +1,6 @@
 import { FilterQuery, MongoClient, ObjectId } from 'mongodb';
 import SqlExpression from './sql/expressions/SqlExpression';
-import AbstractDataStore, { Field, Many, One } from './AbstractDataStore';
+import DataStore, { Field, Many, One } from './DataStore';
 import { RecursivePartial } from '../types/RecursivePartial';
 import { PreHook } from './hooks/PreHook';
 import { BackkEntity } from '../types/entities/BackkEntity';
@@ -72,7 +72,7 @@ import throwException from '../utils/exception/throwException';
 import getUserAccountIdFieldNameAndRequiredValue from './utils/getUserAccountIdFieldNameAndRequiredValue';
 import getDbNameFromServiceName from '../utils/getDbNameFromServiceName';
 
-export default class MongoDbDataStore extends AbstractDataStore {
+export default class MongoDbDataStore extends DataStore {
   private readonly uri: string;
   private mongoClient: MongoClient;
 

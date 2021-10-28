@@ -1,4 +1,4 @@
-import AbstractDataStore from '../AbstractDataStore';
+import DataStore from '../DataStore';
 import getClassPropertyNameToPropertyTypeNameMap from '../../metadata/getClassPropertyNameToPropertyTypeNameMap';
 import getTypeInfoForTypeName from '../../utils/type/getTypeInfoForTypeName';
 import isEntityTypeName from '../../utils/type/isEntityTypeName';
@@ -46,7 +46,7 @@ function setJoinSpec(entityName: string, EntityClass: Function, fieldName: strin
 }
 
 export default function setJoinSpecs(
-  dataStore: AbstractDataStore,
+  dataStore: DataStore,
   entityName: string,
   EntityClass: Function
 ) {

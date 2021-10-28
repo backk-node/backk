@@ -11,7 +11,7 @@ import typePropertyAnnotationContainer from '../../decorators/typeproperty/typeP
 import getClassPropertyNameToPropertyTypeNameMap from '../../metadata/getClassPropertyNameToPropertyTypeNameMap';
 import { HttpStatusCodes } from '../../constants/constants';
 import tryExecutePostHook from '../hooks/tryExecutePostHook';
-import { One } from '../AbstractDataStore';
+import { One } from '../DataStore';
 import DefaultPostQueryOperations from '../../types/postqueryoperations/DefaultPostQueryOperations';
 
 export default async function addSimpleSubEntitiesOrValuesByEntityId<

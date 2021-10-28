@@ -579,10 +579,6 @@ T
 $src/datastore/PostgreSqlDataStore.ts,1/9/19c7770c2a7dd99299bd1c49a5bffaf057af287d
 a
 1src/datastore/sql/operations/dql/getEntityById.ts,8/b/8b15ab504106c0c8ce4fd49312dd90de15d5b496
-U
-%src/datastore/AbstractSqlDataStore.ts,4/a/4a53d6f8742845084c6f1241fac40af293a2c1aa
-R
-"src/datastore/AbstractDataStore.ts,f/4/f4558eca7b6689c835badee5ef621c5595dedca7
 f
 6src/datastore/sql/operations/ddl/initializeDatabase.ts,0/e/0ea45dd67226acec248fa09323994e71c3fb19b3
 O

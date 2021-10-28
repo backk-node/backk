@@ -1,4 +1,4 @@
-import AbstractDataStore from "../datastore/AbstractDataStore";
+import DataStore from "../datastore/DataStore";
 import serviceFunctionAnnotationContainer
   from "../decorators/service/function/serviceFunctionAnnotationContainer";
 // eslint-disable-next-line @typescript-eslint/camelcase
@@ -9,7 +9,7 @@ import { HttpStatusCodes } from "../constants/constants";
 import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
 import DefaultPostQueryOperations from "../types/postqueryoperations/DefaultPostQueryOperations";
 
-export default async function tryInitializeCronJobSchedulingTable(dataStore: AbstractDataStore) {
+export default async function tryInitializeCronJobSchedulingTable(dataStore: DataStore) {
   const clsNamespace = getClsNamespace('serviceFunctionExecution');
 
   await forEachAsyncParallel(

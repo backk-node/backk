@@ -43,7 +43,7 @@ export type One<T> = {
 
 export type ArrayFieldValue = string | number | boolean;
 
-export default abstract class AbstractDataStore {
+export default abstract class DataStore {
   private readonly services: BaseService[] = [];
   readonly schema: string;
   readonly dbName?: string;

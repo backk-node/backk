@@ -111,11 +111,11 @@ export { default as UpdateOnly } from './decorators/typeproperty/access/UpdateOn
 export { default as registerCustomDecorator } from './decorators/registerCustomDecorator';
 
 // Data store
-export { default as AbstractDataStore } from './datastore/AbstractDataStore';
+export { default as DataStore } from './datastore/DataStore';
 export { default as MongoDbDataStore } from './datastore/MongoDbDataStore';
 export { default as MySqlDataStore } from './datastore/MySqlDataStore';
 export { default as PostgreSqlDataStore } from './datastore/PostgreSqlDataStore';
-export { default as NoOpDataStore } from './datastore/NullDataStore';
+export { default as NullDataStore } from './datastore/NullDataStore';
 export * from './datastore/hooks/EntitiesPostHook';
 export { EntityPreHook } from './datastore/hooks/EntityPreHook';
 export * from './datastore/hooks/PostHook';
@@ -128,7 +128,7 @@ export { default as MongoDbQuery } from './datastore/mongodb/MongoDbQuery';
 export { default as OrFilter } from './types/userdefinedfilters/OrFilter';
 export { default as UserDefinedFilter } from './types/userdefinedfilters/UserDefinedFilter';
 export { default as EntityCountRequest } from './types/EntityCountRequest';
-export { One, Many } from './datastore/AbstractDataStore';
+export { One, Many } from './datastore/DataStore';
 
 // CSV, text, JSON and XML file parsing
 export { Value } from './types/Value';

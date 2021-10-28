@@ -4,7 +4,7 @@ import { HttpStatusCodes } from '../../constants/constants';
 import { BackkEntity } from '../../types/entities/BackkEntity';
 import { SubEntity } from '../../types/entities/SubEntity';
 import { EntityPreHook } from './EntityPreHook';
-import { One } from '../AbstractDataStore';
+import { One } from '../DataStore';
 import { getNamespace } from 'cls-hooked';
 
 export default async function tryExecuteEntityPreHooks<T extends BackkEntity | SubEntity>(

@@ -1,8 +1,8 @@
 import { getNamespace } from "cls-hooked";
-import AbstractDataStore from "../../../AbstractDataStore";
+import DataStore from "../../../DataStore";
 
 export default async function tryStartLocalTransactionIfNeeded(
-  dataStore: AbstractDataStore
+  dataStore: DataStore
 ): Promise<boolean> {
   if (
     !getNamespace('multipleServiceFunctionExecutions')?.get('globalTransaction') &&

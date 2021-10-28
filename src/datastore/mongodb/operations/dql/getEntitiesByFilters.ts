@@ -29,7 +29,7 @@ import tryStartLocalTransactionIfNeeded from '../../../sql/operations/transactio
 import tryExecutePreHooks from '../../../hooks/tryExecutePreHooks';
 import { EntitiesPostHook } from '../../../hooks/EntitiesPostHook';
 import tryExecuteEntitiesPostHook from '../../../hooks/tryExecuteEntitiesPostHook';
-import { Many } from '../../../AbstractDataStore';
+import { Many } from '../../../DataStore';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from "../../../utils/tryEnsurePreviousOrNextPageIsRequested";

@@ -1,7 +1,7 @@
-import AbstractDataStore from "../../../../AbstractDataStore";
+import DataStore from "../../../../DataStore";
 import { getNamespace } from "cls-hooked";
 
-export default function updateDbLocalTransactionCount(dataStore: AbstractDataStore) {
+export default function updateDbLocalTransactionCount(dataStore: DataStore) {
   if (
     !dataStore.getClsNamespace()?.get('localTransaction') &&
     !dataStore.getClsNamespace()?.get('globalTransaction') &&

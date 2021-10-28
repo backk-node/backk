@@ -1,10 +1,10 @@
-import { Dirent, existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from "fs";
-import { dirname, resolve } from "path";
-import { parseSync } from "@babel/core";
-import getNamespacedMicroserviceName from "../utils/getNamespacedMicroserviceName";
-import generate from "@babel/generator";
-import { getFileNamesRecursively } from "../utils/file/getSrcFilePathNameForTypeName";
-import getMicroserviceName from "../utils/getMicroserviceName";
+import { Dirent, existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
+import { dirname, resolve } from 'path';
+import { parseSync } from '@babel/core';
+import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
+import generate from '@babel/generator';
+import { getFileNamesRecursively } from '../utils/file/getSrcFilePathNameForTypeName';
+import getMicroserviceName from '../utils/getMicroserviceName';
 
 function getInternalReturnFetchStatement(serviceName: string, functionName: string, argumentName: string) {
   return {
@@ -264,7 +264,25 @@ function rewriteTypeFile(
 
   if (needsRewrite) {
     const code = generate(ast as any).code;
-    writeFileSync(destTypeFilePathName, code, { encoding: 'UTF-8' });
+
+    let outputFileContentsStr = '// DO NOT MODIFY THIS FILE! This is an auto-generated file' + '\n' + code;
+
+    outputFileContentsStr = outputFileContentsStr
+      .split('\n')
+      .map((outputFileLine) => {
+        if (outputFileLine.endsWith(';') && !outputFileLine.startsWith('import')) {
+          return outputFileLine + '\n';
+        }
+
+        if (outputFileLine.startsWith('export default class') || outputFileLine.startsWith('export class')) {
+          return '\n' + outputFileLine;
+        }
+
+        return outputFileLine;
+      })
+      .join('\n');
+
+    writeFileSync(destTypeFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
   }
 }
 
@@ -476,7 +494,7 @@ function generateInternalServiceFile(serviceImplFilePathName: string) {
   );
 }
 
-export default function generateClients(publicTypeNames: any, internalTypeNames: any) {
+export default function generateClients(publicTypeNames: string[], internalTypeNames: string[]) {
   if (!existsSync('src/services')) {
     return;
   }
@@ -500,11 +518,10 @@ export default function generateClients(publicTypeNames: any, internalTypeNames:
     typeFilePathNames
       .filter((typeFilePathName) => typeFilePathName.endsWith('.ts'))
       .forEach((typeFilePathName) => {
+        const typeFileName = typeFilePathName.split('/').pop();
+        const typeName = typeFileName?.split('.')[0];
 
-        const typeFileName = typeFilePathName.split('/').pop()
-        const typeName = typeFileName?.split('.')[0]
-
-        if (publicTypeNames.includes(typeName)) {
+        if (typeName && publicTypeNames.includes(typeName)) {
           const frontEndDestTypeFilePathName = typeFilePathName.replace(
             /src\/services/,
             'generated/clients/frontend/' + getNamespacedMicroserviceName()
@@ -519,7 +536,7 @@ export default function generateClients(publicTypeNames: any, internalTypeNames:
           rewriteTypeFile(typeFilePathName, frontEndDestTypeFilePathName, 'frontend');
         }
 
-        if (internalTypeNames.includes(typeName)) {
+        if (typeName && internalTypeNames.includes(typeName)) {
           const internalDestTypeFilePathName = typeFilePathName.replace(
             /src\/services/,
             'generated/clients/internal/' + getNamespacedMicroserviceName()

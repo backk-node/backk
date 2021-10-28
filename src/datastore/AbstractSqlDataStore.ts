@@ -1,5 +1,5 @@
 import SqlExpression from './sql/expressions/SqlExpression';
-import AbstractDataStore, { Field, Many, One } from './AbstractDataStore';
+import DataStore, { Field, Many, One } from './DataStore';
 import createEntity from './sql/operations/dml/createEntity';
 import getEntitiesByFilters from './sql/operations/dql/getEntitiesByFilters';
 import getEntitiesCount from './sql/operations/dql/getEntitiesCount';
@@ -40,7 +40,7 @@ import updateEntityByFilters from './sql/operations/dml/updateEntityByFilters';
 import doesEntityArrayFieldContainValue from './sql/operations/dql/doesEntityArrayFieldContainValue';
 import EntityCountRequest from '../types/EntityCountRequest';
 
-export default abstract class AbstractSqlDataStore extends AbstractDataStore {
+export default abstract class AbstractSqlDataStore extends DataStore {
   getClient(): any {
     return undefined;
   }

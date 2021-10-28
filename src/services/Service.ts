@@ -1,6 +1,6 @@
-import AbstractDataStore from "../datastore/AbstractDataStore";
+import DataStore from "../datastore/DataStore";
 
 export interface Service {
-  getDataStore(): AbstractDataStore
+  getDataStore(): DataStore
   getServiceType(): string;
 }

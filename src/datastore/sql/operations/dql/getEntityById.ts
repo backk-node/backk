@@ -19,7 +19,7 @@ import { getNamespace } from 'cls-hooked';
 import tryExecutePostHook from '../../../hooks/tryExecutePostHook';
 import { PreHook } from '../../../hooks/PreHook';
 import tryExecutePreHooks from '../../../hooks/tryExecutePreHooks';
-import { One } from '../../../AbstractDataStore';
+import { One } from '../../../DataStore';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from '../../../utils/tryEnsurePreviousOrNextPageIsRequested';

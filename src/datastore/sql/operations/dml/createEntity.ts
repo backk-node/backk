@@ -24,7 +24,7 @@ import isBackkError from '../../../../errors/isBackkError';
 import { PreHook } from '../../../hooks/PreHook';
 import tryExecutePreHooks from '../../../hooks/tryExecutePreHooks';
 import { plainToClass } from 'class-transformer';
-import { One } from '../../../AbstractDataStore';
+import { One } from '../../../DataStore';
 import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
 import getUserAccountIdFieldNameAndRequiredValue from '../../../utils/getUserAccountIdFieldNameAndRequiredValue';
 import throwIf from '../../../../utils/exception/throwIf';

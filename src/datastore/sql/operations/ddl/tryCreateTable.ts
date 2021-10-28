@@ -1,7 +1,7 @@
 import forEachAsyncSequential from '../../../../utils/forEachAsyncSequential';
 import entityAnnotationContainer from '../../../../decorators/entity/entityAnnotationContainer';
 import typeAnnotationContainer from '../../../../decorators/typeproperty/typePropertyAnnotationContainer';
-import AbstractDataStore from '../../../AbstractDataStore';
+import DataStore from '../../../DataStore';
 import getEnumSqlColumnType from './utils/getEnumSqlColumnType';
 import setSubEntityInfo from './utils/setSubEntityInfo';
 import getSqlColumnType from './utils/getSqlColumnType';
@@ -14,7 +14,7 @@ import isEnumTypeName from '../../../../utils/type/isEnumTypeName';
 import typePropertyAnnotationContainer from '../../../../decorators/typeproperty/typePropertyAnnotationContainer';
 
 export default async function tryCreateTable(
-  dataStore: AbstractDataStore,
+  dataStore: DataStore,
   entityName: string,
   EntityClass: Function,
   schema: string | undefined,

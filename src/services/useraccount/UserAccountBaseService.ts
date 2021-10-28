@@ -2,7 +2,7 @@ import _Id from "../../types/_id/_Id";
 import CrudEntityService from "../crudentity/CrudEntityService";
 import AllowForMicroserviceInternalUse from "../../decorators/service/function/AllowForMicroserviceInternalUse";
 import { PromiseErrorOr } from "../../types/PromiseErrorOr";
-import { One } from "../../datastore/AbstractDataStore";
+import { One } from "../../datastore/DataStore";
 import Subject from "../../types/useraccount/Subject";
 
 export default class UserAccountBaseService extends CrudEntityService {

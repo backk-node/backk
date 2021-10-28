@@ -21,7 +21,7 @@ import createBackkErrorFromErrorCodeMessageAndStatus from '../../../../errors/cr
 import { BACKK_ERRORS } from '../../../../errors/backkErrors';
 import tryExecutePostHook from '../../../hooks/tryExecutePostHook';
 import { PostHook } from '../../../hooks/PostHook';
-import { One } from '../../../AbstractDataStore';
+import { One } from '../../../DataStore';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from '../../../utils/tryEnsurePreviousOrNextPageIsRequested';
 import EntityCountRequest from '../../../../types/EntityCountRequest';

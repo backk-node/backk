@@ -1,10 +1,10 @@
 import AbstractSqlDataStore from '../../../AbstractSqlDataStore';
-import AbstractDataStore from '../../../AbstractDataStore';
+import DataStore from '../../../DataStore';
 
 let intervalId: NodeJS.Timeout | undefined = undefined; // NOSONAR
 const RETRY_INTERVAL = 15000;
 
-export default async function removeDbInitialization(dataStore: AbstractDataStore) {
+export default async function removeDbInitialization(dataStore: DataStore) {
   if (process.env.NODE_ENV === 'development') {
     return;
   }

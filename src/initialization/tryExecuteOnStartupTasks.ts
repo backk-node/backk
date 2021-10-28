@@ -1,4 +1,4 @@
-import AbstractDataStore from "../datastore/AbstractDataStore";
+import DataStore from "../datastore/DataStore";
 import BaseService from "../services/BaseService";
 import forEachAsyncSequential from "../utils/forEachAsyncSequential";
 import serviceFunctionAnnotationContainer
@@ -6,7 +6,7 @@ import serviceFunctionAnnotationContainer
 import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
 import throwIf from "../utils/exception/throwIf";
 
-export default async function tryExecuteOnStartUpTasks(controller: any, dataStore: AbstractDataStore) {
+export default async function tryExecuteOnStartUpTasks(controller: any, dataStore: DataStore) {
   const clsNamespace = getClsNamespace('serviceFunctionExecution');
   const [, error] = await clsNamespace.runAndReturn(async () => {
     await dataStore.tryReserveDbConnectionFromPool();

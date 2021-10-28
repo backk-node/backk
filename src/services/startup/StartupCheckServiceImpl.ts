@@ -1,4 +1,4 @@
-import AbstractDataStore from "../../datastore/AbstractDataStore";
+import DataStore from "../../datastore/DataStore";
 import StartupCheckService from "./StartupCheckService";
 import createBackkErrorFromErrorMessageAndStatusCode
   from "../../errors/createBackkErrorFromErrorMessageAndStatusCode";
@@ -9,7 +9,7 @@ import { PromiseErrorOr } from "../../types/PromiseErrorOr";
 import AllowForEveryUser from "../../decorators/service/function/AllowForEveryUser";
 
 export default class StartupCheckServiceImpl extends StartupCheckService {
-  constructor(dataStore: AbstractDataStore) {
+  constructor(dataStore: DataStore) {
     super({}, dataStore);
   }
 

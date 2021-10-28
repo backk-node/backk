@@ -1,5 +1,5 @@
 import { Service } from './Service';
-import AbstractDataStore from '../datastore/AbstractDataStore';
+import DataStore from '../datastore/DataStore';
 import { ErrorNameToErrorDefinitionMap } from '../types/ErrorDefinition';
 import NullDataStore from "../datastore/NullDataStore";
 
@@ -10,7 +10,7 @@ export default class BaseService implements Service {
   /** @internal */
   constructor(
     private readonly errorNameToErrorDefinitionMap: ErrorNameToErrorDefinitionMap,
-    protected readonly dataStore: AbstractDataStore = new NullDataStore()
+    protected readonly dataStore: DataStore = new NullDataStore()
   ) {
     this.Types = {};
 
@@ -46,7 +46,7 @@ export default class BaseService implements Service {
   }
 
   /** @internal */
-  getDataStore(): AbstractDataStore {
+  getDataStore(): DataStore {
     return this.dataStore;
   }
 

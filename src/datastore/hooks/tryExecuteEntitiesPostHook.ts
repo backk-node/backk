@@ -4,7 +4,7 @@ import { HttpStatusCodes } from "../../constants/constants";
 import { BackkEntity } from "../../types/entities/BackkEntity";
 import { SubEntity } from "../../types/entities/SubEntity";
 import { EntitiesPostHook } from "./EntitiesPostHook";
-import { Many } from "../AbstractDataStore";
+import { Many } from "../DataStore";
 
 export default async function tryExecuteEntitiesPostHook<T extends BackkEntity | SubEntity>(
   postHook: EntitiesPostHook<T>,

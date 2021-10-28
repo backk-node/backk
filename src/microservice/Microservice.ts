@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import bfj from 'bfj-pksilen';
-import AbstractDataStore from '../datastore/AbstractDataStore';
+import DataStore from '../datastore/DataStore';
 import log, { Severity } from '../observability/logging/log';
 import initializeMicroservice from './initializeMicroservice';
 import changePackageJsonNameProperty from '../utils/changePackageJsonNameProperty';
@@ -29,7 +29,7 @@ export type HttpVersion = 1;
 
 export default class Microservice {
   private isInitialized = false;
-  constructor(public readonly dataStore: AbstractDataStore) {}
+  constructor(public readonly dataStore: DataStore) {}
 
   async initialize(commandLineArgs: string[], shouldGeneratePostmanIntegrationTestsOnRestartInDevEnv = true) {
     if (

@@ -18,7 +18,7 @@ import getRootOperations from './getRootOperations';
 import convertUserDefinedFiltersToMatchExpression from './convertUserDefinedFiltersToMatchExpression';
 import convertMongoDbQueriesToMatchExpression from './convertMongoDbQueriesToMatchExpression';
 import replaceIdStringsWithObjectIds from './replaceIdStringsWithObjectIds';
-import { One } from "../AbstractDataStore";
+import { One } from "../DataStore";
 import DefaultPostQueryOperations from "../../types/postqueryoperations/DefaultPostQueryOperations";
 
 export default async function addSimpleSubEntitiesOrValuesByFilters<

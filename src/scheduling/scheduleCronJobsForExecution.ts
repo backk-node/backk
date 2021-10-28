@@ -1,6 +1,6 @@
 import { CronJob } from 'cron';
 import parser from 'cron-parser';
-import AbstractDataStore from '../datastore/AbstractDataStore';
+import DataStore from '../datastore/DataStore';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
 // eslint-disable-next-line @typescript-eslint/camelcase
 import __Backk__CronJobScheduling from './entities/__Backk__CronJobScheduling';
@@ -15,7 +15,7 @@ import getClsNamespace from '../continuationlocalstorage/getClsNamespace';
 
 const cronJobs: { [key: string]: CronJob } = {};
 
-export default function scheduleCronJobsForExecution(controller: any, dataStore: AbstractDataStore) {
+export default function scheduleCronJobsForExecution(controller: any, dataStore: DataStore) {
   if (process.env.NODE_ENV === 'development') {
     return;
   }

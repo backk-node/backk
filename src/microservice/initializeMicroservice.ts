@@ -367,7 +367,6 @@ export default function initializeMicroservice(
     };
   });
 
-
   generateTypesForServices(microservice, remoteServiceRootDir);
 
   Object.entries(microservice)
@@ -408,7 +407,9 @@ export default function initializeMicroservice(
       if (process.env.NODE_ENV !== 'development') {
         throw new Error('Client generation allowed in dev environment only');
       }
-      generateClients();
+      const publicTypeNames = Object.keys((microservice.publicServicesMetadata ?? generatePublicServicesMetadata(microservice)).types);
+      const internalTypeNames = Object.keys((microservice.internalServicesMetadata ?? generateInternalServicesMetadata(microservice)).types);
+      generateClients(publicTypeNames, internalTypeNames);
     }
 
     if (command === '--generateApiSpecsOnly') {

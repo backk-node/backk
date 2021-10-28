@@ -37,8 +37,6 @@ _
 /src/decorators/typeproperty/BooleanOrTinyInt.ts,a/4/a4af1814f309ff6bec60798a14532417607e2311
 U
 %src/decorators/typeproperty/Hashed.ts,3/1/31f3e4209678a6e2d08587967a1998a730429b3a
-^
-.src/decorators/typeproperty/IsInternalField.ts,d/4/d4cec8302ec011ddb1ab40808abde7513ab3ca7a
 A
 src/utils/wait.ts,5/a/5a05f1bec552359d90cfe29a11102eeda1a2197f
 W
@@ -181,8 +179,6 @@ M
 src/types/RecursivePartial.ts,5/1/512f2f0c31c7700389405c044b30ccea154313dd
 D
 src/types/Version.ts,9/e/9e0a76b58ecb694d1a02b1c2ec208d2be77ba2d6
-f
-6src/validation/setClassPropertyValidationDecorators.ts,1/6/1695db580a3d226e4d4a006535a80da6c561053a
 `
 0src/datastore/mongodb/removePrivateProperties.ts,f/d/fd98c80881f265234a8e88e35ac03c0638253713
 `
@@ -207,12 +203,6 @@ Z
 *src/service/startup/StartupCheckService.ts,3/c/3c94b7ecf864ecb2fae8f2b6958fb46cc906661c
 S
 #src/service/LivenessCheckService.ts,c/0/c0b72675266582882b63fbd507b754b2a82b8cd7
-S
-#src/openapi/writeOpenApiSpecFile.ts,f/2/f2fd425c36694198fd59a76c96f5848e5bf5657c
-c
-3src/validation/setNestedTypeValidationDecorators.ts,a/2/a2731d0d863b33cc1f7ed5f81e935b9751e3b2c2
-P
- src/metadata/getNestedClasses.ts,5/7/5741819f904c43dfa42fd8f190fcbb9214bdf87b
 b
 2src/decorators/service/AllowServiceForUserRoles.ts,d/e/de1cb8597b57bdcae7561eb644d6dba6c89a725a
 q
@@ -315,8 +305,6 @@ a
 1src/remote/messagequeue/kafka/consumeFromKafka.ts,e/2/e236cb3878b06d9ac3d16895a3fe2c553382926c
 X
 (src/execution/fetchFromRemoteServices.ts,9/f/9f67fbcce7e8a77bfaaf0c281f22e576957cce6f
-n
->src/decorators/typeproperty/typePropertyAnnotationContainer.ts,c/8/c810282510d9ae8ef1f187c69f3bc3db0d6976fb
 d
 4src/remote/utils/validateServiceFunctionArguments.ts,0/e/0e6af11b7ab9460e696901b331a33cfd10b075ab
 e
@@ -459,8 +447,6 @@ Z
 *src/postman/createPostmanCollectionItem.ts,0/4/04b6ca3341973e79516b19b840e72f5d46010297
 J
 src/service/BaseService.ts,9/e/9e1ed5e644e731aaca4364d0285f49366a3c673a
-X
-(src/metadata/generateServicesMetadata.ts,1/c/1c07d967f31c20ff05a217e12bf580a7a42e2bff
 S
 #docs/usage/MICROSERVICE_METADATA.MD,d/8/d871bca4101499475e31f84c6e6f47975caa7357
 V

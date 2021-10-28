@@ -18,7 +18,6 @@ class TypePropertyAnnotationContainer {
   private readonly typePropertyNameToIsPrivateMap: { [key: string]: boolean } = {};
   private readonly typePropertyNameToIsManyToManyMap: { [key: string]: boolean } = {};
   private readonly typePropertyNameToIsExternalIdMap: { [key: string]: boolean } = {};
-  private readonly typePropertyNameToIsInternalMap: { [key: string]: boolean } = {};
   private readonly typePropertyNameToIsOneToManyMap: { [key: string]: boolean } = {};
   private readonly typePropertyNameToIsExternalServiceEntityMap: { [key: string]: boolean } = {};
   private readonly typePropertyNameToRemoteServiceFetchSpecMap: { [key: string]: RemoteServiceFetchSpec } = {};
@@ -80,10 +79,6 @@ class TypePropertyAnnotationContainer {
 
   setTypePropertyAsExternalId(Type: Function, propertyName: string) {
     this.typePropertyNameToIsExternalIdMap[`${Type.name}${propertyName}`] = true;
-  }
-
-  setTypePropertyAsInternal(Type: Function, propertyName: string) {
-    this.typePropertyNameToIsInternalMap[`${Type.name}${propertyName}`] = true;
   }
 
   setTypePropertyAsReadWrite(Type: Function, propertyName: string) {
@@ -294,18 +289,6 @@ class TypePropertyAnnotationContainer {
     while (proto !== Object.prototype) {
       if (this.typePropertyNameToIsExternalIdMap[`${proto.constructor.name}${propertyName}`] !== undefined) {
         return this.typePropertyNameToIsExternalIdMap[`${proto.constructor.name}${propertyName}`];
-      }
-      proto = Object.getPrototypeOf(proto);
-    }
-
-    return false;
-  }
-
-  isTypePropertyInternal(Type: Function, propertyName: string) {
-    let proto = Object.getPrototypeOf(new (Type as new () => any)());
-    while (proto !== Object.prototype) {
-      if (this.typePropertyNameToIsInternalMap[`${proto.constructor.name}${propertyName}`] !== undefined) {
-        return this.typePropertyNameToIsInternalMap[`${proto.constructor.name}${propertyName}`];
       }
       proto = Object.getPrototypeOf(proto);
     }

@@ -17,7 +17,7 @@ export default function setNestedTypeValidationDecorators(Class: Function) {
         entityAnnotationContainer.entityNameToClassMap[Class.name] &&
         !entityAnnotationContainer.entityNameToClassMap[validationMetadata.constraints[0].name]
       ) {
-        throw new Error(validationMetadata.constraints[0].name + ' is missing @BackkEntity() annotation')
+        throw new Error(validationMetadata.constraints[0].name + ' is missing @Entity() annotation')
       }
 
       const nestedValidationMetadataArgs: ValidationMetadataArgs = {

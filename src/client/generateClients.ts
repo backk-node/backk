@@ -1,19 +1,10 @@
-import {
-  copyFileSync,
-  Dirent,
-  existsSync,
-  mkdirSync,
-  readdirSync,
-  readFileSync,
-  unlinkSync,
-  writeFileSync
-} from 'fs';
-import { resolve, dirname } from 'path';
-import { parseSync } from '@babel/core';
-import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
-import generate from '@babel/generator';
-import { getFileNamesRecursively } from '../utils/file/getSrcFilePathNameForTypeName';
-import getMicroserviceName from '../utils/getMicroserviceName';
+import { Dirent, existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from "fs";
+import { dirname, resolve } from "path";
+import { parseSync } from "@babel/core";
+import getNamespacedMicroserviceName from "../utils/getNamespacedMicroserviceName";
+import generate from "@babel/generator";
+import { getFileNamesRecursively } from "../utils/file/getSrcFilePathNameForTypeName";
+import getMicroserviceName from "../utils/getMicroserviceName";
 
 function getInternalReturnFetchStatement(serviceName: string, functionName: string, argumentName: string) {
   return {
@@ -199,9 +190,10 @@ function getFrontendReturnFetchStatement(serviceName: string, functionName: stri
   };
 }
 
-function rewriteTypeFilesWithPrivateProperties(
+function rewriteTypeFile(
   typeFilePathName: string,
-  frontEndDestTypeFilePathName: string
+  destTypeFilePathName: string,
+  clientType: 'frontend' | 'internal'
 ) {
   const typeFileContentsStr = readFileSync(typeFilePathName, { encoding: 'UTF-8' });
 
@@ -217,16 +209,53 @@ function rewriteTypeFilesWithPrivateProperties(
   let needsRewrite = false;
 
   for (const node of nodes) {
+    if (clientType === 'frontend' && node.type === 'ImportDeclaration' && node.source.value === 'backk') {
+      needsRewrite = true;
+      node.source.value = 'backk-frontend-utils';
+    }
+
     if (node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration') {
       const classBodyNodes: any[] = [];
+      node.declaration.decorators = [];
       node.declaration.body.body.forEach((classBodyNode: any) => {
         const isPrivate = classBodyNode.decorators?.find(
           (decorator: any) => decorator.expression.callee.name === 'Private'
         );
+
         if (classBodyNode.type === 'ClassProperty' && isPrivate) {
           needsRewrite = true;
           return;
         }
+
+        classBodyNode.decorators = classBodyNode.decorators?.filter((decorator: any) => {
+          const decoratorName = decorator.expression.callee.name;
+          const shouldRemove = [
+            'CreateOnly',
+            'ReadOnly',
+            'ReadUpdate',
+            'ReadWrite',
+            'UpdateOnly',
+            'WriteOnly',
+            'TestValue',
+            'Encrypted',
+            'FetchFromRemoteService',
+            'Hashed',
+            'Index',
+            'NotEncrypted',
+            'NotHashed',
+            'NotUnique',
+            'ManyToMany',
+            'OneToMany',
+            'Transient',
+            'Unique'
+          ].includes(decoratorName);
+
+          if (shouldRemove) {
+            needsRewrite = true;
+          }
+
+          return !shouldRemove;
+        });
         classBodyNodes.push(classBodyNode);
       });
       node.declaration.body.body = classBodyNodes;
@@ -235,7 +264,7 @@ function rewriteTypeFilesWithPrivateProperties(
 
   if (needsRewrite) {
     const code = generate(ast as any).code;
-    writeFileSync(frontEndDestTypeFilePathName, code, { encoding: 'UTF-8' });
+    writeFileSync(destTypeFilePathName, code, { encoding: 'UTF-8' });
   }
 }
 
@@ -255,7 +284,6 @@ function generateFrontendServiceFile(serviceImplFilePathName: string) {
   for (const node of nodes) {
     if (node.type === 'ImportDeclaration' && node.source.value === 'backk') {
       node.source.value = 'backk-frontend-utils';
-      node.source.raw = 'backk-frontend-utils';
     }
 
     if (node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration') {
@@ -272,7 +300,10 @@ function generateFrontendServiceFile(serviceImplFilePathName: string) {
       }
 
       if (node.declaration.type !== 'ClassDeclaration') {
-        throw new Error(serviceImplFilePathName + ': Invalid service implementation file. File must contain a single export of service implementation class')
+        throw new Error(
+          serviceImplFilePathName +
+            ': Invalid service implementation file. File must contain a single export of service implementation class'
+        );
       }
 
       node.declaration.superClass = null;
@@ -298,6 +329,8 @@ function generateFrontendServiceFile(serviceImplFilePathName: string) {
           if (
             functionName === 'constructor' ||
             classBodyNode.accessibility === 'private' ||
+            classBodyNode.accessibility === 'protected' ||
+            classBodyNode.static ||
             isInternalMethod
           ) {
             return;
@@ -329,11 +362,23 @@ function generateFrontendServiceFile(serviceImplFilePathName: string) {
     mkdirSync(frontEndDestDirPathName, { recursive: true });
   }
 
+  let outputFileContentsStr = '// DO NOT MODIFY THIS FILE! This is an auto-generated file' + '\n' + code;
+
+  outputFileContentsStr = outputFileContentsStr
+    .split('\n')
+    .map((outputFileLine) => {
+      if (outputFileLine.startsWith('export default class') || outputFileLine.startsWith('export class')) {
+        return '\n' + outputFileLine;
+      }
+      return outputFileLine;
+    })
+    .join('\n');
+
   writeFileSync(
     destServiceImplFilePathName.endsWith('ServiceImpl.ts')
       ? destServiceImplFilePathName.slice(0, -7) + '.ts'
       : destServiceImplFilePathName,
-    code,
+    outputFileContentsStr,
     { encoding: 'UTF-8' }
   );
 }
@@ -354,7 +399,10 @@ function generateInternalServiceFile(serviceImplFilePathName: string) {
   for (const node of nodes) {
     if (node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration') {
       if (node.declaration.type !== 'ClassDeclaration') {
-        throw new Error(serviceImplFilePathName + ': Invalid service implementation file. File must contain a single export of service implementation class')
+        throw new Error(
+          serviceImplFilePathName +
+            ': Invalid service implementation file. File must contain a single export of service implementation class'
+        );
       }
 
       node.declaration.superClass = null;
@@ -375,6 +423,8 @@ function generateInternalServiceFile(serviceImplFilePathName: string) {
           if (
             functionName === 'constructor' ||
             classBodyNode.accessibility === 'private' ||
+            classBodyNode.accessibility === 'protected' ||
+            classBodyNode.static ||
             !isInternalMethod
           ) {
             return;
@@ -405,16 +455,28 @@ function generateInternalServiceFile(serviceImplFilePathName: string) {
     mkdirSync(internalDestDirPathName, { recursive: true });
   }
 
+  let outputFileContentsStr = '// DO NOT MODIFY THIS FILE! This is an auto-generated file' + '\n' + code;
+
+  outputFileContentsStr = outputFileContentsStr
+    .split('\n')
+    .map((outputFileLine) => {
+      if (outputFileLine.startsWith('export default class') || outputFileLine.startsWith('export class')) {
+        return '\n' + outputFileLine;
+      }
+      return outputFileLine;
+    })
+    .join('\n');
+
   writeFileSync(
     destServiceImplFilePathName.endsWith('ServiceImpl.ts')
       ? destServiceImplFilePathName.slice(0, -7) + '.ts'
       : destServiceImplFilePathName,
-    code,
+    outputFileContentsStr,
     { encoding: 'UTF-8' }
   );
 }
 
-export default function generateClients() {
+export default function generateClients(publicTypeNames: any, internalTypeNames: any) {
   if (!existsSync('src/services')) {
     return;
   }
@@ -438,27 +500,39 @@ export default function generateClients() {
     typeFilePathNames
       .filter((typeFilePathName) => typeFilePathName.endsWith('.ts'))
       .forEach((typeFilePathName) => {
-        const frontEndDestTypeFilePathName = typeFilePathName.replace(
-          /src\/services/,
-          'generated/clients/frontend/' + getNamespacedMicroserviceName()
-        );
-        const frontEndDestDirPathName = dirname(frontEndDestTypeFilePathName);
-        if (!existsSync(frontEndDestDirPathName)) {
-          mkdirSync(frontEndDestDirPathName, { recursive: true });
-        }
-        copyFileSync(typeFilePathName, frontEndDestTypeFilePathName);
 
-        rewriteTypeFilesWithPrivateProperties(typeFilePathName, frontEndDestTypeFilePathName);
+        const typeFileName = typeFilePathName.split('/').pop()
+        const typeName = typeFileName?.split('.')[0]
 
-        const internalDestTypeFilePathName = typeFilePathName.replace(
-          /src\/services/,
-          'generated/clients/internal/' + getNamespacedMicroserviceName()
-        );
-        const internalDestDirPathName = dirname(internalDestTypeFilePathName);
-        if (!existsSync(internalDestDirPathName)) {
-          mkdirSync(internalDestDirPathName, { recursive: true });
+        if (publicTypeNames.includes(typeName)) {
+          const frontEndDestTypeFilePathName = typeFilePathName.replace(
+            /src\/services/,
+            'generated/clients/frontend/' + getNamespacedMicroserviceName()
+          );
+
+          const frontEndDestDirPathName = dirname(frontEndDestTypeFilePathName);
+
+          if (!existsSync(frontEndDestDirPathName)) {
+            mkdirSync(frontEndDestDirPathName, { recursive: true });
+          }
+
+          rewriteTypeFile(typeFilePathName, frontEndDestTypeFilePathName, 'frontend');
         }
-        copyFileSync(typeFilePathName, internalDestTypeFilePathName);
+
+        if (internalTypeNames.includes(typeName)) {
+          const internalDestTypeFilePathName = typeFilePathName.replace(
+            /src\/services/,
+            'generated/clients/internal/' + getNamespacedMicroserviceName()
+          );
+
+          const internalDestDirPathName = dirname(internalDestTypeFilePathName);
+
+          if (!existsSync(internalDestDirPathName)) {
+            mkdirSync(internalDestDirPathName, { recursive: true });
+          }
+
+          rewriteTypeFile(typeFilePathName, internalDestTypeFilePathName, 'internal');
+        }
       });
 
     let serviceImplFileDirEntry = serviceDirectoryEntries.find((serviceDirectoryEntry) =>

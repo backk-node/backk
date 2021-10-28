@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
-import bfj from 'bfj';
+import bfj from 'bfj-pksilen';
 import { RequestProcessor } from './RequestProcessor';
 import tryExecuteServiceMethod, {
   ServiceFunctionExecutionOptions

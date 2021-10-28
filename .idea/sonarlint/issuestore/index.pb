@@ -421,10 +421,6 @@ $src/execution/ServiceFunctionCall.ts,d/7/d769150ff5903b8b45f738b13d835f55b8282
 -docs/usage/MULTIPLE_SERVICE_FUNCTION_CALLS.MD,0/d/0dcf4f2c1aaf839293469ddd2d16d9d734c85417
 X
 (src/scheduling/entities/JobScheduling.ts,9/b/9b9457714c11119b32f245c1df42a2d1000b2031
-Z
-*src/scheduling/scheduleJobsForExecution.ts,2/f/2f68d5f99daa43c58dc30d5ddcb2f3bb7858f8da
-^
-.src/scheduling/scheduleCronJobsForExecution.ts,0/7/07d0700ee09268cdb174c1505e3f60caf50c2b30
 Q
 !src/scheduling/scheduleCronJob.ts,f/d/fdce8306d871683b9118b4f0c193c5d57578fe6d
 c
@@ -585,5 +581,3 @@ O
 src/datastore/MySqlDataStore.ts,8/f/8f134bc4a4f1e8125d58c46d089a814d427d922b
 <
 package.json,7/0/7030d0b2f71b999ff89a343de08c414af32fc93a
-P
- src/microservice/Microservice.ts,b/2/b203b2517f9ead474bfd9ed8b4aa05bb628a6597

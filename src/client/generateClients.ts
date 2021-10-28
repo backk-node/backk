@@ -298,6 +298,7 @@ function generateFrontendServiceFile(serviceImplFilePathName: string) {
   });
 
   const nodes = (ast as any).program.body;
+  const functionNames: string[] = [];
 
   for (const node of nodes) {
     if (node.type === 'ImportDeclaration' && node.source.value === 'backk') {
@@ -354,6 +355,7 @@ function generateFrontendServiceFile(serviceImplFilePathName: string) {
             return;
           }
 
+          functionNames.push(functionName);
           classBodyNode.async = false;
           classBodyNode.decorators = [];
           classBodyNode.body = {
@@ -381,13 +383,26 @@ function generateFrontendServiceFile(serviceImplFilePathName: string) {
   }
 
   let outputFileContentsStr = '// DO NOT MODIFY THIS FILE! This is an auto-generated file' + '\n' + code;
+  let isFirstFunction = true;
 
   outputFileContentsStr = outputFileContentsStr
     .split('\n')
     .map((outputFileLine) => {
+      if (
+        !isFirstFunction &&
+        functionNames.some((functionName) => outputFileLine.includes(functionName)) &&
+        outputFileLine.includes(': PromiseErrorOr<') &&
+        outputFileLine.endsWith('}')
+      ) {
+        return '\n' + outputFileLine;
+      }
+
       if (outputFileLine.startsWith('export default class') || outputFileLine.startsWith('export class')) {
         return '\n' + outputFileLine;
       }
+
+      // noinspection ReuseOfLocalVariableJS
+      isFirstFunction = false;
       return outputFileLine;
     })
     .join('\n');

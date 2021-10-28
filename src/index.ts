@@ -3,6 +3,11 @@ export * from './constants/constants';
 // Microservice
 export { default as Microservice } from './microservice/Microservice';
 
+// Request processor
+export { default as HttpServer } from './requestprocessor/HttpServer';
+export { default as KafkaConsumer } from './requestprocessor/KafkaConsumer';
+export { default as RedisConsumer } from './requestprocessor/RedisConsumer';
+
 // Base services
 export { default as AuthorizationService } from './authorization/AuthorizationService';
 export { default as ResponseCacheConfigService } from './cache/ResponseCacheConfigService';

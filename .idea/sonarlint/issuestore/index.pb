@@ -606,8 +606,6 @@ S
 #src/openapi/writeOpenApiSpecFile.ts,f/2/f2fd425c36694198fd59a76c96f5848e5bf5657c
 U
 %src/datastore/AbstractSqlDataStore.ts,4/a/4a53d6f8742845084c6f1241fac40af293a2c1aa
-Z
-*src/microservice/initializeMicroservice.ts,1/1/1162f5fb3b946952726e351e5b6fcea12aed21a8
 z
 Jsrc/typescript/generator/generateTypescriptFilesFromTypeDefinitionFiles.ts,b/7/b7cca6f35d8c9e702c044fe7ac7e1ca1c9ceaf0f
 _
@@ -620,7 +618,5 @@ U
 %src/requestprocessor/KafkaConsumer.ts,5/4/54978fb9386e91d4df80e1e6e7893e36b797a7a4
 R
 "src/client/generateClients.spec.ts,a/6/a6fecbc0f79bc3f56abb07935443fc7a2856df5c
-M
-src/client/generateClients.ts,8/b/8bdaf664cfe1fbe97e586bdfd966a3d344312524
 <
 src/index.ts,c/5/c5fb850250c7443c48a6c12b5cf6916773da31f1

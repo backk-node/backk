@@ -407,9 +407,9 @@ export default function initializeMicroservice(
       if (process.env.NODE_ENV !== 'development') {
         throw new Error('Client generation allowed in dev environment only');
       }
-      const publicTypeNames = Object.keys((microservice.publicServicesMetadata ?? generatePublicServicesMetadata(microservice)).types);
-      const internalTypeNames = Object.keys((microservice.internalServicesMetadata ?? generateInternalServicesMetadata(microservice)).types);
-      generateClients(publicTypeNames, internalTypeNames);
+      const publicTypeNames = microservice.publicServicesMetadata ?? generatePublicServicesMetadata(microservice);
+      const internalTypeNames = microservice.internalServicesMetadata ?? generateInternalServicesMetadata(microservice);
+      generateClients(microservice, publicTypeNames, internalTypeNames);
     }
 
     if (command === '--generateApiSpecsOnly') {

@@ -5,6 +5,9 @@ import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceNam
 import generate from '@babel/generator';
 import { getFileNamesRecursively } from '../utils/file/getSrcFilePathNameForTypeName';
 import getMicroserviceName from '../utils/getMicroserviceName';
+import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
+import Microservice from '../microservice/Microservice';
+import BaseService from '../services/BaseService';
 
 function getInternalReturnFetchStatement(serviceName: string, functionName: string, argumentName: string) {
   return {
@@ -509,7 +512,11 @@ function generateInternalServiceFile(serviceImplFilePathName: string) {
   );
 }
 
-export default function generateClients(publicTypeNames: string[], internalTypeNames: string[]) {
+export default function generateClients(
+  microservice: Microservice,
+  publicServicesMetadata: ServiceMetadata[],
+  internalServicesMetadata: ServiceMetadata[]
+) {
   if (!existsSync('src/services')) {
     return;
   }
@@ -528,6 +535,37 @@ export default function generateClients(publicTypeNames: string[], internalTypeN
     }
 
     const serviceDirectoryEntries = readdirSync(serviceDirectory, { withFileTypes: true });
+    let serviceImplFileDirEntry = serviceDirectoryEntries.find((serviceDirectoryEntry) =>
+      serviceDirectoryEntry.name.endsWith('ServiceImpl.ts')
+    );
+
+    if (!serviceImplFileDirEntry) {
+      serviceImplFileDirEntry = serviceDirectoryEntries.find((serviceDirectoryEntry) =>
+        serviceDirectoryEntry.name.endsWith('Service.ts')
+      );
+    }
+
+    if (!serviceImplFileDirEntry) {
+      return;
+    }
+
+    const serviceClassName = serviceImplFileDirEntry.name.split('.ts')[0];
+    const [serviceName] = Object.entries(microservice).find(
+      ([, service]: [string, any]) =>
+        service instanceof BaseService && service.constructor.name === serviceClassName
+    ) ?? [];
+
+    let publicTypeNames: string[];
+    if (serviceName) {
+      const serviceMetadata = publicServicesMetadata.find(serviceMetadata => serviceMetadata.serviceName === serviceName)
+      publicTypeNames = Object.keys(serviceMetadata?.types ?? [])
+    }
+
+    let internalTypeNames: string[];
+    if (serviceName) {
+      const serviceMetadata = internalServicesMetadata.find(serviceMetadata => serviceMetadata.serviceName === serviceName)
+      internalTypeNames = Object.keys(serviceMetadata?.types ?? [])
+    }
 
     const typeFilePathNames = getFileNamesRecursively(serviceDirectory + '/types');
     typeFilePathNames
@@ -566,20 +604,6 @@ export default function generateClients(publicTypeNames: string[], internalTypeN
           rewriteTypeFile(typeFilePathName, internalDestTypeFilePathName, 'internal');
         }
       });
-
-    let serviceImplFileDirEntry = serviceDirectoryEntries.find((serviceDirectoryEntry) =>
-      serviceDirectoryEntry.name.endsWith('ServiceImpl.ts')
-    );
-
-    if (!serviceImplFileDirEntry) {
-      serviceImplFileDirEntry = serviceDirectoryEntries.find((serviceDirectoryEntry) =>
-        serviceDirectoryEntry.name.endsWith('Service.ts')
-      );
-    }
-
-    if (!serviceImplFileDirEntry) {
-      return;
-    }
 
     const serviceImplFilePathName = resolve(serviceDirectory, serviceImplFileDirEntry.name);
     generateFrontendServiceFile(serviceImplFilePathName);

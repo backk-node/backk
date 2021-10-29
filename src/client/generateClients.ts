@@ -303,7 +303,7 @@ function rewriteTypeFile(
     writeFileSync(destTypeFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
 
     const organizeImportsExecPromise = promisifiedExec(
-      process.cwd() + '/node_modules/.bin/organize-imports-cli ' + destTypeFilePathName
+      process.cwd() + '/node_modules/.bin/prettier --write ' + destTypeFilePathName
     );
 
     execPromises.push(organizeImportsExecPromise);
@@ -439,7 +439,7 @@ function generateFrontendServiceFile(serviceImplFilePathName: string, execPromis
   writeFileSync(destServiceClientFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
 
   const organizeImportsExecPromise = promisifiedExec(
-    process.cwd() + '/node_modules/.bin/organize-imports-cli ' + destServiceClientFilePathName
+    process.cwd() + '/node_modules/.bin/prettier --write ' + destServiceClientFilePathName
   );
 
   execPromises.push(organizeImportsExecPromise);
@@ -537,7 +537,7 @@ function generateInternalServiceFile(serviceImplFilePathName: string, execPromis
   writeFileSync(destServiceClientFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
 
   const organizeImportsExecPromise = promisifiedExec(
-    process.cwd() + '/node_modules/.bin/organize-imports-cli ' + destServiceClientFilePathName
+    process.cwd() + '/node_modules/.bin/prettier --write ' + destServiceClientFilePathName
   );
 
   execPromises.push(organizeImportsExecPromise);

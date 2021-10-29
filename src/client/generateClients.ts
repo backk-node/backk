@@ -8,6 +8,13 @@ import getMicroserviceName from '../utils/getMicroserviceName';
 import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
 import Microservice from '../microservice/Microservice';
 import BaseService from '../services/BaseService';
+import AuditLoggingService from '../observability/logging/audit/AuditLoggingService';
+import CaptchaVerificationService from '../captcha/CaptchaVerificationService';
+import ReadinessCheckService from '../services/ReadinessCheckService';
+import LivenessCheckService from '../services/LivenessCheckService';
+import StartupCheckService from '../services/startup/StartupCheckService';
+import ResponseCacheConfigService from '../cache/ResponseCacheConfigService';
+import AuthorizationService from '../authorization/AuthorizationService';
 
 function getInternalReturnFetchStatement(serviceName: string, functionName: string, argumentName: string) {
   return {
@@ -550,22 +557,34 @@ export default function generateClients(
     }
 
     const serviceClassName = serviceImplFileDirEntry.name.split('.ts')[0];
-    const [serviceName] = Object.entries(microservice).find(
-      ([, service]: [string, any]) =>
-        service instanceof BaseService && service.constructor.name === serviceClassName
-    ) ?? [];
+    const [serviceName] =
+      Object.entries(microservice).find(
+        ([, service]: [string, any]) =>
+          service.constructor.name === serviceClassName &&
+          !(
+            service instanceof AuditLoggingService ||
+            service instanceof CaptchaVerificationService ||
+            service instanceof LivenessCheckService ||
+            service instanceof ReadinessCheckService ||
+            service instanceof StartupCheckService ||
+            service instanceof ResponseCacheConfigService ||
+            service instanceof AuthorizationService
+          )
+      ) ?? [];
 
-    let publicTypeNames: string[];
-    if (serviceName) {
-      const serviceMetadata = publicServicesMetadata.find(serviceMetadata => serviceMetadata.serviceName === serviceName)
-      publicTypeNames = Object.keys(serviceMetadata?.types ?? [])
+    if (!serviceName) {
+      return;
     }
 
-    let internalTypeNames: string[];
-    if (serviceName) {
-      const serviceMetadata = internalServicesMetadata.find(serviceMetadata => serviceMetadata.serviceName === serviceName)
-      internalTypeNames = Object.keys(serviceMetadata?.types ?? [])
-    }
+    const foundPublicServiceMetadata = publicServicesMetadata.find(
+      (serviceMetadata) => serviceMetadata.serviceName === serviceName
+    );
+    const publicTypeNames = Object.keys(foundPublicServiceMetadata?.types ?? []);
+
+    const foundInternalServiceMetadata = internalServicesMetadata.find(
+      (serviceMetadata) => serviceMetadata.serviceName === serviceName
+    );
+    const internalTypeNames = Object.keys(foundInternalServiceMetadata?.types ?? []);
 
     const typeFilePathNames = getFileNamesRecursively(serviceDirectory + '/types');
     typeFilePathNames

@@ -251,17 +251,11 @@ function generateTypescriptFileFor(
   const outputFileName = typeFilePathName.split('.')[0] + '.ts';
   writeFileSync(outputFileName, outputFileContentsStr, { encoding: 'UTF-8' });
 
-  const organizeImportsPromise = promisifiedExec(
-    process.cwd() + '/node_modules/.bin/organize-imports-cli ' + outputFileName
+  const prettierPromise = promisifiedExec(
+    process.cwd() + '/node_modules/.bin/prettier --write ' + outputFileName
   );
 
-  promisifiedExecs.push(organizeImportsPromise);
-
-  organizeImportsPromise.then(() => {
-    promisifiedExecs.push(
-      promisifiedExec(process.cwd() + '/node_modules/.bin/prettier --write ' + outputFileName)
-    );
-  });
+  promisifiedExecs.push(prettierPromise);
 }
 
 (async function generateTypescriptFilesFromTypeDefinitionFiles() {

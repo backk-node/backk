@@ -586,8 +586,6 @@ S
 ,src/services/crudentity/CrudEntityService.ts,9/3/93d547a11dcc793be9c9d27720b7d4c10b344b8d
 T
 $src/remote/http/callRemoteService.ts,4/e/4e5f54640166ccdf6297f9fee279284c902e04de
-n
->src/decorators/typeproperty/typePropertyAnnotationContainer.ts,c/8/c810282510d9ae8ef1f187c69f3bc3db0d6976fb
 a
 1src/services/startup/types/entity/SampleEntity.ts,1/c/1c27cd9cd77add2229000bdc2581f5f7ad4424ee
 X
@@ -612,5 +610,3 @@ U
 %src/requestprocessor/KafkaConsumer.ts,5/4/54978fb9386e91d4df80e1e6e7893e36b797a7a4
 R
 "src/client/generateClients.spec.ts,a/6/a6fecbc0f79bc3f56abb07935443fc7a2856df5c
-<
-src/index.ts,c/5/c5fb850250c7443c48a6c12b5cf6916773da31f1

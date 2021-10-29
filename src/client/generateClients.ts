@@ -16,6 +16,7 @@ import LivenessCheckService from '../services/LivenessCheckService';
 import StartupCheckService from '../services/startup/StartupCheckService';
 import ResponseCacheConfigService from '../cache/ResponseCacheConfigService';
 import AuthorizationService from '../authorization/AuthorizationService';
+import capitalizeFirstLetter from '../utils/string/capitalizeFirstLetter';
 
 const promisifiedExec = util.promisify(exec);
 
@@ -360,7 +361,12 @@ function generateFrontendServiceFile(serviceImplFilePathName: string, execPromis
       node.declaration.body.body.forEach((classBodyNode: any) => {
         if (classBodyNode.type === 'ClassMethod') {
           const functionName = classBodyNode.key.name;
-          const argumentName = classBodyNode.params?.[0]?.name;
+
+          const argumentName =
+            classBodyNode.params?.[0]?.type === 'ObjectPattern'
+              ? capitalizeFirstLetter(classBodyNode.params?.[0]?.typeAnnotation.typeAnnotation.id.name)
+              : classBodyNode.params?.[0]?.name;
+
           const isInternalMethod = classBodyNode.decorators?.find(
             (decorator: any) =>
               decorator.expression.callee.name === 'AllowForKubeClusterInternalUse' ||
@@ -587,13 +593,13 @@ export default async function generateClients(
         ([, service]: [string, any]) =>
           service.constructor.name === serviceClassName &&
           !(
-            service instanceof AuditLoggingService ||
-            service instanceof CaptchaVerificationService ||
-            service instanceof LivenessCheckService ||
-            service instanceof ReadinessCheckService ||
-            service instanceof StartupCheckService ||
-            service instanceof ResponseCacheConfigService ||
-            service instanceof AuthorizationService
+            serviceClassName.includes('AuditLoggingService') ||
+            serviceClassName.includes('CaptchaVerificationService') ||
+            serviceClassName.includes('LivenessCheckService') ||
+            serviceClassName.includes('ReadinessCheckService') ||
+            serviceClassName.includes('StartupCheckService') ||
+            serviceClassName.includes('ResponseCacheConfigService') ||
+            serviceClassName.includes('AuthorizationService')
           )
       ) ?? [];
 

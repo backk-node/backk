@@ -1,13 +1,14 @@
 import { Dirent, existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { dirname, resolve } from 'path';
 import { parseSync } from '@babel/core';
+import { exec } from 'child_process';
+import util from 'util';
 import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
 import generate from '@babel/generator';
 import { getFileNamesRecursively } from '../utils/file/getSrcFilePathNameForTypeName';
 import getMicroserviceName from '../utils/getMicroserviceName';
 import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
 import Microservice from '../microservice/Microservice';
-import BaseService from '../services/BaseService';
 import AuditLoggingService from '../observability/logging/audit/AuditLoggingService';
 import CaptchaVerificationService from '../captcha/CaptchaVerificationService';
 import ReadinessCheckService from '../services/ReadinessCheckService';
@@ -15,6 +16,8 @@ import LivenessCheckService from '../services/LivenessCheckService';
 import StartupCheckService from '../services/startup/StartupCheckService';
 import ResponseCacheConfigService from '../cache/ResponseCacheConfigService';
 import AuthorizationService from '../authorization/AuthorizationService';
+
+const promisifiedExec = util.promisify(exec);
 
 function getInternalReturnFetchStatement(serviceName: string, functionName: string, argumentName: string) {
   return {
@@ -203,7 +206,8 @@ function getFrontendReturnFetchStatement(serviceName: string, functionName: stri
 function rewriteTypeFile(
   typeFilePathName: string,
   destTypeFilePathName: string,
-  clientType: 'frontend' | 'internal'
+  clientType: 'frontend' | 'internal',
+  execPromises: Array<Promise<any>>
 ) {
   const typeFileContentsStr = readFileSync(typeFilePathName, { encoding: 'UTF-8' });
 
@@ -222,6 +226,10 @@ function rewriteTypeFile(
     if (clientType === 'frontend' && node.type === 'ImportDeclaration' && node.source.value === 'backk') {
       needsRewrite = true;
       node.source.value = 'backk-frontend-utils';
+    }
+
+    if (node.type === 'TypeAlias') {
+      needsRewrite = true;
     }
 
     if (node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration') {
@@ -293,10 +301,16 @@ function rewriteTypeFile(
       .join('\n');
 
     writeFileSync(destTypeFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
+
+    const organizeImportsExecPromise = promisifiedExec(
+      process.cwd() + '/node_modules/.bin/organize-imports-cli ' + destTypeFilePathName
+    );
+
+    execPromises.push(organizeImportsExecPromise);
   }
 }
 
-function generateFrontendServiceFile(serviceImplFilePathName: string) {
+function generateFrontendServiceFile(serviceImplFilePathName: string, execPromises: Array<Promise<any>>) {
   const serviceImplFileContentsStr = readFileSync(serviceImplFilePathName, { encoding: 'UTF-8' });
 
   const ast = parseSync(serviceImplFileContentsStr, {
@@ -335,6 +349,7 @@ function generateFrontendServiceFile(serviceImplFilePathName: string) {
         );
       }
 
+      node.declaration.decorators = undefined;
       node.declaration.superClass = null;
       const serviceName = node.declaration.id.name[0].toLowerCase() + node.declaration.id.name.slice(1);
       if (serviceName.endsWith('Impl')) {
@@ -417,16 +432,20 @@ function generateFrontendServiceFile(serviceImplFilePathName: string) {
     })
     .join('\n');
 
-  writeFileSync(
-    destServiceImplFilePathName.endsWith('ServiceImpl.ts')
-      ? destServiceImplFilePathName.slice(0, -7) + '.ts'
-      : destServiceImplFilePathName,
-    outputFileContentsStr,
-    { encoding: 'UTF-8' }
+  const destServiceClientFilePathName = destServiceImplFilePathName.endsWith('ServiceImpl.ts')
+    ? destServiceImplFilePathName.slice(0, -7) + '.ts'
+    : destServiceImplFilePathName;
+
+  writeFileSync(destServiceClientFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
+
+  const organizeImportsExecPromise = promisifiedExec(
+    process.cwd() + '/node_modules/.bin/organize-imports-cli ' + destServiceClientFilePathName
   );
+
+  execPromises.push(organizeImportsExecPromise);
 }
 
-function generateInternalServiceFile(serviceImplFilePathName: string) {
+function generateInternalServiceFile(serviceImplFilePathName: string, execPromises: Array<Promise<any>>) {
   const serviceImplFileContentsStr = readFileSync(serviceImplFilePathName, { encoding: 'UTF-8' });
 
   const ast = parseSync(serviceImplFileContentsStr, {
@@ -448,6 +467,7 @@ function generateInternalServiceFile(serviceImplFilePathName: string) {
         );
       }
 
+      node.declaration.decorators = undefined;
       node.declaration.superClass = null;
       const serviceName = node.declaration.id.name[0].toLowerCase() + node.declaration.id.name.slice(1);
       if (serviceName.endsWith('Impl')) {
@@ -510,16 +530,20 @@ function generateInternalServiceFile(serviceImplFilePathName: string) {
     })
     .join('\n');
 
-  writeFileSync(
-    destServiceImplFilePathName.endsWith('ServiceImpl.ts')
-      ? destServiceImplFilePathName.slice(0, -7) + '.ts'
-      : destServiceImplFilePathName,
-    outputFileContentsStr,
-    { encoding: 'UTF-8' }
+  const destServiceClientFilePathName = destServiceImplFilePathName.endsWith('ServiceImpl.ts')
+    ? destServiceImplFilePathName.slice(0, -7) + '.ts'
+    : destServiceImplFilePathName;
+
+  writeFileSync(destServiceClientFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
+
+  const organizeImportsExecPromise = promisifiedExec(
+    process.cwd() + '/node_modules/.bin/organize-imports-cli ' + destServiceClientFilePathName
   );
+
+  execPromises.push(organizeImportsExecPromise);
 }
 
-export default function generateClients(
+export default async function generateClients(
   microservice: Microservice,
   publicServicesMetadata: ServiceMetadata[],
   internalServicesMetadata: ServiceMetadata[]
@@ -533,6 +557,7 @@ export default function generateClients(
     unlinkSync(generatedClientFile);
   });
 
+  const execPromises: Array<Promise<any>> = [];
   const directoryEntries = readdirSync('src/services', { withFileTypes: true });
 
   directoryEntries.forEach((directoryEntry: Dirent) => {
@@ -605,7 +630,7 @@ export default function generateClients(
             mkdirSync(frontEndDestDirPathName, { recursive: true });
           }
 
-          rewriteTypeFile(typeFilePathName, frontEndDestTypeFilePathName, 'frontend');
+          rewriteTypeFile(typeFilePathName, frontEndDestTypeFilePathName, 'frontend', execPromises);
         }
 
         if (typeName && internalTypeNames.includes(typeName)) {
@@ -620,12 +645,14 @@ export default function generateClients(
             mkdirSync(internalDestDirPathName, { recursive: true });
           }
 
-          rewriteTypeFile(typeFilePathName, internalDestTypeFilePathName, 'internal');
+          rewriteTypeFile(typeFilePathName, internalDestTypeFilePathName, 'internal', execPromises);
         }
       });
 
     const serviceImplFilePathName = resolve(serviceDirectory, serviceImplFileDirEntry.name);
-    generateFrontendServiceFile(serviceImplFilePathName);
-    generateInternalServiceFile(serviceImplFilePathName);
+    generateFrontendServiceFile(serviceImplFilePathName, execPromises);
+    generateInternalServiceFile(serviceImplFilePathName, execPromises);
   });
+
+  await Promise.all(execPromises);
 }

@@ -51,7 +51,7 @@ export default class Microservice {
       process.exit(1);
     }
 
-    initializeMicroservice(
+    await initializeMicroservice(
       this,
       this.dataStore,
       shouldGeneratePostmanIntegrationTestsOnRestartInDevEnv,

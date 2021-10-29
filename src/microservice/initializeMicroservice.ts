@@ -312,7 +312,7 @@ export function generateInternalServicesMetadata(microservice: any) {
   return microservice.internalServicesMetadata;
 }
 
-export default function initializeMicroservice(
+export default async function initializeMicroservice(
   microservice: any,
   dataStore: DataStore,
   shouldGeneratePostmanIntegrationTestsOnRestartInDevEnv: boolean,
@@ -409,7 +409,7 @@ export default function initializeMicroservice(
       }
       const publicTypeNames = microservice.publicServicesMetadata ?? generatePublicServicesMetadata(microservice);
       const internalTypeNames = microservice.internalServicesMetadata ?? generateInternalServicesMetadata(microservice);
-      generateClients(microservice, publicTypeNames, internalTypeNames);
+      await generateClients(microservice, publicTypeNames, internalTypeNames);
     }
 
     if (command === '--generateApiSpecsOnly') {

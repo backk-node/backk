@@ -235,6 +235,10 @@ function rewriteTypeFile(
     }
 
     if (node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration') {
+      if (node.declaration?.type === 'TypeAlias') {
+        needsRewrite = true;
+        continue;
+      }
       const classBodyNodes: any[] = [];
       node.declaration.decorators = [];
       node.declaration.body.body.forEach((classBodyNode: any) => {

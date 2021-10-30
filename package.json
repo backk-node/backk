@@ -38,7 +38,7 @@
     "mongodb"
   ],
   "scripts": {
-    "prebuild": "rimraf lib && copyfiles -f \"./src/types/**/*.ts\" lib/src && copyfiles -f \"src/services/**/*Service.ts\" lib/src",
+    "prebuild": "rimraf lib && copyfiles -f \"./src/types/**/*.ts\" lib/src && copyfiles -f \"src/services/**/*ServiceImpl.ts\" lib/src",
     "build": "tsc -p tsconfig.json",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint ./src --ext .ts",

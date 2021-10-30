@@ -347,7 +347,7 @@ export default async function initializeMicroservice(
     if (serviceName === 'metadataService') {
       throw new Error('metadataService is a reserved internal service name.');
     }
-    
+
     const [
       serviceDocumentation,
       functionNameToParamTypeNameMap,

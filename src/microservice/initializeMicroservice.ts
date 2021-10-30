@@ -343,11 +343,11 @@ export default async function initializeMicroservice(
     }
   }
 
-  serviceNameToServiceEntries.forEach(([serviceName]: [string, any]) => {
+  serviceNameToServiceEntries.forEach(([serviceName, service]: [string, any]) => {
     if (serviceName === 'metadataService') {
       throw new Error('metadataService is a reserved internal service name.');
     }
-
+    
     const [
       serviceDocumentation,
       functionNameToParamTypeNameMap,
@@ -357,7 +357,7 @@ export default async function initializeMicroservice(
       microservice[serviceName].constructor,
       serviceName,
       getSrcFilePathNameForTypeName(
-        serviceName.charAt(0).toUpperCase() + serviceName.slice(1),
+        service.constructor.name,
         remoteServiceRootDir
       ),
       remoteServiceRootDir

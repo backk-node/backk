@@ -16,7 +16,7 @@ import LivenessCheckService from '../services/LivenessCheckService';
 import StartupCheckService from '../services/startup/StartupCheckService';
 import ResponseCacheConfigService from '../cache/ResponseCacheConfigService';
 import AuthorizationService from '../authorization/AuthorizationService';
-import capitalizeFirstLetter from '../utils/string/capitalizeFirstLetter';
+import decapitalizeFirstLetter from '../utils/string/decapitalizeFirstLetter';
 
 const promisifiedExec = util.promisify(exec);
 
@@ -357,7 +357,7 @@ function generateFrontendServiceFile(serviceImplFilePathName: string, execPromis
 
           const argumentName =
             classBodyNode.params?.[0]?.type === 'ObjectPattern'
-              ? capitalizeFirstLetter(classBodyNode.params?.[0]?.typeAnnotation.typeAnnotation.id.name)
+              ? decapitalizeFirstLetter(classBodyNode.params?.[0]?.typeAnnotation.typeAnnotation.id.name)
               : classBodyNode.params?.[0]?.name;
 
           const isInternalMethod = classBodyNode.decorators?.find(

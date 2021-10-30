@@ -35,7 +35,7 @@ export default function parseServiceFunctionNameToArgAndReturnTypeNameMaps(
 
       for (const classBodyNode of node.declaration.body.body) {
         if (classBodyNode.type === 'TSDeclareMethod' || classBodyNode.type === 'ClassMethod') {
-          if (classBodyNode.accessibility === 'private' || classBodyNode.accessibility === 'protected') {
+          if (classBodyNode.key.name === 'constructor' || classBodyNode.accessibility === 'private' || classBodyNode.accessibility === 'protected') {
             // noinspection ContinueStatementJS
             continue;
           }

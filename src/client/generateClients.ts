@@ -1,22 +1,15 @@
-import { Dirent, existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
-import { dirname, resolve } from 'path';
 import { parseSync } from '@babel/core';
-import { exec } from 'child_process';
-import util from 'util';
-import rimraf from 'rimraf';
-import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
 import generate from '@babel/generator';
-import { getFileNamesRecursively } from '../utils/file/getSrcFilePathNameForTypeName';
-import getMicroserviceName from '../utils/getMicroserviceName';
+import { exec } from 'child_process';
+import { Dirent, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs';
+import { dirname, resolve } from 'path';
+import rimraf from 'rimraf';
+import util from 'util';
 import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
 import Microservice from '../microservice/Microservice';
-import AuditLoggingService from '../observability/logging/audit/AuditLoggingService';
-import CaptchaVerificationService from '../captcha/CaptchaVerificationService';
-import ReadinessCheckService from '../services/ReadinessCheckService';
-import LivenessCheckService from '../services/LivenessCheckService';
-import StartupCheckService from '../services/startup/StartupCheckService';
-import ResponseCacheConfigService from '../cache/ResponseCacheConfigService';
-import AuthorizationService from '../authorization/AuthorizationService';
+import { getFileNamesRecursively } from '../utils/file/getSrcFilePathNameForTypeName';
+import getMicroserviceName from '../utils/getMicroserviceName';
+import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
 import decapitalizeFirstLetter from '../utils/string/decapitalizeFirstLetter';
 
 const promisifiedExec = util.promisify(exec);
@@ -58,149 +51,163 @@ function getFrontendReturnFetchStatement(serviceName: string, functionName: stri
     argument: {
       type: 'CallExpression',
       callee: {
-        type: 'Identifier',
-        name: 'fetch'
-      },
-      arguments: [
-        {
-          type: 'TemplateLiteral',
-          expressions: [
+        type: 'MemberExpression',
+        object: {
+          type: 'CallExpression',
+          callee: {
+            type: 'Identifier',
+            name: 'fetch'
+          },
+          arguments: [
             {
-              type: 'MemberExpression',
-              object: {
-                type: 'MemberExpression',
-                object: {
-                  type: 'Identifier',
-                  name: 'window'
-                },
-                computed: false,
-                property: {
-                  type: 'Identifier',
-                  name: 'location'
-                }
-              },
-              computed: false,
-              property: {
-                type: 'Identifier',
-                name: 'host'
-              }
-            }
-          ],
-          quasis: [
-            {
-              type: 'TemplateElement',
-              value: {
-                raw: 'https://',
-                cooked: 'https://'
-              },
-              tail: false
-            },
-            {
-              type: 'TemplateElement',
-              value: {
-                raw: `/${getNamespacedMicroserviceName()}/${serviceName}.${functionName}`,
-                cooked: `/${getNamespacedMicroserviceName()}/${serviceName}.${functionName}`
-              },
-              tail: true
-            }
-          ]
-        },
-        {
-          type: 'ObjectExpression',
-          properties: [
-            {
-              type: 'ObjectProperty',
-              method: false,
-              key: {
-                type: 'Identifier',
-                name: 'method'
-              },
-              computed: false,
-              shorthand: false,
-              value: {
-                type: 'StringLiteral',
-                extra: {
-                  rawValue: 'post',
-                  raw: "'post'"
-                },
-                value: 'post'
-              }
-            },
-            ...(argumentName
-              ? [
-                  {
-                    type: 'ObjectProperty',
-                    method: false,
-                    key: {
+              type: 'TemplateLiteral',
+              expressions: [
+                {
+                  type: 'MemberExpression',
+                  object: {
+                    type: 'MemberExpression',
+                    object: {
                       type: 'Identifier',
-                      name: 'body'
+                      name: 'window'
                     },
                     computed: false,
-                    shorthand: false,
-                    value: {
-                      type: 'CallExpression',
-                      callee: {
-                        type: 'MemberExpression',
-                        object: {
-                          type: 'Identifier',
-                          name: 'JSON'
+                    property: {
+                      type: 'Identifier',
+                      name: 'location'
+                    }
+                  },
+                  computed: false,
+                  property: {
+                    type: 'Identifier',
+                    name: 'host'
+                  }
+                }
+              ],
+              quasis: [
+                {
+                  type: 'TemplateElement',
+                  value: {
+                    raw: 'https://',
+                    cooked: 'https://'
+                  },
+                  tail: false
+                },
+                {
+                  type: 'TemplateElement',
+                  value: {
+                    raw: `/${getNamespacedMicroserviceName()}/${serviceName}.${functionName}`,
+                    cooked: `/${getNamespacedMicroserviceName()}/${serviceName}.${functionName}`
+                  },
+                  tail: true
+                }
+              ]
+            },
+            {
+              type: 'ObjectExpression',
+              properties: [
+                {
+                  type: 'ObjectProperty',
+                  method: false,
+                  key: {
+                    type: 'Identifier',
+                    name: 'method'
+                  },
+                  computed: false,
+                  shorthand: false,
+                  value: {
+                    type: 'StringLiteral',
+                    extra: {
+                      rawValue: 'post',
+                      raw: "'post'"
+                    },
+                    value: 'post'
+                  }
+                },
+                ...(argumentName
+                  ? [
+                    {
+                      type: 'ObjectProperty',
+                      method: false,
+                      key: {
+                        type: 'Identifier',
+                        name: 'body'
+                      },
+                      computed: false,
+                      shorthand: false,
+                      value: {
+                        type: 'CallExpression',
+                        callee: {
+                          type: 'MemberExpression',
+                          object: {
+                            type: 'Identifier',
+                            name: 'JSON'
+                          },
+                          computed: false,
+                          property: {
+                            type: 'Identifier',
+                            name: 'stringify'
+                          }
+                        },
+                        arguments: [
+                          {
+                            type: 'Identifier',
+                            name: argumentName
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                  : []),
+                {
+                  type: 'ObjectProperty',
+                  method: false,
+                  key: {
+                    type: 'Identifier',
+                    name: 'headers'
+                  },
+                  computed: false,
+                  shorthand: false,
+                  value: {
+                    type: 'ObjectExpression',
+                    properties: [
+                      {
+                        type: 'ObjectProperty',
+                        method: false,
+                        key: {
+                          type: 'StringLiteral',
+                          extra: {
+                            rawValue: 'Content-Type',
+                            raw: "'Content-Type'"
+                          },
+                          value: 'Content-Type'
                         },
                         computed: false,
-                        property: {
-                          type: 'Identifier',
-                          name: 'stringify'
+                        shorthand: false,
+                        value: {
+                          type: 'StringLiteral',
+                          extra: {
+                            rawValue: 'application/json',
+                            raw: "'application/json'"
+                          },
+                          value: 'application/json'
                         }
-                      },
-                      arguments: [
-                        {
-                          type: 'Identifier',
-                          name: argumentName
-                        }
-                      ]
-                    }
+                      }
+                    ]
                   }
-                ]
-              : []),
-            {
-              type: 'ObjectProperty',
-              method: false,
-              key: {
-                type: 'Identifier',
-                name: 'headers'
-              },
-              computed: false,
-              shorthand: false,
-              value: {
-                type: 'ObjectExpression',
-                properties: [
-                  {
-                    type: 'ObjectProperty',
-                    method: false,
-                    key: {
-                      type: 'StringLiteral',
-                      extra: {
-                        rawValue: 'Content-Type',
-                        raw: "'Content-Type'"
-                      },
-                      value: 'Content-Type'
-                    },
-                    computed: false,
-                    shorthand: false,
-                    value: {
-                      type: 'StringLiteral',
-                      extra: {
-                        rawValue: 'application/json',
-                        raw: "'application/json'"
-                      },
-                      value: 'application/json'
-                    }
-                  }
-                ]
-              }
+                }
+              ]
             }
-          ]
-        }
-      ]
+          ],
+          optional: false
+        },
+        computed: false,
+        property: {
+          type: 'Identifier',
+          name: 'json',
+        },
+        optional: false
+      },
+      arguments: []
     }
   };
 }
@@ -380,7 +387,8 @@ function generateFrontendServiceFile(serviceImplFilePathName: string, execPromis
             classBodyNode.accessibility === 'private' ||
             classBodyNode.accessibility === 'protected' ||
             classBodyNode.static ||
-            isInternalMethod || isInternalService && !classBodyNode.decorators
+            isInternalMethod ||
+            (isInternalService && !classBodyNode.decorators)
           ) {
             return;
           }
@@ -390,8 +398,8 @@ function generateFrontendServiceFile(serviceImplFilePathName: string, execPromis
             classBodyNode.params[0] = {
               type: 'Identifier',
               name: argumentName,
-              typeAnnotation:  classBodyNode.params[0].typeAnnotation
-            }
+              typeAnnotation: classBodyNode.params[0].typeAnnotation
+            };
           }
           classBodyNode.async = false;
           classBodyNode.decorators = [];
@@ -523,8 +531,8 @@ function generateInternalServiceFile(serviceImplFilePathName: string, execPromis
             classBodyNode.params[0] = {
               type: 'Identifier',
               name: argumentName,
-              typeAnnotation:  classBodyNode.params[0].typeAnnotation
-            }
+              typeAnnotation: classBodyNode.params[0].typeAnnotation
+            };
           }
           classBodyNode.async = false;
           classBodyNode.decorators = [];

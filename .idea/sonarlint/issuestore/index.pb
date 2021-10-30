@@ -119,8 +119,6 @@ J
 src/errors/isBackkError.ts,b/e/be9946fedd9e6a796526ab143d7faed978620ccb
 R
 "src/utils/type/isEntityTypeName.ts,7/7/77f233f9d8aa69d2a30a0f26909118a0d6ec4618
-P
- src/utils/type/isEnumTypeName.ts,4/a/4ab0347d80ba81424f175eac0980b52258bb8502
 X
 (src/utils/type/getTypeInfoForTypeName.ts,5/a/5a598c1f84dcd1f73f8f2a53b13cf1449483a796
 ]
@@ -555,8 +553,6 @@ a
 1src/datastore/sql/operations/dql/getEntityById.ts,8/b/8b15ab504106c0c8ce4fd49312dd90de15d5b496
 f
 6src/datastore/sql/operations/ddl/initializeDatabase.ts,0/e/0ea45dd67226acec248fa09323994e71c3fb19b3
-c
-3src/typescript/parser/parseEnumValuesFromSrcFile.ts,0/b/0b73f87f9e7724615b646f10c621dcaa09e49382
 d
 4src/typescript/generator/generateClassFromSrcFile.ts,e/d/edbef0467980c046ac9523e4666f2b29c01d50b0
 B

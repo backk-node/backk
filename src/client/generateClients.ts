@@ -3,6 +3,7 @@ import { dirname, resolve } from 'path';
 import { parseSync } from '@babel/core';
 import { exec } from 'child_process';
 import util from 'util';
+import rimraf from 'rimraf';
 import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
 import generate from '@babel/generator';
 import { getFileNamesRecursively } from '../utils/file/getSrcFilePathNameForTypeName';
@@ -562,11 +563,7 @@ export default async function generateClients(
     return;
   }
 
-  const generatedClientsFiles = getFileNamesRecursively('generated/clients');
-  generatedClientsFiles.forEach((generatedClientFile) => {
-    unlinkSync(generatedClientFile);
-  });
-
+  rimraf.sync('generated/clients');
   const execPromises: Array<Promise<any>> = [];
   const directoryEntries = readdirSync('src/services', { withFileTypes: true });
 

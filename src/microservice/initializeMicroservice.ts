@@ -354,8 +354,7 @@ export default async function initializeMicroservice(
       functionNameToReturnTypeNameMap,
       functionNameToDocumentationMap
     ] = parseServiceFunctionNameToArgAndReturnTypeNameMaps(
-      microservice[serviceName].constructor,
-      serviceName,
+      service.constructor,
       getSrcFilePathNameForTypeName(
         service.constructor.name,
         remoteServiceRootDir

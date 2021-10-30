@@ -5,7 +5,6 @@ import serviceFunctionAnnotationContainer from '../../decorators/service/functio
 
 export default function parseServiceFunctionNameToArgAndReturnTypeNameMaps(
   ServiceClass: Function,
-  serviceName: string,
   serviceFileName: string,
   remoteServiceRootDir = ''
 ): [string | undefined, { [key: string]: string }, { [key: string]: string }, { [key: string]: string }] {
@@ -20,7 +19,6 @@ export default function parseServiceFunctionNameToArgAndReturnTypeNameMaps(
     ]
   });
 
-  const serviceClassName = serviceName.charAt(0).toUpperCase() + serviceName.slice(1);
   const functionNameToFunctionArgumentTypeNameMap: { [key: string]: string } = {};
   const functionNameToFunctionReturnValueTypeNameMap: { [key: string]: string } = {};
   let serviceDocumentation;
@@ -31,7 +29,7 @@ export default function parseServiceFunctionNameToArgAndReturnTypeNameMaps(
     if (
       node.type === 'ExportDefaultDeclaration' &&
       node.declaration.type === 'ClassDeclaration' &&
-      node.declaration.id.name === serviceClassName
+      node.declaration.id.name === ServiceClass.name
     ) {
       serviceDocumentation = node.leadingComments?.[0].value;
 
@@ -52,7 +50,7 @@ export default function parseServiceFunctionNameToArgAndReturnTypeNameMaps(
                 functionName
               )
             ) {
-              throw new Error(serviceName + '.' + functionName + ': there can be only one input argument');
+              throw new Error(ServiceClass.name + '.' + functionName + ': there can be only one input argument');
             }
 
             if (
@@ -82,7 +80,7 @@ export default function parseServiceFunctionNameToArgAndReturnTypeNameMaps(
             ) {
               console.log(fileRows[functionArgumentTypeNameStart.line - 1])
               throw new Error(
-                serviceName + '.' + functionName + ': input argument type must be a user-defined class type'
+                ServiceClass.name + '.' + functionName + ': input argument type must be a user-defined class type'
               );
             }
 

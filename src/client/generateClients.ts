@@ -357,7 +357,7 @@ function generateFrontendServiceFile(serviceImplFilePathName: string, execPromis
 
           const argumentName =
             classBodyNode.params?.[0]?.type === 'ObjectPattern'
-              ? decapitalizeFirstLetter(classBodyNode.params?.[0]?.typeAnnotation.typeAnnotation.id.name)
+              ? decapitalizeFirstLetter(classBodyNode.params[0].typeAnnotation.typeAnnotation.typeName.name)
               : classBodyNode.params?.[0]?.name;
 
           const isInternalMethod = classBodyNode.decorators?.find(

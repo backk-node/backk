@@ -324,6 +324,7 @@ function generateFrontendServiceFile(serviceImplFilePathName: string, execPromis
 
   const nodes = (ast as any).program.body;
   const functionNames: string[] = [];
+  let methodCount = 0;
 
   for (const node of nodes) {
     if (node.type === 'ImportDeclaration' && node.source.value === 'backk') {
@@ -331,17 +332,9 @@ function generateFrontendServiceFile(serviceImplFilePathName: string, execPromis
     }
 
     if (node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration') {
-      if (
-        node.declaration.decorators?.find(
-          (decorator: any) => decorator.expression.callee.name === 'AllowServiceForKubeClusterInternalUse'
-        )
-      ) {
-        const destServiceImplFilePathName = serviceImplFilePathName.replace(
-          /src\/services/,
-          'generated/clients/frontend/' + getNamespacedMicroserviceName()
-        );
-        unlinkSync(destServiceImplFilePathName);
-      }
+      const isInternalService = node.declaration.decorators?.find(
+        (decorator: any) => decorator.expression.callee.name === 'AllowServiceForKubeClusterInternalUse'
+      );
 
       if (node.declaration.type !== 'ClassDeclaration') {
         throw new Error(
@@ -381,7 +374,7 @@ function generateFrontendServiceFile(serviceImplFilePathName: string, execPromis
             classBodyNode.accessibility === 'private' ||
             classBodyNode.accessibility === 'protected' ||
             classBodyNode.static ||
-            isInternalMethod
+            isInternalMethod || isInternalService && !classBodyNode.decorators
           ) {
             return;
           }
@@ -395,6 +388,7 @@ function generateFrontendServiceFile(serviceImplFilePathName: string, execPromis
           };
 
           methods.push(classBodyNode);
+          methodCount++;
         }
       });
 
@@ -402,53 +396,55 @@ function generateFrontendServiceFile(serviceImplFilePathName: string, execPromis
     }
   }
 
-  const code = generate(ast as any).code;
-  const destServiceImplFilePathName = serviceImplFilePathName.replace(
-    /src\/services/,
-    'generated/clients/frontend/' + getNamespacedMicroserviceName()
-  );
+  if (methodCount > 0) {
+    const code = generate(ast as any).code;
+    const destServiceImplFilePathName = serviceImplFilePathName.replace(
+      /src\/services/,
+      'generated/clients/frontend/' + getNamespacedMicroserviceName()
+    );
 
-  const frontEndDestDirPathName = dirname(destServiceImplFilePathName);
-  if (!existsSync(frontEndDestDirPathName)) {
-    mkdirSync(frontEndDestDirPathName, { recursive: true });
+    const frontEndDestDirPathName = dirname(destServiceImplFilePathName);
+    if (!existsSync(frontEndDestDirPathName)) {
+      mkdirSync(frontEndDestDirPathName, { recursive: true });
+    }
+
+    let outputFileContentsStr = '// DO NOT MODIFY THIS FILE! This is an auto-generated file' + '\n' + code;
+    let isFirstFunction = true;
+
+    outputFileContentsStr = outputFileContentsStr
+      .split('\n')
+      .map((outputFileLine) => {
+        if (
+          !isFirstFunction &&
+          functionNames.some((functionName) => outputFileLine.includes(functionName)) &&
+          outputFileLine.includes(': PromiseErrorOr<') &&
+          outputFileLine.endsWith('}')
+        ) {
+          return '\n' + outputFileLine;
+        }
+
+        if (outputFileLine.startsWith('export default class') || outputFileLine.startsWith('export class')) {
+          return '\n' + outputFileLine;
+        }
+
+        // noinspection ReuseOfLocalVariableJS
+        isFirstFunction = false;
+        return outputFileLine;
+      })
+      .join('\n');
+
+    const destServiceClientFilePathName = destServiceImplFilePathName.endsWith('ServiceImpl.ts')
+      ? destServiceImplFilePathName.slice(0, -7) + '.ts'
+      : destServiceImplFilePathName;
+
+    writeFileSync(destServiceClientFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
+
+    const organizeImportsExecPromise = promisifiedExec(
+      process.cwd() + '/node_modules/.bin/prettier --write ' + destServiceClientFilePathName
+    );
+
+    execPromises.push(organizeImportsExecPromise);
   }
-
-  let outputFileContentsStr = '// DO NOT MODIFY THIS FILE! This is an auto-generated file' + '\n' + code;
-  let isFirstFunction = true;
-
-  outputFileContentsStr = outputFileContentsStr
-    .split('\n')
-    .map((outputFileLine) => {
-      if (
-        !isFirstFunction &&
-        functionNames.some((functionName) => outputFileLine.includes(functionName)) &&
-        outputFileLine.includes(': PromiseErrorOr<') &&
-        outputFileLine.endsWith('}')
-      ) {
-        return '\n' + outputFileLine;
-      }
-
-      if (outputFileLine.startsWith('export default class') || outputFileLine.startsWith('export class')) {
-        return '\n' + outputFileLine;
-      }
-
-      // noinspection ReuseOfLocalVariableJS
-      isFirstFunction = false;
-      return outputFileLine;
-    })
-    .join('\n');
-
-  const destServiceClientFilePathName = destServiceImplFilePathName.endsWith('ServiceImpl.ts')
-    ? destServiceImplFilePathName.slice(0, -7) + '.ts'
-    : destServiceImplFilePathName;
-
-  writeFileSync(destServiceClientFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
-
-  const organizeImportsExecPromise = promisifiedExec(
-    process.cwd() + '/node_modules/.bin/prettier --write ' + destServiceClientFilePathName
-  );
-
-  execPromises.push(organizeImportsExecPromise);
 }
 
 function generateInternalServiceFile(serviceImplFilePathName: string, execPromises: Array<Promise<any>>) {
@@ -463,6 +459,7 @@ function generateInternalServiceFile(serviceImplFilePathName: string, execPromis
   });
 
   const nodes = (ast as any).program.body;
+  let methodCount = 0;
 
   for (const node of nodes) {
     if (node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration') {
@@ -473,6 +470,9 @@ function generateInternalServiceFile(serviceImplFilePathName: string, execPromis
         );
       }
 
+      const isInternalService = node.declaration.decorators?.find(
+        (decorator: any) => decorator.expression.callee.name === 'AllowServiceForKubeClusterInternalUse'
+      );
       node.declaration.decorators = undefined;
       node.declaration.superClass = null;
       const serviceName = node.declaration.id.name[0].toLowerCase() + node.declaration.id.name.slice(1);
@@ -486,7 +486,8 @@ function generateInternalServiceFile(serviceImplFilePathName: string, execPromis
           const functionName = classBodyNode.key.name;
           const argumentName = classBodyNode.params?.[0]?.name;
           const isInternalMethod = classBodyNode.decorators?.find(
-            (decorator: any) => decorator.expression.callee.name === 'AllowForKubeClusterInternalUse'
+            (decorator: any) =>
+              isInternalService || decorator.expression.callee.name === 'AllowForKubeClusterInternalUse'
           );
 
           if (
@@ -506,6 +507,7 @@ function generateInternalServiceFile(serviceImplFilePathName: string, execPromis
             body: [getInternalReturnFetchStatement(serviceName, functionName, argumentName)]
           };
           methods.push(classBodyNode);
+          methodCount++;
         }
       });
 
@@ -513,40 +515,42 @@ function generateInternalServiceFile(serviceImplFilePathName: string, execPromis
     }
   }
 
-  const code = generate(ast as any).code;
-  const destServiceImplFilePathName = serviceImplFilePathName.replace(
-    /src\/services/,
-    'generated/clients/internal/' + getNamespacedMicroserviceName()
-  );
+  if (methodCount > 0) {
+    const code = generate(ast as any).code;
+    const destServiceImplFilePathName = serviceImplFilePathName.replace(
+      /src\/services/,
+      'generated/clients/internal/' + getNamespacedMicroserviceName()
+    );
 
-  const internalDestDirPathName = dirname(destServiceImplFilePathName);
-  if (!existsSync(internalDestDirPathName)) {
-    mkdirSync(internalDestDirPathName, { recursive: true });
+    const internalDestDirPathName = dirname(destServiceImplFilePathName);
+    if (!existsSync(internalDestDirPathName)) {
+      mkdirSync(internalDestDirPathName, { recursive: true });
+    }
+
+    let outputFileContentsStr = '// DO NOT MODIFY THIS FILE! This is an auto-generated file' + '\n' + code;
+
+    outputFileContentsStr = outputFileContentsStr
+      .split('\n')
+      .map((outputFileLine) => {
+        if (outputFileLine.startsWith('export default class') || outputFileLine.startsWith('export class')) {
+          return '\n' + outputFileLine;
+        }
+        return outputFileLine;
+      })
+      .join('\n');
+
+    const destServiceClientFilePathName = destServiceImplFilePathName.endsWith('ServiceImpl.ts')
+      ? destServiceImplFilePathName.slice(0, -7) + '.ts'
+      : destServiceImplFilePathName;
+
+    writeFileSync(destServiceClientFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
+
+    const organizeImportsExecPromise = promisifiedExec(
+      process.cwd() + '/node_modules/.bin/prettier --write ' + destServiceClientFilePathName
+    );
+
+    execPromises.push(organizeImportsExecPromise);
   }
-
-  let outputFileContentsStr = '// DO NOT MODIFY THIS FILE! This is an auto-generated file' + '\n' + code;
-
-  outputFileContentsStr = outputFileContentsStr
-    .split('\n')
-    .map((outputFileLine) => {
-      if (outputFileLine.startsWith('export default class') || outputFileLine.startsWith('export class')) {
-        return '\n' + outputFileLine;
-      }
-      return outputFileLine;
-    })
-    .join('\n');
-
-  const destServiceClientFilePathName = destServiceImplFilePathName.endsWith('ServiceImpl.ts')
-    ? destServiceImplFilePathName.slice(0, -7) + '.ts'
-    : destServiceImplFilePathName;
-
-  writeFileSync(destServiceClientFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
-
-  const organizeImportsExecPromise = promisifiedExec(
-    process.cwd() + '/node_modules/.bin/prettier --write ' + destServiceClientFilePathName
-  );
-
-  execPromises.push(organizeImportsExecPromise);
 }
 
 export default async function generateClients(
@@ -617,7 +621,7 @@ export default async function generateClients(
     );
     const internalTypeNames = Object.keys(foundInternalServiceMetadata?.types ?? []);
 
-    const typeFilePathNames = getFileNamesRecursively(serviceDirectory + '/types');
+    const typeFilePathNames = getFileNamesRecursively(serviceDirectory);
     typeFilePathNames
       .filter((typeFilePathName) => typeFilePathName.endsWith('.ts'))
       .forEach((typeFilePathName) => {

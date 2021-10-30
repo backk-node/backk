@@ -120,7 +120,7 @@ export default class NullDataStore extends AbstractDataStore {
   }
 
   tryReserveDbConnectionFromPool(): Promise<void> {
-    throw new Error('Not implemented');
+    return Promise.resolve(undefined);
   }
 
   updateEntity<T extends BackkEntity>(): PromiseErrorOr<null> {

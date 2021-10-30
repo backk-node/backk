@@ -112,7 +112,7 @@ export default async function addSimpleSubEntitiesOrValuesByFilters<
   }
 
   await client
-    .db(dataStore.dbName)
+    .db(dataStore.getDbName())
     .collection(EntityClass.name.toLowerCase())
     .updateOne(matchExpression, {
       ...versionUpdate,

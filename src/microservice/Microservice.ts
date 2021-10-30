@@ -1,4 +1,4 @@
-import DataStore from '../datastore/DataStore';
+import { DataStore } from '../datastore/DataStore';
 import log, { Severity } from '../observability/logging/log';
 import initializeMicroservice from './initializeMicroservice';
 import changePackageJsonNameProperty from '../utils/changePackageJsonNameProperty';

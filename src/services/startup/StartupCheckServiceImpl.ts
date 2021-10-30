@@ -1,4 +1,4 @@
-import DataStore from "../../datastore/DataStore";
+import { DataStore } from "../../datastore/DataStore";
 import StartupCheckService from "./StartupCheckService";
 import createBackkErrorFromErrorMessageAndStatusCode
   from "../../errors/createBackkErrorFromErrorMessageAndStatusCode";

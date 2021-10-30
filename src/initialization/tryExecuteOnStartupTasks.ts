@@ -1,4 +1,4 @@
-import DataStore from "../datastore/DataStore";
+import { DataStore } from "../datastore/DataStore";
 import BaseService from "../services/BaseService";
 import forEachAsyncSequential from "../utils/forEachAsyncSequential";
 import serviceFunctionAnnotationContainer

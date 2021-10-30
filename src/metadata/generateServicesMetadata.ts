@@ -8,7 +8,7 @@ import getTypeDocumentation from './getTypeDocumentation';
 import getTypePropertyAccessType from './getTypePropertyAccessType';
 import CrudEntityService from '../services/crudentity/CrudEntityService';
 import assertFunctionNamesAreValidForCrudEntityService from '../services/crudentity/assertFunctionNamesAreValidForCrudEntityService';
-import DataStore from '../datastore/DataStore';
+import { DataStore } from '../datastore/DataStore';
 import entityAnnotationContainer from '../decorators/entity/entityAnnotationContainer';
 import isCreateFunction from '../services/crudentity/utils/isCreateFunction';
 import { ErrorNameToErrorDefinitionMap } from "../types/ErrorDefinition";

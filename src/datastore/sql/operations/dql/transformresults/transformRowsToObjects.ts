@@ -6,7 +6,7 @@ import removeSingleSubEntitiesWithNullProperties from './removeSingleSubEntities
 import { PostQueryOperations } from '../../../../../types/postqueryoperations/PostQueryOperations';
 import Pagination from '../../../../../types/postqueryoperations/Pagination';
 import convertTinyIntegersToBooleans from './convertTinyIntegersToBooleans';
-import DataStore from '../../../../DataStore';
+import { DataStore } from '../../../../DataStore';
 import { Values } from "../../../../../constants/constants";
 import EntityCountRequest from "../../../../../types/EntityCountRequest";
 

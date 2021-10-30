@@ -1,4 +1,4 @@
-import DataStore from '../../../../DataStore';
+import { DataStore } from '../../../../DataStore';
 import getMaxLengthValidationConstraint from '../../../../../validation/getMaxLengthValidationConstraint';
 import typePropertyAnnotationContainer from '../../../../../decorators/typeproperty/typePropertyAnnotationContainer';
 

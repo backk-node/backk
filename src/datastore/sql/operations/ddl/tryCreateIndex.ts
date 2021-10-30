@@ -1,4 +1,4 @@
-import DataStore from '../../../DataStore';
+import { DataStore } from '../../../DataStore';
 import entityAnnotationContainer from '../../../../decorators/entity/entityAnnotationContainer';
 
 export default async function tryCreateIndex(

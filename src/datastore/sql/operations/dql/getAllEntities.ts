@@ -70,7 +70,7 @@ export default async function getAllEntities<T extends BackkEntity>(
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
     const whereClause =
       userAccountIdFieldName && userAccountId !== undefined
-        ? ` WHERE ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()}.${userAccountIdFieldName} = ${dataStore.getValuePlaceholder(
+        ? ` WHERE ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase()}.${userAccountIdFieldName} = ${dataStore.getValuePlaceholder(
           1
         )}`
         : '';
@@ -78,7 +78,7 @@ export default async function getAllEntities<T extends BackkEntity>(
     const selectStatement = [
       `SELECT ${columns} FROM (SELECT *${
           shouldReturnRootEntityCount ? ', COUNT(*) OVER() AS _count' : ''
-        } FROM ${dataStore.schema}.${tableName}${whereClause}`,
+        } FROM ${dataStore.getSchema()}.${tableName}${whereClause}`,
       rootSortClause,
       rootPaginationClause,
       `) AS "${tableAlias}"`,

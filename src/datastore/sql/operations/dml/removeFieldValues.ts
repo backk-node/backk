@@ -70,7 +70,7 @@ export default async function removeFieldValues<T extends BackkEntity>(
 
     promises.push(
       forEachAsyncParallel(fieldValues, async (fieldValue: any) => {
-        const deleteStatement = `DELETE FROM ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase() +
+        const deleteStatement = `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase() +
           '_' +
           fieldName
             .slice(0, -1)
@@ -102,7 +102,7 @@ export default async function removeFieldValues<T extends BackkEntity>(
       .join(', ');
 
     if (setStatements) {
-      let sqlStatement = `UPDATE ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()} SET ${setStatements}`;
+      let sqlStatement = `UPDATE ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase()} SET ${setStatements}`;
 
       if (numericId !== undefined) {
         sqlStatement += ` WHERE _id = ${dataStore.getValuePlaceholder(columns.length + 1)}`;

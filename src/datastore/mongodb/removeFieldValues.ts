@@ -62,7 +62,7 @@ export default async function removeFieldValues<T extends BackkEntity>(
       }
 
       await client
-        .db(dataStore.dbName)
+        .db(dataStore.getDbName())
         .collection(EntityClass.name.toLowerCase())
         .updateOne(
           { _id: new ObjectId(_id) },

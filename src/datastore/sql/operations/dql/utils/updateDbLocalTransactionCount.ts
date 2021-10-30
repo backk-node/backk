@@ -1,4 +1,4 @@
-import DataStore from "../../../../DataStore";
+import { DataStore } from "../../../../DataStore";
 import { getNamespace } from "cls-hooked";
 
 export default function updateDbLocalTransactionCount(dataStore: DataStore) {

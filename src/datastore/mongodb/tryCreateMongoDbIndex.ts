@@ -24,7 +24,7 @@ export default async function tryCreateMongoDbIndex(
 
   await dataStore.tryExecute(false, async (client) => {
     await client
-      .db(dataStore.dbName)
+      .db(dataStore.getDbName())
       .createIndex(collectionName,
         indexFields.reduce(
           (indexFieldsSpec, indexField, index) => ({

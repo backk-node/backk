@@ -1,4 +1,4 @@
-import DataStore from "../datastore/DataStore";
+import { DataStore } from "../datastore/DataStore";
 import { CronJob } from "cron";
 import findAsyncSequential from "../utils/findAsyncSequential";
 import wait from "../utils/wait";

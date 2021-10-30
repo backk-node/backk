@@ -116,7 +116,7 @@ export { default as UpdateOnly } from './decorators/typeproperty/access/UpdateOn
 export { default as registerCustomDecorator } from './decorators/registerCustomDecorator';
 
 // Data store
-export { default as DataStore } from './datastore/DataStore';
+export { DataStore } from './datastore/DataStore';
 export { default as MongoDbDataStore } from './datastore/MongoDbDataStore';
 export { default as MySqlDataStore } from './datastore/MySqlDataStore';
 export { default as PostgreSqlDataStore } from './datastore/PostgreSqlDataStore';

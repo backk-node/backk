@@ -132,7 +132,7 @@ export default async function createEntity<T extends BackkEntity>(
       .join(', ');
 
     const getIdSqlStatement = dataStore.getReturningIdClause('_id');
-    sqlStatement = `INSERT INTO ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()} (${sqlColumns}) VALUES (${sqlValuePlaceholders}) ${getIdSqlStatement}`;
+    sqlStatement = `INSERT INTO ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase()} (${sqlColumns}) VALUES (${sqlValuePlaceholders}) ${getIdSqlStatement}`;
     const result = await dataStore.tryExecuteQuery(sqlStatement, values);
     const _id = dataStore.getInsertId(result, '_id')?.toString();
 
@@ -156,7 +156,7 @@ export default async function createEntity<T extends BackkEntity>(
               } = entityAnnotationContainer.getManyToManyRelationTableSpec(associationTableName);
 
               await dataStore.tryExecuteSql(
-                `INSERT INTO ${dataStore.schema.toLowerCase()}.${associationTableName.toLowerCase()} (${entityForeignIdFieldName.toLowerCase()}, ${subEntityForeignIdFieldName.toLowerCase()}) VALUES (${dataStore.getValuePlaceholder(
+                `INSERT INTO ${dataStore.getSchema().toLowerCase()}.${associationTableName.toLowerCase()} (${entityForeignIdFieldName.toLowerCase()}, ${subEntityForeignIdFieldName.toLowerCase()}) VALUES (${dataStore.getValuePlaceholder(
                   1
                 )}, ${dataStore.getValuePlaceholder(2)})`,
                 [_id, subEntity._id]
@@ -214,7 +214,7 @@ export default async function createEntity<T extends BackkEntity>(
           await forEachAsyncParallel(
             (entity as any)[fieldName] ?? [],
             async (subItem: any, index: number) => {
-              const insertStatement = `INSERT INTO ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase() +
+              const insertStatement = `INSERT INTO ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase() +
                 '_' +
                 fieldName
                   .slice(0, -1)

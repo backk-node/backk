@@ -74,7 +74,7 @@ export default async function deleteEntityById<T extends BackkEntity>(
         async (joinSpec: EntityJoinSpec) => {
           if (!joinSpec.isReadonly) {
             await dataStore.tryExecuteSql(
-              `DELETE FROM ${dataStore.schema.toLowerCase()}.${joinSpec.subEntityTableName.toLowerCase()} WHERE ${joinSpec.subEntityForeignIdFieldName.toLowerCase()} = ${dataStore.getValuePlaceholder(
+              `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${joinSpec.subEntityTableName.toLowerCase()} WHERE ${joinSpec.subEntityForeignIdFieldName.toLowerCase()} = ${dataStore.getValuePlaceholder(
                 1
               )}`,
               [numericId]
@@ -86,7 +86,7 @@ export default async function deleteEntityById<T extends BackkEntity>(
         entityContainer.manyToManyRelationTableSpecs,
         async ({ associationTableName, entityForeignIdFieldName }) => {
           if (associationTableName.startsWith(EntityClass.name + '_')) {
-            const sqlStatement = `DELETE FROM ${dataStore.schema.toLowerCase()}.${associationTableName.toLowerCase()} WHERE ${entityForeignIdFieldName.toLowerCase()} = ${dataStore.getValuePlaceholder(
+            const sqlStatement = `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${associationTableName.toLowerCase()} WHERE ${entityForeignIdFieldName.toLowerCase()} = ${dataStore.getValuePlaceholder(
               1
             )}`;
             await dataStore.tryExecuteSql(sqlStatement, [numericId]);
@@ -96,7 +96,7 @@ export default async function deleteEntityById<T extends BackkEntity>(
       isRecursive
         ? Promise.resolve(undefined)
         : dataStore.tryExecuteSql(
-            `DELETE FROM ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()} WHERE ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()}._id = ${dataStore.getValuePlaceholder(
+            `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase()} WHERE ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase()}._id = ${dataStore.getValuePlaceholder(
               1
             )}`,
             [numericId]

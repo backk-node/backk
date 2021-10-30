@@ -106,7 +106,7 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
     const selectStatement = [
       `SELECT ${columns} FROM (SELECT *${
         shouldReturnRootEntityCount ? ', COUNT(*) OVER() AS _count' : ''
-      } FROM ${dataStore.schema}.${tableName}`,
+      } FROM ${dataStore.getSchema()}.${tableName}`,
       rootWhereClause,
       rootSortClause,
       rootPaginationClause,

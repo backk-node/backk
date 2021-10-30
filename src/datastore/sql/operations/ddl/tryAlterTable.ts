@@ -1,6 +1,6 @@
 import forEachAsyncParallel from '../../../../utils/forEachAsyncParallel';
 import typePropertyAnnotationContainer from '../../../../decorators/typeproperty/typePropertyAnnotationContainer';
-import DataStore, { Field } from '../../../DataStore';
+import { DataStore, Field }from '../../../DataStore';
 import getEnumSqlColumnType from './utils/getEnumSqlColumnType';
 import getSqlColumnType from './utils/getSqlColumnType';
 import setSubEntityInfo from './utils/setSubEntityInfo';

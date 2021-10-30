@@ -1,6 +1,6 @@
 import parseEnumValuesFromSrcFile from '../../../../../typescript/parser/parseEnumValuesFromSrcFile';
 import getSrcFilePathNameForTypeName from '../../../../../utils/file/getSrcFilePathNameForTypeName';
-import DataStore from "../../../../DataStore";
+import { DataStore } from "../../../../DataStore";
 
 export default function getEnumSqlColumnType(dataStore: DataStore, baseFieldTypeName: string) {
   let enumValues: string[];

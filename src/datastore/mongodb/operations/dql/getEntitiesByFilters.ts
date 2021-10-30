@@ -124,7 +124,7 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
     const rows = await dataStore.tryExecute(shouldUseTransaction, async (client) => {
       if (isSelectForUpdate) {
         await client
-          .db(dataStore.dbName)
+          .db(dataStore.getDbName())
           .collection(EntityClass.name.toLowerCase())
           .updateMany(matchExpression, { $set: { _backkLock: new ObjectId() } });
       }
@@ -135,7 +135,7 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
 
       const joinPipelines = getJoinPipelines(EntityClass, Types);
       const cursor = client
-        .db(dataStore.dbName)
+        .db(dataStore.getDbName())
         .collection<T>(getTableName(EntityClass.name))
         .aggregate([...joinPipelines, getFieldOrdering((Types as any)[getEntityName(EntityClass.name)])])
         .match(matchExpression);
@@ -150,7 +150,7 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
       const [rows, count] = await Promise.all([
         cursor.toArray(),
         shouldReturnRootEntityCount ? client
-          .db(dataStore.dbName)
+          .db(dataStore.getDbName())
           .collection<T>(getTableName(EntityClass.name))
           .countDocuments(matchExpression) : Promise.resolve(undefined)
       ]);

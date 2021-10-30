@@ -1,4 +1,4 @@
-import DataStore from '../../../DataStore';
+import { DataStore } from '../../../DataStore';
 import tryCreateIndex from './tryCreateIndex';
 
 export default async function tryCreateUniqueIndex(

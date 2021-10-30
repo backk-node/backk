@@ -1,4 +1,4 @@
-import DataStore from '../../../DataStore';
+import { DataStore } from '../../../DataStore';
 import forEachAsyncSequential from '../../../../utils/forEachAsyncSequential';
 import entityAnnotationContainer from '../../../../decorators/entity/entityAnnotationContainer';
 import tryAlterOrCreateTable from './tryAlterOrCreateTable';
@@ -32,7 +32,7 @@ export async function isDbInitialized(dataStore: DataStore) {
   if (dataStore instanceof AbstractSqlDataStore) {
     await removeDbInitializationWhenPendingTooLong(dataStore);
 
-    const getAppVersionInitializationStatusSql = `SELECT * ${dataStore.schema.toLowerCase()}.__backk_db_initialization WHERE isinitialized = 1 AND appversion = ${
+    const getAppVersionInitializationStatusSql = `SELECT * ${dataStore.getSchema().toLowerCase()}.__backk_db_initialization WHERE isinitialized = 1 AND appversion = ${
       process.env.npm_package_version
     }`;
 
@@ -72,19 +72,19 @@ export default async function initializeDatabase(
         await forEachAsyncSequential(
           Object.entries(entityAnnotationContainer.entityNameToClassMap),
           async ([entityName, entityClass]: [any, any]) =>
-            tryAlterOrCreateTable(dataStore, entityName, entityClass, dataStore.schema)
+            tryAlterOrCreateTable(dataStore, entityName, entityClass, dataStore.getSchema())
         );
 
         await forEachAsyncSequential(
           Object.entries(entityAnnotationContainer.indexNameToIndexFieldsMap),
           async ([indexName, indexFields]: [any, any]) =>
-            tryCreateIndex(dataStore, indexName, dataStore.schema, indexFields)
+            tryCreateIndex(dataStore, indexName, dataStore.getSchema(), indexFields)
         );
 
         await forEachAsyncSequential(
           Object.entries(entityAnnotationContainer.indexNameToUniqueIndexFieldsMap),
           async ([indexName, indexFields]: [any, any]) =>
-            tryCreateUniqueIndex(dataStore, indexName, dataStore.schema, indexFields)
+            tryCreateUniqueIndex(dataStore, indexName, dataStore.getSchema(), indexFields)
         );
 
         await forEachAsyncSequential(
@@ -97,14 +97,14 @@ export default async function initializeDatabase(
             }
 
             const fields = await dataStore.tryExecuteSqlWithoutCls(
-              `SELECT * FROM ${dataStore.schema.toLowerCase()}.${tableName} LIMIT 1`,
+              `SELECT * FROM ${dataStore.getSchema().toLowerCase()}.${tableName} LIMIT 1`,
               undefined,
               false
             );
 
             await forEachAsyncSequential(foreignIdFieldNames, async (foreignIdFieldName: any) => {
               if (!fields.find((field) => field.name.toLowerCase() === foreignIdFieldName.toLowerCase())) {
-                const alterTableStatementPrefix = `ALTER TABLE ${dataStore.schema.toLowerCase()}.${tableName} ADD `;
+                const alterTableStatementPrefix = `ALTER TABLE ${dataStore.getSchema().toLowerCase()}.${tableName} ADD `;
 
                 const addForeignIdColumnStatement =
                   alterTableStatementPrefix + foreignIdFieldName.toLowerCase() + ' BIGINT';
@@ -115,7 +115,7 @@ export default async function initializeDatabase(
                   `CREATE UNIQUE INDEX ${foreignIdFieldName.toLowerCase() +
                     (entityAnnotationContainer.entityNameToIsArrayMap[entityName]
                       ? '_id'
-                      : '')} ON ${dataStore.schema.toLowerCase()}.${tableName} (` +
+                      : '')} ON ${dataStore.getSchema().toLowerCase()}.${tableName} (` +
                   foreignIdFieldName.toLowerCase() +
                   (entityAnnotationContainer.entityNameToIsArrayMap[entityName] ? ', id)' : ')');
 
@@ -126,7 +126,7 @@ export default async function initializeDatabase(
                   'FOREIGN KEY (' +
                   foreignIdFieldName.toLowerCase() +
                   ') REFERENCES ' +
-                  dataStore.schema.toLowerCase() +
+                  dataStore.getSchema().toLowerCase() +
                   '.' +
                   foreignIdFieldName.toLowerCase().slice(0, -2) +
                   '(_id) ON DELETE CASCADE';
@@ -151,7 +151,7 @@ export default async function initializeDatabase(
 
             try {
               await dataStore.tryExecuteSqlWithoutCls(
-                `SELECT * FROM ${dataStore.schema.toLowerCase()}.${associationTableName.toLowerCase()} LIMIT 1`,
+                `SELECT * FROM ${dataStore.getSchema().toLowerCase()}.${associationTableName.toLowerCase()} LIMIT 1`,
                 undefined,
                 false
               );
@@ -167,17 +167,17 @@ export default async function initializeDatabase(
               }
 
               const createTableStatement = `
-          CREATE TABLE ${dataStore.schema.toLowerCase()}.${associationTableName.toLowerCase()}
+          CREATE TABLE ${dataStore.getSchema().toLowerCase()}.${associationTableName.toLowerCase()}
            (${entityForeignIdFieldName.toLowerCase()} BIGINT,
             ${subEntityForeignIdFieldName.toLowerCase()} BIGINT,
              PRIMARY KEY(${entityForeignIdFieldName.toLowerCase()},
               ${subEntityForeignIdFieldName.toLowerCase()}),
                FOREIGN KEY(${entityForeignIdFieldName.toLowerCase()}) 
-               REFERENCES ${dataStore.schema.toLowerCase()}.${entityForeignIdFieldName
+               REFERENCES ${dataStore.getSchema().toLowerCase()}.${entityForeignIdFieldName
                 .toLowerCase()
                 .slice(0, -2)}(_id) ON DELETE CASCADE,
             FOREIGN KEY(${subEntityForeignIdFieldName.toLowerCase()}) 
-               REFERENCES ${dataStore.schema.toLowerCase()}.${subEntityTableName}(_id) ON DELETE CASCADE)`;
+               REFERENCES ${dataStore.getSchema().toLowerCase()}.${subEntityTableName}(_id) ON DELETE CASCADE)`;
 
               await dataStore.tryExecuteSqlWithoutCls(createTableStatement);
             }
@@ -191,13 +191,13 @@ export default async function initializeDatabase(
       await forEachAsyncSequential(
         Object.entries(entityAnnotationContainer.indexNameToIndexFieldsMap),
         async ([indexName, indexFields]: [any, any]) =>
-          tryCreateMongoDbIndex(dataStore, indexName, dataStore.schema, indexFields)
+          tryCreateMongoDbIndex(dataStore, indexName, dataStore.getSchema(), indexFields)
       );
 
       await forEachAsyncSequential(
         Object.entries(entityAnnotationContainer.indexNameToUniqueIndexFieldsMap),
         async ([indexName, indexFields]: [any, any]) =>
-          tryCreateMongoDbIndex(dataStore, indexName, dataStore.schema, indexFields, true)
+          tryCreateMongoDbIndex(dataStore, indexName, dataStore.getSchema(), indexFields, true)
       );
 
       await forEachAsyncSequential(

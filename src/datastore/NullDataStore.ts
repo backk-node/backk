@@ -1,11 +1,12 @@
-import DataStore, { Field, Many, One } from "./DataStore";
+import { Field, Many, One } from "./DataStore";
 import { BackkEntity } from "../types/entities/BackkEntity";
 import { SubEntity } from "../types/entities/SubEntity";
 import MongoDbQuery from "./mongodb/MongoDbQuery";
 import SqlExpression from "./sql/expressions/SqlExpression";
 import { PromiseErrorOr } from "../types/PromiseErrorOr";
+import AbstractDataStore from "./AbstractDataStore";
 
-export default class NullDataStore extends DataStore {
+export default class NullDataStore extends AbstractDataStore {
   constructor() {
     super('');
   }

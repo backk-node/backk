@@ -1,4 +1,4 @@
-import DataStore from '../../../../DataStore';
+import { DataStore } from '../../../../DataStore';
 
 export default async function createArrayValuesTable(
   schema: string | undefined,

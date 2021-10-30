@@ -1,6 +1,6 @@
 import { FilterQuery, MongoClient, ObjectId } from 'mongodb';
 import SqlExpression from './sql/expressions/SqlExpression';
-import DataStore, { Field, Many, One } from './DataStore';
+import  { Field, Many, One } from './DataStore';
 import { RecursivePartial } from '../types/RecursivePartial';
 import { PreHook } from './hooks/PreHook';
 import { BackkEntity } from '../types/entities/BackkEntity';
@@ -71,8 +71,9 @@ import EntityCountRequest from '../types/EntityCountRequest';
 import throwException from '../utils/exception/throwException';
 import getUserAccountIdFieldNameAndRequiredValue from './utils/getUserAccountIdFieldNameAndRequiredValue';
 import getDbNameFromServiceName from '../utils/getDbNameFromServiceName';
+import AbstractDataStore from "./AbstractDataStore";
 
-export default class MongoDbDataStore extends DataStore {
+export default class MongoDbDataStore extends AbstractDataStore {
   private readonly uri: string;
   private mongoClient: MongoClient;
 
@@ -187,7 +188,7 @@ export default class MongoDbDataStore extends DataStore {
 
       await this.tryExecute(false, (client) =>
         client
-          .db(this.dbName)
+          .db(this.getDbName())
           .collection('__backk__')
           .findOne({})
       );
@@ -325,7 +326,7 @@ export default class MongoDbDataStore extends DataStore {
 
         try {
           createEntityResult = await client
-            .db(this.dbName)
+            .db(this.getDbName())
             .collection(EntityClass.name.toLowerCase())
             .insertOne(entity);
         } catch (error) {
@@ -732,7 +733,7 @@ export default class MongoDbDataStore extends DataStore {
       const entities = await this.tryExecute(false, async (client) => {
         if (isSelectForUpdate) {
           await client
-            .db(this.dbName)
+            .db(this.getDbName())
             .collection(EntityClass.name.toLowerCase())
             .updateMany({}, { $set: { _backkLock: new ObjectId() } });
         }
@@ -740,7 +741,7 @@ export default class MongoDbDataStore extends DataStore {
         const joinPipelines = getJoinPipelines(EntityClass, this.getTypes());
 
         const cursor = client
-          .db(this.dbName)
+          .db(this.getDbName())
           .collection<T>(getTableName(EntityClass.name))
           .aggregate([...joinPipelines, getFieldOrdering(EntityClass)])
           .match(filter);
@@ -756,7 +757,7 @@ export default class MongoDbDataStore extends DataStore {
           cursor.toArray(),
           shouldReturnRootEntityCount
             ? client
-                .db(this.dbName)
+                .db(this.getDbName())
                 .collection<T>(getTableName(EntityClass.name))
                 .countDocuments({})
             : Promise.resolve(undefined)
@@ -908,7 +909,7 @@ export default class MongoDbDataStore extends DataStore {
     try {
       const entityCount = await this.tryExecute(false, async (client) => {
         return client
-          .db(this.dbName)
+          .db(this.getDbName())
           .collection<T>(getTableName(EntityClass.name))
           .countDocuments(matchExpression);
       });
@@ -991,7 +992,7 @@ export default class MongoDbDataStore extends DataStore {
       const entities = await this.tryExecute(shouldUseTransaction, async (client) => {
         if (isSelectForUpdate) {
           await client
-            .db(this.dbName)
+            .db(this.getDbName())
             .collection(EntityClass.name.toLowerCase())
             .findOneAndUpdate(filter, { $set: { _backkLock: new ObjectId() } });
         }
@@ -1003,7 +1004,7 @@ export default class MongoDbDataStore extends DataStore {
         const joinPipelines = getJoinPipelines(EntityClass, this.getTypes());
 
         const cursor = client
-          .db(this.dbName)
+          .db(this.getDbName())
           .collection<T>(getTableName(EntityClass.name))
           .aggregate([...joinPipelines, getFieldOrdering(EntityClass)])
           .match(filter);
@@ -1019,7 +1020,7 @@ export default class MongoDbDataStore extends DataStore {
           cursor.toArray(),
           shouldReturnRootEntityCount
             ? client
-                .db(this.dbName)
+                .db(this.getDbName())
                 .collection<T>(getTableName(EntityClass.name))
                 .countDocuments({ _id: new ObjectId(_id) } as object)
             : Promise.resolve(undefined)
@@ -1127,14 +1128,14 @@ export default class MongoDbDataStore extends DataStore {
       const entities = await this.tryExecute(false, async (client) => {
         if (isSelectForUpdate) {
           await client
-            .db(this.dbName)
+            .db(this.getDbName())
             .collection(EntityClass.name.toLowerCase())
             .updateMany(filter, { $set: { _backkLock: new ObjectId() } });
         }
 
         const joinPipelines = getJoinPipelines(EntityClass, this.getTypes());
         const cursor = client
-          .db(this.dbName)
+          .db(this.getDbName())
           .collection<T>(getTableName(EntityClass.name))
           .aggregate([...joinPipelines, getFieldOrdering(EntityClass)])
           .match(filter);
@@ -1150,7 +1151,7 @@ export default class MongoDbDataStore extends DataStore {
           cursor.toArray(),
           shouldReturnRootEntityCount
             ? client
-                .db(this.dbName)
+                .db(this.getDbName())
                 .collection<T>(getTableName(EntityClass.name))
                 .countDocuments({ _id: { $in: _ids.map((_id: string) => new ObjectId(_id)) } } as object)
             : Promise.resolve(undefined)
@@ -1308,7 +1309,7 @@ export default class MongoDbDataStore extends DataStore {
         });
 
         const updateOperationResult = await client
-          .db(this.dbName)
+          .db(this.getDbName())
           .collection(EntityClass.name.toLowerCase())
           .updateOne({ _id: new ObjectId(_id) }, { $set: restOfEntity });
 
@@ -1423,7 +1424,7 @@ export default class MongoDbDataStore extends DataStore {
         await tryExecuteEntityPreHooks(options?.entityPreHooks ?? [], currentEntity);
 
         await client
-          .db(this.dbName)
+          .db(this.getDbName())
           .collection(EntityClass.name.toLowerCase())
           .updateMany(matchExpression, {
             ...versionUpdate,
@@ -1516,7 +1517,7 @@ export default class MongoDbDataStore extends DataStore {
 
       await this.tryExecute(shouldUseTransaction, async (client) => {
         await client
-          .db(this.dbName)
+          .db(this.getDbName())
           .collection(EntityClass.name.toLowerCase())
           .updateMany(matchExpression, {
             ...versionUpdate,
@@ -1577,7 +1578,7 @@ export default class MongoDbDataStore extends DataStore {
         }
 
         await client
-          .db(this.dbName)
+          .db(this.getDbName())
           .collection(EntityClass.name.toLowerCase())
           .deleteOne({ _id: new ObjectId(_id) });
 
@@ -1671,7 +1672,7 @@ export default class MongoDbDataStore extends DataStore {
         }
 
         await client
-          .db(this.dbName)
+          .db(this.getDbName())
           .collection(EntityClass.name.toLowerCase())
           .deleteOne(matchExpression);
 
@@ -1743,7 +1744,7 @@ export default class MongoDbDataStore extends DataStore {
 
       await this.tryExecute(shouldUseTransaction, async (client) => {
         await client
-          .db(this.dbName)
+          .db(this.getDbName())
           .collection(EntityClass.name.toLowerCase())
           .deleteMany(matchExpression);
       });
@@ -1871,7 +1872,7 @@ export default class MongoDbDataStore extends DataStore {
 
       await this.tryExecute(shouldUseTransaction, async (client) => {
         await client
-          .db(this.dbName)
+          .db(this.getDbName())
           .collection(EntityClass.name.toLowerCase())
           .deleteMany(filter);
       });
@@ -2065,13 +2066,13 @@ export default class MongoDbDataStore extends DataStore {
       return await this.tryExecute(false, async (client) => {
         if (isSelectForUpdate) {
           await client
-            .db(this.dbName)
+            .db(this.getDbName())
             .collection(EntityClass.name.toLowerCase())
             .findOneAndUpdate({ _id: new ObjectId(_id) }, { $set: { _backkLock: new ObjectId() } });
         }
 
         const cursor = client
-          .db(this.dbName)
+          .db(this.getDbName())
           .collection(getTableName(EntityClass.name))
           .find(filter);
 

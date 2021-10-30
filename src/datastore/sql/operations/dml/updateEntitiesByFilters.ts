@@ -77,7 +77,7 @@ export default async function updateEntitiesByFilters<T extends BackkEntity>(
     }
 
     const setStatement = setStatements.join(', ');
-    const sqlStatement = `UPDATE ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()} SET ${setStatement} ${whereClause}`;
+    const sqlStatement = `UPDATE ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase()} SET ${setStatement} ${whereClause}`;
     await dataStore.tryExecuteQueryWithNamedParameters(sqlStatement, { ...filterValues, ...updateValues });
 
     await tryCommitLocalTransactionIfNeeded(didStartTransaction, dataStore);

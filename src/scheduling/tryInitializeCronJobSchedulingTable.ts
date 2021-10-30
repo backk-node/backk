@@ -1,4 +1,4 @@
-import DataStore from "../datastore/DataStore";
+import { DataStore } from "../datastore/DataStore";
 import serviceFunctionAnnotationContainer
   from "../decorators/service/function/serviceFunctionAnnotationContainer";
 // eslint-disable-next-line @typescript-eslint/camelcase

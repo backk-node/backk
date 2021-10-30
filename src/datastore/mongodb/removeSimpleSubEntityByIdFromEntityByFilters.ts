@@ -127,7 +127,7 @@ export default async function removeSimpleSubEntityByIdFromEntityByFilters<T ext
           };
 
       await client
-        .db(dataStore.dbName)
+        .db(dataStore.getDbName())
         .collection(EntityClass.name.toLowerCase())
         .updateOne(matchExpression, { ...versionUpdate, ...lastModifiedTimestampUpdate, $pull: pullCondition });
 

@@ -1,5 +1,5 @@
 import { Service } from './Service';
-import DataStore from '../datastore/DataStore';
+import { DataStore } from '../datastore/DataStore';
 import { ErrorNameToErrorDefinitionMap } from '../types/ErrorDefinition';
 import NullDataStore from "../datastore/NullDataStore";
 

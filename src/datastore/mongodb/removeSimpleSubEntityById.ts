@@ -83,7 +83,7 @@ export default async function removeSimpleSubEntityById<T extends BackkEntity, U
           };
 
       await client
-        .db(dataStore.dbName)
+        .db(dataStore.getDbName())
         .collection(EntityClass.name.toLowerCase())
         .updateOne(
           { _id: new ObjectId(_id) },

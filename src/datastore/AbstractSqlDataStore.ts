@@ -1,5 +1,5 @@
 import SqlExpression from './sql/expressions/SqlExpression';
-import DataStore, { Field, Many, One } from './DataStore';
+import { DataStore, Field, Many, One } from './DataStore';
 import createEntity from './sql/operations/dml/createEntity';
 import getEntitiesByFilters from './sql/operations/dql/getEntitiesByFilters';
 import getEntitiesCount from './sql/operations/dql/getEntitiesCount';
@@ -39,8 +39,9 @@ import deleteEntityByFilters from './sql/operations/dml/deleteEntityByFilters';
 import updateEntityByFilters from './sql/operations/dml/updateEntityByFilters';
 import doesEntityArrayFieldContainValue from './sql/operations/dql/doesEntityArrayFieldContainValue';
 import EntityCountRequest from '../types/EntityCountRequest';
+import AbstractDataStore from './AbstractDataStore';
 
-export default abstract class AbstractSqlDataStore extends DataStore {
+export default abstract class AbstractSqlDataStore extends AbstractDataStore {
   getClient(): any {
     return undefined;
   }
@@ -95,7 +96,7 @@ export default abstract class AbstractSqlDataStore extends DataStore {
   async isDbReady(): Promise<boolean> {
     try {
       await this.tryExecuteSqlWithoutCls(
-        `SELECT * FROM ${this.schema.toLowerCase()}.__backk_db_initialization`,
+        `SELECT * FROM ${this.getSchema().toLowerCase()}.__backk_db_initialization`,
         undefined,
         false
       );
@@ -103,7 +104,7 @@ export default abstract class AbstractSqlDataStore extends DataStore {
       return true;
     } catch {
       try {
-        const createTableStatement = `CREATE TABLE IF NOT EXISTS ${this.schema.toLowerCase()}.__backk_db_initialization (appversion VARCHAR(64) PRIMARY KEY NOT NULL UNIQUE, isinitialized ${this.getBooleanType()}, createdattimestamp ${this.getTimestampType()})`;
+        const createTableStatement = `CREATE TABLE IF NOT EXISTS ${this.getSchema().toLowerCase()}.__backk_db_initialization (appversion VARCHAR(64) PRIMARY KEY NOT NULL UNIQUE, isinitialized ${this.getBooleanType()}, createdattimestamp ${this.getTimestampType()})`;
         await this.tryExecuteSqlWithoutCls(createTableStatement);
         return true;
       } catch {
@@ -787,12 +788,7 @@ export default abstract class AbstractSqlDataStore extends DataStore {
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'removeSubEntityFromEntityById');
     const subEntityJsonPath = `${subEntitiesJsonPath}[?(@.id == '${subEntityId}' || @._id == '${subEntityId}')]`;
-    const response = await this.removeSubEntitiesFromEntityById(
-      subEntityJsonPath,
-      EntityClass,
-      _id,
-      options
-    );
+    const response = await this.removeSubEntitiesFromEntityById(subEntityJsonPath, EntityClass, _id, options);
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
     return response;
   }
@@ -807,10 +803,7 @@ export default abstract class AbstractSqlDataStore extends DataStore {
       postHook?: PostHook<T>;
     }
   ): PromiseErrorOr<null> {
-    const dbOperationStartTimeInMillis = startDbOperation(
-      this,
-      'removeSubEntitiesFromEntityByFilters'
-    );
+    const dbOperationStartTimeInMillis = startDbOperation(this, 'removeSubEntitiesFromEntityByFilters');
     const response = await removeSubEntitiesByFilters(
       this,
       filters,
@@ -860,9 +853,13 @@ export default abstract class AbstractSqlDataStore extends DataStore {
   async addArrayFieldValuesToEntityById<T extends BackkEntity>(
     fieldName: keyof T & string,
     fieldValuesToAdd: (string | number | boolean)[],
-    EntityClass: { new(): T },
+    EntityClass: { new (): T },
     _id: string,
-    options?: { entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[]; postQueryOperations?: PostQueryOperations; postHook?: PostHook<T> }
+    options?: {
+      entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
+      postQueryOperations?: PostQueryOperations;
+      postHook?: PostHook<T>;
+    }
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'addArrayFieldValuesToEntityById');
     const response = await addFieldValues(this, _id, fieldName, fieldValuesToAdd, EntityClass, options);
@@ -873,7 +870,7 @@ export default abstract class AbstractSqlDataStore extends DataStore {
   async doesArrayFieldContainValueInEntityById<T extends BackkEntity>(
     fieldName: keyof T & string,
     fieldValue: string | number | boolean,
-    EntityClass: { new(): T },
+    EntityClass: { new (): T },
     _id: string
   ): PromiseErrorOr<boolean> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'doesArrayFieldContainValueInEntityById');
@@ -885,9 +882,13 @@ export default abstract class AbstractSqlDataStore extends DataStore {
   async removeArrayFieldValuesFromEntityById<T extends BackkEntity>(
     fieldName: keyof T & string,
     fieldValuesToRemove: (string | number | boolean)[],
-    EntityClass: { new(): T },
+    EntityClass: { new (): T },
     _id: string,
-    options?: { entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[]; postQueryOperations?: PostQueryOperations; postHook?: PostHook<T> }
+    options?: {
+      entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
+      postQueryOperations?: PostQueryOperations;
+      postHook?: PostHook<T>;
+    }
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'removeArrayFieldValuesFromEntityById');
     const response = await removeFieldValues(this, _id, fieldName, fieldValuesToRemove, EntityClass, options);

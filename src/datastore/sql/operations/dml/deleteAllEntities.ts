@@ -40,7 +40,7 @@ export default async function deleteAllEntities<T>(
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
     const whereClause =
       userAccountIdFieldName && userAccountId !== undefined
-        ? ` WHERE ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()}.${userAccountIdFieldName} = ${dataStore.getValuePlaceholder(
+        ? ` WHERE ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase()}.${userAccountIdFieldName} = ${dataStore.getValuePlaceholder(
             1
           )}`
         : '';
@@ -51,7 +51,7 @@ export default async function deleteAllEntities<T>(
         async (joinSpec: EntityJoinSpec) => {
           if (!joinSpec.isReadonly) {
             await dataStore.tryExecuteSql(
-              `DELETE FROM ${dataStore.schema.toLowerCase()}.${joinSpec.subEntityTableName.toLowerCase()}`
+              `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${joinSpec.subEntityTableName.toLowerCase()}`
             );
           }
         }
@@ -59,14 +59,14 @@ export default async function deleteAllEntities<T>(
       forEachAsyncParallel(entityContainer.manyToManyRelationTableSpecs, async ({ associationTableName }) => {
         if (associationTableName.startsWith(EntityClass.name + '_')) {
           await dataStore.tryExecuteSql(
-            `DELETE FROM ${dataStore.schema.toLowerCase()}.${associationTableName.toLowerCase()}`
+            `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${associationTableName.toLowerCase()}`
           );
         }
       }),
       isRecursive
         ? Promise.resolve(undefined)
         : dataStore.tryExecuteSql(
-            `DELETE FROM ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()}${whereClause}`,
+            `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase()}${whereClause}`,
             whereClause ? [userAccountId] : undefined
           )
     ]);

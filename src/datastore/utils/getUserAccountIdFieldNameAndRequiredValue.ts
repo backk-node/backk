@@ -1,4 +1,4 @@
-import DataStore from '../DataStore';
+import { DataStore } from '../DataStore';
 
 export default function getUserAccountIdFieldNameAndRequiredValue(dataStore: DataStore) {
   return [

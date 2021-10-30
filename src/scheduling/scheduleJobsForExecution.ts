@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import DataStore, { Many } from "../datastore/DataStore";
+import { DataStore, Many } from "../datastore/DataStore";
 import findAsyncSequential from '../utils/findAsyncSequential';
 import wait from '../utils/wait';
 import __Backk__JobScheduling from './entities/__Backk__JobScheduling';

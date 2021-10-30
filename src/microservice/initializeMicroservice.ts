@@ -8,7 +8,7 @@ import setNestedTypeValidationDecorators from '../validation/setNestedTypeValida
 import writeTestsPostmanCollectionExportFile from '../postman/writeTestsPostmanCollectionExportFile';
 import generateTypesForServices from '../metadata/generateTypesForServices';
 import getNestedClasses from '../metadata/getNestedClasses';
-import DataStore from '../datastore/DataStore';
+import { DataStore } from '../datastore/DataStore';
 import log, { Severity } from '../observability/logging/log';
 import writeOpenApiSpecFile from '../openapi/writeOpenApiSpecFile';
 import { FunctionMetadata } from '../metadata/types/FunctionMetadata';

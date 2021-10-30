@@ -38,7 +38,7 @@ export default class MySqlDataStore extends AbstractSqlDataStore {
         false
       );
       await this.tryExecuteSqlWithoutCls(
-        `SELECT * FROM ${this.schema.toLowerCase()}.__backk_db_initialization`,
+        `SELECT * FROM ${this.getSchema().toLowerCase()}.__backk_db_initialization`,
         undefined,
         false
       );
@@ -46,7 +46,7 @@ export default class MySqlDataStore extends AbstractSqlDataStore {
     } catch {
       try {
         await this.tryExecuteSqlWithoutCls(
-          `CREATE DATABASE IF NOT EXISTS ${this.schema.toLowerCase()}`,
+          `CREATE DATABASE IF NOT EXISTS ${this.getSchema().toLowerCase()}`,
           undefined,
           false
         );
@@ -74,7 +74,7 @@ export default class MySqlDataStore extends AbstractSqlDataStore {
       host: this.host,
       user: this.user,
       password: this.password,
-      database: this.schema
+      database: this.getSchema()
     });
   }
 

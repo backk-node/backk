@@ -94,7 +94,7 @@ export default function getJoinClauses(
           shouldReturnEntityCount ? ', COUNT(*) OVER() AS _count' : ''
         } FROM `;
 
-        joinClausePart += dataStore.schema + '.' + physicalSubEntityTableName.toLowerCase();
+        joinClausePart += dataStore.getSchema() + '.' + physicalSubEntityTableName.toLowerCase();
 
         joinClausePart +=
           (whereClause ? ' ' + whereClause + ' AND ' + whereClausePart : ' WHERE ' + whereClausePart) +
@@ -183,7 +183,7 @@ export default function getJoinClauses(
         const paginationClause = getPaginationClause(joinEntityPath, paginations);
         const whereClausePart =
           '_id = ' +
-          dataStore.schema +
+          dataStore.getSchema() +
           '.' +
           associationTableName.toLowerCase() +
           '.' +
@@ -195,13 +195,13 @@ export default function getJoinClauses(
         );
 
         let joinClausePart = 'LEFT JOIN ';
-        joinClausePart += dataStore.schema + '.' + associationTableName.toLowerCase();
+        joinClausePart += dataStore.getSchema() + '.' + associationTableName.toLowerCase();
         joinClausePart += ' ON ';
         joinClausePart +=
           '"' + tableAliasPath + '"' +
           '._id' +
           ' = ' +
-          dataStore.schema +
+          dataStore.getSchema() +
           '.' +
           associationTableName.toLowerCase() +
           '.' +
@@ -209,7 +209,7 @@ export default function getJoinClauses(
           ` LEFT JOIN LATERAL (SELECT *${
             shouldReturnEntityCount ? ', COUNT(*) OVER() AS _count' : ''
           } FROM ` +
-          dataStore.schema +
+          dataStore.getSchema() +
           '.' +
           physicalSubEntityTableName.toLowerCase() +
           (whereClause ? ' ' + whereClause + ' AND ' + whereClausePart : ' WHERE ' + whereClausePart) +
@@ -218,7 +218,7 @@ export default function getJoinClauses(
           ') AS "' +
           logicalSubEntityTableName.toLowerCase() + '"' +
           ' ON ' +
-          dataStore.schema +
+          dataStore.getSchema() +
           '.' +
           associationTableName.toLowerCase() +
           '.' +

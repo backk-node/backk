@@ -161,7 +161,7 @@ export default async function updateEntity<T extends BackkEntity>(
                   } = entityAnnotationContainer.getManyToManyRelationTableSpec(associationTableName);
 
                   await dataStore.tryExecuteSql(
-                    `DELETE FROM ${dataStore.schema.toLowerCase()}.${associationTableName.toLowerCase()} WHERE ${entityForeignIdFieldName.toLowerCase()} = ${dataStore.getValuePlaceholder(
+                    `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${associationTableName.toLowerCase()} WHERE ${entityForeignIdFieldName.toLowerCase()} = ${dataStore.getValuePlaceholder(
                       1
                     )} AND ${subEntityForeignIdFieldName.toLowerCase()} = ${dataStore.getValuePlaceholder(
                       2
@@ -184,7 +184,7 @@ export default async function updateEntity<T extends BackkEntity>(
                     subEntityForeignIdFieldName
                   } = entityAnnotationContainer.getManyToManyRelationTableSpec(associationTableName);
                   await dataStore.tryExecuteSql(
-                    `INSERT INTO ${dataStore.schema.toLowerCase()}.${associationTableName.toLowerCase()} (${entityForeignIdFieldName.toLowerCase()}, ${subEntityForeignIdFieldName.toLowerCase()}) VALUES (${dataStore.getValuePlaceholder(
+                    `INSERT INTO ${dataStore.getSchema().toLowerCase()}.${associationTableName.toLowerCase()} (${entityForeignIdFieldName.toLowerCase()}, ${subEntityForeignIdFieldName.toLowerCase()}) VALUES (${dataStore.getValuePlaceholder(
                       1
                     )}, ${dataStore.getValuePlaceholder(2)})`,
                     [parseInt(_id ?? id, 10), subEntity._id]
@@ -257,7 +257,7 @@ export default async function updateEntity<T extends BackkEntity>(
 
           promises.push(
             forEachAsyncParallel((restOfEntity as any)[fieldName], async (subItem: any, index) => {
-              const deleteStatement = `DELETE FROM ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase() +
+              const deleteStatement = `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase() +
                 '_' +
                 fieldName
                   .slice(0, -1)
@@ -266,7 +266,7 @@ export default async function updateEntity<T extends BackkEntity>(
               )}`;
               await dataStore.tryExecuteSql(deleteStatement, [_id]);
 
-              const insertStatement = `INSERT INTO ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase() +
+              const insertStatement = `INSERT INTO ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase() +
                 '_' +
                 fieldName
                   .slice(0, -1)
@@ -316,7 +316,7 @@ export default async function updateEntity<T extends BackkEntity>(
     }
 
     if (setStatements) {
-      let sqlStatement = `UPDATE ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()} SET ${setStatements}`;
+      let sqlStatement = `UPDATE ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase()} SET ${setStatements}`;
 
       if (numericId !== undefined) {
         sqlStatement += ` WHERE ${idFieldName} = ${dataStore.getValuePlaceholder(columns.length + 1)}`;

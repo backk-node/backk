@@ -51,7 +51,7 @@ export default async function doesEntityArrayFieldContainValue<T extends BackkEn
 
     const tableName = getTableName(EntityClass.name);
 
-    const selectStatement = `SELECT COUNT(*) as count FROM ${dataStore.schema.toLowerCase()}.${tableName +
+    const selectStatement = `SELECT COUNT(*) as count FROM ${dataStore.getSchema().toLowerCase()}.${tableName +
       '_' +
       fieldName
         .slice(0, -1)

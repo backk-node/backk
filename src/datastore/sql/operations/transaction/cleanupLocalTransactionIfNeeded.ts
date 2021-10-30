@@ -1,4 +1,4 @@
-import DataStore from "../../../DataStore";
+import { DataStore } from "../../../DataStore";
 
 export default function cleanupLocalTransactionIfNeeded(isInsideTransaction: boolean, dataStore: DataStore) {
   if (isInsideTransaction) {

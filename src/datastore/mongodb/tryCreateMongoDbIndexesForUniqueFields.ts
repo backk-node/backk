@@ -14,7 +14,7 @@ export default async function tryCreateMongoDbIndexesForUniqueFields(
       await dataStore.tryReserveDbConnectionFromPool();
 
       await dataStore.tryExecute(false, async (client) => {
-        await client.db(dataStore.dbName).createIndex(
+        await client.db(dataStore.getDbName()).createIndex(
           EntityClass.name.toLowerCase(),
           { [fieldName]: 1 },
           {

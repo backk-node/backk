@@ -1,4 +1,4 @@
-import DataStore from '../DataStore';
+import { DataStore } from '../DataStore';
 import defaultServiceMetrics from '../../observability/metrics/defaultServiceMetrics';
 
 export default function recordDbOperationDuration(dataStore: DataStore, startTimeInMillis: number) {

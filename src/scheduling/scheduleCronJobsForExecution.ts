@@ -1,6 +1,6 @@
 import { CronJob } from 'cron';
 import parser from 'cron-parser';
-import DataStore from '../datastore/DataStore';
+import { DataStore } from '../datastore/DataStore';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
 // eslint-disable-next-line @typescript-eslint/camelcase
 import __Backk__CronJobScheduling from './entities/__Backk__CronJobScheduling';

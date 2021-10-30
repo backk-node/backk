@@ -1,4 +1,4 @@
-import DataStore, { One } from "../../../../DataStore";
+import { DataStore, One } from "../../../../DataStore";
 import { BackkEntity } from "../../../../../types/entities/BackkEntity";
 import throwIf from "../../../../../utils/exception/throwIf";
 

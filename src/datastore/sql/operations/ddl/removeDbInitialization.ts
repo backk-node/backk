@@ -1,5 +1,5 @@
 import AbstractSqlDataStore from '../../../AbstractSqlDataStore';
-import DataStore from '../../../DataStore';
+import { DataStore } from '../../../DataStore';
 
 let intervalId: NodeJS.Timeout | undefined = undefined; // NOSONAR
 const RETRY_INTERVAL = 15000;
@@ -10,7 +10,7 @@ export default async function removeDbInitialization(dataStore: DataStore) {
   }
 
   if (!(dataStore instanceof AbstractSqlDataStore)) {
-    const removeAppVersionSql = `DELETE FROM ${dataStore.schema.toLowerCase()}.__backk_db_initialization WHERE appversion =
+    const removeAppVersionSql = `DELETE FROM ${dataStore.getSchema().toLowerCase()}.__backk_db_initialization WHERE appversion =
     ${process.env.npm_package_version}`;
 
     try {

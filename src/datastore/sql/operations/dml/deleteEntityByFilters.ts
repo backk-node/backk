@@ -89,7 +89,7 @@ export default async function deleteEntityByFilters<T extends object>(
         async (joinSpec: EntityJoinSpec) => {
           if (!joinSpec.isReadonly) {
             await dataStore.tryExecuteQueryWithNamedParameters(
-              `DELETE FROM ${dataStore.schema.toLowerCase()}.${joinSpec.subEntityTableName.toLowerCase()} WHERE ${joinSpec.subEntityForeignIdFieldName.toLowerCase()} IN (SELECT _id FROM ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()} ${whereClause})`,
+              `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${joinSpec.subEntityTableName.toLowerCase()} WHERE ${joinSpec.subEntityForeignIdFieldName.toLowerCase()} IN (SELECT _id FROM ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase()} ${whereClause})`,
               filterValues
             );
           }
@@ -100,14 +100,14 @@ export default async function deleteEntityByFilters<T extends object>(
         async ({ associationTableName, entityForeignIdFieldName }) => {
           if (associationTableName.startsWith(EntityClass.name + '_')) {
             await dataStore.tryExecuteQueryWithNamedParameters(
-              `DELETE FROM ${dataStore.schema.toLowerCase()}.${associationTableName.toLowerCase()} WHERE ${entityForeignIdFieldName.toLowerCase()} IN (SELECT _id FROM ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()} ${whereClause})`,
+              `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${associationTableName.toLowerCase()} WHERE ${entityForeignIdFieldName.toLowerCase()} IN (SELECT _id FROM ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase()} ${whereClause})`,
               filterValues
             );
           }
         }
       ),
       dataStore.tryExecuteQueryWithNamedParameters(
-        `DELETE FROM ${dataStore.schema.toLowerCase()}.${EntityClass.name.toLowerCase()} ${whereClause}`,
+        `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase()} ${whereClause}`,
         filterValues
       )
     ]);

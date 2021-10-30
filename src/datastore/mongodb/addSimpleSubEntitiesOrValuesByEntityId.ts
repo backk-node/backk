@@ -71,7 +71,7 @@ export default async function addSimpleSubEntitiesOrValuesByEntityId<
   }
 
   await client
-    .db(dataStore.dbName)
+    .db(dataStore.getDbName())
     .collection(EntityClass.name.toLowerCase())
     .updateOne(
       { _id: new ObjectId(_id) },

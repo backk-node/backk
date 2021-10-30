@@ -1,4 +1,4 @@
-import DataStore from '../../../DataStore';
+import { DataStore } from '../../../DataStore';
 import tryAlterTable from './tryAlterTable';
 import tryCreateTable from './tryCreateTable';
 import entityAnnotationContainer from "../../../../decorators/entity/entityAnnotationContainer";

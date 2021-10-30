@@ -1,5 +1,5 @@
 import { getNamespace } from "cls-hooked";
-import DataStore from "../../../DataStore";
+import { DataStore } from "../../../DataStore";
 
 export default async function tryStartLocalTransactionIfNeeded(
   dataStore: DataStore

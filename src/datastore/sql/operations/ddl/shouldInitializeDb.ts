@@ -5,7 +5,7 @@ export default async function shouldInitializeDb(dataStore: AbstractSqlDataStore
     return true;
   }
 
-  const addAppVersionSql = `INSERT INTO ${dataStore.schema.toLowerCase()}.__backk_db_initialization (appVersion, isInitialized, createdattimestamp) VALUES ("${
+  const addAppVersionSql = `INSERT INTO ${dataStore.getSchema().toLowerCase()}.__backk_db_initialization (appVersion, isInitialized, createdattimestamp) VALUES ("${
     process.env.npm_package_version
   }", 0, current_timestamp)`;
 

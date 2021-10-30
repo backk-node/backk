@@ -1,7 +1,7 @@
 import forEachAsyncSequential from '../../../../utils/forEachAsyncSequential';
 import entityAnnotationContainer from '../../../../decorators/entity/entityAnnotationContainer';
 import typeAnnotationContainer from '../../../../decorators/typeproperty/typePropertyAnnotationContainer';
-import DataStore from '../../../DataStore';
+import { DataStore } from '../../../DataStore';
 import getEnumSqlColumnType from './utils/getEnumSqlColumnType';
 import setSubEntityInfo from './utils/setSubEntityInfo';
 import getSqlColumnType from './utils/getSqlColumnType';

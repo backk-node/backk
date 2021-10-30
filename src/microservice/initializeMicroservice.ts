@@ -15,7 +15,8 @@ import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
 import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
 import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
-import generateClients from "../client/generateClients";
+import generateClients from '../client/generateClients';
+import NullDataStore from '../datastore/NullDataStore';
 
 function addNestedTypes(privateTypeNames: Set<string>, typeName: string, types: { [p: string]: object }) {
   Object.values(types[typeName] ?? {}).forEach((typeName) => {
@@ -330,8 +331,11 @@ export default async function initializeMicroservice(
   }
 
   if (!remoteServiceRootDir) {
-    const servicesUniqueByDataStore = _.uniqBy(serviceNameToServiceEntries, ([, service]: [string, any]) =>
-      service.getDataStore()
+    const servicesUniqueByDataStore = _.uniqBy(
+      serviceNameToServiceEntries.filter(
+        ([, service]: [string, any]) => !(service.getDataStore() instanceof NullDataStore)
+      ),
+      ([, service]: [string, any]) => service.getDataStore()
     );
 
     if (servicesUniqueByDataStore.length > 1) {
@@ -407,8 +411,10 @@ export default async function initializeMicroservice(
       if (process.env.NODE_ENV !== 'development') {
         throw new Error('Client generation allowed in dev environment only');
       }
-      const publicTypeNames = microservice.publicServicesMetadata ?? generatePublicServicesMetadata(microservice);
-      const internalTypeNames = microservice.internalServicesMetadata ?? generateInternalServicesMetadata(microservice);
+      const publicTypeNames =
+        microservice.publicServicesMetadata ?? generatePublicServicesMetadata(microservice);
+      const internalTypeNames =
+        microservice.internalServicesMetadata ?? generateInternalServicesMetadata(microservice);
       await generateClients(microservice, publicTypeNames, internalTypeNames);
     }
 

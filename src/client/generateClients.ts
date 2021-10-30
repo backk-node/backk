@@ -346,6 +346,7 @@ function generateFrontendServiceFile(serviceImplFilePathName: string, execPromis
 
       node.declaration.decorators = undefined;
       node.declaration.superClass = null;
+      node.declaration.implements = undefined;
       const serviceName = node.declaration.id.name[0].toLowerCase() + node.declaration.id.name.slice(1);
       if (serviceName.endsWith('Impl')) {
         node.declaration.id.name = node.declaration.id.name.slice(0, -4);
@@ -381,6 +382,13 @@ function generateFrontendServiceFile(serviceImplFilePathName: string, execPromis
           }
 
           functionNames.push(functionName);
+          if (classBodyNode.params?.[0]?.type === 'ObjectPattern') {
+            classBodyNode.params[0] = {
+              type: 'Identifier',
+              name: argumentName,
+              typeAnnotation:  classBodyNode.params[0].typeAnnotation
+            }
+          }
           classBodyNode.async = false;
           classBodyNode.decorators = [];
           classBodyNode.body = {
@@ -460,6 +468,7 @@ function generateInternalServiceFile(serviceImplFilePathName: string, execPromis
   });
 
   const nodes = (ast as any).program.body;
+  const functionNames: string[] = [];
   let methodCount = 0;
 
   for (const node of nodes) {
@@ -476,6 +485,7 @@ function generateInternalServiceFile(serviceImplFilePathName: string, execPromis
       );
       node.declaration.decorators = undefined;
       node.declaration.superClass = null;
+      node.declaration.implements = undefined;
       const serviceName = node.declaration.id.name[0].toLowerCase() + node.declaration.id.name.slice(1);
       if (serviceName.endsWith('Impl')) {
         node.declaration.id.name = node.declaration.id.name.slice(0, -4);
@@ -485,7 +495,10 @@ function generateInternalServiceFile(serviceImplFilePathName: string, execPromis
       node.declaration.body.body.forEach((classBodyNode: any) => {
         if (classBodyNode.type === 'ClassMethod') {
           const functionName = classBodyNode.key.name;
-          const argumentName = classBodyNode.params?.[0]?.name;
+          const argumentName =
+            classBodyNode.params?.[0]?.type === 'ObjectPattern'
+              ? decapitalizeFirstLetter(classBodyNode.params[0].typeAnnotation.typeAnnotation.typeName.name)
+              : classBodyNode.params?.[0]?.name;
           const isInternalMethod = classBodyNode.decorators?.find(
             (decorator: any) =>
               isInternalService || decorator.expression.callee.name === 'AllowForKubeClusterInternalUse'
@@ -501,6 +514,14 @@ function generateInternalServiceFile(serviceImplFilePathName: string, execPromis
             return;
           }
 
+          functionNames.push(functionName);
+          if (classBodyNode.params?.[0]?.type === 'ObjectPattern') {
+            classBodyNode.params[0] = {
+              type: 'Identifier',
+              name: argumentName,
+              typeAnnotation:  classBodyNode.params[0].typeAnnotation
+            }
+          }
           classBodyNode.async = false;
           classBodyNode.decorators = [];
           classBodyNode.body = {
@@ -529,13 +550,26 @@ function generateInternalServiceFile(serviceImplFilePathName: string, execPromis
     }
 
     let outputFileContentsStr = '// DO NOT MODIFY THIS FILE! This is an auto-generated file' + '\n' + code;
+    let isFirstFunction = true;
 
     outputFileContentsStr = outputFileContentsStr
       .split('\n')
       .map((outputFileLine) => {
+        if (
+          !isFirstFunction &&
+          functionNames.some((functionName) => outputFileLine.includes(functionName)) &&
+          outputFileLine.includes(': PromiseErrorOr<') &&
+          outputFileLine.endsWith('}')
+        ) {
+          return '\n' + outputFileLine;
+        }
+
         if (outputFileLine.startsWith('export default class') || outputFileLine.startsWith('export class')) {
           return '\n' + outputFileLine;
         }
+
+        // noinspection ReuseOfLocalVariableJS
+        isFirstFunction = false;
         return outputFileLine;
       })
       .join('\n');

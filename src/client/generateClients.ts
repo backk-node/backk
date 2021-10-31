@@ -262,9 +262,10 @@ function generateFrontendServiceFile(
         node.declaration.id.name = node.declaration.id.name.slice(0, -4);
       }
 
-      const [serviceName] = Object.entries(microservice).find(
-        ([, ServiceClass]: [string, any]) => ServiceClass.constructor.name === serviceClassName
-      ) ?? [];
+      const [serviceName] =
+        Object.entries(microservice).find(
+          ([, ServiceClass]: [string, any]) => ServiceClass.constructor.name === serviceClassName
+        ) ?? [];
 
       if (!serviceName) {
         break;
@@ -385,7 +386,11 @@ function generateFrontendServiceFile(
   }
 }
 
-function generateInternalServiceFile(serviceImplFilePathName: string, execPromises: Array<Promise<any>>) {
+function generateInternalServiceFile(
+  microservice: Microservice,
+  serviceImplFilePathName: string,
+  execPromises: Array<Promise<any>>
+) {
   const serviceImplFileContentsStr = readFileSync(serviceImplFilePathName, { encoding: 'UTF-8' });
 
   const ast = parseSync(serviceImplFileContentsStr, {
@@ -421,9 +426,10 @@ function generateInternalServiceFile(serviceImplFilePathName: string, execPromis
         node.declaration.id.name = node.declaration.id.name.slice(0, -4);
       }
 
-      const [serviceName] = Object.entries(microservice).find(
-        ([, ServiceClass]: [string, any]) => ServiceClass.constructor.name === serviceClassName
-      ) ?? [];
+      const [serviceName] =
+        Object.entries(microservice).find(
+          ([, ServiceClass]: [string, any]) => ServiceClass.constructor.name === serviceClassName
+        ) ?? [];
 
       if (!serviceName) {
         break;

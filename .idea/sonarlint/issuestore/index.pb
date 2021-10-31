@@ -600,8 +600,6 @@ T
 $src/services/LivenessCheckService.ts,7/1/71ba80695e96c2ea83c502bbb99d37751d7135bf
 f
 6src/observability/logging/audit/AuditLoggingService.ts,5/0/5094a81c71e92af423372d5e716a29f584c57805
-W
-'src/cache/ResponseCacheConfigService.ts,f/5/f536a6ae2fa1e1e3dd77350602218dbd8a243ff3
 R
 "src/datastore/AbstractDataStore.ts,f/4/f4558eca7b6689c835badee5ef621c5595dedca7
 J

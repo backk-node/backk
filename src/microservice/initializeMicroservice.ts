@@ -1,4 +1,7 @@
 import _ from 'lodash';
+import AuthorizationService from '../authorization/AuthorizationService';
+import ResponseCacheConfigService from '../cache/ResponseCacheConfigService';
+import CaptchaVerificationService from '../captcha/CaptchaVerificationService';
 import generateClients from '../client/generateClients';
 import isClientGenerationNeeded from '../client/isClientGenerationNeeded';
 import { DataStore } from '../datastore/DataStore';
@@ -9,10 +12,14 @@ import generateTypesForServices from '../metadata/generateTypesForServices';
 import getNestedClasses from '../metadata/getNestedClasses';
 import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
 import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
+import AuditLoggingService from '../observability/logging/audit/AuditLoggingService';
 import log, { Severity } from '../observability/logging/log';
 import writeOpenApiSpecFile from '../openapi/writeOpenApiSpecFile';
 import writeTestsPostmanCollectionExportFile from '../postman/writeTestsPostmanCollectionExportFile';
 import BaseService from '../services/BaseService';
+import LivenessCheckService from '../services/LivenessCheckService';
+import ReadinessCheckService from '../services/ReadinessCheckService';
+import StartupCheckService from '../services/startup/StartupCheckService';
 import parseServiceFunctionNameToArgAndReturnTypeNameMaps from '../typescript/parser/parseServiceFunctionNameToArgAndReturnTypeNameMaps';
 import getSrcFilePathNameForTypeName from '../utils/file/getSrcFilePathNameForTypeName';
 import decapitalizeFirstLetter from '../utils/string/decapitalizeFirstLetter';
@@ -323,7 +330,17 @@ export default async function initializeMicroservice(
   remoteServiceRootDir = ''
 ) {
   Object.entries(microservice).forEach(([serviceName, service]: [string, any]) => {
-    if (serviceName.endsWith('Service') && !(service instanceof BaseService)) {
+    if (
+      serviceName.endsWith('Service') &&
+      !(service instanceof BaseService) &&
+      !(service instanceof AuditLoggingService) &&
+      !(service instanceof CaptchaVerificationService) &&
+      !(service instanceof LivenessCheckService) &&
+      !(service instanceof ReadinessCheckService) &&
+      !(service instanceof StartupCheckService) &&
+      !(service instanceof ResponseCacheConfigService) &&
+      !(service instanceof AuthorizationService)
+    ) {
       throw new Error(
         "Class '" + service.constructor.name + "' must extend from 'BaseService' or 'CrudResourceService'"
       );
@@ -344,7 +361,7 @@ export default async function initializeMicroservice(
 
     if (servicesUniqueByDataStore.length > 1) {
       throw new Error(
-        'Multiple data store not allowed. Services can only use one data store which is same for all services'
+        'Multiple data stores are not allowed. Services can only use one data store which is the same for all services'
       );
     }
   }
@@ -356,7 +373,7 @@ export default async function initializeMicroservice(
 
     const serviceFilePathName = getSrcFilePathNameForTypeName(service.constructor.name, remoteServiceRootDir);
 
-    if (!(serviceFilePathName.endsWith('Service.ts') || !serviceFilePathName.endsWith('ServiceImpl.ts'))) {
+    if (!(serviceFilePathName.endsWith('Service.ts') || serviceFilePathName.endsWith('ServiceImpl.ts'))) {
       throw new Error(
         "Invalid file name '" +
           serviceFilePathName +
@@ -371,7 +388,17 @@ export default async function initializeMicroservice(
 
     if (serviceName !== expectedServiceName) {
       throw new Error(
-        "Microservice class property '" + serviceName + "' should be '" + expectedServiceName + "'"
+        "Microservice implementation class property '" +
+          serviceName +
+          "' should be '" +
+          expectedServiceName +
+          "'"
+      );
+    }
+
+    if (!serviceFilePathName.includes('src/services/' + serviceName)) {
+      throw new Error(
+        "Service '" + service.constructor.name + "' should be in directory 'src/services" + serviceName + "'"
       );
     }
 

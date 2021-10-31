@@ -1,4 +1,4 @@
-export default abstract class ResponseCacheConfigServic {
+export default abstract class ResponseCacheConfigService {
   abstract shouldCacheServiceFunctionCallResponse(
     serviceFunctionName: string,
     serviceFunctionArgument: object

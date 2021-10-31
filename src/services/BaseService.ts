@@ -51,7 +51,7 @@ export default class BaseService implements Service {
   }
 
   /** @internal */
-  isUsersService(): boolean {
+  isUserService(): boolean {
     return false;
   }
 }

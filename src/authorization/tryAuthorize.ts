@@ -1,7 +1,7 @@
 import serviceAnnotationContainer from '../decorators/service/serviceAnnotationContainer';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
 import BaseService from '../services/BaseService';
-import UserAccountBaseService from '../services/useraccount/UserAccountBaseService';
+import UserBaseService from '../services/useraccount/UserBaseService';
 import defaultServiceMetrics from '../observability/metrics/defaultServiceMetrics';
 import { BACKK_ERRORS } from '../errors/backkErrors';
 import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
@@ -12,7 +12,7 @@ export default async function tryAuthorize(
   serviceFunctionArgument: any,
   authHeader: string | string[] | undefined,
   authorizationService: any,
-  usersService: UserAccountBaseService | undefined,
+  usersService: UserBaseService | undefined,
   isClusterInternalCall: boolean
 ): Promise<undefined | string> {
   const ServiceClass = service.constructor;

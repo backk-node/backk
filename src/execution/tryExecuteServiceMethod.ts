@@ -6,7 +6,7 @@ import tryAuthorize from '../authorization/tryAuthorize';
 import BaseService from '../services/BaseService';
 import tryVerifyCaptchaToken from '../captcha/tryVerifyCaptchaToken';
 import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
-import UserAccountBaseService from '../services/useraccount/UserAccountBaseService';
+import UserBaseService from '../services/useraccount/UserBaseService';
 import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
 import tryValidateServiceFunctionArgument from '../validation/tryValidateServiceFunctionArgument';
 import tryValidateServiceFunctionReturnValue from '../validation/tryValidateServiceFunctionReturnValue';
@@ -289,7 +289,7 @@ export default async function tryExecuteServiceMethod(
       await tryVerifyCaptchaToken(microservice, serviceFunctionArgument.captchaToken);
     }
 
-    const userService = getMicroserviceServiceByServiceClass(microservice, UserAccountBaseService);
+    const userService = getMicroserviceServiceByServiceClass(microservice, UserBaseService);
     const authorizationService = getMicroserviceServiceByServiceClass(microservice, AuthorizationService);
     const authHeader = headers.authorization;
 
@@ -457,13 +457,13 @@ export default async function tryExecuteServiceMethod(
           ) {
             if (!userService) {
               throw new Error(
-                'User account service is missing. You must implement a captcha verification service class that extends UserAccountBaseService and instantiate your class and store in a field in MicroserviceImpl class'
+                'User account service is missing. You must implement a captcha verification service class that extends UserBaseService and instantiate your class and store in a field in MicroserviceImpl class'
               );
             }
 
             let userAccountId;
 
-            if (microservice[serviceName] instanceof UserAccountBaseService) {
+            if (microservice[serviceName] instanceof UserBaseService) {
               userAccountId = serviceFunctionArgument._id ?? subject;
               if (serviceFunctionArgument._id) {
                 subjectCache.storeExpiringItem(subject, userAccountId, 30 * 60);
@@ -770,18 +770,18 @@ export default async function tryExecuteServiceMethod(
     const auditLog = ServiceClass ? serviceFunctionAnnotationContainer.getAuditLog(ServiceClass, functionName) : undefined;
 
     if (
-      microservice[serviceName] instanceof UserAccountBaseService ||
+      microservice[serviceName] instanceof UserBaseService ||
       auditLog?.shouldLog(serviceFunctionArgument, response)
     ) {
       const auditLogEntry = createAuditLogEntry(
         subject ?? serviceFunctionArgument?.subject ?? '',
         (headers['x-forwarded-for'] ?? '') as string,
         (headers.authorization ?? '') as string,
-        microservice[serviceName] instanceof UserAccountBaseService ? functionName : serviceFunctionName,
+        microservice[serviceName] instanceof UserBaseService ? functionName : serviceFunctionName,
         storedError ? 'failure' : 'success',
         storedError?.statusCode,
         storedError?.message,
-        microservice[serviceName] instanceof UserAccountBaseService
+        microservice[serviceName] instanceof UserBaseService
           ? serviceFunctionArgument
           : { ...(auditLog?.attributesToLog(serviceFunctionArgument, response) ?? {}), _id: response?._id }
       );

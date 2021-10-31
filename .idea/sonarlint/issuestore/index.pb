@@ -654,7 +654,5 @@ M
 src/client/generateClients.ts,8/b/8bdaf664cfe1fbe97e586bdfd966a3d344312524
 G
 src/services/Service.ts,e/4/e4a548851f3a5b613e2e08e822a73a3f82f0dfc4
-<
-src/index.ts,c/5/c5fb850250c7443c48a6c12b5cf6916773da31f1
 K
 src/services/BaseService.ts,9/4/9434f185c4f597d67e2b58164a20c94dfc0e257c

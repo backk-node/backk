@@ -14,6 +14,7 @@ export { default as ResponseCacheConfigService } from './cache/ResponseCacheConf
 export { default as CaptchaVerificationService } from './captcha/CaptchaVerificationService';
 export { default as CrudEntityService } from './services/crudentity/CrudEntityService';
 export { default as StartupCheckService } from './services/startup/StartupCheckService';
+export { Service } from './services/Service';
 export { UserService } from './services/useraccount/UserService';
 export { default as UserBaseService } from './services/useraccount/UserBaseService';
 export { default as BaseService } from './services/BaseService';

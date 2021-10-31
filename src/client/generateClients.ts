@@ -236,7 +236,12 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
         );
       }
 
-      node.declaration.decorators = undefined;
+      node.declaration.decorators = node.declaration.decorators?.filter(
+        (decorator: any) =>
+          decorator.expression.callee.name === 'Create' ||
+          decorator.expression.callee.name === 'Update' ||
+          decorator.expression.callee.name === 'Delete'
+      );
       node.declaration.superClass = null;
       node.declaration.implements = undefined;
       const serviceClassName = node.declaration.id.name;
@@ -395,7 +400,12 @@ function generateInternalServiceFile(microservice: Microservice, serviceImplFile
       const isInternalService = node.declaration.decorators?.find(
         (decorator: any) => decorator.expression.callee.name === 'AllowServiceForKubeClusterInternalUse'
       );
-      node.declaration.decorators = undefined;
+      node.declaration.decorators = node.declaration.decorators?.filter(
+        (decorator: any) =>
+          decorator.expression.callee.name === 'Create' ||
+          decorator.expression.callee.name === 'Update' ||
+          decorator.expression.callee.name === 'Delete'
+      );
       node.declaration.superClass = null;
       node.declaration.implements = undefined;
       const serviceClassName = node.declaration.id.name;

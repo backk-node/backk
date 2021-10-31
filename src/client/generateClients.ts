@@ -256,15 +256,15 @@ function generateFrontendServiceFile(
       node.declaration.decorators = undefined;
       node.declaration.superClass = null;
       node.declaration.implements = undefined;
-      const serviceClassName = node.declaration.id.name[0].toLowerCase() + node.declaration.id.name.slice(1);
+      const serviceClassName = node.declaration.id.name;
 
       if (serviceClassName.endsWith('Impl')) {
-        node.declaration.id.name = node.declaration.id.name.slice(0, -4);
+        node.declaration.id.name = serviceClassName.slice(0, -4);
       }
 
       const [serviceName] =
         Object.entries(microservice).find(
-          ([, ServiceClass]: [string, any]) => ServiceClass.constructor.name === serviceClassName
+          ([, service]: [string, any]) => service.constructor.name === serviceClassName
         ) ?? [];
 
       if (!serviceName) {
@@ -420,15 +420,15 @@ function generateInternalServiceFile(
       node.declaration.decorators = undefined;
       node.declaration.superClass = null;
       node.declaration.implements = undefined;
-      const serviceClassName = node.declaration.id.name[0].toLowerCase() + node.declaration.id.name.slice(1);
+      const serviceClassName = node.declaration.id.name;
 
       if (serviceClassName.endsWith('Impl')) {
-        node.declaration.id.name = node.declaration.id.name.slice(0, -4);
+        node.declaration.id.name = serviceClassName.slice(0, -4);
       }
 
       const [serviceName] =
         Object.entries(microservice).find(
-          ([, ServiceClass]: [string, any]) => ServiceClass.constructor.name === serviceClassName
+          ([, service]: [string, any]) => service.constructor.name === serviceClassName
         ) ?? [];
 
       if (!serviceName) {

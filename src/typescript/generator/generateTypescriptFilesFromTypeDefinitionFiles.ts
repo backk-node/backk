@@ -1,9 +1,9 @@
 import { parseSync } from '@babel/core';
 import generate from '@babel/generator';
 import { exec } from 'child_process';
-import util from 'util';
 import { readFileSync, writeFileSync } from 'fs';
 import _ from 'lodash';
+import util from 'util';
 import { getFileNamesRecursively } from '../../utils/file/getSrcFilePathNameForTypeName';
 import getTypeFilePathNameFor from '../../utils/file/getTypeFilePathNameFor';
 import parseTypescriptLinesForTypeName from '../parser/parseTypescriptLinesForTypeName';
@@ -14,7 +14,7 @@ const promisifiedExec = util.promisify(exec);
 function generateTypescriptFileFor(
   typeFilePathName: string,
   handledTypeFilePathNames: string[],
-  promisifiedExecs: Array<Promise<any>>
+  outputFilePathNames: string[]
 ) {
   const typeFileLines = readFileSync(typeFilePathName, { encoding: 'UTF-8' }).split('\n');
   let outputImportCodeLines: string[] = [];
@@ -55,23 +55,16 @@ function generateTypescriptFileFor(
       }
 
       if (spreadType.startsWith('Omit<')) {
-        const baseType = spreadType
-          .slice(5)
-          .split(',')[0]
-          .trim();
+        const baseType = spreadType.slice(5).split(',')[0].trim();
 
-        const ommittedKeyParts = spreadType
-          .slice(5)
-          .split(',')[1]
-          .slice(0, -1)
-          .split('|');
+        const ommittedKeyParts = spreadType.slice(5).split(',')[1].slice(0, -1).split('|');
 
         const omittedKeys = ommittedKeyParts.map((omittedKeyPart) => omittedKeyPart.trim().split(/["']/)[1]);
         const baseTypeFilePathName = getTypeFilePathNameFor(baseType);
 
         if (baseTypeFilePathName) {
           handledTypeFilePathNames.push(baseTypeFilePathName);
-          generateTypescriptFileFor(baseTypeFilePathName, handledTypeFilePathNames, promisifiedExecs);
+          generateTypescriptFileFor(baseTypeFilePathName, handledTypeFilePathNames, outputFilePathNames);
         }
 
         const [importLines, classPropertyDeclarations] = parseTypescriptLinesForTypeName(
@@ -89,23 +82,13 @@ function generateTypescriptFileFor(
         outputImportCodeLines = outputImportCodeLines.concat(importLines);
         outputClassPropertyDeclarations = outputClassPropertyDeclarations.concat(classPropertyDeclarations);
       } else if (spreadType.startsWith('Pick<')) {
-        const baseType = spreadType
-          .slice(5)
-          .split(',')[0]
-          .trim();
+        const baseType = spreadType.slice(5).split(',')[0].trim();
 
-        const pickedKeyParts = spreadType
-          .slice(5)
-          .split(',')[1]
-          .slice(0, -1)
-          .split('|');
+        const pickedKeyParts = spreadType.slice(5).split(',')[1].slice(0, -1).split('|');
 
         const pickedKeys = pickedKeyParts.map((pickedKeyPart) => {
           if (pickedKeyPart.includes(' as ')) {
-            return pickedKeyPart
-              .trim()
-              .split(' as ')[0]
-              .split(/["']/)[1];
+            return pickedKeyPart.trim().split(' as ')[0].split(/["']/)[1];
           }
 
           return pickedKeyPart.trim().split(/["']/)[1];
@@ -130,7 +113,7 @@ function generateTypescriptFileFor(
 
         if (baseTypeFilePathName) {
           handledTypeFilePathNames.push(baseTypeFilePathName);
-          generateTypescriptFileFor(baseTypeFilePathName, handledTypeFilePathNames, promisifiedExecs);
+          generateTypescriptFileFor(baseTypeFilePathName, handledTypeFilePathNames, outputFilePathNames);
         }
 
         const [importLines, classPropertyDeclarations] = parseTypescriptLinesForTypeName(
@@ -154,7 +137,7 @@ function generateTypescriptFileFor(
 
         if (spreadTypeFilePathName) {
           handledTypeFilePathNames.push(spreadTypeFilePathName);
-          generateTypescriptFileFor(spreadTypeFilePathName, handledTypeFilePathNames, promisifiedExecs);
+          generateTypescriptFileFor(spreadTypeFilePathName, handledTypeFilePathNames, outputFilePathNames);
         }
 
         const [importLines, classPropertyDeclarations] = parseTypescriptLinesForTypeName(
@@ -181,8 +164,8 @@ function generateTypescriptFileFor(
     plugins: [
       ['@babel/plugin-proposal-decorators', { legacy: true }],
       '@babel/plugin-proposal-class-properties',
-      '@babel/plugin-transform-typescript'
-    ]
+      '@babel/plugin-transform-typescript',
+    ],
   });
 
   const classDecoratorNames: string[] = [];
@@ -228,7 +211,7 @@ function generateTypescriptFileFor(
     "// This file can be generated from the respective .type file by running npm script 'generateTypes'",
     '',
     ...outputImportCodeLines,
-    ''
+    '',
   ];
 
   let outputFileContentsStr = outputFileHeaderLines.join('\n') + '\n' + outputCode;
@@ -250,18 +233,13 @@ function generateTypescriptFileFor(
 
   const outputFileName = typeFilePathName.split('.')[0] + '.ts';
   writeFileSync(outputFileName, outputFileContentsStr, { encoding: 'UTF-8' });
-
-  const prettierPromise = promisifiedExec(
-    process.cwd() + '/node_modules/.bin/prettier --write ' + outputFileName
-  );
-
-  promisifiedExecs.push(prettierPromise);
+  outputFilePathNames.push(outputFileName);
 }
 
 (async function generateTypescriptFilesFromTypeDefinitionFiles() {
   const filePathNames = getFileNamesRecursively(process.cwd() + '/src');
   const handledTypeFilePathNames: string[] = [];
-  const promisifiedExecs: Array<Promise<any>> = [];
+  const outputFilePathNames: string[] = [];
 
   filePathNames
     .filter((filePathName: string) => filePathName.endsWith('.type'))
@@ -270,10 +248,12 @@ function generateTypescriptFileFor(
         return;
       }
 
-      generateTypescriptFileFor(typeFilePathName, handledTypeFilePathNames, promisifiedExecs);
+      generateTypescriptFileFor(typeFilePathName, handledTypeFilePathNames, outputFilePathNames);
     });
 
-  await Promise.all(promisifiedExecs);
+  await promisifiedExec(
+    process.cwd() + '/node_modules/.bin/prettier --write ' + outputFilePathNames.join(' ')
+  );
 })().catch((error) => {
   console.log(error);
   process.exit(1);

@@ -383,7 +383,7 @@ export default async function initializeMicroservice(
 
     let expectedServiceName = decapitalizeFirstLetter(service.constructor.name);
     if (service.constructor.name.endsWith('Impl')) {
-      expectedServiceName = service.constructor.name.slice(0, -4);
+      expectedServiceName = expectedServiceName.slice(0, -4);
     }
 
     if (serviceName !== expectedServiceName) {

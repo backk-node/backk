@@ -41,12 +41,13 @@ export default class Microservice {
     if (
       commandLineArgs?.[2] &&
       commandLineArgs?.[2] !== '--generateApiSpecsOnly' &&
-      commandLineArgs?.[2] !== '--generateClientsOnly'
+      commandLineArgs?.[2] !== '--generateClientsOnly' &&
+      commandLineArgs?.[2] !== '--generateClientsOnlyIfNeeded'
     ) {
       console.error(
         'Invalid command line parameter: ' +
           commandLineArgs?.[2] +
-          '\nSupported command line parameters are:\n--generateApiSpecsOnly\n--generateClientsOnly'
+          '\nSupported command line parameters are:\n--generateApiSpecsOnly\n--generateClientsOnly\n--generateClientsOnlyIfNeeded'
       );
       process.exit(1);
     }
@@ -60,7 +61,8 @@ export default class Microservice {
 
     if (
       commandLineArgs?.[2] === '--generateApiSpecsOnly' ||
-      commandLineArgs?.[2] === '--generateClientsOnly'
+      commandLineArgs?.[2] === '--generateClientsOnly' ||
+      commandLineArgs?.[2] === '--generateClientsOnlyIfNeeded'
     ) {
       process.exit(0);
     }

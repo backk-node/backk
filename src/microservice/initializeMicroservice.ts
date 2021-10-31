@@ -1,22 +1,23 @@
 import _ from 'lodash';
-import BaseService from '../services/BaseService';
+import generateClients from '../client/generateClients';
+import { DataStore } from '../datastore/DataStore';
+import NullDataStore from '../datastore/NullDataStore';
+import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
 import generateServicesMetadata from '../metadata/generateServicesMetadata';
-import parseServiceFunctionNameToArgAndReturnTypeNameMaps from '../typescript/parser/parseServiceFunctionNameToArgAndReturnTypeNameMaps';
-import getSrcFilePathNameForTypeName from '../utils/file/getSrcFilePathNameForTypeName';
-import setClassPropertyValidationDecorators from '../validation/setClassPropertyValidationDecorators';
-import setNestedTypeValidationDecorators from '../validation/setNestedTypeValidationDecorators';
-import writeTestsPostmanCollectionExportFile from '../postman/writeTestsPostmanCollectionExportFile';
 import generateTypesForServices from '../metadata/generateTypesForServices';
 import getNestedClasses from '../metadata/getNestedClasses';
-import { DataStore } from '../datastore/DataStore';
+import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
+import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
 import log, { Severity } from '../observability/logging/log';
 import writeOpenApiSpecFile from '../openapi/writeOpenApiSpecFile';
-import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
-import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
+import writeTestsPostmanCollectionExportFile from '../postman/writeTestsPostmanCollectionExportFile';
+import BaseService from '../services/BaseService';
+import parseServiceFunctionNameToArgAndReturnTypeNameMaps from '../typescript/parser/parseServiceFunctionNameToArgAndReturnTypeNameMaps';
+import getSrcFilePathNameForTypeName from '../utils/file/getSrcFilePathNameForTypeName';
 import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
-import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
-import generateClients from '../client/generateClients';
-import NullDataStore from '../datastore/NullDataStore';
+import setClassPropertyValidationDecorators from '../validation/setClassPropertyValidationDecorators';
+import setNestedTypeValidationDecorators from '../validation/setNestedTypeValidationDecorators';
+import isClientGenerationNeeded from "../client/isClientGenerationNeeded";
 
 function addNestedTypes(privateTypeNames: Set<string>, typeName: string, types: { [p: string]: object }) {
   Object.values(types[typeName] ?? {}).forEach((typeName) => {
@@ -86,7 +87,7 @@ function getInternalMetadata(
     if (internalTypeNames.has(typeName)) {
       return {
         ...internalTypes,
-        typeName: value
+        typeName: value,
       };
     }
     return internalTypes;
@@ -97,7 +98,7 @@ function getInternalMetadata(
       if (internalTypeNames.has(typeName)) {
         return {
           ...internalPropertyAccess,
-          typeName: value
+          typeName: value,
         };
       }
       return internalPropertyAccess;
@@ -110,7 +111,7 @@ function getInternalMetadata(
       if (internalTypeNames.has(typeName)) {
         return {
           ...internalTypesDocumentation,
-          typeName: value
+          typeName: value,
         };
       }
       return internalTypesDocumentation;
@@ -123,7 +124,7 @@ function getInternalMetadata(
       if (internalTypeNames.has(typeName)) {
         return {
           ...internalTypeReferences,
-          typeName: value
+          typeName: value,
         };
       }
       return internalTypeReferences;
@@ -136,7 +137,7 @@ function getInternalMetadata(
       if (internalTypeNames.has(typeName)) {
         return {
           ...internalTypes,
-          typeName: value
+          typeName: value,
         };
       }
       return internalTypes;
@@ -150,7 +151,7 @@ function getInternalMetadata(
     internalPropertyAccess,
     internalTypesDocumentation,
     internalTypeReferences,
-    internalValidations
+    internalValidations,
   };
 }
 
@@ -215,7 +216,7 @@ function getPublicMetadata(
     publicPropertyAccess,
     publicTypesDocumentation,
     publicTypeReferences,
-    publicValidations
+    publicValidations,
   };
 }
 
@@ -230,7 +231,7 @@ export function generatePublicServicesMetadata(microservice: any) {
         propertyAccess,
         serviceDocumentation,
         typeReferences,
-        typesDocumentation
+        typesDocumentation,
       } = serviceMetadata;
 
       const {
@@ -239,7 +240,7 @@ export function generatePublicServicesMetadata(microservice: any) {
         publicPropertyAccess,
         publicTypesDocumentation,
         publicTypeReferences,
-        publicValidations
+        publicValidations,
       } = getPublicMetadata(
         microservice[serviceMetadata.serviceName].constructor,
         functions,
@@ -258,7 +259,7 @@ export function generatePublicServicesMetadata(microservice: any) {
         propertyAccess: publicPropertyAccess,
         typesDocumentation: publicTypesDocumentation,
         typeReferences: publicTypeReferences,
-        validations: publicValidations
+        validations: publicValidations,
       };
     }
   );
@@ -277,7 +278,7 @@ export function generateInternalServicesMetadata(microservice: any) {
         propertyAccess,
         serviceDocumentation,
         typeReferences,
-        typesDocumentation
+        typesDocumentation,
       } = serviceMetadata;
 
       const {
@@ -286,7 +287,7 @@ export function generateInternalServicesMetadata(microservice: any) {
         internalPropertyAccess,
         internalTypesDocumentation,
         internalTypeReferences,
-        internalValidations
+        internalValidations,
       } = getInternalMetadata(
         microservice[serviceMetadata.serviceName].constructor,
         functions,
@@ -305,7 +306,7 @@ export function generateInternalServicesMetadata(microservice: any) {
         propertyAccess: internalPropertyAccess,
         typesDocumentation: internalTypesDocumentation,
         typeReferences: internalTypeReferences,
-        validations: internalValidations
+        validations: internalValidations,
       };
     }
   );
@@ -352,13 +353,10 @@ export default async function initializeMicroservice(
       serviceDocumentation,
       functionNameToParamTypeNameMap,
       functionNameToReturnTypeNameMap,
-      functionNameToDocumentationMap
+      functionNameToDocumentationMap,
     ] = parseServiceFunctionNameToArgAndReturnTypeNameMaps(
       service.constructor,
-      getSrcFilePathNameForTypeName(
-        service.constructor.name,
-        remoteServiceRootDir
-      ),
+      getSrcFilePathNameForTypeName(service.constructor.name, remoteServiceRootDir),
       remoteServiceRootDir
     );
 
@@ -366,7 +364,7 @@ export default async function initializeMicroservice(
       serviceDocumentation,
       functionNameToParamTypeNameMap,
       functionNameToReturnTypeNameMap,
-      functionNameToDocumentationMap
+      functionNameToDocumentationMap,
     };
   });
 
@@ -406,15 +404,22 @@ export default async function initializeMicroservice(
       writeTestsPostmanCollectionExportFile(microservice, servicesMetadata);
     }
 
-    if (command === '--generateClientsOnly') {
+    if (command === '--generateClientsOnly' || command === '--generateClientsOnlyIfNeeded') {
       if (process.env.NODE_ENV !== 'development') {
         throw new Error('Client generation allowed in dev environment only');
       }
+
       const publicTypeNames =
         microservice.publicServicesMetadata ?? generatePublicServicesMetadata(microservice);
       const internalTypeNames =
         microservice.internalServicesMetadata ?? generateInternalServicesMetadata(microservice);
-      await generateClients(microservice, publicTypeNames, internalTypeNames);
+
+      if (
+        command === '--generateClientsOnly' ||
+        (command === '--generateClientsOnlyIfNeeded' && isClientGenerationNeeded(microservice, publicTypeNames, internalTypeNames))
+      ) {
+        await generateClients(microservice, publicTypeNames, internalTypeNames);
+      }
     }
 
     if (command === '--generateApiSpecsOnly') {

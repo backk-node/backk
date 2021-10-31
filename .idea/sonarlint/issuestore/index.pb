@@ -580,8 +580,6 @@ R
 "src/requestprocessor/HttpServer.ts,8/6/869e973a694b88bc90d4f845180c81727430030e
 U
 %src/services/ReadinessCheckService.ts,a/c/aca76d51d139ac7a3a39bedf668ebb966286244a
-P
- src/microservice/Microservice.ts,b/2/b203b2517f9ead474bfd9ed8b4aa05bb628a6597
 n
 >src/decorators/typeproperty/typePropertyAnnotationContainer.ts,c/8/c810282510d9ae8ef1f187c69f3bc3db0d6976fb
 Z
@@ -638,8 +636,6 @@ e
 5src/decorators/service/function/AllowHttpGetMethod.ts,a/3/a3e3c1250b7f81826a9be8cb2c6250fcad0b21f5
 u
 Esrc/decorators/service/function/serviceFunctionAnnotationContainer.ts,6/f/6f969f85640cfffcf6ed8d82aff088220b97d615
-Z
-*src/microservice/initializeMicroservice.ts,1/1/1162f5fb3b946952726e351e5b6fcea12aed21a8
 X
 (src/execution/tryExecuteServiceMethod.ts,a/3/a3a819ae1b09ff11116e6c75731dfd3ccfee00ec
 _
@@ -650,9 +646,13 @@ P
  src/utils/type/isEnumTypeName.ts,4/a/4ab0347d80ba81424f175eac0980b52258bb8502
 c
 3src/typescript/parser/parseEnumValuesFromSrcFile.ts,0/b/0b73f87f9e7724615b646f10c621dcaa09e49382
-M
-src/client/generateClients.ts,8/b/8bdaf664cfe1fbe97e586bdfd966a3d344312524
 G
 src/services/Service.ts,e/4/e4a548851f3a5b613e2e08e822a73a3f82f0dfc4
 K
 src/services/BaseService.ts,9/4/9434f185c4f597d67e2b58164a20c94dfc0e257c
+V
+&src/types/useraccount/UserAccountId.ts,f/a/fa42744a702ca90abf093419fc6b6b6980802d7a
+\
+,src/services/crudentity/CrudEntityService.ts,9/3/93d547a11dcc793be9c9d27720b7d4c10b344b8d
+[
++src/services/useraccount/UserBaseService.ts,4/f/4fa4d3374a0a8c0d4308a7c4e451ee861dc443a2

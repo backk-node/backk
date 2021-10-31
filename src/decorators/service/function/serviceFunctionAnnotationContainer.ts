@@ -27,6 +27,7 @@ class ServiceFunctionAnnotationContainer {
   private readonly serviceFunctionNameToResponseHeadersMap: { [key: string]: HttpHeaders<any, any> } = {};
   private readonly serviceFunctionNameToHasNoAutoTestMap: { [key: string]: boolean } = {};
   private readonly serviceFunctionNameToAuditLogMap: { [key: string]: AuditLog } = {};
+  private readonly serviceFunctionNameToAllowHttpGetMethodMap: { [key: string]: boolean } = {};
 
   private readonly serviceFunctionNameToExpectedResponseFieldPathNameToFieldValueMapMap: {
     [key: string]: { [key: string]: any };
@@ -62,6 +63,10 @@ class ServiceFunctionAnnotationContainer {
 
   addServiceFunctionAllowedForClusterInternalUse(serviceClass: Function, functionName: string) {
     this.serviceFunctionNameToIsAllowedForClusterInternalUseMap[`${serviceClass.name}${functionName}`] = true;
+  }
+
+  addServiceFunctionAllowHttpGetMethod(serviceClass: Function, functionName: string) {
+    this.serviceFunctionNameToAllowHttpGetMethodMap[`${serviceClass.name}${functionName}`] = true;
   }
 
   addServiceFunctionAllowedForEveryUserForOwnResources(
@@ -348,6 +353,21 @@ class ServiceFunctionAnnotationContainer {
     while (proto !== Object.prototype) {
       if (
         this.serviceFunctionNameToIsNotTransactionalMap[`${proto.constructor.name}${functionName}`] !==
+        undefined
+      ) {
+        return true;
+      }
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    return false;
+  }
+
+  doesServiceFunctionAllowHttpGetMethod(serviceClass: Function, functionName: string) {
+    let proto = Object.getPrototypeOf(new (serviceClass as new () => any)());
+    while (proto !== Object.prototype) {
+      if (
+        this.serviceFunctionNameToAllowHttpGetMethodMap[`${proto.constructor.name}${functionName}`] !==
         undefined
       ) {
         return true;

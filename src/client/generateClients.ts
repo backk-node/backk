@@ -7,14 +7,23 @@ import rimraf from 'rimraf';
 import util from 'util';
 import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
 import Microservice from '../microservice/Microservice';
-import { getFileNamesRecursively } from '../utils/file/getSrcFilePathNameForTypeName';
+import types from '../types/types';
+import getSrcFilePathNameForTypeName, {
+  getFileNamesRecursively
+} from '../utils/file/getSrcFilePathNameForTypeName';
 import getMicroserviceName from '../utils/getMicroserviceName';
 import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
 import decapitalizeFirstLetter from '../utils/string/decapitalizeFirstLetter';
+import parseEnumValuesFromSrcFile from "../typescript/parser/parseEnumValuesFromSrcFile";
 
 const promisifiedExec = util.promisify(exec);
 
-function getInternalReturnFetchStatement(serviceName: string, functionName: string, argumentName: string) {
+function getReturnCallRemoteServiceStatement(
+  serviceName: string,
+  functionName: string,
+  argumentName: string,
+  isGetMethodAllowed: boolean
+) {
   return {
     type: 'ReturnStatement',
     argument: {
@@ -39,175 +48,31 @@ function getInternalReturnFetchStatement(serviceName: string, functionName: stri
         {
           type: 'StringLiteral',
           value: process.env.SERVICE_NAMESPACE
-        }
-      ]
-    }
-  };
-}
-
-function getFrontendReturnFetchStatement(serviceName: string, functionName: string, argumentName: string) {
-  return {
-    type: 'ReturnStatement',
-    argument: {
-      type: 'CallExpression',
-      callee: {
-        type: 'MemberExpression',
-        object: {
-          type: 'CallExpression',
-          callee: {
-            type: 'Identifier',
-            name: 'fetch'
-          },
-          arguments: [
-            {
-              type: 'TemplateLiteral',
-              expressions: [
-                {
-                  type: 'MemberExpression',
-                  object: {
-                    type: 'MemberExpression',
-                    object: {
+        },
+        ...(isGetMethodAllowed
+          ? [
+              {
+                type: 'ObjectExpression',
+                properties: [
+                  {
+                    type: 'ObjectProperty',
+                    method: false,
+                    key: {
                       type: 'Identifier',
-                      name: 'window'
+                      name: 'httpMethod'
                     },
                     computed: false,
-                    property: {
-                      type: 'Identifier',
-                      name: 'location'
+                    shorthand: false,
+                    value: {
+                      type: 'StringLiteral',
+                      value: 'GET'
                     }
-                  },
-                  computed: false,
-                  property: {
-                    type: 'Identifier',
-                    name: 'host'
                   }
-                }
-              ],
-              quasis: [
-                {
-                  type: 'TemplateElement',
-                  value: {
-                    raw: 'https://',
-                    cooked: 'https://'
-                  },
-                  tail: false
-                },
-                {
-                  type: 'TemplateElement',
-                  value: {
-                    raw: `/${getNamespacedMicroserviceName()}/${serviceName}.${functionName}`,
-                    cooked: `/${getNamespacedMicroserviceName()}/${serviceName}.${functionName}`
-                  },
-                  tail: true
-                }
-              ]
-            },
-            {
-              type: 'ObjectExpression',
-              properties: [
-                {
-                  type: 'ObjectProperty',
-                  method: false,
-                  key: {
-                    type: 'Identifier',
-                    name: 'method'
-                  },
-                  computed: false,
-                  shorthand: false,
-                  value: {
-                    type: 'StringLiteral',
-                    extra: {
-                      rawValue: 'post',
-                      raw: "'post'"
-                    },
-                    value: 'post'
-                  }
-                },
-                ...(argumentName
-                  ? [
-                    {
-                      type: 'ObjectProperty',
-                      method: false,
-                      key: {
-                        type: 'Identifier',
-                        name: 'body'
-                      },
-                      computed: false,
-                      shorthand: false,
-                      value: {
-                        type: 'CallExpression',
-                        callee: {
-                          type: 'MemberExpression',
-                          object: {
-                            type: 'Identifier',
-                            name: 'JSON'
-                          },
-                          computed: false,
-                          property: {
-                            type: 'Identifier',
-                            name: 'stringify'
-                          }
-                        },
-                        arguments: [
-                          {
-                            type: 'Identifier',
-                            name: argumentName
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                  : []),
-                {
-                  type: 'ObjectProperty',
-                  method: false,
-                  key: {
-                    type: 'Identifier',
-                    name: 'headers'
-                  },
-                  computed: false,
-                  shorthand: false,
-                  value: {
-                    type: 'ObjectExpression',
-                    properties: [
-                      {
-                        type: 'ObjectProperty',
-                        method: false,
-                        key: {
-                          type: 'StringLiteral',
-                          extra: {
-                            rawValue: 'Content-Type',
-                            raw: "'Content-Type'"
-                          },
-                          value: 'Content-Type'
-                        },
-                        computed: false,
-                        shorthand: false,
-                        value: {
-                          type: 'StringLiteral',
-                          extra: {
-                            rawValue: 'application/json',
-                            raw: "'application/json'"
-                          },
-                          value: 'application/json'
-                        }
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
-          ],
-          optional: false
-        },
-        computed: false,
-        property: {
-          type: 'Identifier',
-          name: 'json',
-        },
-        optional: false
-      },
-      arguments: []
+                ]
+              }
+            ]
+          : [])
+      ]
     }
   };
 }
@@ -216,7 +81,8 @@ function rewriteTypeFile(
   typeFilePathName: string,
   destTypeFilePathName: string,
   clientType: 'frontend' | 'internal',
-  execPromises: Array<Promise<any>>
+  execPromises: Array<Promise<any>>,
+  typeNames: string[]
 ) {
   const typeFileContentsStr = readFileSync(typeFilePathName, { encoding: 'UTF-8' });
 
@@ -242,7 +108,7 @@ function rewriteTypeFile(
     }
 
     if (node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration') {
-      if (node.declaration?.type === 'TypeAlias') {
+      if (node.declaration?.type === 'TSTypeAliasDeclaration') {
         needsRewrite = true;
         continue;
       }
@@ -256,6 +122,33 @@ function rewriteTypeFile(
         if (classBodyNode.type === 'ClassProperty' && isPrivate) {
           needsRewrite = true;
           return;
+        }
+
+        const propertyTypeName = classBodyNode.typeAnnotation.typeAnnotation?.id?.name;
+
+        if (
+          propertyTypeName &&
+          propertyTypeName[0] === propertyTypeName[0].toUpperCase() &&
+          propertyTypeName[0] !== '(' &&
+          propertyTypeName !== 'Date' &&
+          !typeNames.includes(propertyTypeName) &&
+          !(types as any)[propertyTypeName] &&
+          parseEnumValuesFromSrcFile(propertyTypeName).length > 0
+        ) {
+          const typeFilePathName = getSrcFilePathNameForTypeName(propertyTypeName);
+
+          const destTypeFilePathName = typeFilePathName.replace(
+            /src\/services/,
+            'generated/clients/frontend/' + getNamespacedMicroserviceName()
+          );
+
+          const destDirPathName = dirname(destTypeFilePathName);
+
+          if (!existsSync(destDirPathName)) {
+            mkdirSync(destDirPathName, { recursive: true });
+          }
+
+          rewriteTypeFile(typeFilePathName, destTypeFilePathName, clientType, execPromises, typeNames);
         }
 
         classBodyNode.decorators = classBodyNode.decorators?.filter((decorator: any) => {
@@ -287,6 +180,7 @@ function rewriteTypeFile(
 
           return !shouldRemove;
         });
+
         classBodyNodes.push(classBodyNode);
       });
       node.declaration.body.body = classBodyNodes;
@@ -373,6 +267,10 @@ function generateFrontendServiceFile(serviceImplFilePathName: string, execPromis
               ? decapitalizeFirstLetter(classBodyNode.params[0].typeAnnotation.typeAnnotation.typeName.name)
               : classBodyNode.params?.[0]?.name;
 
+          const isGetMethodAllowed = classBodyNode.decorators?.find(
+            (decorator: any) => decorator.expression.callee.name === 'AllowHttpGetMethod'
+          );
+
           const isInternalMethod = classBodyNode.decorators?.find(
             (decorator: any) =>
               decorator.expression.callee.name === 'AllowForKubeClusterInternalUse' ||
@@ -405,7 +303,9 @@ function generateFrontendServiceFile(serviceImplFilePathName: string, execPromis
           classBodyNode.decorators = [];
           classBodyNode.body = {
             type: 'BlockStatement',
-            body: [getFrontendReturnFetchStatement(serviceName, functionName, argumentName)]
+            body: [
+              getReturnCallRemoteServiceStatement(serviceName, functionName, argumentName, isGetMethodAllowed)
+            ]
           };
 
           methods.push(classBodyNode);
@@ -429,7 +329,11 @@ function generateFrontendServiceFile(serviceImplFilePathName: string, execPromis
       mkdirSync(frontEndDestDirPathName, { recursive: true });
     }
 
-    let outputFileContentsStr = '// DO NOT MODIFY THIS FILE! This is an auto-generated file' + '\n' + code;
+    let outputFileContentsStr =
+      '// DO NOT MODIFY THIS FILE! This is an auto-generated file' +
+      '\n' +
+      "import { callRemoteService } from 'backk-frontend-utils';" +
+      code;
     let isFirstFunction = true;
 
     outputFileContentsStr = outputFileContentsStr
@@ -511,6 +415,9 @@ function generateInternalServiceFile(serviceImplFilePathName: string, execPromis
             classBodyNode.params?.[0]?.type === 'ObjectPattern'
               ? decapitalizeFirstLetter(classBodyNode.params[0].typeAnnotation.typeAnnotation.typeName.name)
               : classBodyNode.params?.[0]?.name;
+          const isGetMethodAllowd = classBodyNode.decorators?.find(
+            (decorator: any) => decorator.expression.callee.name === 'AllowHttpGetMethod'
+          );
           const isInternalMethod = classBodyNode.decorators?.find(
             (decorator: any) =>
               isInternalService || decorator.expression.callee.name === 'AllowForKubeClusterInternalUse'
@@ -538,7 +445,9 @@ function generateInternalServiceFile(serviceImplFilePathName: string, execPromis
           classBodyNode.decorators = [];
           classBodyNode.body = {
             type: 'BlockStatement',
-            body: [getInternalReturnFetchStatement(serviceName, functionName, argumentName)]
+            body: [
+              getReturnCallRemoteServiceStatement(serviceName, functionName, argumentName, isGetMethodAllowd)
+            ]
           };
           methods.push(classBodyNode);
           methodCount++;
@@ -683,7 +592,13 @@ export default async function generateClients(
             mkdirSync(frontEndDestDirPathName, { recursive: true });
           }
 
-          rewriteTypeFile(typeFilePathName, frontEndDestTypeFilePathName, 'frontend', execPromises);
+          rewriteTypeFile(
+            typeFilePathName,
+            frontEndDestTypeFilePathName,
+            'frontend',
+            execPromises,
+            publicTypeNames
+          );
         }
 
         if (typeName && internalTypeNames.includes(typeName)) {
@@ -698,7 +613,13 @@ export default async function generateClients(
             mkdirSync(internalDestDirPathName, { recursive: true });
           }
 
-          rewriteTypeFile(typeFilePathName, internalDestTypeFilePathName, 'internal', execPromises);
+          rewriteTypeFile(
+            typeFilePathName,
+            internalDestTypeFilePathName,
+            'internal',
+            execPromises,
+            internalTypeNames
+          );
         }
       });
 

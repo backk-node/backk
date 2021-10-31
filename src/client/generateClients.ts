@@ -154,12 +154,6 @@ function rewriteTypeFile(
         classBodyNode.decorators = classBodyNode.decorators?.filter((decorator: any) => {
           const decoratorName = decorator.expression.callee.name;
           const shouldRemove = [
-            'CreateOnly',
-            'ReadOnly',
-            'ReadUpdate',
-            'ReadWrite',
-            'UpdateOnly',
-            'WriteOnly',
             'TestValue',
             'Encrypted',
             'FetchFromRemoteService',

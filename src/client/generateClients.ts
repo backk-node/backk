@@ -8,13 +8,13 @@ import util from 'util';
 import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
 import Microservice from '../microservice/Microservice';
 import types from '../types/types';
+import parseEnumValuesFromSrcFile from '../typescript/parser/parseEnumValuesFromSrcFile';
 import getSrcFilePathNameForTypeName, {
   getFileNamesRecursively
 } from '../utils/file/getSrcFilePathNameForTypeName';
 import getMicroserviceName from '../utils/getMicroserviceName';
 import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
 import decapitalizeFirstLetter from '../utils/string/decapitalizeFirstLetter';
-import parseEnumValuesFromSrcFile from "../typescript/parser/parseEnumValuesFromSrcFile";
 
 const promisifiedExec = util.promisify(exec);
 
@@ -217,7 +217,11 @@ function rewriteTypeFile(
   }
 }
 
-function generateFrontendServiceFile(serviceImplFilePathName: string, execPromises: Array<Promise<any>>) {
+function generateFrontendServiceFile(
+  microservice: Microservice,
+  serviceImplFilePathName: string,
+  execPromises: Array<Promise<any>>
+) {
   const serviceImplFileContentsStr = readFileSync(serviceImplFilePathName, { encoding: 'UTF-8' });
 
   const ast = parseSync(serviceImplFileContentsStr, {
@@ -252,10 +256,18 @@ function generateFrontendServiceFile(serviceImplFilePathName: string, execPromis
       node.declaration.decorators = undefined;
       node.declaration.superClass = null;
       node.declaration.implements = undefined;
-      let serviceName = node.declaration.id.name[0].toLowerCase() + node.declaration.id.name.slice(1);
-      if (serviceName.endsWith('Impl')) {
+      const serviceClassName = node.declaration.id.name[0].toLowerCase() + node.declaration.id.name.slice(1);
+
+      if (serviceClassName.endsWith('Impl')) {
         node.declaration.id.name = node.declaration.id.name.slice(0, -4);
-        serviceName = node.declaration.id.name;
+      }
+
+      const [serviceName] = Object.entries(microservice).find(
+        ([, ServiceClass]: [string, any]) => ServiceClass.constructor.name === serviceClassName
+      ) ?? [];
+
+      if (!serviceName) {
+        break;
       }
 
       const methods: any[] = [];
@@ -403,10 +415,18 @@ function generateInternalServiceFile(serviceImplFilePathName: string, execPromis
       node.declaration.decorators = undefined;
       node.declaration.superClass = null;
       node.declaration.implements = undefined;
-      let serviceName = node.declaration.id.name[0].toLowerCase() + node.declaration.id.name.slice(1);
-      if (serviceName.endsWith('Impl')) {
+      const serviceClassName = node.declaration.id.name[0].toLowerCase() + node.declaration.id.name.slice(1);
+
+      if (serviceClassName.endsWith('Impl')) {
         node.declaration.id.name = node.declaration.id.name.slice(0, -4);
-        serviceName = node.declaration.id.name;
+      }
+
+      const [serviceName] = Object.entries(microservice).find(
+        ([, ServiceClass]: [string, any]) => ServiceClass.constructor.name === serviceClassName
+      ) ?? [];
+
+      if (!serviceName) {
+        break;
       }
 
       const methods: any[] = [];
@@ -626,8 +646,8 @@ export default async function generateClients(
       });
 
     const serviceImplFilePathName = resolve(serviceDirectory, serviceImplFileDirEntry.name);
-    generateFrontendServiceFile(serviceImplFilePathName, execPromises);
-    generateInternalServiceFile(serviceImplFilePathName, execPromises);
+    generateFrontendServiceFile(microservice, serviceImplFilePathName, execPromises);
+    generateInternalServiceFile(microservice, serviceImplFilePathName, execPromises);
   });
 
   await Promise.all(execPromises);

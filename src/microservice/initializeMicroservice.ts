@@ -419,6 +419,7 @@ export default async function initializeMicroservice(
         (command === '--generateClientsOnlyIfNeeded' && isClientGenerationNeeded(microservice, publicTypeNames, internalTypeNames))
       ) {
         await generateClients(microservice, publicTypeNames, internalTypeNames);
+        console.log('Successfully generated clients.')
       }
     }
 
@@ -442,6 +443,8 @@ export default async function initializeMicroservice(
         microservice.internalServicesMetadata ?? generateInternalServicesMetadata(microservice),
         'internal'
       );
+
+      console.log('Successfully generated API specs.')
     }
 
     const serviceNames = Object.entries(microservice)
@@ -449,6 +452,8 @@ export default async function initializeMicroservice(
       .map(([serviceName]) => serviceName)
       .join(', ');
 
-    log(Severity.INFO, 'Services initialized', serviceNames);
+    if (!command) {
+      log(Severity.INFO, 'Services initialized', serviceNames);
+    }
   }
 }

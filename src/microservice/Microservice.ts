@@ -11,6 +11,8 @@ import scheduleCronJobsForExecution from '../scheduling/scheduleCronJobsForExecu
 import scheduleJobsForExecution from '../scheduling/scheduleJobsForExecution';
 import reloadLoggingConfigOnChange from '../configuration/reloadLoggingConfigOnChange';
 import { RequestProcessor } from '../requestprocessor/RequestProcessor';
+import areTypeDefinitionsUsedInTypeFilesChanged
+  from "../typescript/utils/areTypeDefinitionsUsedInTypeFilesChanged";
 
 export type HttpVersion = 1;
 
@@ -58,6 +60,11 @@ export default class Microservice {
       shouldGeneratePostmanIntegrationTestsOnRestartInDevEnv,
       commandLineArgs?.[2] ?? ''
     );
+
+    if (areTypeDefinitionsUsedInTypeFilesChanged()) {
+      console.log("Type definitions have changed.\nRun 'npm run generateTypes'");
+      process.exit(0);
+    }
 
     if (
       commandLineArgs?.[2] === '--generateApiSpecsOnly' ||

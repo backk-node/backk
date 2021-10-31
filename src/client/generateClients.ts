@@ -10,7 +10,7 @@ import Microservice from '../microservice/Microservice';
 import types from '../types/types';
 import parseEnumValuesFromSrcFile from '../typescript/parser/parseEnumValuesFromSrcFile';
 import getSrcFilePathNameForTypeName, {
-  getFileNamesRecursively
+  getFileNamesRecursively,
 } from '../utils/file/getSrcFilePathNameForTypeName';
 import getMicroserviceName from '../utils/getMicroserviceName';
 import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
@@ -30,24 +30,24 @@ function getReturnCallRemoteServiceStatement(
       type: 'CallExpression',
       callee: {
         type: 'Identifier',
-        name: 'callRemoteService'
+        name: 'callRemoteService',
       },
       arguments: [
         {
           type: 'StringLiteral',
-          value: getMicroserviceName()
+          value: getMicroserviceName(),
         },
         {
           type: 'StringLiteral',
-          value: `${serviceName}.${functionName}`
+          value: `${serviceName}.${functionName}`,
         },
         {
           type: 'Identifier',
-          name: argumentName ?? 'undefined'
+          name: argumentName ?? 'undefined',
         },
         {
           type: 'StringLiteral',
-          value: process.env.SERVICE_NAMESPACE
+          value: process.env.SERVICE_NAMESPACE,
         },
         ...(isGetMethodAllowed
           ? [
@@ -59,21 +59,21 @@ function getReturnCallRemoteServiceStatement(
                     method: false,
                     key: {
                       type: 'Identifier',
-                      name: 'httpMethod'
+                      name: 'httpMethod',
                     },
                     computed: false,
                     shorthand: false,
                     value: {
                       type: 'StringLiteral',
-                      value: 'GET'
-                    }
-                  }
-                ]
-              }
+                      value: 'GET',
+                    },
+                  },
+                ],
+              },
             ]
-          : [])
-      ]
-    }
+          : []),
+      ],
+    },
   };
 }
 
@@ -81,7 +81,6 @@ function rewriteTypeFile(
   typeFilePathName: string,
   destTypeFilePathName: string,
   clientType: 'frontend' | 'internal',
-  execPromises: Array<Promise<any>>,
   typeNames: string[]
 ) {
   const typeFileContentsStr = readFileSync(typeFilePathName, { encoding: 'UTF-8' });
@@ -90,8 +89,8 @@ function rewriteTypeFile(
     plugins: [
       ['@babel/plugin-proposal-decorators', { legacy: true }],
       '@babel/plugin-proposal-class-properties',
-      '@babel/plugin-transform-typescript'
-    ]
+      '@babel/plugin-transform-typescript',
+    ],
   });
 
   const nodes = (ast as any).program.body;
@@ -148,7 +147,7 @@ function rewriteTypeFile(
             mkdirSync(destDirPathName, { recursive: true });
           }
 
-          rewriteTypeFile(typeFilePathName, destTypeFilePathName, clientType, execPromises, typeNames);
+          rewriteTypeFile(typeFilePathName, destTypeFilePathName, clientType, typeNames);
         }
 
         classBodyNode.decorators = classBodyNode.decorators?.filter((decorator: any) => {
@@ -165,7 +164,7 @@ function rewriteTypeFile(
             'ManyToMany',
             'OneToMany',
             'Transient',
-            'Unique'
+            'Unique',
           ].includes(decoratorName);
 
           if (shouldRemove) {
@@ -202,28 +201,18 @@ function rewriteTypeFile(
       .join('\n');
 
     writeFileSync(destTypeFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
-
-    const organizeImportsExecPromise = promisifiedExec(
-      process.cwd() + '/node_modules/.bin/prettier --write ' + destTypeFilePathName
-    );
-
-    execPromises.push(organizeImportsExecPromise);
   }
 }
 
-function generateFrontendServiceFile(
-  microservice: Microservice,
-  serviceImplFilePathName: string,
-  execPromises: Array<Promise<any>>
-) {
+function generateFrontendServiceFile(microservice: Microservice, serviceImplFilePathName: string) {
   const serviceImplFileContentsStr = readFileSync(serviceImplFilePathName, { encoding: 'UTF-8' });
 
   const ast = parseSync(serviceImplFileContentsStr, {
     plugins: [
       ['@babel/plugin-proposal-decorators', { legacy: true }],
       '@babel/plugin-proposal-class-properties',
-      '@babel/plugin-transform-typescript'
-    ]
+      '@babel/plugin-transform-typescript',
+    ],
   });
 
   const nodes = (ast as any).program.body;
@@ -304,7 +293,7 @@ function generateFrontendServiceFile(
             classBodyNode.params[0] = {
               type: 'Identifier',
               name: argumentName,
-              typeAnnotation: classBodyNode.params[0].typeAnnotation
+              typeAnnotation: classBodyNode.params[0].typeAnnotation,
             };
           }
           classBodyNode.async = false;
@@ -312,8 +301,13 @@ function generateFrontendServiceFile(
           classBodyNode.body = {
             type: 'BlockStatement',
             body: [
-              getReturnCallRemoteServiceStatement(serviceName, functionName, argumentName, isGetMethodAllowed)
-            ]
+              getReturnCallRemoteServiceStatement(
+                serviceName,
+                functionName,
+                argumentName,
+                isGetMethodAllowed
+              ),
+            ],
           };
 
           methods.push(classBodyNode);
@@ -371,28 +365,18 @@ function generateFrontendServiceFile(
       : destServiceImplFilePathName;
 
     writeFileSync(destServiceClientFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
-
-    const organizeImportsExecPromise = promisifiedExec(
-      process.cwd() + '/node_modules/.bin/prettier --write ' + destServiceClientFilePathName
-    );
-
-    execPromises.push(organizeImportsExecPromise);
   }
 }
 
-function generateInternalServiceFile(
-  microservice: Microservice,
-  serviceImplFilePathName: string,
-  execPromises: Array<Promise<any>>
-) {
+function generateInternalServiceFile(microservice: Microservice, serviceImplFilePathName: string) {
   const serviceImplFileContentsStr = readFileSync(serviceImplFilePathName, { encoding: 'UTF-8' });
 
   const ast = parseSync(serviceImplFileContentsStr, {
     plugins: [
       ['@babel/plugin-proposal-decorators', { legacy: true }],
       '@babel/plugin-proposal-class-properties',
-      '@babel/plugin-transform-typescript'
-    ]
+      '@babel/plugin-transform-typescript',
+    ],
   });
 
   const nodes = (ast as any).program.body;
@@ -460,7 +444,7 @@ function generateInternalServiceFile(
             classBodyNode.params[0] = {
               type: 'Identifier',
               name: argumentName,
-              typeAnnotation: classBodyNode.params[0].typeAnnotation
+              typeAnnotation: classBodyNode.params[0].typeAnnotation,
             };
           }
           classBodyNode.async = false;
@@ -468,8 +452,8 @@ function generateInternalServiceFile(
           classBodyNode.body = {
             type: 'BlockStatement',
             body: [
-              getReturnCallRemoteServiceStatement(serviceName, functionName, argumentName, isGetMethodAllowd)
-            ]
+              getReturnCallRemoteServiceStatement(serviceName, functionName, argumentName, isGetMethodAllowd),
+            ],
           };
           methods.push(classBodyNode);
           methodCount++;
@@ -522,12 +506,6 @@ function generateInternalServiceFile(
       : destServiceImplFilePathName;
 
     writeFileSync(destServiceClientFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
-
-    const organizeImportsExecPromise = promisifiedExec(
-      process.cwd() + '/node_modules/.bin/prettier --write ' + destServiceClientFilePathName
-    );
-
-    execPromises.push(organizeImportsExecPromise);
   }
 }
 
@@ -541,7 +519,6 @@ export default async function generateClients(
   }
 
   rimraf.sync('generated/clients');
-  const execPromises: Array<Promise<any>> = [];
   const directoryEntries = readdirSync('src/services', { withFileTypes: true });
 
   directoryEntries.forEach((directoryEntry: Dirent) => {
@@ -614,13 +591,7 @@ export default async function generateClients(
             mkdirSync(frontEndDestDirPathName, { recursive: true });
           }
 
-          rewriteTypeFile(
-            typeFilePathName,
-            frontEndDestTypeFilePathName,
-            'frontend',
-            execPromises,
-            publicTypeNames
-          );
+          rewriteTypeFile(typeFilePathName, frontEndDestTypeFilePathName, 'frontend', publicTypeNames);
         }
 
         if (typeName && internalTypeNames.includes(typeName)) {
@@ -635,20 +606,14 @@ export default async function generateClients(
             mkdirSync(internalDestDirPathName, { recursive: true });
           }
 
-          rewriteTypeFile(
-            typeFilePathName,
-            internalDestTypeFilePathName,
-            'internal',
-            execPromises,
-            internalTypeNames
-          );
+          rewriteTypeFile(typeFilePathName, internalDestTypeFilePathName, 'internal', internalTypeNames);
         }
       });
 
     const serviceImplFilePathName = resolve(serviceDirectory, serviceImplFileDirEntry.name);
-    generateFrontendServiceFile(microservice, serviceImplFilePathName, execPromises);
-    generateInternalServiceFile(microservice, serviceImplFilePathName, execPromises);
+    generateFrontendServiceFile(microservice, serviceImplFilePathName);
+    generateInternalServiceFile(microservice, serviceImplFilePathName);
   });
 
-  await Promise.all(execPromises);
+  await promisifiedExec(process.cwd() + '/node_modules/.bin/prettier --write generated/clients');
 }

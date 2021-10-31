@@ -124,7 +124,7 @@ function rewriteTypeFile(
           return;
         }
 
-        const propertyTypeName = classBodyNode.typeAnnotation.typeAnnotation?.id?.name;
+        const propertyTypeName = classBodyNode.typeAnnotation.typeAnnotation?.typeName?.name;
 
         if (
           propertyTypeName &&
@@ -252,9 +252,10 @@ function generateFrontendServiceFile(serviceImplFilePathName: string, execPromis
       node.declaration.decorators = undefined;
       node.declaration.superClass = null;
       node.declaration.implements = undefined;
-      const serviceName = node.declaration.id.name[0].toLowerCase() + node.declaration.id.name.slice(1);
+      let serviceName = node.declaration.id.name[0].toLowerCase() + node.declaration.id.name.slice(1);
       if (serviceName.endsWith('Impl')) {
         node.declaration.id.name = node.declaration.id.name.slice(0, -4);
+        serviceName = node.declaration.id.name;
       }
 
       const methods: any[] = [];
@@ -402,9 +403,10 @@ function generateInternalServiceFile(serviceImplFilePathName: string, execPromis
       node.declaration.decorators = undefined;
       node.declaration.superClass = null;
       node.declaration.implements = undefined;
-      const serviceName = node.declaration.id.name[0].toLowerCase() + node.declaration.id.name.slice(1);
+      let serviceName = node.declaration.id.name[0].toLowerCase() + node.declaration.id.name.slice(1);
       if (serviceName.endsWith('Impl')) {
         node.declaration.id.name = node.declaration.id.name.slice(0, -4);
+        serviceName = node.declaration.id.name;
       }
 
       const methods: any[] = [];

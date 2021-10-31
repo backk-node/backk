@@ -153,8 +153,6 @@ L
 src/types/ErrorDefinition.ts,b/d/bdddc5a4ea19c1d1a503ef76b0bc3261f648deba
 D
 src/types/ErrorOr.ts,1/f/1fd51b38aff1cbce4f0f5d2c383dbc13be1c8a99
-Z
-*src/utils/changePackageJsonNameProperty.ts,4/d/4de71c93b5442fda6f6491b5f45624f6dbdf5957
 c
 3src/postman/getServiceFunctionExampleReturnValue.ts,0/4/047d096565075e7de84417852baecf401ae35cc0
 N
@@ -425,8 +423,6 @@ S
 #docs/usage/MICROSERVICE_METADATA.MD,d/8/d871bca4101499475e31f84c6e6f47975caa7357
 V
 &docs/usage/DOCUMENTING_MICROSERVICE.MD,0/c/0cd3f27a354e7b58f9ae4538ce2869f575cb67e4
-[
-+src/observability/logging/logEnvironment.ts,e/2/e2977c9c028b7a5f9f113c1370453b46c7aab27a
 I
 docs/api/OBSERVABILITY.MD,d/e/de26c745d47694e67ee89b5bac1664b649d90a96
 `
@@ -618,8 +614,6 @@ _
 package.json,7/0/7030d0b2f71b999ff89a343de08c414af32fc93a
 N
 src/datastore/NullDataStore.ts,2/e/2e928b6ee6da950485438ecb838be1ab236d6091
-{
-Ksrc/typescript/parser/parseServiceFunctionNameToArgAndReturnTypeNameMaps.ts,9/1/91ee05e5e186389425ee5664ede164ff88b2ce83
 P
  src/metadata/getNestedClasses.ts,5/7/5741819f904c43dfa42fd8f190fcbb9214bdf87b
 T
@@ -634,8 +628,6 @@ u
 Esrc/decorators/service/function/serviceFunctionAnnotationContainer.ts,6/f/6f969f85640cfffcf6ed8d82aff088220b97d615
 X
 (src/execution/tryExecuteServiceMethod.ts,a/3/a3a819ae1b09ff11116e6c75731dfd3ccfee00ec
-_
-/src/utils/file/getSrcFilePathNameForTypeName.ts,0/e/0e8b631c4da7d29df106b7fda6bc971ce9fc27a1
 B
 src/types/types.ts,c/a/ca15b85bec71704fc4a189e0d28db77b74c7e5a2
 P

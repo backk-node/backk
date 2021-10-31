@@ -2,9 +2,12 @@ import { readFileSync, writeFileSync } from 'fs';
 import getMicroserviceName from './getMicroserviceName';
 
 export default function changePackageJsonNameProperty() {
+  if (process.env.NODE_ENV !== 'development') {
+    return;
+  }
+
   try {
     const packageJsonContents = readFileSync('package.json', { encoding: 'UTF-8' });
-
     const packageJsonObject = JSON.parse(packageJsonContents);
     if (packageJsonObject.name === 'my-microservice') {
       packageJsonObject.name = getMicroserviceName();

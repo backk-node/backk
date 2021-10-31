@@ -61,16 +61,16 @@ export default class Microservice {
       commandLineArgs?.[2] ?? ''
     );
 
-    if (areTypeDefinitionsUsedInTypeFilesChanged()) {
-      console.log("Type definitions have changed.\nRun 'npm run generateTypes'");
-      process.exit(0);
-    }
-
     if (
       commandLineArgs?.[2] === '--generateApiSpecsOnly' ||
       commandLineArgs?.[2] === '--generateClientsOnly' ||
       commandLineArgs?.[2] === '--generateClientsOnlyIfNeeded'
     ) {
+      process.exit(0);
+    }
+
+    if (process.env.NODE_ENV === 'development' && areTypeDefinitionsUsedInTypeFilesChanged()) {
+      console.log("Type definitions have changed.\nRun 'npm run generateTypes'");
       process.exit(0);
     }
 

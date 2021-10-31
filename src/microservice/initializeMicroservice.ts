@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import generateClients from '../client/generateClients';
+import isClientGenerationNeeded from '../client/isClientGenerationNeeded';
 import { DataStore } from '../datastore/DataStore';
 import NullDataStore from '../datastore/NullDataStore';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
@@ -14,10 +15,10 @@ import writeTestsPostmanCollectionExportFile from '../postman/writeTestsPostmanC
 import BaseService from '../services/BaseService';
 import parseServiceFunctionNameToArgAndReturnTypeNameMaps from '../typescript/parser/parseServiceFunctionNameToArgAndReturnTypeNameMaps';
 import getSrcFilePathNameForTypeName from '../utils/file/getSrcFilePathNameForTypeName';
+import decapitalizeFirstLetter from '../utils/string/decapitalizeFirstLetter';
 import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
 import setClassPropertyValidationDecorators from '../validation/setClassPropertyValidationDecorators';
 import setNestedTypeValidationDecorators from '../validation/setNestedTypeValidationDecorators';
-import isClientGenerationNeeded from "../client/isClientGenerationNeeded";
 
 function addNestedTypes(privateTypeNames: Set<string>, typeName: string, types: { [p: string]: object }) {
   Object.values(types[typeName] ?? {}).forEach((typeName) => {
@@ -321,15 +322,17 @@ export default async function initializeMicroservice(
   command: string,
   remoteServiceRootDir = ''
 ) {
+  Object.entries(microservice).forEach(([serviceName, service]: [string, any]) => {
+    if (serviceName.endsWith('Service') && !(service instanceof BaseService)) {
+      throw new Error(
+        "Class '" + service.constructor.name + "' must extend from 'BaseService' or 'CrudResourceService'"
+      );
+    }
+  });
+
   const serviceNameToServiceEntries = Object.entries(microservice).filter(
     ([, service]: [string, any]) => service instanceof BaseService || remoteServiceRootDir
   );
-
-  if (serviceNameToServiceEntries.length === 0) {
-    throw new Error(
-      microservice.constructor + ': No services defined. Services must extend from BaseService.'
-    );
-  }
 
   if (!remoteServiceRootDir) {
     const servicesUniqueByDataStore = _.uniqBy(
@@ -340,13 +343,36 @@ export default async function initializeMicroservice(
     );
 
     if (servicesUniqueByDataStore.length > 1) {
-      throw new Error('Services can use only one same database manager');
+      throw new Error(
+        'Multiple data store not allowed. Services can only use one data store which is same for all services'
+      );
     }
   }
 
   serviceNameToServiceEntries.forEach(([serviceName, service]: [string, any]) => {
     if (serviceName === 'metadataService') {
       throw new Error('metadataService is a reserved internal service name.');
+    }
+
+    const serviceFilePathName = getSrcFilePathNameForTypeName(service.constructor.name, remoteServiceRootDir);
+
+    if (!(serviceFilePathName.endsWith('Service.ts') || !serviceFilePathName.endsWith('ServiceImpl.ts'))) {
+      throw new Error(
+        "Invalid file name '" +
+          serviceFilePathName +
+          "'. Service file name must end with 'Service' or 'ServiceImpl'"
+      );
+    }
+
+    let expectedServiceName = decapitalizeFirstLetter(service.constructor.name);
+    if (service.constructor.name.endsWith('Impl')) {
+      expectedServiceName = service.constructor.name.slice(0, -4);
+    }
+
+    if (serviceName !== expectedServiceName) {
+      throw new Error(
+        "Microservice class property '" + serviceName + "' should be '" + expectedServiceName + "'"
+      );
     }
 
     const [
@@ -356,7 +382,7 @@ export default async function initializeMicroservice(
       functionNameToDocumentationMap,
     ] = parseServiceFunctionNameToArgAndReturnTypeNameMaps(
       service.constructor,
-      getSrcFilePathNameForTypeName(service.constructor.name, remoteServiceRootDir),
+      serviceFilePathName,
       remoteServiceRootDir
     );
 
@@ -416,10 +442,11 @@ export default async function initializeMicroservice(
 
       if (
         command === '--generateClientsOnly' ||
-        (command === '--generateClientsOnlyIfNeeded' && isClientGenerationNeeded(microservice, publicTypeNames, internalTypeNames))
+        (command === '--generateClientsOnlyIfNeeded' &&
+          isClientGenerationNeeded(microservice, publicTypeNames, internalTypeNames))
       ) {
         await generateClients(microservice, publicTypeNames, internalTypeNames);
-        console.log('Successfully generated clients.')
+        console.log('Successfully generated clients.');
       }
     }
 
@@ -444,7 +471,7 @@ export default async function initializeMicroservice(
         'internal'
       );
 
-      console.log('Successfully generated API specs.')
+      console.log('Successfully generated API specs.');
     }
 
     const serviceNames = Object.entries(microservice)

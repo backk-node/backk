@@ -24,7 +24,8 @@ function getReturnCallOrSendToRemoteServiceStatement(
   functionName: string,
   argumentName: string,
   isGetMethodAllowed: boolean,
-  requestProcessors?: RequestProcessor[]
+  requestProcessors?: RequestProcessor[],
+  shouldHaveJwtStorageEncryptionKeyArgument = false
 ) {
   let backkFunction = 'callRemoteService';
   const asyncRequestProcessor = requestProcessors?.find((requestProcessor) =>
@@ -62,6 +63,14 @@ function getReturnCallOrSendToRemoteServiceStatement(
           type: 'StringLiteral',
           value: process.env.SERVICE_NAMESPACE,
         },
+        ...(shouldHaveJwtStorageEncryptionKeyArgument
+          ? [
+              {
+                type: 'Identifier',
+                name: 'jwtStorageEncryptionKey',
+              },
+            ]
+          : []),
         ...(isGetMethodAllowed
           ? [
               {
@@ -314,6 +323,16 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
               typeAnnotation: classBodyNode.params[0].typeAnnotation,
             };
           }
+          classBodyNode.params[1] = {
+            type: 'Identifier',
+            name: 'jwtStorageEncryptionKey',
+            typeAnnotation: {
+              type: 'TypeAnnotation',
+              typeAnnotation: {
+                type: 'StringTypeAnnotation',
+              },
+            },
+          };
           classBodyNode.async = false;
           classBodyNode.decorators = [];
           classBodyNode.body = {
@@ -323,7 +342,9 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
                 serviceName,
                 functionName,
                 argumentName,
-                isGetMethodAllowed
+                isGetMethodAllowed,
+                [],
+                true
               ),
             ],
           };

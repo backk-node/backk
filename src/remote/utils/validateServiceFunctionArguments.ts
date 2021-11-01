@@ -1,12 +1,12 @@
-import { CallOrSendToUrlSpec } from "../messagequeue/sendToRemoteServiceInsideTransaction";
-import forEachAsyncSequential from "../../utils/forEachAsyncSequential";
-import parseRemoteServiceFunctionCallUrlParts from "./parseRemoteServiceFunctionCallUrlParts";
-import fs from "fs";
-import generateClassFromSrcFile from "../../typescript/generator/generateClassFromSrcFile";
-import initializeMicroservice from "../../microservice/initializeMicroservice";
-import { plainToClass } from "class-transformer";
-import tryValidateServiceFunctionArgument from "../../validation/tryValidateServiceFunctionArgument";
-import NullDataStore from "../../datastore/NullDataStore";
+import { plainToClass } from 'class-transformer';
+import fs from 'fs';
+import NullDataStore from '../../datastore/NullDataStore';
+import initializeMicroservice from '../../microservice/initializeMicroservice';
+import generateClassFromSrcFile from '../../typescript/generator/generateClassFromSrcFile';
+import forEachAsyncSequential from '../../utils/forEachAsyncSequential';
+import tryValidateServiceFunctionArgument from '../../validation/tryValidateServiceFunctionArgument';
+import { CallOrSendToUrlSpec } from '../messagequeue/sendToRemoteServiceInsideTransaction';
+import parseRemoteServiceFunctionCallUrlParts from './parseRemoteServiceFunctionCallUrlParts';
 
 export const remoteMicroserviceNameToControllerMap: { [key: string]: any } = {};
 const noOpDataStore = new NullDataStore();
@@ -41,10 +41,10 @@ export async function validateServiceFunctionArguments(sends: CallOrSendToUrlSpe
       const serviceInstance = new ServiceClass(noOpDataStore);
 
       controller = {
-        [serviceName]: serviceInstance
+        [serviceName]: serviceInstance,
       };
 
-      initializeMicroservice(controller, noOpDataStore, false, '', remoteServiceRootDir);
+      initializeMicroservice(controller, noOpDataStore, false, '', [], remoteServiceRootDir);
       remoteMicroserviceNameToControllerMap[`${topic}$/${serviceName}`] = controller;
     }
 
@@ -68,8 +68,8 @@ export async function validateServiceFunctionArguments(sends: CallOrSendToUrlSpe
     } catch (error) {
       throw new Error(
         serviceFunctionUrl +
-        ': Invalid remote service function callRemoteService argument: ' +
-        JSON.stringify(error.message)
+          ': Invalid remote service function callRemoteService argument: ' +
+          JSON.stringify(error.message)
       );
     }
   });

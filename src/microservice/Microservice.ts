@@ -58,7 +58,8 @@ export default class Microservice {
       this,
       this.dataStore,
       shouldGeneratePostmanIntegrationTestsOnRestartInDevEnv,
-      commandLineArgs?.[2] ?? ''
+      commandLineArgs?.[2] ?? '',
+      requestProcessors
     );
 
     if (

@@ -12,6 +12,7 @@ import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackk
 import { BACKK_ERRORS } from '../errors/backkErrors';
 import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
 import log, { Severity } from '../observability/logging/log';
+import { CommunicationMethod } from "../remote/messagequeue/sendToRemoteService";
 
 export default class HttpServer implements RequestProcessor {
   constructor(
@@ -96,5 +97,13 @@ export default class HttpServer implements RequestProcessor {
 
     log(Severity.INFO, `HTTP server started, listening to port ${port}`, '');
     server.listen(port);
+  }
+
+  isAsyncProcessor(): boolean {
+    return false;
+  }
+
+  getCommunicationMethod(): CommunicationMethod {
+    return 'http';
   }
 }

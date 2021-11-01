@@ -1,13 +1,16 @@
-import { RequestProcessor } from './RequestProcessor';
 import { ITopicConfig } from 'kafkajs';
-import consumeFromKafka from "../remote/messagequeue/kafka/consumeFromKafka";
-import getNamespacedMicroserviceName from "../utils/getNamespacedMicroserviceName";
+import consumeFromKafka from '../remote/messagequeue/kafka/consumeFromKafka';
+import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
+import AbstractAsyncRequestProcessor from './AbstractAsyncRequestProcessor';
+import { CommunicationMethod } from "../remote/messagequeue/sendToRemoteService";
 
-export default class KafkaConsumer implements RequestProcessor {
+export default class KafkaConsumer extends AbstractAsyncRequestProcessor {
   constructor(
     private readonly defaultTopicConfig?: Omit<ITopicConfig, 'topic'>,
     private readonly additionalTopics?: string[]
-  ) {}
+  ) {
+    super();
+  }
 
   startProcessingRequests(): void {
     consumeFromKafka(
@@ -18,5 +21,9 @@ export default class KafkaConsumer implements RequestProcessor {
       this.defaultTopicConfig,
       this.additionalTopics
     );
+  }
+
+  getCommunicationMethod(): CommunicationMethod {
+    return 'kafka';
   }
 }

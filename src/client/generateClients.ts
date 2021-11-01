@@ -7,6 +7,7 @@ import rimraf from 'rimraf';
 import util from 'util';
 import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
 import Microservice from '../microservice/Microservice';
+import { RequestProcessor } from '../requestprocessor/RequestProcessor';
 import types from '../types/types';
 import parseEnumValuesFromSrcFile from '../typescript/parser/parseEnumValuesFromSrcFile';
 import getSrcFilePathNameForTypeName, {
@@ -18,21 +19,33 @@ import decapitalizeFirstLetter from '../utils/string/decapitalizeFirstLetter';
 
 const promisifiedExec = util.promisify(exec);
 
-function getReturnCallRemoteServiceStatement(
+function getReturnCallOrSendToRemoteServiceStatement(
   serviceName: string,
   functionName: string,
   argumentName: string,
-  isGetMethodAllowed: boolean
+  isGetMethodAllowed: boolean,
+  requestProcessors?: RequestProcessor[]
 ) {
+  let backkFunction = 'callRemoteService';
+  const asyncRequestProcessor = requestProcessors?.find((requestProcessor) =>
+    requestProcessor.isAsyncProcessor()
+  );
+  if (asyncRequestProcessor) {
+    backkFunction = 'sendToRemoteService';
+  }
+
   return {
     type: 'ReturnStatement',
     argument: {
       type: 'CallExpression',
       callee: {
         type: 'Identifier',
-        name: 'callRemoteService',
+        name: backkFunction,
       },
       arguments: [
+        ...(asyncRequestProcessor
+          ? [{ type: 'StringLiteral', value: asyncRequestProcessor.getCommunicationMethod() }]
+          : []),
         {
           type: 'StringLiteral',
           value: getMicroserviceName(),
@@ -306,7 +319,7 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
           classBodyNode.body = {
             type: 'BlockStatement',
             body: [
-              getReturnCallRemoteServiceStatement(
+              getReturnCallOrSendToRemoteServiceStatement(
                 serviceName,
                 functionName,
                 argumentName,
@@ -373,7 +386,11 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
   }
 }
 
-function generateInternalServiceFile(microservice: Microservice, serviceImplFilePathName: string) {
+function generateInternalServiceFile(
+  microservice: Microservice,
+  serviceImplFilePathName: string,
+  requestProcessors: RequestProcessor[]
+) {
   const serviceImplFileContentsStr = readFileSync(serviceImplFilePathName, { encoding: 'UTF-8' });
 
   const ast = parseSync(serviceImplFileContentsStr, {
@@ -431,7 +448,7 @@ function generateInternalServiceFile(microservice: Microservice, serviceImplFile
             classBodyNode.params?.[0]?.type === 'ObjectPattern'
               ? decapitalizeFirstLetter(classBodyNode.params[0].typeAnnotation.typeAnnotation.typeName.name)
               : classBodyNode.params?.[0]?.name;
-          const isGetMethodAllowd = classBodyNode.decorators?.find(
+          const isGetMethodAllowed = classBodyNode.decorators?.find(
             (decorator: any) => decorator.expression.callee.name === 'AllowHttpGetMethod'
           );
           const isInternalMethod = classBodyNode.decorators?.find(
@@ -462,7 +479,13 @@ function generateInternalServiceFile(microservice: Microservice, serviceImplFile
           classBodyNode.body = {
             type: 'BlockStatement',
             body: [
-              getReturnCallRemoteServiceStatement(serviceName, functionName, argumentName, isGetMethodAllowd),
+              getReturnCallOrSendToRemoteServiceStatement(
+                serviceName,
+                functionName,
+                argumentName,
+                isGetMethodAllowed,
+                requestProcessors
+              ),
             ],
           };
           methods.push(classBodyNode);
@@ -522,7 +545,8 @@ function generateInternalServiceFile(microservice: Microservice, serviceImplFile
 export default async function generateClients(
   microservice: Microservice,
   publicServicesMetadata: ServiceMetadata[],
-  internalServicesMetadata: ServiceMetadata[]
+  internalServicesMetadata: ServiceMetadata[],
+  requestProcessors: RequestProcessor[]
 ) {
   if (!existsSync('src/services')) {
     return;
@@ -622,7 +646,7 @@ export default async function generateClients(
 
     const serviceImplFilePathName = resolve(serviceDirectory, serviceImplFileDirEntry.name);
     generateFrontendServiceFile(microservice, serviceImplFilePathName);
-    generateInternalServiceFile(microservice, serviceImplFilePathName);
+    generateInternalServiceFile(microservice, serviceImplFilePathName, requestProcessors);
   });
 
   await promisifiedExec(process.cwd() + '/node_modules/.bin/prettier --write generated/clients');

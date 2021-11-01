@@ -26,6 +26,7 @@ import decapitalizeFirstLetter from '../utils/string/decapitalizeFirstLetter';
 import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
 import setClassPropertyValidationDecorators from '../validation/setClassPropertyValidationDecorators';
 import setNestedTypeValidationDecorators from '../validation/setNestedTypeValidationDecorators';
+import { RequestProcessor } from "../requestprocessor/RequestProcessor";
 
 function addNestedTypes(privateTypeNames: Set<string>, typeName: string, types: { [p: string]: object }) {
   Object.values(types[typeName] ?? {}).forEach((typeName) => {
@@ -327,6 +328,7 @@ export default async function initializeMicroservice(
   dataStore: DataStore,
   shouldGeneratePostmanIntegrationTestsOnRestartInDevEnv: boolean,
   command: string,
+  requestProcessors: RequestProcessor[],
   remoteServiceRootDir = ''
 ) {
   Object.entries(microservice).forEach(([serviceName, service]: [string, any]) => {
@@ -483,7 +485,7 @@ export default async function initializeMicroservice(
         (command === '--generateClientsOnlyIfNeeded' &&
           isClientGenerationNeeded(microservice, publicTypeNames, internalTypeNames))
       ) {
-        await generateClients(microservice, publicTypeNames, internalTypeNames);
+        await generateClients(microservice, publicTypeNames, internalTypeNames, requestProcessors);
         console.log('Successfully generated clients.');
       }
     }

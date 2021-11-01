@@ -85,3 +85,7 @@ export class HttpStatusCodes {
   static readonly NOT_IMPLEMENTED = 501;
   static readonly SERVICE_UNAVAILABLE = 503;
 }
+
+export class Durations {
+  static readonly SECS_IN_MINUTE = 60;
+}

@@ -1,11 +1,10 @@
-import { Base64 } from 'js-base64';
-import { verify } from 'jsonwebtoken';
-import fetch from 'node-fetch';
-import _ from 'lodash';
-import https from 'https';
-import AuthorizationService from './AuthorizationService';
-import throwException from '../utils/exception/throwException';
-import log, { Severity } from '../observability/logging/log';
+import { Base64 } from "js-base64";
+import { verify } from "jsonwebtoken";
+import fetch from "node-fetch";
+import _ from "lodash";
+import AuthorizationService from "./AuthorizationService";
+import throwException from "../utils/exception/throwException";
+import log, { Severity } from "../observability/logging/log";
 
 export default class JwtAuthorizationServiceImpl extends AuthorizationService {
   private signSecretOrPublicKey: string | undefined;
@@ -32,7 +31,7 @@ export default class JwtAuthorizationServiceImpl extends AuthorizationService {
     }
   }
 
-  async getSubject(authHeader: string): Promise<string | undefined> {
+  async getSubjectAndIssuer(authHeader: string): Promise<[string | undefined, string | undefined]> {
     const jwt = JwtAuthorizationServiceImpl.getJwtFrom(authHeader);
 
     if (jwt) {
@@ -46,19 +45,19 @@ export default class JwtAuthorizationServiceImpl extends AuthorizationService {
               error.message,
             error.stack
           );
-          return undefined
+          return [undefined, undefined]
         }
       }
 
       try {
         const jwtClaims = verify(jwt, this.signSecretOrPublicKey);
-        return _.get(jwtClaims, 'sub');
+        return [_.get(jwtClaims, 'sub'), _.get(jwtClaims, 'iss')];
       } catch {
-        return Promise.resolve(undefined);
+        return [undefined, undefined];
       }
     }
 
-    return undefined;
+    return [undefined, undefined];
   }
 
   async hasUserRoleIn(roles: string[], authHeader: string): Promise<boolean> {

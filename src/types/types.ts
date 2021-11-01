@@ -48,6 +48,7 @@ import _IdAndDefaultPostQueryOperations from "./postqueryoperations/_IdAndDefaul
 import DbTableVersion from "./DbTableVersion";
 import CurrentPageToken from "./postqueryoperations/CurrentPageToken";
 import EntityCountRequest from "./EntityCountRequest";
+import Issuer from "./useraccount/Issuer";
 
 const types = {
   _Id,
@@ -79,6 +80,7 @@ const types = {
   Version,
   BaseUserAccount,
   Subject,
+  Issuer,
   UserAccountId,
   _IdAndCreatedAtTimestampAndUserAccountId,
   _IdAndVersionAndCreatedAtTimestampAndLastModifiedTimestampAndUserAccountId,

@@ -1,10 +1,10 @@
-import serviceAnnotationContainer from '../decorators/service/serviceAnnotationContainer';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
-import BaseService from '../services/BaseService';
-import UserBaseService from '../services/useraccount/UserBaseService';
-import defaultServiceMetrics from '../observability/metrics/defaultServiceMetrics';
+import serviceAnnotationContainer from '../decorators/service/serviceAnnotationContainer';
 import { BACKK_ERRORS } from '../errors/backkErrors';
 import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
+import defaultServiceMetrics from '../observability/metrics/defaultServiceMetrics';
+import BaseService from '../services/BaseService';
+import UserBaseService from '../services/useraccount/UserBaseService';
 
 export default async function tryAuthorize(
   service: BaseService,
@@ -14,7 +14,7 @@ export default async function tryAuthorize(
   authorizationService: any,
   usersService: UserBaseService | undefined,
   isClusterInternalCall: boolean
-): Promise<undefined | string> {
+): Promise<[string | undefined, string | undefined]> {
   const ServiceClass = service.constructor;
 
   if (!authorizationService) {
@@ -32,7 +32,7 @@ export default async function tryAuthorize(
           functionName
         )
       ) {
-        return;
+        return [undefined, undefined];
       }
     } else {
       throw createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.USER_NOT_AUTHENTICATED);
@@ -46,9 +46,9 @@ export default async function tryAuthorize(
       ) ||
       serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUser(ServiceClass, functionName)
     ) {
-      const subject = await authorizationService.getSubject(authHeader);
-      if (subject) {
-        return subject;
+      const [subject, issuer] = await authorizationService.getSubjectAndIssuer(authHeader);
+      if (subject && issuer) {
+        return [subject, issuer];
       }
     }
 
@@ -59,7 +59,7 @@ export default async function tryAuthorize(
     );
 
     if (await authorizationService.hasUserRoleIn(allowedRoles, authHeader)) {
-      return;
+      return [undefined, undefined];
     }
   }
 
@@ -72,7 +72,7 @@ export default async function tryAuthorize(
         functionName
       ))
   ) {
-    return;
+    return [undefined, undefined];
   }
 
   defaultServiceMetrics.incrementAuthorizationFailuresByOne();

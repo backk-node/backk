@@ -1,49 +1,50 @@
 import { plainToClass } from 'class-transformer';
-import _ from 'lodash';
 import Redis from 'ioredis';
+import _ from 'lodash';
 import { MemoryCache } from 'memory-cache-node';
-import tryAuthorize from '../authorization/tryAuthorize';
-import BaseService from '../services/BaseService';
-import tryVerifyCaptchaToken from '../captcha/tryVerifyCaptchaToken';
-import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
-import UserBaseService from '../services/useraccount/UserBaseService';
-import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
-import tryValidateServiceFunctionArgument from '../validation/tryValidateServiceFunctionArgument';
-import tryValidateServiceFunctionReturnValue from '../validation/tryValidateServiceFunctionReturnValue';
-import defaultServiceMetrics from '../observability/metrics/defaultServiceMetrics';
-import createBackkErrorFromError from '../errors/createBackkErrorFromError';
-import log, { Severity } from '../observability/logging/log';
-import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
-import { HttpStatusCodes, MAX_INT_VALUE, Values } from '../constants/constants';
-import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
-import AuditLoggingService from '../observability/logging/audit/AuditLoggingService';
-import createAuditLogEntry from '../observability/logging/audit/createAuditLogEntry';
-import executeMultipleServiceFunctions from './executeMultipleServiceFunctions';
-import tryScheduleJobExecution from '../scheduling/tryScheduleJobExecution';
-import isExecuteMultipleRequest from './isExecuteMultipleRequest';
-import createErrorFromErrorCodeMessageAndStatus from '../errors/createErrorFromErrorCodeMessageAndStatus';
-import { BackkError } from '../types/BackkError';
-import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
-import { BACKK_ERRORS } from '../errors/backkErrors';
-import emptyError from '../errors/emptyError';
-import fetchFromRemoteServices from './fetchFromRemoteServices';
-import getClsNamespace from '../continuationlocalstorage/getClsNamespace';
-import getMicroserviceServiceByServiceClass from '../microservice/getMicroserviceServiceByServiceClass';
 import AuthorizationService from '../authorization/AuthorizationService';
-import throwException from '../utils/exception/throwException';
+import tryAuthorize from '../authorization/tryAuthorize';
 import ResponseCacheConfigService from '../cache/ResponseCacheConfigService';
-import LivenessCheckService from '../services/LivenessCheckService';
+import tryVerifyCaptchaToken from '../captcha/tryVerifyCaptchaToken';
+import { Durations, HttpStatusCodes, MAX_INT_VALUE, Values } from '../constants/constants';
+import getClsNamespace from '../continuationlocalstorage/getClsNamespace';
+import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
+import { BACKK_ERRORS } from '../errors/backkErrors';
+import createBackkErrorFromError from '../errors/createBackkErrorFromError';
+import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
+import createErrorFromErrorCodeMessageAndStatus from '../errors/createErrorFromErrorCodeMessageAndStatus';
+import emptyError from '../errors/emptyError';
+import isBackkError from '../errors/isBackkError';
+import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
+import getMicroserviceServiceByServiceClass from '../microservice/getMicroserviceServiceByServiceClass';
 import getMicroserviceServiceNameByServiceClass from '../microservice/getMicroserviceServiceNameByServiceClass';
-import ReadinessCheckService from '../services/ReadinessCheckService';
-import StartupCheckService from '../services/startup/StartupCheckService';
-import throwIf from '../utils/exception/throwIf';
-import { getDefaultOrThrowExceptionInProduction } from '../utils/exception/getDefaultOrThrowExceptionInProduction';
-import { getOpenApiSpec } from '../openapi/writeOpenApiSpecFile';
 import {
   generateInternalServicesMetadata,
-  generatePublicServicesMetadata
+  generatePublicServicesMetadata,
 } from '../microservice/initializeMicroservice';
-import isBackkError from '../errors/isBackkError';
+import AuditLoggingService from '../observability/logging/audit/AuditLoggingService';
+import createAuditLogEntry from '../observability/logging/audit/createAuditLogEntry';
+import log, { Severity } from '../observability/logging/log';
+import defaultServiceMetrics from '../observability/metrics/defaultServiceMetrics';
+import { getOpenApiSpec } from '../openapi/writeOpenApiSpecFile';
+import tryScheduleJobExecution from '../scheduling/tryScheduleJobExecution';
+import BaseService from '../services/BaseService';
+import LivenessCheckService from '../services/LivenessCheckService';
+import ReadinessCheckService from '../services/ReadinessCheckService';
+import StartupCheckService from '../services/startup/StartupCheckService';
+import TenantBaseService from '../services/tenant/TenantBaseService';
+import UserBaseService from '../services/useraccount/UserBaseService';
+import { BackkError } from '../types/BackkError';
+import { getDefaultOrThrowExceptionInProduction } from '../utils/exception/getDefaultOrThrowExceptionInProduction';
+import throwException from '../utils/exception/throwException';
+import throwIf from '../utils/exception/throwIf';
+import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
+import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
+import tryValidateServiceFunctionArgument from '../validation/tryValidateServiceFunctionArgument';
+import tryValidateServiceFunctionReturnValue from '../validation/tryValidateServiceFunctionReturnValue';
+import executeMultipleServiceFunctions from './executeMultipleServiceFunctions';
+import fetchFromRemoteServices from './fetchFromRemoteServices';
+import isExecuteMultipleRequest from './isExecuteMultipleRequest';
 
 export interface ServiceFunctionExecutionOptions {
   isMetadataServiceEnabled?: boolean;
@@ -59,7 +60,11 @@ export interface ServiceFunctionExecutionOptions {
   };
 }
 
-const subjectCache = new MemoryCache(5 * 60, Values._100K);
+const subjectToUserAccountIdCache = new MemoryCache<string, string>(
+  5 * Durations.SECS_IN_MINUTE,
+  Values._100K
+);
+const issuerToTenantIdCache = new MemoryCache<string, string>(5 * Durations.SECS_IN_MINUTE, Values._10K);
 
 export default async function tryExecuteServiceMethod(
   microservice: any,
@@ -73,6 +78,7 @@ export default async function tryExecuteServiceMethod(
 ): Promise<void | object> {
   let storedError;
   let subject: string | undefined;
+  let issuer: string | undefined;
   let response: any;
   // eslint-disable-next-line prefer-const
   let [serviceName, functionName] = serviceFunctionName.split('.');
@@ -94,7 +100,7 @@ export default async function tryExecuteServiceMethod(
         ) {
           throw createBackkErrorFromErrorCodeMessageAndStatus({
             ...BACKK_ERRORS.INVALID_ARGUMENT,
-            message: BACKK_ERRORS.INVALID_ARGUMENT.message + 'too many service functions called'
+            message: BACKK_ERRORS.INVALID_ARGUMENT.message + 'too many service functions called',
           });
         }
       } else {
@@ -162,7 +168,8 @@ export default async function tryExecuteServiceMethod(
         (!serviceFunctionName.match(
           options?.httpGetRequests?.regExpForAllowedServiceFunctionNames ?? /^[a-z][A-Za-z0-9]*\.get/
         ) ||
-        options?.httpGetRequests?.deniedServiceFunctionNames?.includes(serviceFunctionName)) && !serviceFunctionAnnotationContainer.doesServiceFunctionAllowHttpGetMethod(ServiceClass, functionName)
+          options?.httpGetRequests?.deniedServiceFunctionNames?.includes(serviceFunctionName)) &&
+        !serviceFunctionAnnotationContainer.doesServiceFunctionAllowHttpGetMethod(ServiceClass, functionName)
       ) {
         throw createErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.HTTP_METHOD_MUST_BE_POST);
       }
@@ -178,7 +185,7 @@ export default async function tryExecuteServiceMethod(
           ...BACKK_ERRORS.INVALID_ARGUMENT,
           message:
             BACKK_ERRORS.INVALID_ARGUMENT.message +
-            'argument not valid or too long. Argument must be a URI encoded JSON string'
+            'argument not valid or too long. Argument must be a URI encoded JSON string',
         });
       }
     }
@@ -201,7 +208,7 @@ export default async function tryExecuteServiceMethod(
       } else {
         throw createBackkErrorFromErrorCodeMessageAndStatus({
           ...BACKK_ERRORS.UNKNOWN_SERVICE,
-          message: BACKK_ERRORS.UNKNOWN_SERVICE.message + serviceName
+          message: BACKK_ERRORS.UNKNOWN_SERVICE.message + serviceName,
         });
       }
     } else if (serviceFunctionName === 'metadataService.getServicesMetadata') {
@@ -212,14 +219,14 @@ export default async function tryExecuteServiceMethod(
             services: isClusterInternalCall
               ? microservice.internalServicesMetadata ?? generateInternalServicesMetadata(microservice)
               : microservice.publicServicesMetadata ?? generatePublicServicesMetadata(microservice),
-            commonErrors: BACKK_ERRORS
+            commonErrors: BACKK_ERRORS,
           })
         );
         return;
       } else {
         throw createBackkErrorFromErrorCodeMessageAndStatus({
           ...BACKK_ERRORS.UNKNOWN_SERVICE,
-          message: BACKK_ERRORS.UNKNOWN_SERVICE.message + serviceName
+          message: BACKK_ERRORS.UNKNOWN_SERVICE.message + serviceName,
         });
       }
     } else if (serviceFunctionName === 'livenessCheckService.isMicroserviceAlive') {
@@ -257,7 +264,7 @@ export default async function tryExecuteServiceMethod(
     if (!microservice[serviceName]) {
       throw createBackkErrorFromErrorCodeMessageAndStatus({
         ...BACKK_ERRORS.UNKNOWN_SERVICE,
-        message: BACKK_ERRORS.UNKNOWN_SERVICE.message + serviceName
+        message: BACKK_ERRORS.UNKNOWN_SERVICE.message + serviceName,
       });
     }
 
@@ -267,7 +274,7 @@ export default async function tryExecuteServiceMethod(
     if (!microservice[serviceName][functionName] || !serviceFunctionResponseValueTypeName) {
       throw createBackkErrorFromErrorCodeMessageAndStatus({
         ...BACKK_ERRORS.UNKNOWN_SERVICE_FUNCTION,
-        message: BACKK_ERRORS.UNKNOWN_SERVICE_FUNCTION.message + serviceFunctionName
+        message: BACKK_ERRORS.UNKNOWN_SERVICE_FUNCTION.message + serviceFunctionName,
       });
     }
 
@@ -281,7 +288,7 @@ export default async function tryExecuteServiceMethod(
     ) {
       throw createBackkErrorFromErrorCodeMessageAndStatus({
         ...BACKK_ERRORS.INVALID_ARGUMENT,
-        message: BACKK_ERRORS.INVALID_ARGUMENT.message + 'argument must be a JSON object'
+        message: BACKK_ERRORS.INVALID_ARGUMENT.message + 'argument must be a JSON object',
       });
     }
 
@@ -293,7 +300,7 @@ export default async function tryExecuteServiceMethod(
     const authorizationService = getMicroserviceServiceByServiceClass(microservice, AuthorizationService);
     const authHeader = headers.authorization;
 
-    subject = await tryAuthorize(
+    [subject, issuer] = await tryAuthorize(
       microservice[serviceName],
       functionName,
       serviceFunctionArgument,
@@ -306,7 +313,10 @@ export default async function tryExecuteServiceMethod(
     const dataStore = (microservice[serviceName] as BaseService).getDataStore();
 
     if (
-      (serviceFunctionArgument?.userId || serviceFunctionArgument?.userAccountId) &&
+      (serviceFunctionArgument?.userId ||
+        serviceFunctionArgument?.userAccountId ||
+        serviceFunctionArgument?.tenantId ||
+        (serviceFunctionArgument?.subject && microservice[serviceName] instanceof UserBaseService)) &&
       serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUserDespiteOfUserIdInArg(
         ServiceClass,
         functionName
@@ -316,7 +326,7 @@ export default async function tryExecuteServiceMethod(
         serviceName +
           '.' +
           functionName +
-          ": argument contains 'userId' or 'userAccountId' and @AllowForEveryUser() annotation. Do you mean to use @AllowForEveryUserForOwnResources() annotation instead? If not, you must annotate this function with @AllowForEveryUser(true)"
+          ": argument contains 'tenantId', subject', 'userId' or 'userAccountId' and @AllowForEveryUser() annotation. Do you mean to use @AllowForEveryUserForOwnResources() annotation instead? If not, you must annotate this function with AllowForEveryUser decorator including a true flag: @AllowForEveryUser(true)"
       );
     }
 
@@ -410,14 +420,14 @@ export default async function tryExecuteServiceMethod(
         cachedResponseJson = await redis.get(key);
       } catch (error) {
         log(Severity.ERROR, 'Redis cache error: ' + error.message, error.stack, {
-          redisCacheServer
+          redisCacheServer,
         });
       }
 
       if (cachedResponseJson) {
         log(Severity.DEBUG, 'Redis cache debug: fetched service function call response from cache', '', {
           redisCacheServer,
-          key
+          key,
         });
 
         defaultServiceMetrics.incrementServiceFunctionCallCacheHitCounterByOne(serviceFunctionName);
@@ -455,20 +465,18 @@ export default async function tryExecuteServiceMethod(
               functionName
             )
           ) {
-            if (!userService) {
-              throw new Error(
-                'User account service is missing. You must implement a captcha verification service class that extends UserBaseService and instantiate your class and store in a field in MicroserviceImpl class'
-              );
-            }
-
-            let userAccountId;
+            let userAccountOrTenantId;
 
             if (microservice[serviceName] instanceof UserBaseService) {
-              userAccountId = serviceFunctionArgument._id ?? subject;
-              if (serviceFunctionArgument._id) {
-                subjectCache.storeExpiringItem(subject, userAccountId, 30 * 60);
+              userAccountOrTenantId = serviceFunctionArgument._id ?? subject;
+              if (serviceFunctionArgument._id && subject) {
+                subjectToUserAccountIdCache.storeExpiringItem(
+                  subject,
+                  userAccountOrTenantId,
+                  30 * Durations.SECS_IN_MINUTE
+                );
               } else if (subject) {
-                subjectCache.removeItem(subject);
+                subjectToUserAccountIdCache.removeItem(subject);
               } else {
                 throw createBackkErrorFromErrorCodeMessageAndStatus(
                   BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED
@@ -476,14 +484,51 @@ export default async function tryExecuteServiceMethod(
               }
             }
 
-            if (userAccountId === undefined) {
-              if (subjectCache.hasItem(subject)) {
-                userAccountId = subjectCache.retrieveItemValue(subject);
+            if (
+              userAccountOrTenantId === undefined &&
+              subject &&
+              serviceFunctionArgument?.tenantId === undefined
+            ) {
+              if (subjectToUserAccountIdCache.hasItem(subject)) {
+                userAccountOrTenantId = subjectToUserAccountIdCache.retrieveItemValue(subject);
               } else {
+                if (!userService) {
+                  throw new Error(
+                    'User account service is missing. You must implement a user account service class that extends UserBaseService class and instantiate your class and store in a field in MicroserviceImpl class'
+                  );
+                }
                 const [idEntity, error] = await userService.getIdBySubject({ subject });
                 throwIf(error);
-                userAccountId = idEntity.data._id;
-                subjectCache.storeExpiringItem(subject, userAccountId, 30 * 60);
+                userAccountOrTenantId = idEntity.data._id;
+                subjectToUserAccountIdCache.storeExpiringItem(
+                  subject,
+                  userAccountOrTenantId,
+                  30 * Durations.SECS_IN_MINUTE
+                );
+                clsNamespace.set('dbLocalTransactionCount', 0);
+              }
+            } else if (
+              userAccountOrTenantId === undefined &&
+              issuer &&
+              serviceFunctionArgument?.tenantId !== undefined
+            ) {
+              if (issuerToTenantIdCache.hasItem(issuer)) {
+                userAccountOrTenantId = issuerToTenantIdCache.retrieveItemValue(issuer);
+              } else {
+                const tenantService = getMicroserviceServiceByServiceClass(microservice, TenantBaseService);
+                if (!tenantService) {
+                  throw new Error(
+                    'Tenant service is missing. You must implement a tenant service class that extends TenantBaseService and instantiate your class and store in a field in MicroserviceImpl class'
+                  );
+                }
+                const [idEntity, error] = await tenantService.getIdByIssuer({ issuer });
+                throwIf(error);
+                userAccountOrTenantId = idEntity.data._id;
+                issuerToTenantIdCache.storeExpiringItem(
+                  issuer,
+                  userAccountOrTenantId,
+                  30 * Durations.SECS_IN_MINUTE
+                );
                 clsNamespace.set('dbLocalTransactionCount', 0);
               }
             }
@@ -496,7 +541,7 @@ export default async function tryExecuteServiceMethod(
               )
             );
 
-            clsNamespace.set('userAccountId', userAccountId.toString());
+            clsNamespace.set('userAccountId', userAccountOrTenantId.toString());
           }
 
           [response, backkError] = await microservice[serviceName][functionName](
@@ -577,7 +622,11 @@ export default async function tryExecuteServiceMethod(
       }
 
       if (response) {
-        const { baseTypeName: serviceFunctionBaseReturnTypeName, isOneOf, isManyOf } = getTypeInfoForTypeName(
+        const {
+          baseTypeName: serviceFunctionBaseReturnTypeName,
+          isOneOf,
+          isManyOf,
+        } = getTypeInfoForTypeName(
           microservice[`${serviceName}__BackkTypes__`].functionNameToReturnTypeNameMap[functionName]
         );
 
@@ -670,7 +719,7 @@ export default async function tryExecuteServiceMethod(
 
             log(Severity.DEBUG, 'Redis cache debug: stored service function call response to cache', '', {
               redisCacheServer,
-              key
+              key,
             });
 
             defaultServiceMetrics.incrementServiceFunctionCallCachedResponsesCounterByOne(serviceName);
@@ -685,7 +734,7 @@ export default async function tryExecuteServiceMethod(
             }
           } catch (error) {
             log(Severity.ERROR, 'Redis cache error message: ' + error.message, error.stack, {
-              redisCacheServer
+              redisCacheServer,
             });
           }
         }
@@ -767,7 +816,9 @@ export default async function tryExecuteServiceMethod(
       resp.end(JSON.stringify(createBackkErrorFromError(errorOrBackkError)));
     }
   } finally {
-    const auditLog = ServiceClass ? serviceFunctionAnnotationContainer.getAuditLog(ServiceClass, functionName) : undefined;
+    const auditLog = ServiceClass
+      ? serviceFunctionAnnotationContainer.getAuditLog(ServiceClass, functionName)
+      : undefined;
 
     if (
       microservice[serviceName] instanceof UserBaseService ||

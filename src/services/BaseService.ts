@@ -54,4 +54,9 @@ export default class BaseService implements Service {
   isUserService(): boolean {
     return false;
   }
+
+  /** @internal */
+  isTenantService(): boolean {
+    return false;
+  }
 }

@@ -1,7 +1,8 @@
-import { DataStore } from "../datastore/DataStore";
+import { DataStore } from '../datastore/DataStore';
 
 export interface Service {
-  getDataStore(): DataStore
+  getDataStore(): DataStore;
   getServiceType(): string;
-  isUserService(): boolean
+  isUserService(): boolean;
+  isTenantService(): boolean;
 }

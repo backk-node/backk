@@ -482,6 +482,21 @@ export default async function tryExecuteServiceMethod(
                   BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED
                 );
               }
+            } else if (microservice[serviceName] instanceof TenantBaseService) {
+              userAccountOrTenantId = serviceFunctionArgument._id ?? issuer;
+              if (serviceFunctionArgument._id && issuer) {
+                issuerToTenantIdCache.storeExpiringItem(
+                  issuer,
+                  userAccountOrTenantId,
+                  30 * Durations.SECS_IN_MINUTE
+                );
+              } else if (issuer) {
+                issuerToTenantIdCache.removeItem(issuer);
+              } else {
+                throw createBackkErrorFromErrorCodeMessageAndStatus(
+                  BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED
+                );
+              }
             }
 
             if (

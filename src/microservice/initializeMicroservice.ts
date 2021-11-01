@@ -396,9 +396,20 @@ export default async function initializeMicroservice(
       );
     }
 
-    if (!serviceFilePathName.includes('src/services/' + serviceName)) {
+    const serviceDirName = serviceName.toLowerCase();
+    if (
+      !serviceFilePathName.includes('/src/services/' + serviceDirName) &&
+      !serviceFilePathName.includes('/src/services/' + serviceDirName.slice(0, -'service'.length)) &&
+      !serviceFilePathName.includes('/node_modules/backk/lib/src')
+    ) {
       throw new Error(
-        "Service '" + service.constructor.name + "' should be in directory 'src/services" + serviceName + "'"
+        "Service '" +
+          service.constructor.name +
+          "' should be in directory 'src/services/" +
+          serviceDirName +
+          "' or 'src/services/'" +
+          serviceDirName.slice(0, -'service'.length) +
+          "'"
       );
     }
 

@@ -89,6 +89,12 @@ export default function writeApiPostmanCollectionExportFile<T>(
 
   _.set(
     payload,
+    'iss',
+    'http://localhost:8080/auth/realms/test'
+  );
+
+  _.set(
+    payload,
     process.env.JWT_ROLES_CLAIM_PATH ??
       throwException('JWT_ROLES_CLAIM_PATH environment variable must be defined'),
     [process.env.TEST_USER_ROLE]

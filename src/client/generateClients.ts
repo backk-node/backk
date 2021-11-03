@@ -382,7 +382,7 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
           !isFirstFunction &&
           functionNames.some((functionName) => outputFileLine.includes(functionName)) &&
           outputFileLine.includes(': PromiseErrorOr<') &&
-          outputFileLine.endsWith('}')
+          outputFileLine.endsWith('{')
         ) {
           return '\n' + outputFileLine;
         }

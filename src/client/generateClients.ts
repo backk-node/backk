@@ -25,7 +25,7 @@ function getReturnCallOrSendToRemoteServiceStatement(
   argumentName: string,
   isGetMethodAllowed: boolean,
   requestProcessors?: RequestProcessor[],
-  shouldHaveJwtStorageEncryptionKeyArgument = false
+  shouldHaveJwtStorageEncryptionKeyArg = false
 ) {
   let backkFunction = 'callRemoteService';
   const asyncRequestProcessor = requestProcessors?.find((requestProcessor) =>
@@ -63,14 +63,10 @@ function getReturnCallOrSendToRemoteServiceStatement(
           type: 'StringLiteral',
           value: process.env.SERVICE_NAMESPACE,
         },
-        ...(shouldHaveJwtStorageEncryptionKeyArgument
-          ? [
-              {
-                type: 'Identifier',
-                name: 'jwtStorageEncryptionKey',
-              },
-            ]
-          : []),
+        ...(shouldHaveJwtStorageEncryptionKeyArg ? [{
+          type: 'Identifier',
+          name: 'jwtStorageEncryptionKey',
+        }]: []),
         ...(isGetMethodAllowed
           ? [
               {
@@ -333,6 +329,7 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
               },
             },
           };
+          classBodyNode.static = true;
           classBodyNode.async = false;
           classBodyNode.decorators = [];
           classBodyNode.body = {
@@ -374,6 +371,7 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
       '// DO NOT MODIFY THIS FILE! This is an auto-generated file' +
       '\n' +
       "import { callRemoteService } from 'backk-frontend-utils';" +
+      "import jwtStorageEncryptionKey from '../../jwt/jwtStorageEncryptionKey';"
       code;
     let isFirstFunction = true;
 
@@ -496,6 +494,7 @@ function generateInternalServiceFile(
             };
           }
           classBodyNode.async = false;
+          classBodyNode.static = true;
           classBodyNode.decorators = [];
           classBodyNode.body = {
             type: 'BlockStatement',

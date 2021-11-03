@@ -319,16 +319,6 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
               typeAnnotation: classBodyNode.params[0].typeAnnotation,
             };
           }
-          classBodyNode.params[1] = {
-            type: 'Identifier',
-            name: 'jwtStorageEncryptionKey',
-            typeAnnotation: {
-              type: 'TypeAnnotation',
-              typeAnnotation: {
-                type: 'StringTypeAnnotation',
-              },
-            },
-          };
           classBodyNode.static = true;
           classBodyNode.async = false;
           classBodyNode.decorators = [];
@@ -371,7 +361,7 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
       '// DO NOT MODIFY THIS FILE! This is an auto-generated file' +
       '\n' +
       "import { callRemoteService } from 'backk-frontend-utils';" +
-      "import jwtStorageEncryptionKey from '../../jwt/jwtStorageEncryptionKey';"
+      "import jwtStorageEncryptionKey from '../../../jwt/jwtStorageEncryptionKey';"
       code;
     let isFirstFunction = true;
 

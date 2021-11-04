@@ -13,7 +13,7 @@ import { BACKK_ERRORS } from '../errors/backkErrors';
 import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
 import log, { Severity } from '../observability/logging/log';
 import { CommunicationMethod } from "../remote/messagequeue/sendToRemoteService";
-import { MAX_INT_VALUE } from "../constants/constants";
+import { HttpStatusCodes, MAX_INT_VALUE } from "../constants/constants";
 
 export default class HttpServer implements RequestProcessor {
   constructor(
@@ -53,7 +53,8 @@ export default class HttpServer implements RequestProcessor {
 
       try {
         if (request.method === 'OPTIONS') {
-          response.end();
+          response.writeHead(HttpStatusCodes.SUCCESS)
+          response.end(); 
         }
         if (request.method === 'GET') {
           const serviceFunctionArgumentInJson = request.url?.split('?arg=')[1];

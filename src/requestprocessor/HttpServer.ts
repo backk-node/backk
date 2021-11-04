@@ -48,7 +48,7 @@ export default class HttpServer implements RequestProcessor {
       if (!isClusterInternalCall) {
         response.setHeader(
           'Access-Control-Allow-Origin',
-          process.env.NODE_ENV === 'development' ? 'http://' : 'https://' + request.headers.host
+          (process.env.NODE_ENV === 'development' ? 'http://' : 'https://') + request.headers.host
         );
       }
 

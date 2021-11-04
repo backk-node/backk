@@ -35,7 +35,10 @@ export default class HttpServer implements RequestProcessor {
         10
       );
 
-      if (contentLength === undefined || contentLength > MAX_REQUEST_CONTENT_LENGTH_IN_BYTES) {
+      if (
+        request.method === 'POST' &&
+        (contentLength === undefined || contentLength > MAX_REQUEST_CONTENT_LENGTH_IN_BYTES)
+      ) {
         const backkError = createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.REQUEST_IS_TOO_LONG);
         response.writeHead(backkError.statusCode, { 'Content-Type': 'application/json' });
         response.end(JSON.stringify(backkError));
@@ -48,7 +51,7 @@ export default class HttpServer implements RequestProcessor {
       if (!isClusterInternalCall) {
         response.setHeader(
           'Access-Control-Allow-Origin',
-          (process.env.NODE_ENV === 'development' ? 'http://' : 'https://') + request.headers.host
+          process.env.NODE_ENV === 'development' ? '*' : ('https://' + request.headers.host)
         );
       }
 

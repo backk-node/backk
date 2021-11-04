@@ -13,6 +13,7 @@ import { BACKK_ERRORS } from '../errors/backkErrors';
 import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
 import log, { Severity } from '../observability/logging/log';
 import { CommunicationMethod } from "../remote/messagequeue/sendToRemoteService";
+import { MAX_INT_VALUE } from "../constants/constants";
 
 export default class HttpServer implements RequestProcessor {
   constructor(
@@ -26,7 +27,7 @@ export default class HttpServer implements RequestProcessor {
 
       const contentLength = request.headers['content-length']
         ? parseInt(request.headers['content-length'], 10)
-        : Number.MAX_SAFE_INTEGER;
+        : undefined;
 
       const MAX_REQUEST_CONTENT_LENGTH_IN_BYTES = parseInt(
         process.env.MAX_REQUEST_CONTENT_LENGTH_IN_BYTES ??
@@ -42,18 +43,24 @@ export default class HttpServer implements RequestProcessor {
       }
 
       const isClusterInternalCall = !request.url?.includes(getNamespacedMicroserviceName());
-
       let serviceFunctionArgument;
+      const origin = request.url?.split('//')?.[1].split('/')[0];
+      response.setHeader('Access-Control-Allow-Origin', origin ?? 'null');
+      response.setHeader('X-content-type-options', 'nosniff');
+      response.setHeader('Strict-Transport-Security', 'max-age=' + MAX_INT_VALUE + '; includeSubDomains');
+      response.setHeader('X-Frame-Options', 'DENY');
+      response.setHeader('Content-Security-Policy', "frame-ancestors 'none'");
 
       try {
+        if (request.method === 'OPTIONS') {
+          response.end();
+        }
         if (request.method === 'GET') {
-          const argumentInJsonQueryParameter = request.url?.split('?arg=').pop();
-          serviceFunctionArgument = argumentInJsonQueryParameter
-            ? JSON.parse(argumentInJsonQueryParameter)
+          const serviceFunctionArgumentInJson = request.url?.split('?arg=')[1];
+          serviceFunctionArgument = serviceFunctionArgumentInJson
+            ? JSON.parse(serviceFunctionArgumentInJson)
             : undefined;
         } else {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-          // @ts-ignore
           serviceFunctionArgument = await bfj.parse(request);
         }
       } catch (error) {

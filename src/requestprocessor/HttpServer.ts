@@ -1,19 +1,19 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import bfj from 'bfj-pksilen';
-import { RequestProcessor } from './RequestProcessor';
+import { createServer } from 'http';
+import { HttpStatusCodes, MAX_INT_VALUE } from '../constants/constants';
+import { BACKK_ERRORS } from '../errors/backkErrors';
+import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
 import tryExecuteServiceMethod, {
-  ServiceFunctionExecutionOptions
+  ServiceFunctionExecutionOptions,
 } from '../execution/tryExecuteServiceMethod';
 import Microservice, { HttpVersion } from '../microservice/Microservice';
-import { createServer } from 'http';
-import throwException from '../utils/exception/throwException';
-import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
-import { BACKK_ERRORS } from '../errors/backkErrors';
-import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
 import log, { Severity } from '../observability/logging/log';
-import { CommunicationMethod } from "../remote/messagequeue/sendToRemoteService";
-import { HttpStatusCodes, MAX_INT_VALUE } from "../constants/constants";
+import { CommunicationMethod } from '../remote/messagequeue/sendToRemoteService';
+import throwException from '../utils/exception/throwException';
+import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
+import { RequestProcessor } from './RequestProcessor';
 
 export default class HttpServer implements RequestProcessor {
   constructor(
@@ -44,8 +44,14 @@ export default class HttpServer implements RequestProcessor {
 
       const isClusterInternalCall = !request.url?.includes(getNamespacedMicroserviceName());
       let serviceFunctionArgument;
-      const origin = request.url?.split('//')?.[1].split('/')[0];
-      response.setHeader('Access-Control-Allow-Origin', origin ?? 'null');
+
+      if (!isClusterInternalCall) {
+        response.setHeader(
+          'Access-Control-Allow-Origin',
+          process.env.NODE_ENV === 'development' ? 'http://' : 'https://' + request.headers.host
+        );
+      }
+
       response.setHeader('X-content-type-options', 'nosniff');
       response.setHeader('Strict-Transport-Security', 'max-age=' + MAX_INT_VALUE + '; includeSubDomains');
       response.setHeader('X-Frame-Options', 'DENY');
@@ -53,8 +59,8 @@ export default class HttpServer implements RequestProcessor {
 
       try {
         if (request.method === 'OPTIONS') {
-          response.writeHead(HttpStatusCodes.SUCCESS)
-          response.end(); 
+          response.writeHead(HttpStatusCodes.SUCCESS);
+          response.end();
         }
         if (request.method === 'GET') {
           const serviceFunctionArgumentInJson = request.url?.split('?arg=')[1];
@@ -67,7 +73,7 @@ export default class HttpServer implements RequestProcessor {
       } catch (error) {
         const backkError = createBackkErrorFromErrorCodeMessageAndStatus({
           ...BACKK_ERRORS.INVALID_ARGUMENT,
-          message: BACKK_ERRORS.INVALID_ARGUMENT.message + error.message
+          message: BACKK_ERRORS.INVALID_ARGUMENT.message + error.message,
         });
         response.writeHead(backkError.statusCode, { 'Content-Type': 'application/json' });
         response.end(JSON.stringify(backkError));

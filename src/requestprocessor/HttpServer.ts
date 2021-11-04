@@ -52,7 +52,7 @@ export default class HttpServer implements RequestProcessor {
         );
       }
 
-      response.setHeader('X-content-type-options', 'nosniff');
+      response.setHeader('X-Content-Type-Options', 'nosniff');
       response.setHeader('Strict-Transport-Security', 'max-age=' + MAX_INT_VALUE + '; includeSubDomains');
       response.setHeader('X-Frame-Options', 'DENY');
       response.setHeader('Content-Security-Policy', "frame-ancestors 'none'");
@@ -61,6 +61,7 @@ export default class HttpServer implements RequestProcessor {
         if (request.method === 'OPTIONS') {
           response.writeHead(HttpStatusCodes.SUCCESS);
           response.end();
+          return;
         }
         if (request.method === 'GET') {
           const serviceFunctionArgumentInJson = request.url?.split('?arg=')[1];

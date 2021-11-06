@@ -1,5 +1,5 @@
-import parseEnumValuesFromSrcFile from "../typescript/parser/parseEnumValuesFromSrcFile";
-import pushIfNotExists from "../utils/array/pushIfNotExists";
+import parseEnumValuesFromSrcFile from '../typescript/parser/parseEnumValuesFromSrcFile';
+import pushIfNotExists from '../utils/array/pushIfNotExists';
 
 function createUndefinedDecorator(modes: string[]) {
   return {
@@ -184,10 +184,15 @@ function createIsInDecorator(values: any[]) {
         type: 'Identifier',
         name: 'IsIn',
       },
-      arguments: values.map((value) => ({
-        type: isNaN(firstValueAsNumber) ? 'StringLiteral' : 'NumericLiteral',
-        value,
-      })),
+      arguments: [
+        {
+          type: 'ArrayExpression',
+          elements: values.map((value) => ({
+            type: isNaN(firstValueAsNumber) ? 'StringLiteral' : 'NumericLiteral',
+            value,
+          })),
+        },
+      ],
     },
   };
 }
@@ -375,7 +380,11 @@ function createValidateIfNotUndefinedOnUpdateDecorator(propertyName: string) {
 }
 
 function addDecorator(decorators: any[], decoratorToAdd: any) {
-  if (!decorators.find((decorator: any) => decorator.expression.callee.name === decoratorToAdd.expression.callee.name)) {
+  if (
+    !decorators.find(
+      (decorator: any) => decorator.expression.callee.name === decoratorToAdd.expression.callee.name
+    )
+  ) {
     decorators.push(decoratorToAdd);
   }
 }
@@ -411,7 +420,10 @@ export default function addAdditionalDecorators(
   );
 
   if (isPrivateOrReadOnly) {
-    addDecorator(classBodyNode.decorators, createUndefinedDecorator(['__backk_create__', '__backk_update__']));
+    addDecorator(
+      classBodyNode.decorators,
+      createUndefinedDecorator(['__backk_create__', '__backk_update__'])
+    );
     pushIfNotExists(imports, 'IsUndefined');
   }
 

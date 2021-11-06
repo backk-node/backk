@@ -17,7 +17,7 @@ import CurrentPageToken from "./CurrentPageToken";
 
 export default class DefaultPostQueryOperations implements PostQueryOperations {
   constructor(pageNumber: number = 1, pageSize: number = Values._50) {
-    this.paginations = [new Pagination('*', 1, pageSize)]
+    this.paginations = [new Pagination('*', pageNumber, pageSize)]
   }
 
   @IsOptional()

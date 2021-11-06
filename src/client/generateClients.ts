@@ -16,16 +16,21 @@ import getSrcFilePathNameForTypeName, {
 import getMicroserviceName from '../utils/getMicroserviceName';
 import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
 import decapitalizeFirstLetter from '../utils/string/decapitalizeFirstLetter';
+import addAdditionalDecorators from './addAdditionalDecorators';
+import getServiceFunctionType from './getServiceFunctionType';
 
 const promisifiedExec = util.promisify(exec);
+
+export type ServiceFunctionType = 'create' | 'update' | 'other';
 
 function getReturnCallOrSendToRemoteServiceStatement(
   serviceName: string,
   functionName: string,
+  serviceFunctionType: ServiceFunctionType,
   argumentName: string,
   isGetMethodAllowed: boolean,
   requestProcessors?: RequestProcessor[],
-  shouldHaveJwtStorageEncryptionKeyArg = false
+  shouldHaveAccessTokenStorageEncryptionKeyArg = false
 ) {
   let backkFunction = 'callRemoteService';
   const asyncRequestProcessor = requestProcessors?.find((requestProcessor) =>
@@ -56,6 +61,10 @@ function getReturnCallOrSendToRemoteServiceStatement(
           value: `${serviceName}.${functionName}`,
         },
         {
+          type: 'StringLiteral',
+          value: `${serviceFunctionType}`,
+        },
+        {
           type: 'Identifier',
           name: argumentName ?? 'undefined',
         },
@@ -63,10 +72,14 @@ function getReturnCallOrSendToRemoteServiceStatement(
           type: 'StringLiteral',
           value: process.env.SERVICE_NAMESPACE,
         },
-        ...(shouldHaveJwtStorageEncryptionKeyArg ? [{
-          type: 'Identifier',
-          name: 'jwtStorageEncryptionKey',
-        }]: []),
+        ...(shouldHaveAccessTokenStorageEncryptionKeyArg
+          ? [
+              {
+                type: 'Identifier',
+                name: 'EncryptionKeyManager.accessTokenStorageEncryptionKey',
+              },
+            ]
+          : []),
         ...(isGetMethodAllowed
           ? [
               {
@@ -112,23 +125,22 @@ function rewriteTypeFile(
   });
 
   const nodes = (ast as any).program.body;
-  let needsRewrite = false;
+  const imports: string[] = [];
 
   for (const node of nodes) {
     if (clientType === 'frontend' && node.type === 'ImportDeclaration' && node.source.value === 'backk') {
-      needsRewrite = true;
       node.source.value = 'backk-frontend-utils';
-    }
-
-    if (node.type === 'TypeAlias') {
-      needsRewrite = true;
     }
 
     if (node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration') {
       if (node.declaration?.type === 'TSTypeAliasDeclaration') {
-        needsRewrite = true;
         continue;
       }
+
+      const isEntity = node.declaration.decorators?.find(
+        (decorator: any) => decorator.expression.callee.name === 'Entity'
+      );
+
       const classBodyNodes: any[] = [];
       node.declaration.decorators = [];
       node.declaration.body.body.forEach((classBodyNode: any) => {
@@ -137,7 +149,6 @@ function rewriteTypeFile(
         );
 
         if (classBodyNode.type === 'ClassProperty' && isPrivate) {
-          needsRewrite = true;
           return;
         }
 
@@ -168,6 +179,12 @@ function rewriteTypeFile(
           rewriteTypeFile(typeFilePathName, destTypeFilePathName, clientType, typeNames);
         }
 
+        if (!classBodyNode.decorators) {
+          classBodyNode.decorators = [];
+        }
+
+        addAdditionalDecorators(classBodyNode, imports, typeNames, isEntity);
+
         classBodyNode.decorators = classBodyNode.decorators?.filter((decorator: any) => {
           const decoratorName = decorator.expression.callee.name;
           const shouldRemove = [
@@ -183,11 +200,13 @@ function rewriteTypeFile(
             'OneToMany',
             'Transient',
             'Unique',
+            'CreateOnly',
+            'ReadOnly',
+            'ReadUpdate',
+            'ReadWrite',
+            'UpdateOnly',
+            'WriteOnly',
           ].includes(decoratorName);
-
-          if (shouldRemove) {
-            needsRewrite = true;
-          }
 
           return !shouldRemove;
         });
@@ -198,28 +217,30 @@ function rewriteTypeFile(
     }
   }
 
-  if (needsRewrite) {
-    const code = generate(ast as any).code;
+  const code = generate(ast as any).code;
 
-    let outputFileContentsStr = '// DO NOT MODIFY THIS FILE! This is an auto-generated file' + '\n' + code;
+  let outputFileContentsStr =
+    '// DO NOT MODIFY THIS FILE! This is an auto-generated file' +
+    '\n' +
+    (imports.length > 0 ? 'import {' + imports.join(', ') + "} from 'backk-frontend-utils'" : '') +
+    code;
 
-    outputFileContentsStr = outputFileContentsStr
-      .split('\n')
-      .map((outputFileLine) => {
-        if (outputFileLine.endsWith(';') && !outputFileLine.startsWith('import')) {
-          return outputFileLine + '\n';
-        }
+  outputFileContentsStr = outputFileContentsStr
+    .split('\n')
+    .map((outputFileLine) => {
+      if (outputFileLine.endsWith(';') && !outputFileLine.startsWith('import')) {
+        return outputFileLine + '\n';
+      }
 
-        if (outputFileLine.startsWith('export default class') || outputFileLine.startsWith('export class')) {
-          return '\n' + outputFileLine;
-        }
+      if (outputFileLine.startsWith('export default class') || outputFileLine.startsWith('export class')) {
+        return '\n' + outputFileLine;
+      }
 
-        return outputFileLine;
-      })
-      .join('\n');
+      return outputFileLine;
+    })
+    .join('\n');
 
-    writeFileSync(destTypeFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
-  }
+  writeFileSync(destTypeFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
 }
 
 function generateFrontendServiceFile(microservice: Microservice, serviceImplFilePathName: string) {
@@ -254,13 +275,8 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
         );
       }
 
-      node.declaration.decorators = node.declaration.decorators?.filter(
-        (decorator: any) =>
-          decorator.expression.callee.name === 'Create' ||
-          decorator.expression.callee.name === 'Update' ||
-          decorator.expression.callee.name === 'Delete'
-      );
-      node.declaration.superClass = null;
+      node.declaration.superClass = undefined;
+      node.declaration.decorators = [];
       node.declaration.implements = undefined;
       const serviceClassName = node.declaration.id.name;
 
@@ -311,6 +327,8 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
             return;
           }
 
+          const serviceFunctionType = getServiceFunctionType(functionName, classBodyNode.decorators);
+
           functionNames.push(functionName);
           if (classBodyNode.params?.[0]?.type === 'ObjectPattern') {
             classBodyNode.params[0] = {
@@ -328,6 +346,7 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
               getReturnCallOrSendToRemoteServiceStatement(
                 serviceName,
                 functionName,
+                serviceFunctionType,
                 argumentName,
                 isGetMethodAllowed,
                 [],
@@ -361,7 +380,7 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
       '// DO NOT MODIFY THIS FILE! This is an auto-generated file' +
       '\n' +
       "import { callRemoteService } from 'backk-frontend-utils';" +
-      "import jwtStorageEncryptionKey from '../../../jwt/jwtStorageEncryptionKey';"
+      "import EncryptionKeyManager from '../_backk/EncryptionKeyManager';" +
       code;
     let isFirstFunction = true;
 
@@ -426,12 +445,7 @@ function generateInternalServiceFile(
       const isInternalService = node.declaration.decorators?.find(
         (decorator: any) => decorator.expression.callee.name === 'AllowServiceForKubeClusterInternalUse'
       );
-      node.declaration.decorators = node.declaration.decorators?.filter(
-        (decorator: any) =>
-          decorator.expression.callee.name === 'Create' ||
-          decorator.expression.callee.name === 'Update' ||
-          decorator.expression.callee.name === 'Delete'
-      );
+      node.declaration.decorators = [];
       node.declaration.superClass = null;
       node.declaration.implements = undefined;
       const serviceClassName = node.declaration.id.name;
@@ -475,6 +489,7 @@ function generateInternalServiceFile(
             return;
           }
 
+          const serviceFunctionType = getServiceFunctionType(functionName, classBodyNode.decorators);
           functionNames.push(functionName);
           if (classBodyNode.params?.[0]?.type === 'ObjectPattern') {
             classBodyNode.params[0] = {
@@ -492,6 +507,7 @@ function generateInternalServiceFile(
               getReturnCallOrSendToRemoteServiceStatement(
                 serviceName,
                 functionName,
+                serviceFunctionType,
                 argumentName,
                 isGetMethodAllowed,
                 requestProcessors
@@ -550,6 +566,105 @@ function generateInternalServiceFile(
 
     writeFileSync(destServiceClientFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
   }
+}
+
+function createPackageJsonFiles() {
+  const npmPackageScope = process.env.GENERATED_CLIENTS_NPM_PACKAGE_SCOPE ?? process.env.SERVICE_NAMESPACE;
+  const frontEndClientPackageName = getMicroserviceName() + '-frontend-client';
+  const frontEndClientPackageJsonObj = {
+    name:
+      npmPackageScope === 'default'
+        ? frontEndClientPackageName
+        : `@${npmPackageScope}/${frontEndClientPackageName}`,
+    version: '1.0.0',
+    files: ['lib'],
+    scripts: {
+      prebuild: 'rimraf lib',
+      build: 'tsc -p tsconfig.json',
+    },
+    devDependencies: {
+      'backk-frontend-utils': '^1.0.0',
+      '@types/node': '13.13.48',
+      rimraf: '^3.0.2',
+      typescript: '3.9.9',
+    },
+  };
+
+  const frontEndClientDirPathName =
+    process.cwd() + '/generated/clients/frontend/' + getNamespacedMicroserviceName();
+  if (!existsSync(frontEndClientDirPathName)) {
+    mkdirSync(frontEndClientDirPathName, { recursive: true });
+  }
+  writeFileSync(
+    frontEndClientDirPathName + '/package.json',
+    JSON.stringify(frontEndClientPackageJsonObj, null, 2)
+  );
+
+  const internalClientPackageJsonObj = frontEndClientPackageJsonObj;
+  const internalClientPackageName = getMicroserviceName() + '-internal-client';
+  internalClientPackageJsonObj.name =
+    npmPackageScope === 'default'
+      ? internalClientPackageName
+      : `@${npmPackageScope}/${internalClientPackageName}`;
+
+  const internalClientDirPathName =
+    process.cwd() + '/generated/clients/internal/' + getNamespacedMicroserviceName();
+  if (!existsSync(internalClientDirPathName)) {
+    mkdirSync(internalClientDirPathName, { recursive: true });
+  }
+  writeFileSync(
+    internalClientDirPathName + '/package.json',
+    JSON.stringify(internalClientPackageJsonObj, null, 2)
+  );
+}
+
+function createGitIgnoreFiles() {
+  const gitIgnoreFileContent = 'lib/\nnode_modules/';
+
+  writeFileSync(
+    process.cwd() + '/generated/clients/frontend/' + getNamespacedMicroserviceName() + '/.gitignore',
+    gitIgnoreFileContent
+  );
+
+  writeFileSync(
+    process.cwd() + '/generated/clients/internal/' + getNamespacedMicroserviceName() + '/.gitignore',
+    gitIgnoreFileContent
+  );
+}
+
+function createTsConfigFiles() {
+  const frontendTsConfigFileContent = {
+    compilerOptions: {
+      module: 'commonjs',
+      declaration: true,
+      removeComments: true,
+      esModuleInterop: true,
+      emitDecoratorMetadata: true,
+      experimentalDecorators: true,
+      target: 'es6',
+      sourceMap: true,
+      strict: true,
+      outDir: './lib',
+      baseUrl: './',
+      incremental: true,
+    },
+
+    include: ['**/*.ts'],
+    exclude: ['node_modules', 'lib'],
+  };
+
+  writeFileSync(
+    process.cwd() + '/generated/clients/frontend/' + getNamespacedMicroserviceName() + '/tsconfig.json',
+    JSON.stringify(frontendTsConfigFileContent, null, 2)
+  );
+
+  const internalTsConfigFileContent = frontendTsConfigFileContent;
+  internalTsConfigFileContent.compilerOptions.target = 'es2019';
+
+  writeFileSync(
+    process.cwd() + '/generated/clients/internal/' + getNamespacedMicroserviceName() + '/tsconfig.json',
+    JSON.stringify(internalTsConfigFileContent, null, 2)
+  );
 }
 
 export default async function generateClients(
@@ -654,10 +769,27 @@ export default async function generateClients(
         }
       });
 
+    const baseServiceDir =
+      process.cwd() + '/generated/clients/frontend/' + getNamespacedMicroserviceName() + '/_backk';
+    if (!existsSync(baseServiceDir)) {
+      mkdirSync(baseServiceDir);
+    }
+    const baseServiceFilePathName = baseServiceDir + '/EncryptionKeyManager.ts';
+    const baseServiceCode = `
+    export default class EncryptionKeyManager {
+      static accessTokenStorageEncryptionKey: string;
+      static setAccessTokenStorageEncryptionKey(encryptionKey: string): void {
+        EncryptionKeyManager.accessTokenStorageEncryptionKey = encryptionKey;
+      }
+    }`;
+    writeFileSync(baseServiceFilePathName, baseServiceCode, { encoding: 'UTF-8' });
     const serviceImplFilePathName = resolve(serviceDirectory, serviceImplFileDirEntry.name);
     generateFrontendServiceFile(microservice, serviceImplFilePathName);
     generateInternalServiceFile(microservice, serviceImplFilePathName, requestProcessors);
   });
 
+  createPackageJsonFiles();
+  createGitIgnoreFiles();
+  createTsConfigFiles();
   await promisifiedExec(process.cwd() + '/node_modules/.bin/prettier --write generated/clients');
 }

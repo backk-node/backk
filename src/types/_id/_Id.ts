@@ -4,7 +4,7 @@ import IsUndefined from '../../decorators/typeproperty/IsUndefined';
 import IsStringOrObjectId from '../../decorators/typeproperty/IsStringOrObjectId';
 import ReadUpdate from "../../decorators/typeproperty/access/ReadUpdate";
 
-// eslint-disable-next-line @typescript-eslint/class-value-casing
+// eslint-disable-next-line @typescript-eslint/class-name-casing
 export default class _Id implements BackkEntity {
   @IsUndefined({ groups: ['__backk_create__'] })
   @IsStringOrObjectId({ groups: ['__backk_update__'] })

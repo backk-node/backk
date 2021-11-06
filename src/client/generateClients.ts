@@ -206,6 +206,7 @@ function rewriteTypeFile(
             'ReadWrite',
             'UpdateOnly',
             'WriteOnly',
+            'IsExternalId'
           ].includes(decoratorName);
 
           return !shouldRemove;

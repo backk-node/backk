@@ -211,6 +211,7 @@ export { default as DbTableVersion } from './types/DbTableVersion';
 export { default as BaseUserAccount } from './types/useraccount/BaseUserAccount';
 export { default as UserAccountId } from './types/useraccount/UserAccountId';
 export { default as Subject } from './types/useraccount/Subject';
+export { default as Issuer } from './types/useraccount/Issuer';
 
 // Generate error
 export { default as createBackkErrorFromErrorMessageAndStatusCode } from './errors/createBackkErrorFromErrorMessageAndStatusCode';

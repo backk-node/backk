@@ -802,6 +802,30 @@ export default async function generateClients(
   rimraf.sync('generated/clients');
   const directoryEntries = readdirSync('src/services', { withFileTypes: true });
 
+  const publicTypeNames: string[] = [];
+  publicServicesMetadata.forEach(
+    (serviceMetadata) => {
+      const typeNames = Object.keys(serviceMetadata.types ?? []);
+      typeNames.forEach(typeName => {
+        if (!publicTypeNames.includes(typeName)) {
+          publicTypeNames.push(typeName);
+        }
+      })
+    }
+  );
+
+  const internalTypeNames: string[] = [];
+  internalServicesMetadata.forEach(
+    (serviceMetadata) => {
+      const typeNames = Object.keys(serviceMetadata.types ?? []);
+      typeNames.forEach(typeName => {
+        if (!internalTypeNames.includes(typeName)) {
+          internalTypeNames.push(typeName);
+        }
+      })
+    }
+  );
+
   directoryEntries.forEach((directoryEntry: Dirent) => {
     const serviceDirectory = resolve('src/services', directoryEntry.name);
     if (!directoryEntry.isDirectory()) {
@@ -842,16 +866,6 @@ export default async function generateClients(
     if (!serviceName) {
       return;
     }
-
-    const foundPublicServiceMetadata = publicServicesMetadata.find(
-      (serviceMetadata) => serviceMetadata.serviceName === serviceName
-    );
-    const publicTypeNames = Object.keys(foundPublicServiceMetadata?.types ?? []);
-
-    const foundInternalServiceMetadata = internalServicesMetadata.find(
-      (serviceMetadata) => serviceMetadata.serviceName === serviceName
-    );
-    const internalTypeNames = Object.keys(foundInternalServiceMetadata?.types ?? []);
 
     const typeFilePathNames = getFileNamesRecursively(serviceDirectory);
     typeFilePathNames

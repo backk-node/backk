@@ -432,6 +432,15 @@ export default function addAdditionalDecorators(
       decorator.expression.callee.name === 'Private' || decorator.expression.callee.name === 'IsExternalId'
   );
 
+  const isOneOrNoneOf = classBodyNode.decorators.find(
+    (decorator: any) =>
+      decorator.expression.callee.name === 'IsNoneOf' || decorator.expression.callee.name === 'IsOneOf'
+  );
+
+  if (isOneOrNoneOf) {
+    isOneOrNoneOf.arguments = isOneOrNoneOf.arguments.slice(1);
+  }
+
   const propertyName = classBodyNode.key.name;
 
   if (

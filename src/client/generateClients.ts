@@ -68,6 +68,12 @@ function getValidateServiceFunctionArgumentBlock(
       param: {
         type: 'Identifier',
         name: 'error',
+        typeAnnotation: {
+          type: 'TSTypeAnnotation',
+          typeAnnotation: {
+            type: 'TSAnyKeyword',
+          },
+        },
       },
       body: {
         type: 'BlockStatement',
@@ -647,8 +653,11 @@ function generateInternalServiceFile(
       mkdirSync(internalDestDirPathName, { recursive: true });
     }
 
-    let outputFileContentsStr = '// DO NOT MODIFY THIS FILE! This is an auto-generated file' + '\n' +
-      "import { callRemoteService, sendToRemoteService, validateServiceFunctionArgumentOrThrow } from 'backk';\n" + code;
+    let outputFileContentsStr =
+      '// DO NOT MODIFY THIS FILE! This is an auto-generated file' +
+      '\n' +
+      "import { callRemoteService, sendToRemoteService, validateServiceFunctionArgumentOrThrow } from 'backk';\n" +
+      code;
     let isFirstFunction = true;
 
     outputFileContentsStr = outputFileContentsStr

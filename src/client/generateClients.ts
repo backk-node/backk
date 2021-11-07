@@ -23,10 +23,112 @@ const promisifiedExec = util.promisify(exec);
 
 export type ServiceFunctionType = 'create' | 'update' | 'other';
 
+function getValidateServiceFunctionArgumentBlock(
+  argumentName: string,
+  argumentClassName: string,
+  serviceFunctionType: string
+) {
+  return {
+    type: 'TryStatement',
+    block: {
+      type: 'BlockStatement',
+      body: [
+        {
+          type: 'ExpressionStatement',
+          expression: {
+            type: 'AwaitExpression',
+            argument: {
+              type: 'CallExpression',
+              callee: {
+                type: 'Identifier',
+                name: 'validateServiceFunctionArgumentOrThrow',
+              },
+              arguments: [
+                {
+                  type: 'Identifier',
+                  name: argumentName,
+                },
+                {
+                  type: 'Identifier',
+                  name: argumentClassName,
+                },
+                {
+                  type: 'Identifier',
+                  name: serviceFunctionType,
+                },
+              ],
+              optional: false,
+            },
+          },
+        },
+      ],
+    },
+    handler: {
+      type: 'CatchClause',
+      param: {
+        type: 'Identifier',
+        name: 'error',
+        typeAnnotation: {
+          type: 'TSTypeAnnotation',
+          typeAnnotation: {
+            type: 'TSAnyKeyword',
+          },
+        },
+      },
+      body: {
+        type: 'BlockStatement',
+        body: [
+          {
+            type: 'ReturnStatement',
+            argument: {
+              type: 'ArrayExpression',
+              elements: [
+                {
+                  type: 'Literal',
+                  value: null,
+                },
+                {
+                  type: 'ObjectExpression',
+                  properties: [
+                    {
+                      type: 'Property',
+                      key: {
+                        type: 'Identifier',
+                        name: 'message',
+                      },
+                      value: {
+                        type: 'MemberExpression',
+                        object: {
+                          type: 'Identifier',
+                          name: 'error',
+                        },
+                        property: {
+                          type: 'Identifier',
+                          name: 'message',
+                        },
+                        computed: false,
+                        optional: false,
+                      },
+                      computed: false,
+                      method: false,
+                      shorthand: false,
+                      kind: 'init',
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    finalizer: null,
+  };
+}
+
 function getReturnCallOrSendToRemoteServiceStatement(
   serviceName: string,
   functionName: string,
-  serviceFunctionType: ServiceFunctionType,
   argumentName: string,
   isGetMethodAllowed: boolean,
   requestProcessors?: RequestProcessor[],
@@ -59,10 +161,6 @@ function getReturnCallOrSendToRemoteServiceStatement(
         {
           type: 'StringLiteral',
           value: `${serviceName}.${functionName}`,
-        },
-        {
-          type: 'StringLiteral',
-          value: `${serviceFunctionType}`,
         },
         {
           type: 'Identifier',
@@ -206,7 +304,7 @@ function rewriteTypeFile(
             'ReadWrite',
             'UpdateOnly',
             'WriteOnly',
-            'IsExternalId'
+            'IsExternalId',
           ].includes(decoratorName);
 
           return !shouldRemove;
@@ -341,13 +439,23 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
           classBodyNode.static = true;
           classBodyNode.async = false;
           classBodyNode.decorators = [];
+          const argumentClassName = classBodyNode.params?.[0]?.typeAnnotation?.typeAnnotation?.typeName?.type;
+
           classBodyNode.body = {
             type: 'BlockStatement',
             body: [
+              ...(argumentName && argumentClassName
+                ? [
+                    getValidateServiceFunctionArgumentBlock(
+                      argumentName,
+                      argumentClassName,
+                      serviceFunctionType
+                    ),
+                  ]
+                : []),
               getReturnCallOrSendToRemoteServiceStatement(
                 serviceName,
                 functionName,
-                serviceFunctionType,
                 argumentName,
                 isGetMethodAllowed,
                 [],
@@ -472,9 +580,11 @@ function generateInternalServiceFile(
             classBodyNode.params?.[0]?.type === 'ObjectPattern'
               ? decapitalizeFirstLetter(classBodyNode.params[0].typeAnnotation.typeAnnotation.typeName.name)
               : classBodyNode.params?.[0]?.name;
+
           const isGetMethodAllowed = classBodyNode.decorators?.find(
             (decorator: any) => decorator.expression.callee.name === 'AllowHttpGetMethod'
           );
+
           const isInternalMethod = classBodyNode.decorators?.find(
             (decorator: any) =>
               isInternalService || decorator.expression.callee.name === 'AllowForKubeClusterInternalUse'
@@ -502,13 +612,23 @@ function generateInternalServiceFile(
           classBodyNode.async = false;
           classBodyNode.static = true;
           classBodyNode.decorators = [];
+          const argumentClassName = classBodyNode.params?.[0]?.typeAnnotation?.typeAnnotation?.typeName?.type;
+
           classBodyNode.body = {
             type: 'BlockStatement',
             body: [
+              ...(argumentName && argumentClassName
+                ? [
+                    getValidateServiceFunctionArgumentBlock(
+                      argumentName,
+                      argumentClassName,
+                      serviceFunctionType
+                    ),
+                  ]
+                : []),
               getReturnCallOrSendToRemoteServiceStatement(
                 serviceName,
                 functionName,
-                serviceFunctionType,
                 argumentName,
                 isGetMethodAllowed,
                 requestProcessors

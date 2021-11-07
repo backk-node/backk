@@ -27,7 +27,7 @@ import _IdAndCaptchaAndVersionAndLastModifiedTimestamp
 import _IdAndCaptchaAndVersionAndCreatedAtTimestampAndLastModifiedTimestamp
   from "./_id/_IdAndCaptchaAndVersionAndCreatedAtTimestampAndLastModifiedTimestamp";
 import OrFilter from "./userdefinedfilters/OrFilter";
-import { Value } from "./Value";
+import Value from "./Value";
 import Version from "./Version";
 import BaseUserAccount from "./useraccount/BaseUserAccount";
 import Subject from "./useraccount/Subject";

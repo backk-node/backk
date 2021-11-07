@@ -438,7 +438,7 @@ export default function addAdditionalDecorators(
   );
 
   if (isOneOrNoneOf) {
-    isOneOrNoneOf.arguments = isOneOrNoneOf.arguments.slice(1);
+    isOneOrNoneOf.arguments = isOneOrNoneOf.expression.arguments.slice(1);
   }
 
   const propertyName = classBodyNode.key.name;

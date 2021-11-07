@@ -139,7 +139,7 @@ export { default as EntityCountRequest } from './types/EntityCountRequest';
 export { One, Many } from './datastore/DataStore';
 
 // CSV, text, JSON and XML file parsing
-export { Value } from './types/Value';
+export { default as Value } from './types/Value';
 export { default as tryGetObjectsFromCsvFile } from './file/tryGetObjectsFromCsvFile';
 export { default as tryGetSeparatedValuesFromTextFile } from './file/tryGetSeparatedValuesFromTextFile';
 export { default as tryGetSeparatedIntegerValuesFromTextFile } from './file/tryGetSeparatedIntegerValuesFromTextFile';

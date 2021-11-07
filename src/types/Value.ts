@@ -5,7 +5,7 @@ import Entity from "../decorators/entity/Entity";
 import ReadWrite from "../decorators/typeproperty/access/ReadWrite";
 
 @Entity()
-export class Value {
+export default class Value {
   @MaxLength(Lengths._1K)
   @IsAnyString()
   @ReadWrite()

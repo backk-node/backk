@@ -11,6 +11,7 @@ import {
 import MaxLengthAndMatches from "../../decorators/typeproperty/MaxLengthAndMatches";
 import OrFilter from "./OrFilter";
 import { Lengths } from "../../constants/constants";
+import { Type } from "class-transformer";
 
 export default class UserDefinedFilter {
   @IsOptional()
@@ -89,6 +90,7 @@ export default class UserDefinedFilter {
   @IsOptional()
   @IsInstance(OrFilter, { each: true })
   @ValidateNested({ each: true })
+  @Type(() => OrFilter)
   @IsArray()
   @ArrayMinSize(2)
   @ArrayMaxSize(10)

@@ -3,11 +3,13 @@ import SortBy from "./SortBy";
 import { ArrayMaxSize, ArrayMinSize, IsArray, IsInstance, IsOptional, ValidateNested } from "class-validator";
 import Pagination from "./Pagination";
 import { Values } from "../../constants/constants";
+import { Type } from "class-transformer";
 
 export default class DefaultSortingAndPagination implements PostQueryOperations {
   @IsOptional()
   @IsInstance(SortBy, { each: true })
   @ValidateNested({ each: true })
+  @Type(() => SortBy)
   @IsArray()
   @ArrayMinSize(0)
   @ArrayMaxSize(Values._25)
@@ -16,6 +18,7 @@ export default class DefaultSortingAndPagination implements PostQueryOperations 
   @IsOptional()
   @IsInstance(Pagination, { each: true })
   @ValidateNested({ each: true })
+  @Type(() => Pagination)
   @IsArray()
   @ArrayMinSize(0)
   @ArrayMaxSize(Values._25)

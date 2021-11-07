@@ -14,6 +14,7 @@ import Pagination from "./Pagination";
 import MaxLengthAndMatches from "../../decorators/typeproperty/MaxLengthAndMatches";
 import { Lengths, Values } from "../../constants/constants";
 import CurrentPageToken from "./CurrentPageToken";
+import { Type } from "class-transformer";
 
 export default class DefaultPostQueryOperations implements PostQueryOperations {
   constructor(pageNumber: number = 1, pageSize: number = Values._50) {
@@ -41,6 +42,7 @@ export default class DefaultPostQueryOperations implements PostQueryOperations {
   @IsOptional()
   @IsInstance(SortBy, { each: true })
   @ValidateNested({ each: true })
+  @Type(() => SortBy)
   @IsArray()
   @ArrayMinSize(0)
   @ArrayMaxSize(Values._25)
@@ -49,6 +51,7 @@ export default class DefaultPostQueryOperations implements PostQueryOperations {
   @IsOptional()
   @IsInstance(Pagination, { each: true })
   @ValidateNested({ each: true })
+  @Type(() => Pagination)
   @IsArray()
   @ArrayMinSize(0)
   @ArrayMaxSize(Values._100)
@@ -57,6 +60,7 @@ export default class DefaultPostQueryOperations implements PostQueryOperations {
   @IsOptional()
   @IsInstance(CurrentPageToken, { each: true })
   @ValidateNested({ each: true })
+  @Type(() => CurrentPageToken)
   @IsArray()
   @ArrayMinSize(0)
   @ArrayMaxSize(Values._100)

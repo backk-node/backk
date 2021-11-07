@@ -7,8 +7,6 @@ W
 .prettierrc,2/0/20137a9e94744624390b6748bc96df5ca1579b71
 T
 $src/assertions/assertIsColumnName.ts,2/a/2ae36cbb6aeff087f0e729ef8722608bd752f54b
-_
-/src/continuationlocalstorage/getClsNamespace.ts,7/6/762601a647d8d7d2b07fdc24143126a159b37a33
 d
 4src/decorators/service/function/AllowForUserRoles.ts,7/5/754251d4fed56a1d69dd227e152edfcecc5379ca
 Y
@@ -596,8 +594,6 @@ U
 %src/requestprocessor/KafkaConsumer.ts,5/4/54978fb9386e91d4df80e1e6e7893e36b797a7a4
 U
 %src/requestprocessor/RedisConsumer.ts,5/0/50dc18ff4d5a87dc5cd75379cf4421cfe9553f4e
-Z
-*src/microservice/initializeMicroservice.ts,1/1/1162f5fb3b946952726e351e5b6fcea12aed21a8
 d
 4src/remote/utils/validateServiceFunctionArguments.ts,0/e/0e6af11b7ab9460e696901b331a33cfd10b075ab
 [

@@ -16,6 +16,7 @@ import AuditLoggingService from '../observability/logging/audit/AuditLoggingServ
 import log, { Severity } from '../observability/logging/log';
 import writeOpenApiSpecFile from '../openapi/writeOpenApiSpecFile';
 import writeTestsPostmanCollectionExportFile from '../postman/writeTestsPostmanCollectionExportFile';
+import { RequestProcessor } from '../requestprocessor/RequestProcessor';
 import BaseService from '../services/BaseService';
 import LivenessCheckService from '../services/LivenessCheckService';
 import ReadinessCheckService from '../services/ReadinessCheckService';
@@ -26,7 +27,6 @@ import decapitalizeFirstLetter from '../utils/string/decapitalizeFirstLetter';
 import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
 import setClassPropertyValidationDecorators from '../validation/setClassPropertyValidationDecorators';
 import setNestedTypeValidationDecorators from '../validation/setNestedTypeValidationDecorators';
-import { RequestProcessor } from "../requestprocessor/RequestProcessor";
 
 function addNestedTypes(privateTypeNames: Set<string>, typeName: string, types: { [p: string]: object }) {
   Object.values(types[typeName] ?? {}).forEach((typeName) => {
@@ -480,13 +480,18 @@ export default async function initializeMicroservice(
       const internalTypeNames =
         microservice.internalServicesMetadata ?? generateInternalServicesMetadata(microservice);
 
-      if (
-        command === '--generateClientsOnly' ||
-        (command === '--generateClientsOnlyIfNeeded' &&
-          isClientGenerationNeeded(microservice, publicTypeNames, internalTypeNames))
-      ) {
+      if (command === '--generateClientsOnly') {
         await generateClients(microservice, publicTypeNames, internalTypeNames, requestProcessors);
         console.log('Successfully generated clients.');
+      }
+
+      if (command === '--generateClientsOnlyIfNeeded') {
+        if (isClientGenerationNeeded(microservice, publicTypeNames, internalTypeNames)) {
+          await generateClients(microservice, publicTypeNames, internalTypeNames, requestProcessors);
+          console.log('Successfully generated clients.');
+        } else {
+          console.log('Generation of clients is not needed. Clients are up to date.');
+        }
       }
     }
 

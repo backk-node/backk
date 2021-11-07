@@ -53,8 +53,8 @@ function getValidateServiceFunctionArgumentBlock(
                   name: argumentClassName,
                 },
                 {
-                  type: 'Identifier',
-                  name: serviceFunctionType,
+                  type: 'StringLiteral',
+                  value: serviceFunctionType,
                 },
               ],
               optional: false,
@@ -68,12 +68,6 @@ function getValidateServiceFunctionArgumentBlock(
       param: {
         type: 'Identifier',
         name: 'error',
-        typeAnnotation: {
-          type: 'TSTypeAnnotation',
-          typeAnnotation: {
-            type: 'TSAnyKeyword',
-          },
-        },
       },
       body: {
         type: 'BlockStatement',
@@ -84,35 +78,33 @@ function getValidateServiceFunctionArgumentBlock(
               type: 'ArrayExpression',
               elements: [
                 {
-                  type: 'Literal',
+                  type: 'NullLiteral',
                   value: null,
                 },
                 {
                   type: 'ObjectExpression',
                   properties: [
                     {
-                      type: 'Property',
+                      type: 'ObjectProperty',
+                      method: false,
                       key: {
                         type: 'Identifier',
                         name: 'message',
                       },
+                      computed: false,
+                      shorthand: false,
                       value: {
                         type: 'MemberExpression',
                         object: {
                           type: 'Identifier',
                           name: 'error',
                         },
+                        computed: false,
                         property: {
                           type: 'Identifier',
                           name: 'message',
                         },
-                        computed: false,
-                        optional: false,
                       },
-                      computed: false,
-                      method: false,
-                      shorthand: false,
-                      kind: 'init',
                     },
                   ],
                 },
@@ -437,10 +429,9 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
             };
           }
           classBodyNode.static = true;
-          classBodyNode.async = false;
+          classBodyNode.async = true;
           classBodyNode.decorators = [];
-          const argumentClassName = classBodyNode.params?.[0]?.typeAnnotation?.typeAnnotation?.typeName?.type;
-
+          const argumentClassName = classBodyNode.params?.[0]?.typeAnnotation?.typeAnnotation?.typeName?.name;
           classBodyNode.body = {
             type: 'BlockStatement',
             body: [
@@ -488,7 +479,7 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
     let outputFileContentsStr =
       '// DO NOT MODIFY THIS FILE! This is an auto-generated file' +
       '\n' +
-      "import { callRemoteService } from 'backk-frontend-utils';" +
+      "import { callRemoteService, validateServiceFunctionArgumentOrThrow } from 'backk-frontend-utils';" +
       "import EncryptionKeyManager from '../_backk/EncryptionKeyManager';" +
       code;
     let isFirstFunction = true;
@@ -609,10 +600,10 @@ function generateInternalServiceFile(
               typeAnnotation: classBodyNode.params[0].typeAnnotation,
             };
           }
-          classBodyNode.async = false;
+          classBodyNode.async = true;
           classBodyNode.static = true;
           classBodyNode.decorators = [];
-          const argumentClassName = classBodyNode.params?.[0]?.typeAnnotation?.typeAnnotation?.typeName?.type;
+          const argumentClassName = classBodyNode.params?.[0]?.typeAnnotation?.typeAnnotation?.typeName?.name;
 
           classBodyNode.body = {
             type: 'BlockStatement',
@@ -656,7 +647,8 @@ function generateInternalServiceFile(
       mkdirSync(internalDestDirPathName, { recursive: true });
     }
 
-    let outputFileContentsStr = '// DO NOT MODIFY THIS FILE! This is an auto-generated file' + '\n' + code;
+    let outputFileContentsStr = '// DO NOT MODIFY THIS FILE! This is an auto-generated file' + '\n' +
+      "import { callRemoteService, sendToRemoteService, validateServiceFunctionArgumentOrThrow } from 'backk';\n" + code;
     let isFirstFunction = true;
 
     outputFileContentsStr = outputFileContentsStr

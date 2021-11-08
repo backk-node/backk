@@ -448,6 +448,14 @@ export default function addAdditionalDecorators(
         type: 'StringLiteral',
         value: process.env.MICROSERVICE_NAMESPACE,
       },
+      {
+        type: 'Identifier',
+        name: 'MicroserviceOptions.fqdn',
+      },
+      {
+        type: 'Identifier',
+        name: 'MicroserviceOptions.accessTokenStorageEncryptionKey',
+      },
       ...isOneOrNoneOf.expression.arguments.slice(1),
     ];
   }

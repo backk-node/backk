@@ -320,10 +320,18 @@ function rewriteTypeFile(
 
   const code = generate(ast as any).code;
 
+  let parentDir = dirname(typeFilePathName).split('/').slice(0, -1).join('/');
+  let relative = '../';
+  while (!parentDir.endsWith('/src/services')) {
+    relative += '../';
+    parentDir = parentDir.split('/').slice(0, -1).join('/')
+  }
+
   let outputFileContentsStr =
     '// DO NOT MODIFY THIS FILE! This is an auto-generated file' +
     '\n' +
     (imports.length > 0 ? 'import {' + imports.join(', ') + "} from 'backk-frontend-utils'" : '') +
+    `import MicroserviceOptions from '${relative}_backk/MicroserviceOptions'` +
     code;
 
   outputFileContentsStr = outputFileContentsStr
@@ -804,6 +812,28 @@ export default async function generateClients(
   }
 
   rimraf.sync('generated/clients');
+
+  const baseServiceDir =
+    process.cwd() + '/generated/clients/frontend/' + getNamespacedMicroserviceName() + '/_backk';
+  if (!existsSync(baseServiceDir)) {
+    mkdirSync(baseServiceDir, { recursive: true });
+  }
+  const baseServiceFilePathName = baseServiceDir + '/MicroserviceOptions.ts';
+  const baseServiceCode = `
+    export default class MicroserviceOptions{
+      static accessTokenStorageEncryptionKey = '';
+      static fqdn = '';
+      
+      static setAccessTokenStorageEncryptionKey(encryptionKey: string): void {
+        MicroserviceOptions.accessTokenStorageEncryptionKey = encryptionKey;
+      }
+      
+      static setFqdn(fqdn: string): void {
+        MicroserviceOptions.fqdn = fqdn;
+      }
+    }`;
+  writeFileSync(baseServiceFilePathName, baseServiceCode, { encoding: 'UTF-8' });
+
   const directoryEntries = readdirSync('src/services', { withFileTypes: true });
 
   const publicTypeNames: string[] = [];
@@ -909,26 +939,6 @@ export default async function generateClients(
         }
       });
 
-    const baseServiceDir =
-      process.cwd() + '/generated/clients/frontend/' + getNamespacedMicroserviceName() + '/_backk';
-    if (!existsSync(baseServiceDir)) {
-      mkdirSync(baseServiceDir);
-    }
-    const baseServiceFilePathName = baseServiceDir + '/MicroserviceOptions.ts';
-    const baseServiceCode = `
-    export default class MicroserviceOptions{
-      static accessTokenStorageEncryptionKey = '';
-      static fqdn = '';
-      
-      static setAccessTokenStorageEncryptionKey(encryptionKey: string): void {
-        MicroserviceOptions.accessTokenStorageEncryptionKey = encryptionKey;
-      }
-      
-      static setFqdn(fqdn: string): void {
-        MicroserviceOptions.fqdn = fqdn;
-      }
-    }`;
-    writeFileSync(baseServiceFilePathName, baseServiceCode, { encoding: 'UTF-8' });
     const serviceImplFilePathName = resolve(serviceDirectory, serviceImplFileDirEntry.name);
     generateFrontendServiceFile(microservice, serviceImplFilePathName);
     generateInternalServiceFile(microservice, serviceImplFilePathName, requestProcessors);

@@ -1,5 +1,6 @@
 import parseEnumValuesFromSrcFile from '../typescript/parser/parseEnumValuesFromSrcFile';
 import pushIfNotExists from '../utils/array/pushIfNotExists';
+import getMicroserviceName from '../utils/getMicroserviceName';
 
 function createUndefinedDecorator(modes: string[]) {
   return {
@@ -438,7 +439,17 @@ export default function addAdditionalDecorators(
   );
 
   if (isOneOrNoneOf) {
-    isOneOrNoneOf.expression.arguments = isOneOrNoneOf.expression.arguments.slice(1);
+    isOneOrNoneOf.expression.arguments = [
+      {
+        type: 'StringLiteral',
+        value: getMicroserviceName(),
+      },
+      {
+        type: 'StringLiteral',
+        value: process.env.MICROSERVICE_NAMESPACE,
+      },
+      ...isOneOrNoneOf.expression.arguments.slice(1),
+    ];
   }
 
   const propertyName = classBodyNode.key.name;

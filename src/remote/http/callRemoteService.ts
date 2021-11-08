@@ -23,7 +23,7 @@ export default async function callRemoteService(
   microserviceName: string,
   serviceFunctionName: string,
   serviceFunctionArgument?: object,
-  microserviceNamespace = process.env.SERVICE_NAMESPACE,
+  microserviceNamespace = process.env.MICROSERVICE_NAMESPACE,
   options?: HttpRequestOptions
 ): PromiseErrorOr<object | null> {
   const server = `${microserviceName}.${microserviceNamespace}.svc.cluster.local`

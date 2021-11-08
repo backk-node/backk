@@ -166,13 +166,17 @@ function getReturnCallOrSendToRemoteServiceStatement(
         },
         {
           type: 'StringLiteral',
-          value: process.env.SERVICE_NAMESPACE,
+          value: process.env.MICROSERVICE_NAMESPACE,
+        },
+        {
+          type: 'Identifier',
+          name: 'MicroserviceOptions.fqdn',
         },
         ...(shouldHaveAccessTokenStorageEncryptionKeyArg
           ? [
               {
                 type: 'Identifier',
-                name: 'EncryptionKeyManager.accessTokenStorageEncryptionKey',
+                name: 'MicroserviceOptions.accessTokenStorageEncryptionKey',
               },
             ]
           : []),
@@ -486,7 +490,7 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
       '// DO NOT MODIFY THIS FILE! This is an auto-generated file' +
       '\n' +
       "import { callRemoteService, validateServiceFunctionArgumentOrThrow } from 'backk-frontend-utils';" +
-      "import EncryptionKeyManager from '../_backk/EncryptionKeyManager';" +
+      "import MicroserviceOptions from '../_backk/MicroserviceOptions';" +
       code;
     let isFirstFunction = true;
 
@@ -691,7 +695,7 @@ function generateInternalServiceFile(
 }
 
 function createPackageJsonFiles() {
-  const npmPackageScope = process.env.GENERATED_CLIENTS_NPM_PACKAGE_SCOPE ?? process.env.SERVICE_NAMESPACE;
+  const npmPackageScope = process.env.GENERATED_CLIENTS_NPM_PACKAGE_SCOPE ?? process.env.MICROSERVICE_NAMESPACE;
   const frontEndClientPackageName = getMicroserviceName() + '-frontend-client';
   const frontEndClientPackageJsonObj = {
     name:
@@ -910,12 +914,18 @@ export default async function generateClients(
     if (!existsSync(baseServiceDir)) {
       mkdirSync(baseServiceDir);
     }
-    const baseServiceFilePathName = baseServiceDir + '/EncryptionKeyManager.ts';
+    const baseServiceFilePathName = baseServiceDir + '/MicroserviceOptions.ts';
     const baseServiceCode = `
-    export default class EncryptionKeyManager {
-      static accessTokenStorageEncryptionKey: string;
+    export default class MicroserviceOptions{
+      static accessTokenStorageEncryptionKey = '';
+      static fqdn = '';
+      
       static setAccessTokenStorageEncryptionKey(encryptionKey: string): void {
-        EncryptionKeyManager.accessTokenStorageEncryptionKey = encryptionKey;
+        MicroserviceOptions.accessTokenStorageEncryptionKey = encryptionKey;
+      }
+      
+      static setFqdn(fqdn: string): void {
+        MicroserviceOptions.fqdn = fqdn;
       }
     }`;
     writeFileSync(baseServiceFilePathName, baseServiceCode, { encoding: 'UTF-8' });

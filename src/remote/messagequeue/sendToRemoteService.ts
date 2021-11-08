@@ -66,7 +66,7 @@ export default async function sendToRemoteService(
   microserviceName: string,
   serviceFunctionName: string,
   serviceFunctionArgument: object,
-  microserviceNamespace = process.env.SERVICE_NAMESPACE,
+  microserviceNamespace = process.env.MICROSERVICE_NAMESPACE,
   server?: string,
   sendResponseTo?: ResponseSendToSpec,
   options?: SendToOptions

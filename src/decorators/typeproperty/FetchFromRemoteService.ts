@@ -5,7 +5,7 @@ export default function FetchFromRemoteService<T, U>(
   remoteMicroserviceName: string,
   remoteServiceFunctionName: string,
   buildRemoteServiceFunctionArgument: (arg: T, response: U) => { [key: string]: any },
-  remoteMicroserviceNamespace = process.env.SERVICE_NAMESPACE,
+  remoteMicroserviceNamespace = process.env.MICROSERVICE_NAMESPACE,
   options?: HttpRequestOptions
 ) {
   // eslint-disable-next-line @typescript-eslint/ban-types

@@ -251,7 +251,7 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'integrati
     throw new Error('NODE_ENV environment variable must be defined');
   }
 
-  if (!process.env.SERVICE_NAMESPACE) {
+  if (!process.env.MICROSERVICE_NAMESPACE) {
     throw new Error('SERVICE_NAMESPACE environment variable must be defined');
   }
 
@@ -295,7 +295,7 @@ export default function log(
       Body: body,
       Resource: {
         'service.name': serviceName,
-        'service.namespace': process.env.SERVICE_NAMESPACE ?? '',
+        'service.namespace': process.env.MICROSERVICE_NAMESPACE ?? '',
         'service.instance.id': process.env.SERVICE_INSTANCE_ID ?? getMicroserviceName() + '-87ffab3-xx567',
         'service.version': packageObj.version,
         'node.name': process.env.NODE_NAME ?? ''

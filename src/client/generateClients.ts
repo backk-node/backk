@@ -1,7 +1,7 @@
 import { parseSync } from '@babel/core';
 import generate from '@babel/generator';
 import { exec } from 'child_process';
-import { Dirent, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs';
+import { copyFileSync, Dirent, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
 import { dirname, resolve } from 'path';
 import rimraf from 'rimraf';
 import util from 'util';
@@ -324,7 +324,7 @@ function rewriteTypeFile(
   let relative = '../';
   while (!parentDir.endsWith('/src/services')) {
     relative += '../';
-    parentDir = parentDir.split('/').slice(0, -1).join('/')
+    parentDir = parentDir.split('/').slice(0, -1).join('/');
   }
 
   let outputFileContentsStr =
@@ -352,7 +352,11 @@ function rewriteTypeFile(
   writeFileSync(destTypeFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
 }
 
-function generateFrontendServiceFile(microservice: Microservice, serviceImplFilePathName: string) {
+function generateFrontendServiceFile(
+  microservice: Microservice,
+  serviceFilePathName: string,
+  serviceImplFilePathName: string
+) {
   const serviceImplFileContentsStr = readFileSync(serviceImplFilePathName, { encoding: 'UTF-8' });
 
   const ast = parseSync(serviceImplFileContentsStr, {
@@ -489,10 +493,17 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
       'generated/clients/frontend/' + getNamespacedMicroserviceName()
     );
 
+    const destServiceFilePathName = serviceFilePathName.replace(
+      /src\/services/,
+      'generated/clients/frontend/' + getNamespacedMicroserviceName()
+    );
+
     const frontEndDestDirPathName = dirname(destServiceImplFilePathName);
     if (!existsSync(frontEndDestDirPathName)) {
       mkdirSync(frontEndDestDirPathName, { recursive: true });
     }
+
+    copyFileSync(serviceFilePathName, destServiceFilePathName);
 
     let outputFileContentsStr =
       '// DO NOT MODIFY THIS FILE! This is an auto-generated file' +
@@ -524,16 +535,13 @@ function generateFrontendServiceFile(microservice: Microservice, serviceImplFile
       })
       .join('\n');
 
-    const destServiceClientFilePathName = destServiceImplFilePathName.endsWith('ServiceImpl.ts')
-      ? destServiceImplFilePathName.slice(0, -7) + '.ts'
-      : destServiceImplFilePathName;
-
-    writeFileSync(destServiceClientFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
+    writeFileSync(destServiceImplFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
   }
 }
 
 function generateInternalServiceFile(
   microservice: Microservice,
+  serviceFilePathName: string,
   serviceImplFilePathName: string,
   requestProcessors: RequestProcessor[]
 ) {
@@ -660,10 +668,17 @@ function generateInternalServiceFile(
       'generated/clients/internal/' + getNamespacedMicroserviceName()
     );
 
+    const destServiceFilePathName = serviceFilePathName.replace(
+      /src\/services/,
+      'generated/clients/internal/' + getNamespacedMicroserviceName()
+    );
+
     const internalDestDirPathName = dirname(destServiceImplFilePathName);
     if (!existsSync(internalDestDirPathName)) {
       mkdirSync(internalDestDirPathName, { recursive: true });
     }
+
+    copyFileSync(serviceFilePathName, destServiceFilePathName);
 
     let outputFileContentsStr =
       '// DO NOT MODIFY THIS FILE! This is an auto-generated file' +
@@ -694,16 +709,13 @@ function generateInternalServiceFile(
       })
       .join('\n');
 
-    const destServiceClientFilePathName = destServiceImplFilePathName.endsWith('ServiceImpl.ts')
-      ? destServiceImplFilePathName.slice(0, -7) + '.ts'
-      : destServiceImplFilePathName;
-
-    writeFileSync(destServiceClientFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
+    writeFileSync(destServiceImplFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
   }
 }
 
 function createPackageJsonFiles() {
-  const npmPackageScope = process.env.GENERATED_CLIENTS_NPM_PACKAGE_SCOPE ?? process.env.MICROSERVICE_NAMESPACE;
+  const npmPackageScope =
+    process.env.GENERATED_CLIENTS_NPM_PACKAGE_SCOPE ?? process.env.MICROSERVICE_NAMESPACE;
   const frontEndClientPackageName = getMicroserviceName() + '-frontend-client';
   const frontEndClientPackageJsonObj = {
     name:
@@ -837,28 +849,24 @@ export default async function generateClients(
   const directoryEntries = readdirSync('src/services', { withFileTypes: true });
 
   const publicTypeNames: string[] = [];
-  publicServicesMetadata.forEach(
-    (serviceMetadata) => {
-      const typeNames = Object.keys(serviceMetadata.types ?? []);
-      typeNames.forEach(typeName => {
-        if (!publicTypeNames.includes(typeName)) {
-          publicTypeNames.push(typeName);
-        }
-      })
-    }
-  );
+  publicServicesMetadata.forEach((serviceMetadata) => {
+    const typeNames = Object.keys(serviceMetadata.types ?? []);
+    typeNames.forEach((typeName) => {
+      if (!publicTypeNames.includes(typeName)) {
+        publicTypeNames.push(typeName);
+      }
+    });
+  });
 
   const internalTypeNames: string[] = [];
-  internalServicesMetadata.forEach(
-    (serviceMetadata) => {
-      const typeNames = Object.keys(serviceMetadata.types ?? []);
-      typeNames.forEach(typeName => {
-        if (!internalTypeNames.includes(typeName)) {
-          internalTypeNames.push(typeName);
-        }
-      })
-    }
-  );
+  internalServicesMetadata.forEach((serviceMetadata) => {
+    const typeNames = Object.keys(serviceMetadata.types ?? []);
+    typeNames.forEach((typeName) => {
+      if (!internalTypeNames.includes(typeName)) {
+        internalTypeNames.push(typeName);
+      }
+    });
+  });
 
   directoryEntries.forEach((directoryEntry: Dirent) => {
     const serviceDirectory = resolve('src/services', directoryEntry.name);
@@ -867,17 +875,15 @@ export default async function generateClients(
     }
 
     const serviceDirectoryEntries = readdirSync(serviceDirectory, { withFileTypes: true });
-    let serviceImplFileDirEntry = serviceDirectoryEntries.find((serviceDirectoryEntry) =>
+    const serviceImplFileDirEntry = serviceDirectoryEntries.find((serviceDirectoryEntry) =>
       serviceDirectoryEntry.name.endsWith('ServiceImpl.ts')
     );
 
-    if (!serviceImplFileDirEntry) {
-      serviceImplFileDirEntry = serviceDirectoryEntries.find((serviceDirectoryEntry) =>
-        serviceDirectoryEntry.name.endsWith('Service.ts')
-      );
-    }
+    const serviceFileDirEntry = serviceDirectoryEntries.find((serviceDirectoryEntry) =>
+      serviceDirectoryEntry.name.endsWith('Service.ts')
+    );
 
-    if (!serviceImplFileDirEntry) {
+    if (!serviceImplFileDirEntry || !serviceFileDirEntry) {
       return;
     }
 
@@ -939,8 +945,9 @@ export default async function generateClients(
         }
       });
 
+    const serviceFilePathName = resolve(serviceDirectory, serviceFileDirEntry.name);
     const serviceImplFilePathName = resolve(serviceDirectory, serviceImplFileDirEntry.name);
-    generateFrontendServiceFile(microservice, serviceImplFilePathName);
+    generateFrontendServiceFile(microservice, serviceFilePathName, serviceImplFilePathName);
     generateInternalServiceFile(microservice, serviceImplFilePathName, requestProcessors);
   });
 

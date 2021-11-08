@@ -16,6 +16,10 @@ export default function MaxLengthAndMatches(
       options: validationOptions,
       validator: {
         validate(value: any) {
+          if (value === null || value === undefined) {
+            return false;
+          }
+
           if (isIncludeOrExcludeResponseFieldsProperty && value.includes('{')) {
             // noinspection AssignmentToFunctionParameterJS
             maxLength = 65536

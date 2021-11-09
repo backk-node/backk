@@ -58,25 +58,6 @@ function createIdValidationDecorator() {
           pattern: '^[a-f\\d]{1,24}$',
           flags: '',
         },
-        {
-          type: 'ObjectExpression',
-          properties: [
-            {
-              type: 'ObjectProperty',
-              method: false,
-              key: {
-                type: 'Identifier',
-                name: 'groups',
-              },
-              computed: false,
-              shorthand: false,
-              value: {
-                type: 'StringLiteral',
-                value: '__backk_argument__',
-              },
-            },
-          ],
-        },
       ],
     },
   };
@@ -124,20 +105,6 @@ function createIsInstanceValidationDecorator(className: string) {
               value: {
                 type: 'BooleanLiteral',
                 value: true,
-              },
-            },
-            {
-              type: 'ObjectProperty',
-              method: false,
-              key: {
-                type: 'Identifier',
-                name: 'argument',
-              },
-              computed: false,
-              shorthand: false,
-              value: {
-                type: 'StringLiteral',
-                value: '__backk_argument__',
               },
             },
           ],
@@ -239,25 +206,6 @@ function createIsInDecorator(values: any[]) {
             type: isNaN(firstValueAsNumber) ? 'StringLiteral' : 'NumericLiteral',
             value,
           })),
-        },
-        {
-          type: 'ObjectExpression',
-          properties: [
-            {
-              type: 'ObjectProperty',
-              method: false,
-              key: {
-                type: 'Identifier',
-                name: 'groups',
-              },
-              computed: false,
-              shorthand: false,
-              value: {
-                type: 'StringLiteral',
-                value: '__backk_argument__',
-              },
-            },
-          ],
         },
       ],
     },
@@ -416,30 +364,6 @@ function createValidateIfNotUndefinedOnUpdateDecorator(propertyName: string) {
               name: 'undefined',
             },
           },
-        },
-        {
-          type: 'ObjectExpression',
-          properties: [
-            {
-              type: 'ObjectProperty',
-              method: false,
-              key: {
-                type: 'Identifier',
-                name: 'groups',
-              },
-              computed: false,
-              shorthand: false,
-              value: {
-                type: 'ArrayExpression',
-                elements: [
-                  {
-                    type: 'StringLiteral',
-                    value: '__backk_update__',
-                  },
-                ],
-              },
-            },
-          ],
         },
       ],
     },

@@ -337,40 +337,6 @@ export default async function tryExecuteServiceMethod(
         serviceFunctionArgument
       );
 
-      Object.entries(instantiatedServiceFunctionArgument).forEach(([propName, propValue]: [string, any]) => {
-        if (Array.isArray(propValue) && propValue.length > 0) {
-          instantiatedServiceFunctionArgument[propName] = propValue.map((pv) => {
-            if (_.isPlainObject(pv)) {
-              const serviceMetadata = microservice.servicesMetadata.find(
-                (serviceMetadata: ServiceMetadata) => serviceMetadata.serviceName === serviceName
-              );
-
-              const { baseTypeName } = getTypeInfoForTypeName(
-                serviceMetadata.types[serviceFunctionArgumentTypeName][propName]
-              );
-
-              return plainToClass(microservice[serviceName]['Types'][baseTypeName], pv);
-            }
-            return pv;
-          });
-        } else {
-          if (_.isPlainObject(propValue)) {
-            const serviceMetadata = microservice.servicesMetadata.find(
-              (serviceMetadata: ServiceMetadata) => serviceMetadata.serviceName === serviceName
-            );
-
-            const { baseTypeName } = getTypeInfoForTypeName(
-              serviceMetadata.types[serviceFunctionArgumentTypeName][propName]
-            );
-
-            instantiatedServiceFunctionArgument[propName] = plainToClass(
-              microservice[serviceName]['Types'][baseTypeName],
-              propValue
-            );
-          }
-        }
-      });
-
       if (!instantiatedServiceFunctionArgument) {
         throw createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.MISSING_SERVICE_FUNCTION_ARGUMENT);
       }

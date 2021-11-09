@@ -1,7 +1,7 @@
 import { parseSync } from '@babel/core';
 import generate from '@babel/generator';
 import { exec } from 'child_process';
-import { copyFileSync, Dirent, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs';
+import { Dirent, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs';
 import { dirname, resolve } from 'path';
 import rimraf from 'rimraf';
 import util from 'util';
@@ -506,15 +506,34 @@ function generateFrontendServiceFile(
     }
 
     const serviceFileContents = readFileSync(serviceFilePathName, { encoding: 'UTF-8' });
-    const outputLines = serviceFileContents
-      .split('\n')
-      .filter(
-        (line: string) =>
-          !removedFunctionNames.some((removedFunctionName) => line.trim().startsWith(removedFunctionName))
-      )
-      .join('\n');
 
-    writeFileSync(destServiceFilePathName, outputLines, { encoding: 'UTF-8' });
+    const serviceAst = parseSync(serviceFileContents, {
+      plugins: [
+        ['@babel/plugin-proposal-decorators', { legacy: true }],
+        '@babel/plugin-proposal-class-properties',
+        '@babel/plugin-transform-typescript',
+      ],
+    });
+
+    const nodes = (serviceAst as any).program.body;
+
+    for (const node of nodes) {
+      if (node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration') {
+        const methods: any[] = [];
+        node.declaration.body.body.forEach((classBodyNode: any) => {
+          if (classBodyNode.type === 'ClassMethod') {
+            const functionName = classBodyNode.key.name;
+            if (!removedFunctionNames.some(removedFunctionName => functionName === removedFunctionName)) {
+              methods.push(classBodyNode);
+            }
+          }
+        });
+        node.declaration.body.body = methods;
+      }
+    }
+
+    const serviceCode = generate(serviceAst as any).code;
+    writeFileSync(destServiceFilePathName, serviceCode, { encoding: 'UTF-8' });
 
     let outputFileContentsStr =
       '// DO NOT MODIFY THIS FILE! This is an auto-generated file' +
@@ -626,7 +645,7 @@ function generateInternalServiceFile(
             classBodyNode.static ||
             !isInternalMethod
           ) {
-            removedFunctionNames.push(functionName)
+            removedFunctionNames.push(functionName);
             return;
           }
 
@@ -692,15 +711,34 @@ function generateInternalServiceFile(
     }
 
     const serviceFileContents = readFileSync(serviceFilePathName, { encoding: 'UTF-8' });
-    const outputLines = serviceFileContents
-      .split('\n')
-      .filter(
-        (line: string) =>
-          !removedFunctionNames.some((removedFunctionName) => line.trim().startsWith(removedFunctionName))
-      )
-      .join('\n');
+    const serviceAst = parseSync(serviceFileContents, {
+      plugins: [
+        ['@babel/plugin-proposal-decorators', { legacy: true }],
+        '@babel/plugin-proposal-class-properties',
+        '@babel/plugin-transform-typescript',
+      ],
+    });
 
-    writeFileSync(destServiceFilePathName, outputLines, { encoding: 'UTF-8' });
+    const nodes = (serviceAst as any).program.body;
+
+    for (const node of nodes) {
+      if (node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration') {
+        const methods: any[] = [];
+        node.declaration.body.body.forEach((classBodyNode: any) => {
+          if (classBodyNode.type === 'ClassMethod') {
+            const functionName = classBodyNode.key.name;
+            if (!removedFunctionNames.some(removedFunctionName => functionName === removedFunctionName)) {
+              methods.push(classBodyNode);
+            }
+          }
+        });
+        node.declaration.body.body = methods;
+      }
+    }
+
+    const serviceCode = generate(serviceAst as any).code;
+
+    writeFileSync(destServiceFilePathName, serviceCode, { encoding: 'UTF-8' });
 
     let outputFileContentsStr =
       '// DO NOT MODIFY THIS FILE! This is an auto-generated file' +

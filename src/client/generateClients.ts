@@ -369,6 +369,7 @@ function generateFrontendServiceFile(
 
   const nodes = (ast as any).program.body;
   const functionNames: string[] = [];
+  const removedFunctionNames: string[] = [];
   let methodCount = 0;
 
   for (const node of nodes) {
@@ -437,12 +438,12 @@ function generateFrontendServiceFile(
             isInternalMethod ||
             (isInternalService && !classBodyNode.decorators)
           ) {
+            removedFunctionNames.push(functionName);
             return;
           }
 
           const serviceFunctionType = getServiceFunctionType(functionName, classBodyNode.decorators);
 
-          functionNames.push(functionName);
           if (classBodyNode.params?.[0]?.type === 'ObjectPattern') {
             classBodyNode.params[0] = {
               type: 'Identifier',
@@ -450,6 +451,7 @@ function generateFrontendServiceFile(
               typeAnnotation: classBodyNode.params[0].typeAnnotation,
             };
           }
+          functionNames.push(functionName);
           classBodyNode.static = true;
           classBodyNode.async = true;
           classBodyNode.decorators = [];
@@ -503,7 +505,16 @@ function generateFrontendServiceFile(
       mkdirSync(frontEndDestDirPathName, { recursive: true });
     }
 
-    copyFileSync(serviceFilePathName, destServiceFilePathName);
+    const serviceFileContents = readFileSync(serviceFilePathName, { encoding: 'UTF-8' });
+    const outputLines = serviceFileContents
+      .split('\n')
+      .filter(
+        (line: string) =>
+          !removedFunctionNames.some((removedFunctionName) => line.trim().startsWith(removedFunctionName))
+      )
+      .join('\n');
+
+    writeFileSync(destServiceFilePathName, outputLines, { encoding: 'UTF-8' });
 
     let outputFileContentsStr =
       '// DO NOT MODIFY THIS FILE! This is an auto-generated file' +
@@ -557,6 +568,7 @@ function generateInternalServiceFile(
 
   const nodes = (ast as any).program.body;
   const functionNames: string[] = [];
+  const removedFunctionNames: string[] = [];
   let methodCount = 0;
 
   for (const node of nodes) {
@@ -614,6 +626,7 @@ function generateInternalServiceFile(
             classBodyNode.static ||
             !isInternalMethod
           ) {
+            removedFunctionNames.push(functionName)
             return;
           }
 
@@ -678,7 +691,16 @@ function generateInternalServiceFile(
       mkdirSync(internalDestDirPathName, { recursive: true });
     }
 
-    copyFileSync(serviceFilePathName, destServiceFilePathName);
+    const serviceFileContents = readFileSync(serviceFilePathName, { encoding: 'UTF-8' });
+    const outputLines = serviceFileContents
+      .split('\n')
+      .filter(
+        (line: string) =>
+          !removedFunctionNames.some((removedFunctionName) => line.trim().startsWith(removedFunctionName))
+      )
+      .join('\n');
+
+    writeFileSync(destServiceFilePathName, outputLines, { encoding: 'UTF-8' });
 
     let outputFileContentsStr =
       '// DO NOT MODIFY THIS FILE! This is an auto-generated file' +

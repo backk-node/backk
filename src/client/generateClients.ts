@@ -371,6 +371,8 @@ function generateFrontendServiceFile(
   const functionNames: string[] = [];
   const removedFunctionNames: string[] = [];
   let methodCount = 0;
+  let serviceName: string | undefined;
+  let serviceClassName: string = '';
 
   for (const node of nodes) {
     if (node.type === 'ImportDeclaration' && node.source.value === 'backk') {
@@ -389,16 +391,11 @@ function generateFrontendServiceFile(
         );
       }
 
+      node.type = 'ExportNamedDeclaration';
       node.declaration.superClass = undefined;
       node.declaration.decorators = [];
-      node.declaration.implements = undefined;
-      const serviceClassName = node.declaration.id.name;
-
-      if (serviceClassName.endsWith('Impl')) {
-        node.declaration.id.name = serviceClassName.slice(0, -4);
-      }
-
-      const [serviceName] =
+      serviceClassName = node.declaration.id.name;
+      [serviceName] =
         Object.entries(microservice).find(
           ([, service]: [string, any]) => service.constructor.name === serviceClassName
         ) ?? [];
@@ -452,7 +449,6 @@ function generateFrontendServiceFile(
             };
           }
           functionNames.push(functionName);
-          classBodyNode.static = true;
           classBodyNode.async = true;
           classBodyNode.decorators = [];
           const argumentClassName = classBodyNode.params?.[0]?.typeAnnotation?.typeAnnotation?.typeName?.name;
@@ -469,7 +465,7 @@ function generateFrontendServiceFile(
                   ]
                 : []),
               getReturnCallOrSendToRemoteServiceStatement(
-                serviceName,
+                serviceName!,
                 functionName,
                 argumentName,
                 isGetMethodAllowed,
@@ -490,15 +486,15 @@ function generateFrontendServiceFile(
 
   if (methodCount > 0) {
     const code = generate(ast as any).code;
-    const destServiceImplFilePathName = serviceImplFilePathName.replace(
-      /src\/services/,
-      'generated/clients/frontend/' + getNamespacedMicroserviceName()
-    );
-
-    const destServiceFilePathName = serviceFilePathName.replace(
-      /src\/services/,
-      'generated/clients/frontend/' + getNamespacedMicroserviceName()
-    );
+    const destServiceImplFilePathName =
+      serviceImplFilePathName
+        .replace(/src\/services/, 'generated/clients/frontend/' + getNamespacedMicroserviceName())
+        .split('/')
+        .slice(0, -1)
+        .join('/') +
+      '/' +
+      serviceName +
+      '.ts';
 
     const frontEndDestDirPathName = dirname(destServiceImplFilePathName);
     if (!existsSync(frontEndDestDirPathName)) {
@@ -506,7 +502,6 @@ function generateFrontendServiceFile(
     }
 
     const serviceFileContents = readFileSync(serviceFilePathName, { encoding: 'UTF-8' });
-
     const serviceAst = parseSync(serviceFileContents, {
       plugins: [
         ['@babel/plugin-proposal-decorators', { legacy: true }],
@@ -518,12 +513,15 @@ function generateFrontendServiceFile(
     const nodes = (serviceAst as any).program.body;
 
     for (const node of nodes) {
-      if (node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration') {
+      if (node.type === 'ImportDeclaration' && node.source.value === 'backk') {
+        node.source.value = 'backk-frontend-utils';
+      }
+      if (node.type === 'ExportNamedDeclaration') {
         const methods: any[] = [];
         node.declaration.body.body.forEach((classBodyNode: any) => {
-          if (classBodyNode.type === 'ClassMethod') {
+          if (classBodyNode.type === 'TSMethodSignature') {
             const functionName = classBodyNode.key.name;
-            if (!removedFunctionNames.some(removedFunctionName => functionName === removedFunctionName)) {
+            if (!removedFunctionNames.some((removedFunctionName) => functionName === removedFunctionName)) {
               methods.push(classBodyNode);
             }
           }
@@ -533,18 +531,20 @@ function generateFrontendServiceFile(
     }
 
     const serviceCode = generate(serviceAst as any).code;
-    writeFileSync(destServiceFilePathName, serviceCode, { encoding: 'UTF-8' });
+    const serviceImportLines = serviceCode
+      .split('\n')
+      .filter((line) => line.startsWith('import'))
+      .join('\n');
+    const serviceInterfaceLines = serviceCode
+      .split('\n')
+      .filter((line) => !line.startsWith('import') && line.trim().length !== 0)
+      .join('\n');
 
-    let outputFileContentsStr =
-      '// DO NOT MODIFY THIS FILE! This is an auto-generated file' +
-      '\n' +
-      "import { callRemoteService, validateServiceFunctionArgumentOrThrow } from 'backk-frontend-utils';" +
-      "import MicroserviceOptions from '../_backk/MicroserviceOptions';" +
-      code;
     let isFirstFunction = true;
 
-    outputFileContentsStr = outputFileContentsStr
+    const classCode = code
       .split('\n')
+      .filter((line) => !line.startsWith('import'))
       .map((outputFileLine) => {
         if (
           !isFirstFunction &&
@@ -554,16 +554,34 @@ function generateFrontendServiceFile(
         ) {
           return '\n' + outputFileLine;
         }
-
-        if (outputFileLine.startsWith('export default class') || outputFileLine.startsWith('export class')) {
-          return '\n' + outputFileLine;
-        }
-
         // noinspection ReuseOfLocalVariableJS
         isFirstFunction = false;
         return outputFileLine;
       })
       .join('\n');
+
+    const serviceInterfaceName = serviceClassName.slice(0, -4);
+    const outputFileContentsStr =
+      '// DO NOT MODIFY THIS FILE! This is an auto-generated file' +
+      '\n' +
+      serviceImportLines +
+      code
+        .split('\n')
+        .filter(
+          (line) =>
+            line.startsWith('import') &&
+            !line.startsWith(`import { ${serviceInterfaceName} }`) &&
+            !line.startsWith(`import {${serviceInterfaceName}}`)
+        )
+        .join('\n') +
+      "import { callRemoteService, validateServiceFunctionArgumentOrThrow } from 'backk-frontend-utils';" +
+      "import MicroserviceOptions from '../_backk/MicroserviceOptions';" + '\n\n' +
+      serviceInterfaceLines +
+      '\n\n' +
+      classCode +
+      '\n\n' +
+      `const ${serviceName} = new ${serviceClassName}()\n` +
+      `export default ${serviceName}`;
 
     writeFileSync(destServiceImplFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
   }
@@ -589,9 +607,12 @@ function generateInternalServiceFile(
   const functionNames: string[] = [];
   const removedFunctionNames: string[] = [];
   let methodCount = 0;
+  let serviceName: string | undefined;
+  let serviceClassName: string = '';
 
   for (const node of nodes) {
     if (node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration') {
+      node.type = 'ExportNamedDeclaration';
       if (node.declaration.type !== 'ClassDeclaration') {
         throw new Error(
           serviceImplFilePathName +
@@ -604,14 +625,9 @@ function generateInternalServiceFile(
       );
       node.declaration.decorators = [];
       node.declaration.superClass = null;
-      node.declaration.implements = undefined;
-      const serviceClassName = node.declaration.id.name;
+      serviceClassName = node.declaration.id.name;
 
-      if (serviceClassName.endsWith('Impl')) {
-        node.declaration.id.name = serviceClassName.slice(0, -4);
-      }
-
-      const [serviceName] =
+      [serviceName] =
         Object.entries(microservice).find(
           ([, service]: [string, any]) => service.constructor.name === serviceClassName
         ) ?? [];
@@ -676,7 +692,7 @@ function generateInternalServiceFile(
                   ]
                 : []),
               getReturnCallOrSendToRemoteServiceStatement(
-                serviceName,
+                serviceName!,
                 functionName,
                 argumentName,
                 isGetMethodAllowed,
@@ -695,15 +711,15 @@ function generateInternalServiceFile(
 
   if (methodCount > 0) {
     const code = generate(ast as any).code;
-    const destServiceImplFilePathName = serviceImplFilePathName.replace(
-      /src\/services/,
-      'generated/clients/internal/' + getNamespacedMicroserviceName()
-    );
-
-    const destServiceFilePathName = serviceFilePathName.replace(
-      /src\/services/,
-      'generated/clients/internal/' + getNamespacedMicroserviceName()
-    );
+    const destServiceImplFilePathName =
+      serviceImplFilePathName
+        .replace(/src\/services/, 'generated/clients/internal/' + getNamespacedMicroserviceName())
+        .split('/')
+        .slice(0, -1)
+        .join('/') +
+      '/' +
+      serviceName +
+      '.ts';
 
     const internalDestDirPathName = dirname(destServiceImplFilePathName);
     if (!existsSync(internalDestDirPathName)) {
@@ -722,12 +738,12 @@ function generateInternalServiceFile(
     const nodes = (serviceAst as any).program.body;
 
     for (const node of nodes) {
-      if (node.type === 'ExportNamedDeclaration' || node.type === 'ExportDefaultDeclaration') {
+      if (node.type === 'ExportNamedDeclaration') {
         const methods: any[] = [];
         node.declaration.body.body.forEach((classBodyNode: any) => {
-          if (classBodyNode.type === 'ClassMethod') {
+          if (classBodyNode.type === 'TSMethodSignature') {
             const functionName = classBodyNode.key.name;
-            if (!removedFunctionNames.some(removedFunctionName => functionName === removedFunctionName)) {
+            if (!removedFunctionNames.some((removedFunctionName) => functionName === removedFunctionName)) {
               methods.push(classBodyNode);
             }
           }
@@ -737,18 +753,20 @@ function generateInternalServiceFile(
     }
 
     const serviceCode = generate(serviceAst as any).code;
+    const serviceImportLines = serviceCode
+      .split('\n')
+      .filter((line) => line.startsWith('import'))
+      .join('\n');
+    const serviceInterfaceLines = serviceCode
+      .split('\n')
+      .filter((line) => !line.startsWith('import') && line.trim().length !== 0)
+      .join('\n');
 
-    writeFileSync(destServiceFilePathName, serviceCode, { encoding: 'UTF-8' });
-
-    let outputFileContentsStr =
-      '// DO NOT MODIFY THIS FILE! This is an auto-generated file' +
-      '\n' +
-      "import { callRemoteService, sendToRemoteService, validateServiceFunctionArgumentOrThrow } from 'backk';\n" +
-      code;
     let isFirstFunction = true;
 
-    outputFileContentsStr = outputFileContentsStr
+    const classCode = code
       .split('\n')
+      .filter((line) => !line.startsWith('import'))
       .map((outputFileLine) => {
         if (
           !isFirstFunction &&
@@ -758,16 +776,33 @@ function generateInternalServiceFile(
         ) {
           return '\n' + outputFileLine;
         }
-
-        if (outputFileLine.startsWith('export default class') || outputFileLine.startsWith('export class')) {
-          return '\n' + outputFileLine;
-        }
-
         // noinspection ReuseOfLocalVariableJS
         isFirstFunction = false;
         return outputFileLine;
       })
       .join('\n');
+
+    const serviceInterfaceName = serviceClassName.slice(0, -4);
+    const outputFileContentsStr =
+      '// DO NOT MODIFY THIS FILE! This is an auto-generated file' +
+      '\n' +
+      serviceImportLines +
+      code
+        .split('\n')
+        .filter(
+          (line) =>
+            line.startsWith('import') &&
+            !line.startsWith(`import { ${serviceInterfaceName} }`) &&
+            !line.startsWith(`import {${serviceInterfaceName}}`)
+        )
+        .join('\n') +
+      "import { callRemoteService, sendToRemoteService, validateServiceFunctionArgumentOrThrow } from 'backk';\n\n" +
+      serviceInterfaceLines +
+      '\n\n' +
+      classCode +
+      '\n\n' +
+      `const ${serviceName} = new ${serviceClassName}()\n` +
+      `export default ${serviceName}`;
 
     writeFileSync(destServiceImplFilePathName, outputFileContentsStr, { encoding: 'UTF-8' });
   }

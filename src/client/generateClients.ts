@@ -518,6 +518,7 @@ function generateFrontendServiceFile(
       }
       if (node.type === 'ExportNamedDeclaration') {
         const methods: any[] = [];
+        node.declaration.extends = undefined;
         node.declaration.body.body.forEach((classBodyNode: any) => {
           if (classBodyNode.type === 'TSMethodSignature') {
             const functionName = classBodyNode.key.name;
@@ -740,6 +741,7 @@ function generateInternalServiceFile(
     for (const node of nodes) {
       if (node.type === 'ExportNamedDeclaration') {
         const methods: any[] = [];
+        node.declaration.extends = undefined;
         node.declaration.body.body.forEach((classBodyNode: any) => {
           if (classBodyNode.type === 'TSMethodSignature') {
             const functionName = classBodyNode.key.name;

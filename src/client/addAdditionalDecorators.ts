@@ -141,20 +141,6 @@ function createNestedValidationDecorator() {
                 value: true,
               },
             },
-            {
-              type: 'ObjectProperty',
-              method: false,
-              key: {
-                type: 'Identifier',
-                name: 'argument',
-              },
-              computed: false,
-              shorthand: false,
-              value: {
-                type: 'StringLiteral',
-                value: '__backk_argument__',
-              },
-            },
           ],
         },
       ],

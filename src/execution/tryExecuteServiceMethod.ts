@@ -638,13 +638,13 @@ export default async function tryExecuteServiceMethod(
             serviceFunctionName
           );
         } else if (typeof response === 'object') {
-          if (isManyOf) {
+          if (isManyOf && response.data.length > 0) {
             await tryValidateServiceFunctionReturnValue(
               response.data[0],
               ServiceFunctionReturnType,
               serviceFunctionName
             );
-          } else if (isOneOf) {
+          } else if (isOneOf && response.data !== undefined) {
             await tryValidateServiceFunctionReturnValue(
               response.data,
               ServiceFunctionReturnType,

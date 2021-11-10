@@ -114,7 +114,7 @@ function createIsInstanceValidationDecorator(className: string) {
   };
 }
 
-/* function createNestedValidationDecorator() {
+function createNestedValidationDecorator() {
   return {
     type: 'Decorator',
     expression: {
@@ -160,7 +160,7 @@ function createIsInstanceValidationDecorator(className: string) {
       ],
     },
   };
-} */
+}
 
 function createTypeDecorator(typeName: string) {
   return {
@@ -476,10 +476,10 @@ export default function addAdditionalDecorators(
     if (typeNames.includes(typeName)) {
       classBodyNode.decorators.push(createIsInstanceValidationDecorator(typeName));
       pushIfNotExists(imports, 'IsInstance');
-      /* classBodyNode.decorators.push(createNestedValidationDecorator());
+      classBodyNode.decorators.push(createNestedValidationDecorator());
       pushIfNotExists(imports, 'ValidateNested');
       classBodyNode.decorators.push(createTypeDecorator(typeName));
-      pushIfNotExists(imports, 'Type');*/
+      pushIfNotExists(imports, 'Type');
     } else {
       const enumValues = parseEnumValuesFromSrcFile(typeName);
       if (enumValues.length > 0) {

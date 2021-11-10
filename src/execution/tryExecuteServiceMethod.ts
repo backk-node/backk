@@ -1,12 +1,11 @@
 import { plainToClass } from 'class-transformer';
 import Redis from 'ioredis';
-import _ from 'lodash';
 import { MemoryCache } from 'memory-cache-node';
 import AuthorizationService from '../authorization/AuthorizationService';
 import tryAuthorize from '../authorization/tryAuthorize';
 import ResponseCacheConfigService from '../cache/ResponseCacheConfigService';
 import tryVerifyCaptchaToken from '../captcha/tryVerifyCaptchaToken';
-import { Durations, HttpStatusCodes, MAX_INT_VALUE, Values } from '../constants/constants';
+import { Durations, HttpStatusCodes, Values } from '../constants/constants';
 import getClsNamespace from '../continuationlocalstorage/getClsNamespace';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
 import { BACKK_ERRORS } from '../errors/backkErrors';
@@ -15,7 +14,6 @@ import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackk
 import createErrorFromErrorCodeMessageAndStatus from '../errors/createErrorFromErrorCodeMessageAndStatus';
 import emptyError from '../errors/emptyError';
 import isBackkError from '../errors/isBackkError';
-import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
 import getMicroserviceServiceByServiceClass from '../microservice/getMicroserviceServiceByServiceClass';
 import getMicroserviceServiceNameByServiceClass from '../microservice/getMicroserviceServiceNameByServiceClass';
 import {
@@ -638,18 +636,22 @@ export default async function tryExecuteServiceMethod(
             serviceFunctionName
           );
         } else if (typeof response === 'object') {
-          if (isManyOf && response.data.length > 0) {
-            await tryValidateServiceFunctionReturnValue(
-              response.data[0],
-              ServiceFunctionReturnType,
-              serviceFunctionName
-            );
-          } else if (isOneOf && response.data !== undefined) {
-            await tryValidateServiceFunctionReturnValue(
-              response.data,
-              ServiceFunctionReturnType,
-              serviceFunctionName
-            );
+          if (isManyOf) {
+            if (response.data.length > 0) {
+              await tryValidateServiceFunctionReturnValue(
+                response.data[0],
+                ServiceFunctionReturnType,
+                serviceFunctionName
+              );
+            }
+          } else if (isOneOf) {
+            if (response.data !== undefined) {
+              await tryValidateServiceFunctionReturnValue(
+                response.data,
+                ServiceFunctionReturnType,
+                serviceFunctionName
+              );
+            }
           } else {
             await tryValidateServiceFunctionReturnValue(
               response,

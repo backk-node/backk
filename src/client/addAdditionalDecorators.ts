@@ -365,6 +365,28 @@ function createValidateIfNotUndefinedOnUpdateDecorator(propertyName: string) {
             },
           },
         },
+        {
+          type: 'ObjectExpression',
+          properties: [
+            {
+              type: 'ObjectProperty',
+              method: false,
+              key: {
+                type: 'Identifier',
+                name: 'groups',
+              },
+              computed: false,
+              shorthand: false,
+              value: {
+                type: 'ArrayExpression',
+                elements: [{
+                  type: 'StringLiteral',
+                  value: '__backk_update__',
+                }],
+              },
+            },
+          ],
+        },
       ],
     },
   };

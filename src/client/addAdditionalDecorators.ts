@@ -365,10 +365,12 @@ function createValidateIfNotUndefinedOnUpdateDecorator(propertyName: string) {
               shorthand: false,
               value: {
                 type: 'ArrayExpression',
-                elements: [{
-                  type: 'StringLiteral',
-                  value: '__backk_update__',
-                }],
+                elements: [
+                  {
+                    type: 'StringLiteral',
+                    value: '__backk_update__',
+                  },
+                ],
               },
             },
           ],

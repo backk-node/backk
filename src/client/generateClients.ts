@@ -41,7 +41,7 @@ function getValidateServiceFunctionArgumentBlock(
               type: 'CallExpression',
               callee: {
                 type: 'Identifier',
-                name: 'validateServiceFunctionArgument',
+                name: 'validateServiceFunctionArgumentOrThrow',
               },
               arguments: [
                 {

@@ -390,6 +390,30 @@ function addDecorator(decorators: any[], decoratorToAdd: any) {
   }
 }
 
+function addUndefinedTypeAnnotation(classBodyNode: any) {
+  if (classBodyNode.typeAnnotation.typeAnnotation.type !== 'TSUnionType') {
+    classBodyNode.typeAnnotation.typeAnnotation = {
+      type: 'TSUnionType',
+      types: [
+        classBodyNode.typeAnnotation?.typeAnnotation,
+        {
+          type: 'TSUndefinedKeyword',
+        },
+      ],
+    };
+  } else {
+    if (
+      !classBodyNode.typeAnnotation.typeAnnotation.types.find(
+        (type: any) => type.type === 'TSUndefinedKeyword'
+      )
+    ) {
+      classBodyNode.typeAnnotation.typeAnnotation.types.push({
+        type: 'TSUndefinedKeyword',
+      });
+    }
+  }
+}
+
 export default function addAdditionalDecorators(
   classBodyNode: any,
   imports: string[],
@@ -402,6 +426,7 @@ export default function addAdditionalDecorators(
 
   if (isCreateOnly) {
     addDecorator(classBodyNode.decorators, createUndefinedDecorator(['__backk_update__']));
+    addUndefinedTypeAnnotation(classBodyNode);
     pushIfNotExists(imports, 'IsUndefined');
   }
 
@@ -412,6 +437,7 @@ export default function addAdditionalDecorators(
 
   if (isUpdateOnlyOrReadUpdate) {
     addDecorator(classBodyNode.decorators, createUndefinedDecorator(['__backk_create__']));
+    addUndefinedTypeAnnotation(classBodyNode);
     pushIfNotExists(imports, 'IsUndefined');
   }
 
@@ -425,6 +451,7 @@ export default function addAdditionalDecorators(
       classBodyNode.decorators,
       createUndefinedDecorator(['__backk_create__', '__backk_update__'])
     );
+    addUndefinedTypeAnnotation(classBodyNode);
     pushIfNotExists(imports, 'IsUndefined');
   }
 
@@ -518,6 +545,7 @@ export default function addAdditionalDecorators(
 
   if (propertyName !== '_id' && isEntity) {
     classBodyNode.decorators.push(createValidateIfNotUndefinedOnUpdateDecorator(propertyName));
+    addUndefinedTypeAnnotation(classBodyNode);
     pushIfNotExists(imports, 'ValidateIf');
   }
 

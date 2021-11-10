@@ -14,6 +14,10 @@ export default function IsCreditCardExpiration(validationOptions?: ValidationOpt
       options: validationOptions,
       validator: {
         validate(value: string) {
+          if (typeof value !== 'string') {
+            return false;
+          }
+
           const [month, year] = value.split('/');
 
           const currentTimestamp = dayjs()

@@ -10,6 +10,10 @@ export default function IsCreditCardVerificationCode(validationOptions?: Validat
       options: validationOptions,
       validator: {
         validate(value: string) {
+          if (typeof value !== 'string') {
+            return false;
+          }
+
           return !!value.match(/^[0-9]{3,4}$/);
         },
         defaultMessage: () =>

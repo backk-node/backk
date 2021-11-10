@@ -12,6 +12,10 @@ export default function IsSubject(validationOptions?: ValidationOptions) {
       options: validationOptions,
       validator: {
         validate(value: any) {
+          if (typeof value !== 'string') {
+            return false;
+          }
+
           return value.length < Lengths._256 && isAscii(value);
         }
       },

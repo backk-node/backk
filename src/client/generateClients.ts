@@ -301,11 +301,13 @@ function rewriteTypeFile(
 
         addAdditionalDecorators(classBodyNode, imports, typeNames, isEntity);
 
-        (propertyNameToTypeNameMap as any)[classBodyNode.key.name] = getPropertyTypeName(
-          classBodyNode,
-          enumValues,
-          isArray
-        );
+        if (!classBodyNode.value) {
+          (propertyNameToTypeNameMap as any)[classBodyNode.key.name] = getPropertyTypeName(
+            classBodyNode,
+            enumValues,
+            isArray
+          );
+        }
 
         classBodyNode.decorators = classBodyNode.decorators?.filter((decorator: any) => {
           const decoratorName = decorator.expression.callee.name;

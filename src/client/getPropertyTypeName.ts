@@ -1,12 +1,11 @@
-export default function getPropertyTypeName(classProperty: any, enumValues: any[]) {
+export default function getPropertyTypeName(classProperty: any, enumValues: any[], isArray: boolean) {
   if (enumValues) {
     const numericValue = parseFloat(enumValues[0]);
     if (!isNaN(numericValue)) {
-      return  numericValue;
+      return isArray ? numericValue + '[]' : numericValue;
     }
-    return "'" + enumValues[0] +  "'";
-  }
-  else if (
+    return isArray ? "'" + enumValues[0] + "'" + '[]' : "'" + enumValues[0] + "'";
+  } else if (
     classProperty.typeAnnotation.typeAnnotation.type === 'TSStringKeyword' ||
     classProperty.typeAnnotation.typeAnnotation.type === 'TSNumberKeyword' ||
     classProperty.typeAnnotation.typeAnnotation.type === 'TSBooleanKeyword'
@@ -21,14 +20,20 @@ export default function getPropertyTypeName(classProperty: any, enumValues: any[
       classProperty.typeAnnotation.typeAnnotation.types[0].type === 'TSUndefinedKeyword')
   ) {
     return classProperty.typeAnnotation.typeAnnotation.types[0].type;
-  } else if ( classProperty.typeAnnotation.typeAnnotation.type === 'TSUnionType' &&
-    classProperty.typeAnnotation.typeAnnotation.types[0].type === 'TSTypeReference') {
+  } else if (
+    classProperty.typeAnnotation.typeAnnotation.type === 'TSUnionType' &&
+    classProperty.typeAnnotation.typeAnnotation.types[0].type === 'TSTypeReference'
+  ) {
     return classProperty.typeAnnotation.typeAnnotation.types[0].typeName.name;
-  } else if (classProperty.typeAnnotation.typeAnnotation.type === 'TSUnionType' &&
-    classProperty.typeAnnotation.typeAnnotation.types[0].type === 'TSArrayType') {
-    if (classProperty.typeAnnotation.typeAnnotation.types[0].elementType.type === 'TSStringKeyword' ||
+  } else if (
+    classProperty.typeAnnotation.typeAnnotation.type === 'TSUnionType' &&
+    classProperty.typeAnnotation.typeAnnotation.types[0].type === 'TSArrayType'
+  ) {
+    if (
+      classProperty.typeAnnotation.typeAnnotation.types[0].elementType.type === 'TSStringKeyword' ||
       classProperty.typeAnnotation.typeAnnotation.types[0].elementType.type === 'TSNumberKeyword' ||
-      classProperty.typeAnnotation.typeAnnotation.types[0].elementType.type === 'TSBooleanKeyword') {
+      classProperty.typeAnnotation.typeAnnotation.types[0].elementType.type === 'TSBooleanKeyword'
+    ) {
       return classProperty.typeAnnotation.typeAnnotation.types[0].elementType.type + '[]';
     }
     return classProperty.typeAnnotation.typeAnnotation.types[0].elementType.typeName.name + '[]';
@@ -51,11 +56,12 @@ export default function getPropertyTypeName(classProperty: any, enumValues: any[
       classProperty.typeAnnotation.typeAnnotation.elementType.type === 'TSBooleanKeyword'
     ) {
       return classProperty.typeAnnotation.typeAnnotation.elementType.type + '[]';
-    }  else if (
+    } else if (
       classProperty.typeAnnotation.typeAnnotation.elementType.type === 'TSParenthesizedType' &&
       classProperty.typeAnnotation.typeAnnotation.elementType.typeAnnotation.types[0].type === 'TSLiteralType'
     ) {
-      const literalValue = classProperty.typeAnnotation.typeAnnotation.elementType.typeAnnotation.types[0].literal.value;
+      const literalValue =
+        classProperty.typeAnnotation.typeAnnotation.elementType.typeAnnotation.types[0].literal.value;
       const numericValue = parseFloat(literalValue);
       if (!isNaN(numericValue)) {
         return numericValue + '[]';

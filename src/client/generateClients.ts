@@ -260,7 +260,14 @@ function rewriteTypeFile(
           return;
         }
 
-        const propertyTypeName = classBodyNode.typeAnnotation.typeAnnotation?.typeName?.name;
+        let propertyTypeName;
+        let isArray = false;
+        if (classBodyNode.typeAnnotation.typeAnnotation?.typeName?.name) {
+          propertyTypeName = classBodyNode.typeAnnotation.typeAnnotation.typeName.name;
+        } else if (classBodyNode.typeAnnotation.typeAnnotation?.type === 'TSArrayType') {
+          propertyTypeName = classBodyNode.typeAnnotation.typeAnnotation.elementType?.typeName?.name;
+          isArray = true;
+        }
 
         let enumValues;
         if (
@@ -296,7 +303,8 @@ function rewriteTypeFile(
 
         (propertyNameToTypeNameMap as any)[classBodyNode.key.name] = getPropertyTypeName(
           classBodyNode,
-          enumValues
+          enumValues,
+          isArray
         );
 
         classBodyNode.decorators = classBodyNode.decorators?.filter((decorator: any) => {
@@ -329,7 +337,10 @@ function rewriteTypeFile(
         classBodyNodes.push(classBodyNode);
       });
 
-      node.declaration.body.body = [createConstructor(propertyNameToTypeNameMap, hasSuperClass), ...classBodyNodes];
+      node.declaration.body.body = [
+        createConstructor(propertyNameToTypeNameMap, hasSuperClass),
+        ...classBodyNodes,
+      ];
     }
   }
 

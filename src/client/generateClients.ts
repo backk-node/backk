@@ -17,6 +17,8 @@ import getMicroserviceName from '../utils/getMicroserviceName';
 import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
 import decapitalizeFirstLetter from '../utils/string/decapitalizeFirstLetter';
 import addAdditionalDecorators from './addAdditionalDecorators';
+import createConstructor from './createConstructor';
+import getPropertyTypeName from './getPropertyTypeName';
 import getServiceFunctionType from './getServiceFunctionType';
 
 const promisifiedExec = util.promisify(exec);
@@ -226,6 +228,7 @@ function rewriteTypeFile(
 
   const nodes = (ast as any).program.body;
   const imports: string[] = [];
+  const propertyNameToTypeNameMap = {};
 
   for (const node of nodes) {
     if (clientType === 'frontend' && node.type === 'ImportDeclaration' && node.source.value === 'backk') {
@@ -243,10 +246,15 @@ function rewriteTypeFile(
 
       const classBodyNodes: any[] = [];
       node.declaration.decorators = [];
+      const hasSuperClass = !!node.declaration.superClass;
       node.declaration.body.body.forEach((classBodyNode: any) => {
         const isPrivate = classBodyNode.decorators?.find(
           (decorator: any) => decorator.expression.callee.name === 'Private'
         );
+
+        if (classBodyNode.type !== 'ClassProperty') {
+          return;
+        }
 
         if (classBodyNode.type === 'ClassProperty' && isPrivate) {
           return;
@@ -254,6 +262,7 @@ function rewriteTypeFile(
 
         const propertyTypeName = classBodyNode.typeAnnotation.typeAnnotation?.typeName?.name;
 
+        let enumValues;
         if (
           propertyTypeName &&
           propertyTypeName[0] === propertyTypeName[0].toUpperCase() &&
@@ -261,7 +270,7 @@ function rewriteTypeFile(
           propertyTypeName !== 'Date' &&
           !typeNames.includes(propertyTypeName) &&
           !(types as any)[propertyTypeName] &&
-          parseEnumValuesFromSrcFile(propertyTypeName).length > 0
+          (enumValues = parseEnumValuesFromSrcFile(propertyTypeName)).length > 0 // NOSONAR intentional assignment to enumValues
         ) {
           const typeFilePathName = getSrcFilePathNameForTypeName(propertyTypeName);
 
@@ -284,6 +293,11 @@ function rewriteTypeFile(
         }
 
         addAdditionalDecorators(classBodyNode, imports, typeNames, isEntity);
+
+        (propertyNameToTypeNameMap as any)[classBodyNode.key.name] = getPropertyTypeName(
+          classBodyNode,
+          enumValues
+        );
 
         classBodyNode.decorators = classBodyNode.decorators?.filter((decorator: any) => {
           const decoratorName = decorator.expression.callee.name;
@@ -314,7 +328,8 @@ function rewriteTypeFile(
 
         classBodyNodes.push(classBodyNode);
       });
-      node.declaration.body.body = classBodyNodes;
+
+      node.declaration.body.body = [createConstructor(propertyNameToTypeNameMap, hasSuperClass), ...classBodyNodes];
     }
   }
 
@@ -337,14 +352,18 @@ function rewriteTypeFile(
   outputFileContentsStr = outputFileContentsStr
     .split('\n')
     .map((outputFileLine) => {
-      if (outputFileLine.endsWith(';') && !outputFileLine.startsWith('import')) {
+      const trimmedOutputFileLine = outputFileLine.trimLeft();
+      if (
+        outputFileLine.endsWith(';') &&
+        !outputFileLine.startsWith('import') &&
+        !trimmedOutputFileLine.startsWith('this.') &&
+        !trimmedOutputFileLine.startsWith('super()')
+      ) {
         return outputFileLine + '\n';
       }
-
       if (outputFileLine.startsWith('export default class') || outputFileLine.startsWith('export class')) {
         return '\n' + outputFileLine;
       }
-
       return outputFileLine;
     })
     .join('\n');
@@ -576,7 +595,8 @@ function generateFrontendServiceFile(
         )
         .join('\n') +
       "import { callRemoteService, validateServiceFunctionArgumentOrThrow } from 'backk-frontend-utils';" +
-      "import MicroserviceOptions from '../_backk/MicroserviceOptions';" + '\n\n' +
+      "import MicroserviceOptions from '../_backk/MicroserviceOptions';" +
+      '\n\n' +
       serviceInterfaceLines +
       '\n\n' +
       classCode +

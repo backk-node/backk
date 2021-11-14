@@ -246,7 +246,6 @@ function rewriteTypeFile(
 
       const classBodyNodes: any[] = [];
       node.declaration.decorators = [];
-      const hasSuperClass = !!node.declaration.superClass;
       node.declaration.body.body.forEach((classBodyNode: any) => {
         const isPrivate = classBodyNode.decorators?.find(
           (decorator: any) => decorator.expression.callee.name === 'Private'
@@ -300,14 +299,6 @@ function rewriteTypeFile(
         }
 
         addAdditionalDecorators(classBodyNode, imports, typeNames, isEntity);
-
-        if (!classBodyNode.value) {
-          (propertyNameToTypeNameMap as any)[classBodyNode.key.name] = getPropertyTypeName(
-            classBodyNode,
-            enumValues,
-            isArray
-          );
-        }
 
         classBodyNode.decorators = classBodyNode.decorators?.filter((decorator: any) => {
           const decoratorName = decorator.expression.callee.name;

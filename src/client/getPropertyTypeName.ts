@@ -1,11 +1,5 @@
-export default function getPropertyTypeName(classProperty: any, enumValues: any[], isArray: boolean) {
-  if (enumValues) {
-    const numericValue = parseFloat(enumValues[0]);
-    if (!isNaN(numericValue)) {
-      return isArray ? numericValue + '[]' : numericValue;
-    }
-    return isArray ? "'" + enumValues[0] + "'" + '[]' : "'" + enumValues[0] + "'";
-  } else if (
+export default function getPropertyTypeName(classProperty: any) {
+  if (
     classProperty.typeAnnotation.typeAnnotation.type === 'TSStringKeyword' ||
     classProperty.typeAnnotation.typeAnnotation.type === 'TSNumberKeyword' ||
     classProperty.typeAnnotation.typeAnnotation.type === 'TSBooleanKeyword'

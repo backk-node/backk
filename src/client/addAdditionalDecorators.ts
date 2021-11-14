@@ -1,6 +1,7 @@
 import parseEnumValuesFromSrcFile from '../typescript/parser/parseEnumValuesFromSrcFile';
 import pushIfNotExists from '../utils/array/pushIfNotExists';
 import getMicroserviceName from '../utils/getMicroserviceName';
+import getPropertyTypeName from './getPropertyTypeName';
 
 function createUndefinedDecorator(modes: string[]) {
   return {
@@ -72,6 +73,120 @@ function createIdOrObjectIdValidationDecorator() {
         type: 'Identifier',
         name: 'IsStringOrObjectId',
       },
+    },
+  };
+}
+
+function createStringValidationDecorator(isArray: boolean) {
+  return {
+    type: 'Decorator',
+    expression: {
+      type: 'CallExpression',
+      callee: {
+        type: 'Identifier',
+        name: 'IsString',
+      },
+      arguments: [
+        ...(isArray
+          ? [
+              {
+                type: 'ObjectExpression',
+                properties: [
+                  {
+                    type: 'ObjectProperty',
+                    method: false,
+                    key: {
+                      type: 'Identifier',
+                      name: 'each',
+                    },
+                    computed: false,
+                    shorthand: false,
+                    value: {
+                      type: 'BooleanLiteral',
+                      value: true,
+                    },
+                  },
+                ],
+              },
+            ]
+          : []),
+      ],
+    },
+  };
+}
+
+function createBooleanValidationDecorator(isArray: boolean) {
+  return {
+    type: 'Decorator',
+    expression: {
+      type: 'CallExpression',
+      callee: {
+        type: 'Identifier',
+        name: 'IsBoolean',
+      },
+      arguments: [
+        ...(isArray
+          ? [
+            {
+              type: 'ObjectExpression',
+              properties: [
+                {
+                  type: 'ObjectProperty',
+                  method: false,
+                  key: {
+                    type: 'Identifier',
+                    name: 'each',
+                  },
+                  computed: false,
+                  shorthand: false,
+                  value: {
+                    type: 'BooleanLiteral',
+                    value: true,
+                  },
+                },
+              ],
+            },
+          ]
+          : []),
+      ],
+    },
+  };
+}
+
+function createDateValidationDecorator(isArray: boolean) {
+  return {
+    type: 'Decorator',
+    expression: {
+      type: 'CallExpression',
+      callee: {
+        type: 'Identifier',
+        name: 'IsDate',
+      },
+      arguments: [
+        ...(isArray
+          ? [
+            {
+              type: 'ObjectExpression',
+              properties: [
+                {
+                  type: 'ObjectProperty',
+                  method: false,
+                  key: {
+                    type: 'Identifier',
+                    name: 'each',
+                  },
+                  computed: false,
+                  shorthand: false,
+                  value: {
+                    type: 'BooleanLiteral',
+                    value: true,
+                  },
+                },
+              ],
+            },
+          ]
+          : []),
+      ],
     },
   };
 }
@@ -420,6 +535,22 @@ export default function addAdditionalDecorators(
   typeNames: string[],
   isEntity: boolean
 ): string[] {
+  const propertyTypeName = getPropertyTypeName(classBodyNode);
+
+  if (propertyTypeName === 'TSStringKeyword') {
+    addDecorator(classBodyNode.decorators, createStringValidationDecorator(false));
+    pushIfNotExists(imports, 'IsString');
+  } else if (propertyTypeName === 'TSStringKeyword[]') {
+    addDecorator(classBodyNode.decorators, createStringValidationDecorator(true));
+    pushIfNotExists(imports, 'IsString');
+  } else if (propertyTypeName === 'TSBooleanKeyword') {
+    addDecorator(classBodyNode.decorators, createBooleanValidationDecorator(false));
+    pushIfNotExists(imports, 'IsBoolean');
+  } else if (propertyTypeName === 'TSBooleanKeyword[]') {
+    addDecorator(classBodyNode.decorators, createStringValidationDecorator(true));
+    pushIfNotExists(imports, 'IsBoolean');
+  }
+
   const isCreateOnly = !!classBodyNode.decorators.find(
     (decorator: any) => decorator.expression.callee.name === 'CreateOnly'
   );
@@ -508,7 +639,9 @@ export default function addAdditionalDecorators(
 
   if (typeName === 'Date') {
     classBodyNode.decorators.push(createTypeDecorator('Date'));
+    classBodyNode.decorators.push(createDateValidationDecorator(isArrayType));
     pushIfNotExists(imports, 'Type');
+    pushIfNotExists(imports, 'IsDate');
   } else if (typeName) {
     if (typeNames.includes(typeName)) {
       classBodyNode.decorators.push(createIsInstanceValidationDecorator(typeName));

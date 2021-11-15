@@ -127,26 +127,26 @@ function createBooleanValidationDecorator(isArray: boolean) {
       arguments: [
         ...(isArray
           ? [
-            {
-              type: 'ObjectExpression',
-              properties: [
-                {
-                  type: 'ObjectProperty',
-                  method: false,
-                  key: {
-                    type: 'Identifier',
-                    name: 'each',
+              {
+                type: 'ObjectExpression',
+                properties: [
+                  {
+                    type: 'ObjectProperty',
+                    method: false,
+                    key: {
+                      type: 'Identifier',
+                      name: 'each',
+                    },
+                    computed: false,
+                    shorthand: false,
+                    value: {
+                      type: 'BooleanLiteral',
+                      value: true,
+                    },
                   },
-                  computed: false,
-                  shorthand: false,
-                  value: {
-                    type: 'BooleanLiteral',
-                    value: true,
-                  },
-                },
-              ],
-            },
-          ]
+                ],
+              },
+            ]
           : []),
       ],
     },
@@ -165,26 +165,26 @@ function createDateValidationDecorator(isArray: boolean) {
       arguments: [
         ...(isArray
           ? [
-            {
-              type: 'ObjectExpression',
-              properties: [
-                {
-                  type: 'ObjectProperty',
-                  method: false,
-                  key: {
-                    type: 'Identifier',
-                    name: 'each',
+              {
+                type: 'ObjectExpression',
+                properties: [
+                  {
+                    type: 'ObjectProperty',
+                    method: false,
+                    key: {
+                      type: 'Identifier',
+                      name: 'each',
+                    },
+                    computed: false,
+                    shorthand: false,
+                    value: {
+                      type: 'BooleanLiteral',
+                      value: true,
+                    },
                   },
-                  computed: false,
-                  shorthand: false,
-                  value: {
-                    type: 'BooleanLiteral',
-                    value: true,
-                  },
-                },
-              ],
-            },
-          ]
+                ],
+              },
+            ]
           : []),
       ],
     },
@@ -536,16 +536,41 @@ export default function addAdditionalDecorators(
   isEntity: boolean
 ): string[] {
   const propertyTypeName = getPropertyTypeName(classBodyNode);
+  const numericValue = typeof propertyTypeName === 'string' ? parseFloat(propertyTypeName) : propertyTypeName;
 
+  if (!isNaN(numericValue)) {
+    classBodyNode.value = {
+      type: 'NumericLiteral',
+      value: numericValue,
+    };
+  } else if (propertyTypeName.startsWith("'") && propertyTypeName.endsWith("'")) {
+    classBodyNode.value = {
+      type: 'StringLiteral',
+      value: propertyTypeName.slice(1, -1),
+    };
+  } else if (propertyTypeName === 'TSNumberKeyword') {
+    classBodyNode.value = {
+      type: 'Identifier',
+      name: 'NaN',
+    };
+  }
   if (propertyTypeName === 'TSStringKeyword') {
     addDecorator(classBodyNode.decorators, createStringValidationDecorator(false));
     pushIfNotExists(imports, 'IsString');
+    classBodyNode.value = {
+      type: 'StringLiteral',
+      value: '',
+    };
   } else if (propertyTypeName === 'TSStringKeyword[]') {
     addDecorator(classBodyNode.decorators, createStringValidationDecorator(true));
     pushIfNotExists(imports, 'IsString');
   } else if (propertyTypeName === 'TSBooleanKeyword') {
     addDecorator(classBodyNode.decorators, createBooleanValidationDecorator(false));
     pushIfNotExists(imports, 'IsBoolean');
+    classBodyNode.value = {
+      type: 'BooleanLiteral',
+      value: false,
+    };
   } else if (propertyTypeName === 'TSBooleanKeyword[]') {
     addDecorator(classBodyNode.decorators, createStringValidationDecorator(true));
     pushIfNotExists(imports, 'IsBoolean');

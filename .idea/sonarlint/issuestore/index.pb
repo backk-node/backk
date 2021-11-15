@@ -157,8 +157,6 @@ X
 (src/decorators/typeproperty/OneToMany.ts,9/9/9916583dd19b9e6ff9e95e96a416836c2fc0ea71
 Y
 )src/decorators/typeproperty/ManyToMany.ts,e/4/e4e77eb1b64da98eede4b175e8368365748bc5dc
-[
-+src/decorators/typeproperty/UiProperties.ts,2/3/236844af0f05953b546d9fd346c6ed1ced586159
 Y
 )src/decorators/registerCustomDecorator.ts,b/2/b237259ab8cf95607e9c4d9d54dd46c159bf4b58
 l

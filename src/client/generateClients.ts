@@ -1,25 +1,21 @@
-import { parseSync } from '@babel/core';
-import generate from '@babel/generator';
-import { exec } from 'child_process';
-import { Dirent, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs';
-import { dirname, resolve } from 'path';
-import rimraf from 'rimraf';
-import util from 'util';
-import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
-import Microservice from '../microservice/Microservice';
-import { RequestProcessor } from '../requestprocessor/RequestProcessor';
-import types from '../types/types';
-import parseEnumValuesFromSrcFile from '../typescript/parser/parseEnumValuesFromSrcFile';
-import getSrcFilePathNameForTypeName, {
-  getFileNamesRecursively,
-} from '../utils/file/getSrcFilePathNameForTypeName';
-import getMicroserviceName from '../utils/getMicroserviceName';
-import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
-import decapitalizeFirstLetter from '../utils/string/decapitalizeFirstLetter';
-import addAdditionalDecorators from './addAdditionalDecorators';
-import createConstructor from './createConstructor';
-import getPropertyTypeName from './getPropertyTypeName';
-import getServiceFunctionType from './getServiceFunctionType';
+import { parseSync } from "@babel/core";
+import generate from "@babel/generator";
+import { exec } from "child_process";
+import { Dirent, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
+import { dirname, resolve } from "path";
+import rimraf from "rimraf";
+import util from "util";
+import { ServiceMetadata } from "../metadata/types/ServiceMetadata";
+import Microservice from "../microservice/Microservice";
+import { RequestProcessor } from "../requestprocessor/RequestProcessor";
+import types from "../types/types";
+import parseEnumValuesFromSrcFile from "../typescript/parser/parseEnumValuesFromSrcFile";
+import getSrcFilePathNameForTypeName, { getFileNamesRecursively } from "../utils/file/getSrcFilePathNameForTypeName";
+import getMicroserviceName from "../utils/getMicroserviceName";
+import getNamespacedMicroserviceName from "../utils/getNamespacedMicroserviceName";
+import decapitalizeFirstLetter from "../utils/string/decapitalizeFirstLetter";
+import addAdditionalDecorators from "./addAdditionalDecorators";
+import getServiceFunctionType from "./getServiceFunctionType";
 
 const promisifiedExec = util.promisify(exec);
 
@@ -266,6 +262,13 @@ function rewriteTypeFile(
         } else if (classBodyNode.typeAnnotation.typeAnnotation?.type === 'TSArrayType') {
           propertyTypeName = classBodyNode.typeAnnotation.typeAnnotation.elementType?.typeName?.name;
           isArray = true;
+        }
+
+        if (isArray) {
+          classBodyNode.value = {
+            type: 'ArrayExpression',
+            elements: []
+          }
         }
 
         let enumValues;

@@ -224,7 +224,6 @@ function rewriteTypeFile(
 
   const nodes = (ast as any).program.body;
   const imports: string[] = [];
-  const propertyNameToTypeNameMap = {};
 
   for (const node of nodes) {
     if (clientType === 'frontend' && node.type === 'ImportDeclaration' && node.source.value === 'backk') {
@@ -264,13 +263,6 @@ function rewriteTypeFile(
           isArray = true;
         }
 
-        if (isArray) {
-          classBodyNode.value = {
-            type: 'ArrayExpression',
-            elements: []
-          }
-        }
-
         let enumValues;
         if (
           propertyTypeName &&
@@ -301,8 +293,7 @@ function rewriteTypeFile(
           classBodyNode.decorators = [];
         }
 
-        addAdditionalDecorators(classBodyNode, imports, typeNames, isEntity);
-
+        addAdditionalDecorators(classBodyNode, imports, typeNames, isEntity, isArray, enumValues);
         classBodyNode.decorators = classBodyNode.decorators?.filter((decorator: any) => {
           const decoratorName = decorator.expression.callee.name;
           const shouldRemove = [

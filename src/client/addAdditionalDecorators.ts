@@ -533,27 +533,40 @@ export default function addAdditionalDecorators(
   classBodyNode: any,
   imports: string[],
   typeNames: string[],
-  isEntity: boolean
+  isEntity: boolean,
+  isArray: boolean,
+  enumValues: any[]
 ): string[] {
-  const propertyTypeName = getPropertyTypeName(classBodyNode);
+  const propertyTypeName = getPropertyTypeName(classBodyNode, enumValues, isArray);
   const numericValue = typeof propertyTypeName === 'string' ? parseFloat(propertyTypeName) : propertyTypeName;
 
-  if (!isNaN(numericValue)) {
+  if (typeof propertyTypeName === 'string' && propertyTypeName.endsWith('[]')) {
+    classBodyNode.value = {
+      type: 'ArrayExpression',
+      elements: []
+    };
+    classBodyNode.definite = undefined;
+  }
+  else if (!isNaN(numericValue)) {
     classBodyNode.value = {
       type: 'NumericLiteral',
       value: numericValue,
     };
+    classBodyNode.definite = undefined;
   } else if (propertyTypeName.startsWith("'") && propertyTypeName.endsWith("'")) {
     classBodyNode.value = {
       type: 'StringLiteral',
       value: propertyTypeName.slice(1, -1),
     };
+    classBodyNode.definite = undefined;
   } else if (propertyTypeName === 'TSNumberKeyword') {
     classBodyNode.value = {
       type: 'Identifier',
       name: 'NaN',
     };
+    classBodyNode.definite = undefined;
   }
+
   if (propertyTypeName === 'TSStringKeyword') {
     addDecorator(classBodyNode.decorators, createStringValidationDecorator(false));
     pushIfNotExists(imports, 'IsString');
@@ -561,6 +574,7 @@ export default function addAdditionalDecorators(
       type: 'StringLiteral',
       value: '',
     };
+    classBodyNode.definite = undefined;
   } else if (propertyTypeName === 'TSStringKeyword[]') {
     addDecorator(classBodyNode.decorators, createStringValidationDecorator(true));
     pushIfNotExists(imports, 'IsString');
@@ -571,6 +585,7 @@ export default function addAdditionalDecorators(
       type: 'BooleanLiteral',
       value: false,
     };
+    classBodyNode.definite = undefined;
   } else if (propertyTypeName === 'TSBooleanKeyword[]') {
     addDecorator(classBodyNode.decorators, createStringValidationDecorator(true));
     pushIfNotExists(imports, 'IsBoolean');

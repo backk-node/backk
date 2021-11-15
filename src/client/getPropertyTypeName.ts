@@ -1,5 +1,18 @@
-export default function getPropertyTypeName(classProperty: any) {
-  if (
+export default function getPropertyTypeName(classProperty: any, enumValues: any[], isArray: boolean) {
+  if (enumValues) {
+    const numericValue = parseFloat(enumValues[0]);
+    if (!isNaN(numericValue)) {
+      return isArray ? numericValue + '[]' : numericValue;
+    }
+    return isArray ? "'" + enumValues[0] + "'" + '[]' : "'" + enumValues[0] + "'";
+  } else if (classProperty.typeAnnotation.typeAnnotation.type === 'TSLiteralType') {
+    const literalValue = classProperty.typeAnnotation.typeAnnotation.literal.value;
+    const numericValue = parseFloat(literalValue);
+    if (!isNaN(numericValue)) {
+      return numericValue;
+    }
+    return "'" + literalValue + "'";
+  } else if (
     classProperty.typeAnnotation.typeAnnotation.type === 'TSStringKeyword' ||
     classProperty.typeAnnotation.typeAnnotation.type === 'TSNumberKeyword' ||
     classProperty.typeAnnotation.typeAnnotation.type === 'TSBooleanKeyword'

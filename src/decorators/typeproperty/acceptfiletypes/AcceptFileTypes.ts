@@ -14,16 +14,19 @@ export default function AcceptFileTypes(fileTypes: string[], validationOptions?:
             return false;
           }
 
-          const mediaTypes = value.slice(5)?.split(';base64')[0]?.split(';');
-          const finalFileTypes = fileTypes.map((fileType) => {
+          const valueMediaTypes = value.slice(5)?.split(';base64')[0]?.split(';');
+          const requiredFileTypes = fileTypes.map((fileType) => {
             if (fileType.endsWith('/*')) {
               return fileType.slice(0, -2);
             }
             return fileType.slice(1);
           });
-          return finalFileTypes.some((finalFileType) => mediaTypes.includes(finalFileType));
+          return requiredFileTypes.some(
+            (requiredFileType) =>
+              !!valueMediaTypes.find((valueMediaType) => valueMediaType.includes(requiredFileType))
+          );
         },
-        defaultMessage: () => propertyName + ' is not valid file type: ' + fileTypes.join(', ')
+        defaultMessage: () => propertyName + ' is not valid file type: ' + fileTypes.join(', '),
       },
     });
   };

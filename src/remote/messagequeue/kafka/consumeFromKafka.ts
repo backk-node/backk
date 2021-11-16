@@ -112,9 +112,9 @@ export default async function consumeFromKafka(
     log(Severity.DEBUG, 'Kafka consumer debug: started fetch messages from server', '');
     fetchSpan = tracerProvider.getTracer('default').startSpan('kafkajs.consumer.FETCH_START');
     hasFetchError = false;
-    fetchSpan.setAttribute('component', 'kafkajs');
-    fetchSpan.setAttribute('span.kind', 'CLIENT');
-    fetchSpan.setAttribute('peer.address', server);
+    fetchSpan?.setAttribute('component', 'kafkajs');
+    fetchSpan?.setAttribute('span.kind', 'CLIENT');
+    fetchSpan?.setAttribute('peer.address', server);
   });
 
   consumer.on(consumer.events.FETCH, (event) => {

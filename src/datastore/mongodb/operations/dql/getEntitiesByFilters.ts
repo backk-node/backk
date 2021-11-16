@@ -156,7 +156,7 @@ export default async function getEntitiesByFilters<T extends BackkEntity>(
       ]);
 
       if (count !== undefined) {
-        rows.forEach(row => {
+        rows.forEach((row: any) => {
           (row as any)._count = count;
         });
       }

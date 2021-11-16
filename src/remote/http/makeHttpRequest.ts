@@ -1,5 +1,4 @@
 import { HttpRequestOptions } from "./callRemoteService";
-import https from "https";
 import fetch from "node-fetch";
 import { HttpStatusCodes } from "../../constants/constants";
 import log, { Severity } from "../../observability/logging/log";
@@ -28,7 +27,7 @@ export default async function makeHttpRequest(
       }
     });
 
-    const responseBody = response.size > 0 ? await response.json() : undefined;
+    const responseBody: any = response.size > 0 ? await response.json() : undefined;
 
     if (response.status >= HttpStatusCodes.ERRORS_START) {
       const message = responseBody.message ?? JSON.stringify(responseBody);

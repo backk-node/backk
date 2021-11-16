@@ -94,6 +94,10 @@ export { default as ShouldBeTrueForObject } from './decorators/typeproperty/Shou
 export { default as Unique } from './decorators/typeproperty/Unique';
 export { default as NotUnique } from './decorators/typeproperty/NotUnique';
 export { default as IsSubject } from './decorators/typeproperty/IsSubject';
+export { default as AcceptFileTypes } from './decorators/typeproperty/AcceptFileTypes';
+export { default as IsInPast } from './decorators/typeproperty/IsInPast';
+export { default as IsInFuture } from './decorators/typeproperty/IsInFuture';
+export { default as IsTimestampBetween } from './decorators/typeproperty/IsTimestampBetween';
 
 // Entity property decorators
 export { default as Encrypted } from './decorators/typeproperty/Encrypted';

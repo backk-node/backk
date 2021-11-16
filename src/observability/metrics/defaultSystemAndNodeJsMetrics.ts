@@ -7,7 +7,7 @@ import CpuUsage = NodeJS.CpuUsage;
 import { Counter } from '@opentelemetry/api';
 
 class DefaultSystemAndNodeJsMetrics {
-  private garbageCollectionDurationBucketCounter: Counter;
+  private readonly garbageCollectionDurationBucketCounter: Counter;
 
   constructor(private readonly meter: Meter) {
     this.garbageCollectionDurationBucketCounter = this.meter.createCounter(`garbage_collection_event_count`, {
@@ -24,7 +24,7 @@ class DefaultSystemAndNodeJsMetrics {
       {
         description: 'Process start timestamp since epoch in seconds'
       },
-      (valueObserver) => {
+      (valueObserver: any) => {
         valueObserver.observe(processStartTimestampSinceEpochInSecs, labels);
       }
     );
@@ -37,7 +37,7 @@ class DefaultSystemAndNodeJsMetrics {
         {
           description: "Total count of process's active requests"
         },
-        (valueObserver) => {
+        (valueObserver: any) => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
           // @ts-ignore
           valueObserver.observe(process._getActiveRequests().length, labels);
@@ -51,7 +51,7 @@ class DefaultSystemAndNodeJsMetrics {
         {
           description: "Count of process's open file descriptors"
         },
-        (valueObserver) => {
+        (valueObserver: any) => {
           try {
             const fileDescriptors = fs.readdirSync('/proc/self/fd');
             valueObserver.observe(fileDescriptors.length - 1, labels);
@@ -70,7 +70,7 @@ class DefaultSystemAndNodeJsMetrics {
         {
           description: "Total count of process's active handles"
         },
-        (valueObserver) => {
+        (valueObserver: any) => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
           // @ts-ignore
           valueObserver.observe(process._getActiveHandles().length, labels);
@@ -85,7 +85,7 @@ class DefaultSystemAndNodeJsMetrics {
       {
         description: 'CPU usage percentage of process'
       },
-      (valueObserver) => {
+      (valueObserver: any) => {
         const cpuUsage = process.cpuUsage(previousCpuUsage);
         const totalCpuUsageInMillis = (cpuUsage.user + cpuUsage.system) / 1000;
         valueObserver.observe((totalCpuUsageInMillis / DEFAULT_METER_INTERVAL_IN_MILLIS) * 100, labels);
@@ -99,7 +99,7 @@ class DefaultSystemAndNodeJsMetrics {
         {
           description: 'Container memory usage in megabytes'
         },
-        (valueObserver) => {
+        (valueObserver: any) => {
           try {
             const memoryUsageInBytesStr = fs.readFileSync('/sys/fs/cgroup/memory/memory.usage_in_bytes', {
               encoding: 'UTF-8'
@@ -120,7 +120,7 @@ class DefaultSystemAndNodeJsMetrics {
         {
           description: 'Container memory limit in megabytes'
         },
-        (valueObserver) => {
+        (valueObserver: any) => {
           try {
             const memoryLimitInBytesStr = fs.readFileSync('/sys/fs/cgroup/memory/memory.limit_in_bytes', {
               encoding: 'UTF-8'

@@ -1,10 +1,10 @@
-import { Base64 } from "js-base64";
-import { verify } from "jsonwebtoken";
-import fetch from "node-fetch";
-import _ from "lodash";
-import AuthorizationService from "./AuthorizationService";
-import throwException from "../utils/exception/throwException";
-import log, { Severity } from "../observability/logging/log";
+import { Base64 } from 'js-base64';
+import { verify } from 'jsonwebtoken';
+import _ from 'lodash';
+import fetch from 'node-fetch';
+import log, { Severity } from '../observability/logging/log';
+import throwException from '../utils/exception/throwException';
+import AuthorizationService from './AuthorizationService';
 
 export default class JwtAuthorizationServiceImpl extends AuthorizationService {
   private signSecretOrPublicKey: string | undefined;
@@ -20,14 +20,15 @@ export default class JwtAuthorizationServiceImpl extends AuthorizationService {
       throwException('`JWT_ROLES_CLAIM_PATH` environment variable must be defined');
 
     this.publicKeyPath =
-      process.env.PUBLIC_KEY_PATH ??
-      throwException('PUBLIC_KEY_PATH environment variable must be defined');
+      process.env.PUBLIC_KEY_PATH ?? throwException('PUBLIC_KEY_PATH environment variable must be defined');
 
     if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'integration') {
       this.signSecretOrPublicKey = process.env.JWT_SIGN_SECRET ?? 'abcdef';
       this.authServerPublicKeyUrl = '';
     } else {
-      this.authServerPublicKeyUrl = process.env.AUTH_SERVER_PUBLIC_KEY_URL ?? throwException('AUTH_SERVER_PUBLIC_KEY_URL environment variable must be defined');
+      this.authServerPublicKeyUrl =
+        process.env.AUTH_SERVER_PUBLIC_KEY_URL ??
+        throwException('AUTH_SERVER_PUBLIC_KEY_URL environment variable must be defined');
     }
   }
 
@@ -45,7 +46,7 @@ export default class JwtAuthorizationServiceImpl extends AuthorizationService {
               error.message,
             error.stack
           );
-          return [undefined, undefined]
+          return [undefined, undefined];
         }
       }
 
@@ -71,7 +72,7 @@ export default class JwtAuthorizationServiceImpl extends AuthorizationService {
           log(
             Severity.ERROR,
             `Failed to fetch public key from Authorization Server: ${this.authServerPublicKeyUrl} with error: ` +
-            error.message,
+              error.message,
             error.stack
           );
           return false;

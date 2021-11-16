@@ -11,7 +11,7 @@ export default class MongoDbQuery<T> {
     this.subEntityPath = subEntityPath ?? '';
     this.filterQuery = {}
 
-    Object.entries(filterQuery).forEach(([fieldName, fieldValue]) => {
+    Object.entries(filterQuery).forEach(([fieldName, fieldValue]: [string, any]) => {
       let finalFieldValue = fieldValue;
 
       if (!shouldUseRandomInitializationVector(fieldName) && shouldEncryptValue(fieldName)) {

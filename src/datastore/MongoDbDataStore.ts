@@ -764,7 +764,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
         ]);
 
         if (count !== undefined) {
-          rows.forEach((row) => {
+          rows.forEach((row: any) => {
             (row as any)._count = count;
           });
         }
@@ -1027,7 +1027,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
         ]);
 
         if (count !== undefined) {
-          rows.forEach((row) => {
+          rows.forEach((row: any) => {
             (row as any)._count = count;
           });
         }
@@ -1158,7 +1158,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
         ]);
 
         if (count !== undefined) {
-          rows.forEach((row) => {
+          rows.forEach((row: any) => {
             (row as any)._count = count;
           });
         }

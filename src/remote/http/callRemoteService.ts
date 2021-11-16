@@ -65,7 +65,7 @@ export default async function callRemoteService(
       }
     });
 
-    const responseBody = response.size > 0 ? await response.json() : undefined;
+    const responseBody: any = response.size > 0 ? await response.json() : undefined;
 
     if (response.status >= HttpStatusCodes.ERRORS_START) {
       const message = responseBody.message ?? JSON.stringify(responseBody);

@@ -265,6 +265,25 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
       );
     }
 
+    if (validationMetadata.type === 'isDataUri') {
+      const acceptFileTypesValidation = validationMetadatas.find(
+        ({ propertyName, type, constraints }: ValidationMetadata) =>
+          propertyName === validationMetadata.propertyName &&
+          type === 'customValidation' &&
+          constraints?.[0] === 'acceptFileTypes'
+      );
+
+      if (!acceptFileTypesValidation) {
+        throw new Error(
+          'Property ' +
+          Class.name +
+          '.' +
+          validationMetadata.propertyName +
+          ": must be annotated with @AcceptFileTypes() decorator to specify accepted file types, for example: @AcceptFileTypes(['image/*']) or @AcceptFileTypes(['image/*', '.pdf'])"
+        );
+      }
+    }
+
     if (validationMetadata.type === 'isArray') {
       const arrayMaxSizeValidationMetadata = validationMetadatas.find(
         (otherValidationMetadata: ValidationMetadata) =>

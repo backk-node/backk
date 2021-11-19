@@ -98,7 +98,6 @@ export { default as AcceptFileTypes } from './decorators/typeproperty/acceptfile
 export { default as IsInPast } from './decorators/typeproperty/IsInPast';
 export { default as IsInFuture } from './decorators/typeproperty/IsInFuture';
 export { default as IsTimestampBetween } from './decorators/typeproperty/IsTimestampBetween';
-
 // Entity property decorators
 export { default as Encrypted } from './decorators/typeproperty/Encrypted';
 export { default as TestValue } from './decorators/typeproperty/testing/TestValue';

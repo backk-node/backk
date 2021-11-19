@@ -673,9 +673,16 @@ export default function addAdditionalDecorators(
   }
 
   const isArrayType = classBodyNode.typeAnnotation?.typeAnnotation?.type === 'TSArrayType';
-  const typeName = isArrayType
+  let typeName = isArrayType
     ? classBodyNode.typeAnnotation?.typeAnnotation?.elementType?.typeName?.name
     : classBodyNode.typeAnnotation?.typeAnnotation?.typeName?.name;
+
+  if (classBodyNode.typeAnnotation?.typeAnnotation?.type === 'TSUnionType') {
+    const isArrayType = classBodyNode.typeAnnotation.typeAnnotation.types[0] === 'TSArrayType';
+    typeName = isArrayType
+      ? classBodyNode.typeAnnotation.typeAnnotation.types[0].elementType?.typeName?.name
+      : classBodyNode.typeAnnotation.typeAnnotation.types[0].typeName?.name;
+  }
 
   if (typeName === 'Date') {
     classBodyNode.decorators.push(createTypeDecorator('Date'));

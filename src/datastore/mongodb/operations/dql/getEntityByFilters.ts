@@ -29,7 +29,7 @@ import tryStartLocalTransactionIfNeeded from '../../../sql/operations/transactio
 import tryExecutePreHooks from '../../../hooks/tryExecutePreHooks';
 import { PostHook } from '../../../hooks/PostHook';
 import createBackkErrorFromErrorCodeMessageAndStatus from '../../../../errors/createBackkErrorFromErrorCodeMessageAndStatus';
-import { BACKK_ERRORS } from '../../../../errors/backkErrors';
+import { backkErrors } from '../../../../errors/backkErrors';
 import tryExecutePostHook from '../../../hooks/tryExecutePostHook';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import { One } from '../../../DataStore';
@@ -194,7 +194,7 @@ export default async function getEntityByFilters<T extends BackkEntity>(
           return [
             null,
             createBackkErrorFromErrorCodeMessageAndStatus({
-              ...BACKK_ERRORS.ENTITY_NOT_FOUND,
+              ...backkErrors.ENTITY_NOT_FOUND,
               message: `${EntityClass.name} with given filter(s) not found`
             })
           ];

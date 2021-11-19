@@ -8,7 +8,7 @@ import { plainToClass } from "class-transformer";
 import JobScheduling from "./entities/JobScheduling";
 import { scheduleCronJob } from "./scheduleCronJob";
 import createErrorFromErrorCodeMessageAndStatus from "../errors/createErrorFromErrorCodeMessageAndStatus";
-import { BACKK_ERRORS } from "../errors/backkErrors";
+import { backkErrors } from "../errors/backkErrors";
 import emptyError from "../errors/emptyError";
 import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
 import { One } from "../datastore/DataStore";
@@ -30,8 +30,8 @@ export default async function tryScheduleJobExecution(
     });
   } catch (validationErrors) {
     throw createBackkErrorFromErrorCodeMessageAndStatus({
-      ...BACKK_ERRORS.INVALID_ARGUMENT,
-      message: BACKK_ERRORS.INVALID_ARGUMENT.message + getValidationErrors(validationErrors)
+      ...backkErrors.INVALID_ARGUMENT,
+      message: backkErrors.INVALID_ARGUMENT.message + getValidationErrors(validationErrors)
     });
   }
 
@@ -51,8 +51,8 @@ export default async function tryScheduleJobExecution(
 
   if (!controller[serviceName]) {
     throw createErrorFromErrorCodeMessageAndStatus({
-      ...BACKK_ERRORS.UNKNOWN_SERVICE,
-      message: BACKK_ERRORS.UNKNOWN_SERVICE.message + serviceName
+      ...backkErrors.UNKNOWN_SERVICE,
+      message: backkErrors.UNKNOWN_SERVICE.message + serviceName
     });
   }
 
@@ -61,8 +61,8 @@ export default async function tryScheduleJobExecution(
 
   if (!controller[serviceName][functionName] || !serviceFunctionResponseValueTypeName) {
     throw createErrorFromErrorCodeMessageAndStatus({
-      ...BACKK_ERRORS.UNKNOWN_SERVICE_FUNCTION,
-      message: BACKK_ERRORS.UNKNOWN_SERVICE_FUNCTION.message + serviceFunctionName
+      ...backkErrors.UNKNOWN_SERVICE_FUNCTION,
+      message: backkErrors.UNKNOWN_SERVICE_FUNCTION.message + serviceFunctionName
     });
   }
 
@@ -72,8 +72,8 @@ export default async function tryScheduleJobExecution(
 
   if (scheduledExecutionTimestampAsDate.getSeconds() !== 0) {
     throw createBackkErrorFromErrorCodeMessageAndStatus({
-      ...BACKK_ERRORS.INVALID_ARGUMENT,
-      message: BACKK_ERRORS.INVALID_ARGUMENT.message + "Seconds in 'scheduledExecutionTimestamp' must be zero"
+      ...backkErrors.INVALID_ARGUMENT,
+      message: backkErrors.INVALID_ARGUMENT.message + "Seconds in 'scheduledExecutionTimestamp' must be zero"
     });
   }
 

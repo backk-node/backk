@@ -8,7 +8,7 @@ import updateDbLocalTransactionCount from './utils/updateDbLocalTransactionCount
 import getTableName from '../../../utils/getTableName';
 import createBackkErrorFromErrorCodeMessageAndStatus from '../../../../errors/createBackkErrorFromErrorCodeMessageAndStatus';
 import createErrorFromErrorCodeMessageAndStatus from '../../../../errors/createErrorFromErrorCodeMessageAndStatus';
-import { BACKK_ERRORS } from '../../../../errors/backkErrors';
+import { backkErrors } from '../../../../errors/backkErrors';
 import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
 import { PostHook } from '../../../hooks/PostHook';
 import tryStartLocalTransactionIfNeeded from '../transaction/tryStartLocalTransactionIfNeeded';
@@ -93,8 +93,8 @@ export default async function getEntityById<T extends BackkEntity>(
     if (isNaN(numericId)) {
       // noinspection ExceptionCaughtLocallyJS
       throw createErrorFromErrorCodeMessageAndStatus({
-        ...BACKK_ERRORS.INVALID_ARGUMENT,
-        message: BACKK_ERRORS.INVALID_ARGUMENT.message + idFieldName + ' must be a numeric id'
+        ...backkErrors.INVALID_ARGUMENT,
+        message: backkErrors.INVALID_ARGUMENT.message + idFieldName + ' must be a numeric id'
       });
     }
 
@@ -144,7 +144,7 @@ export default async function getEntityById<T extends BackkEntity>(
         return [
           null,
           createBackkErrorFromErrorCodeMessageAndStatus({
-            ...BACKK_ERRORS.ENTITY_NOT_FOUND,
+            ...backkErrors.ENTITY_NOT_FOUND,
             message: `${EntityClass.name} with _id ${_id} not found`
           })
         ];

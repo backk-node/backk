@@ -12,7 +12,7 @@ import { BackkError } from '../types/BackkError';
 import callRemoteService from '../remote/http/callRemoteService';
 import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
 import createErrorFromErrorCodeMessageAndStatus from '../errors/createErrorFromErrorCodeMessageAndStatus';
-import { BACKK_ERRORS } from '../errors/backkErrors';
+import { backkErrors } from '../errors/backkErrors';
 import getClsNamespace from '../continuationlocalstorage/getClsNamespace';
 import getMicroserviceName from "../utils/getMicroserviceName";
 
@@ -56,7 +56,7 @@ async function executeMultiple<T>(
         if (isTransactional) {
           response.end(
             createBackkErrorFromErrorCodeMessageAndStatus(
-              BACKK_ERRORS.REMOTE_SERVICE_FUNCTION_CALL_NOT_ALLOWED_INSIDE_TRANSACTION
+              backkErrors.REMOTE_SERVICE_FUNCTION_CALL_NOT_ALLOWED_INSIDE_TRANSACTION
             )
           );
 
@@ -64,7 +64,7 @@ async function executeMultiple<T>(
         } else if (!options?.multipleServiceFunctionExecution?.regExpForAllowedRemoteServiceFunctionCalls) {
           response.end(
             createBackkErrorFromErrorCodeMessageAndStatus(
-              BACKK_ERRORS.ALLOWED_REMOTE_SERVICE_FUNCTIONS_REGEXP_PATTERN_NOT_DEFINED
+              backkErrors.ALLOWED_REMOTE_SERVICE_FUNCTIONS_REGEXP_PATTERN_NOT_DEFINED
             )
           );
 
@@ -76,7 +76,7 @@ async function executeMultiple<T>(
         ) {
           response.end(
             createBackkErrorFromErrorCodeMessageAndStatus(
-              BACKK_ERRORS.REMOTE_SERVICE_FUNCTION_CALL_NOT_ALLOWED
+              backkErrors.REMOTE_SERVICE_FUNCTION_CALL_NOT_ALLOWED
             )
           );
 
@@ -142,9 +142,9 @@ export default async function executeMultipleServiceFunctions(
 
   if (!areServiceFunctionCallsValid) {
     throw createErrorFromErrorCodeMessageAndStatus({
-      ...BACKK_ERRORS.INVALID_ARGUMENT,
+      ...backkErrors.INVALID_ARGUMENT,
       message:
-        BACKK_ERRORS.INVALID_ARGUMENT.message + 'unknown service(s) or function(s) or invalid argument(s)'
+        backkErrors.INVALID_ARGUMENT.message + 'unknown service(s) or function(s) or invalid argument(s)'
     });
   }
 

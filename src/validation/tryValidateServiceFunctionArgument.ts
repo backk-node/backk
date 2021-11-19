@@ -5,7 +5,7 @@ import getValidationErrors from './getValidationErrors';
 import { HttpStatusCodes } from '../constants/constants';
 import isCreateFunction from '../services/crudentity/utils/isCreateFunction';
 import { DataStore } from '../datastore/DataStore';
-import { BACKK_ERRORS } from '../errors/backkErrors';
+import { backkErrors } from '../errors/backkErrors';
 
 function filterOutManyToManyIdErrors(validationErrors: ValidationError[]) {
   validationErrors.forEach((validationError) => {
@@ -73,7 +73,7 @@ export default async function tryValidateServiceFunctionArgument(
     }
 
     const errorMessage =
-      `Error code ${BACKK_ERRORS.INVALID_ARGUMENT.errorCode}:${BACKK_ERRORS.INVALID_ARGUMENT.message}` +
+      `Error code ${backkErrors.INVALID_ARGUMENT.errorCode}:${backkErrors.INVALID_ARGUMENT.message}` +
       getValidationErrors(validationErrors);
 
     createErrorFromErrorMessageAndThrowError(

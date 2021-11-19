@@ -18,7 +18,7 @@ import tryCommitLocalTransactionIfNeeded from '../transaction/tryCommitLocalTran
 import tryRollbackLocalTransactionIfNeeded from '../transaction/tryRollbackLocalTransactionIfNeeded';
 import cleanupLocalTransactionIfNeeded from '../transaction/cleanupLocalTransactionIfNeeded';
 import createBackkErrorFromErrorCodeMessageAndStatus from '../../../../errors/createBackkErrorFromErrorCodeMessageAndStatus';
-import { BACKK_ERRORS } from '../../../../errors/backkErrors';
+import { backkErrors } from '../../../../errors/backkErrors';
 import tryExecutePostHook from '../../../hooks/tryExecutePostHook';
 import { PostHook } from '../../../hooks/PostHook';
 import { One } from '../../../DataStore';
@@ -152,7 +152,7 @@ export default async function getEntityByFilters<T>(
         return [
           null,
           createBackkErrorFromErrorCodeMessageAndStatus({
-            ...BACKK_ERRORS.ENTITY_NOT_FOUND,
+            ...backkErrors.ENTITY_NOT_FOUND,
             message: `${EntityClass.name} with given filter(s) not found`
           })
         ];

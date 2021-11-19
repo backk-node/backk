@@ -3,7 +3,7 @@
 import bfj from 'bfj-pksilen';
 import { createServer } from 'http';
 import { HttpStatusCodes, MAX_INT_VALUE } from '../constants/constants';
-import { BACKK_ERRORS } from '../errors/backkErrors';
+import { backkErrors } from '../errors/backkErrors';
 import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
 import tryExecuteServiceMethod, {
   ServiceFunctionExecutionOptions,
@@ -39,7 +39,7 @@ export default class HttpServer implements RequestProcessor {
         request.method === 'POST' &&
         (contentLength === undefined || contentLength > MAX_REQUEST_CONTENT_LENGTH_IN_BYTES)
       ) {
-        const backkError = createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.REQUEST_IS_TOO_LONG);
+        const backkError = createBackkErrorFromErrorCodeMessageAndStatus(backkErrors.REQUEST_IS_TOO_LONG);
         response.writeHead(backkError.statusCode, { 'Content-Type': 'application/json' });
         response.end(JSON.stringify(backkError));
         return;
@@ -79,8 +79,8 @@ export default class HttpServer implements RequestProcessor {
         }
       } catch (error) {
         const backkError = createBackkErrorFromErrorCodeMessageAndStatus({
-          ...BACKK_ERRORS.INVALID_ARGUMENT,
-          message: BACKK_ERRORS.INVALID_ARGUMENT.message + error.message,
+          ...backkErrors.INVALID_ARGUMENT,
+          message: backkErrors.INVALID_ARGUMENT.message + error.message,
         });
         response.writeHead(backkError.statusCode, { 'Content-Type': 'application/json' });
         response.end(JSON.stringify(backkError));

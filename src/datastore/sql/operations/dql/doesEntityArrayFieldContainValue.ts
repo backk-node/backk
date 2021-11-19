@@ -1,7 +1,7 @@
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
 import createErrorFromErrorCodeMessageAndStatus from '../../../../errors/createErrorFromErrorCodeMessageAndStatus';
-import { BACKK_ERRORS } from '../../../../errors/backkErrors';
+import { backkErrors } from '../../../../errors/backkErrors';
 import isBackkError from '../../../../errors/isBackkError';
 import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
 import AbstractSqlDataStore from '../../../AbstractSqlDataStore';
@@ -44,8 +44,8 @@ export default async function doesEntityArrayFieldContainValue<T extends BackkEn
     if (isNaN(numericId)) {
       // noinspection ExceptionCaughtLocallyJS
       throw createErrorFromErrorCodeMessageAndStatus({
-        ...BACKK_ERRORS.INVALID_ARGUMENT,
-        message: BACKK_ERRORS.INVALID_ARGUMENT.message + '_id: must be a numeric id'
+        ...backkErrors.INVALID_ARGUMENT,
+        message: backkErrors.INVALID_ARGUMENT.message + '_id: must be a numeric id'
       });
     }
 

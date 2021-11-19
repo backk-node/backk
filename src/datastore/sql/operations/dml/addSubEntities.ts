@@ -19,7 +19,7 @@ import getEntityById from '../dql/getEntityById';
 import { PostHook } from '../../../hooks/PostHook';
 import tryExecutePostHook from '../../../hooks/tryExecutePostHook';
 import createBackkErrorFromErrorCodeMessageAndStatus from '../../../../errors/createBackkErrorFromErrorCodeMessageAndStatus';
-import { BACKK_ERRORS } from '../../../../errors/backkErrors';
+import { backkErrors } from '../../../../errors/backkErrors';
 import getSingularName from '../../../../utils/getSingularName';
 import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
 import isBackkError from '../../../../errors/isBackkError';
@@ -113,13 +113,13 @@ export default async function addSubEntities<T extends BackkEntity, U extends Su
       ) {
         // noinspection ExceptionCaughtLocallyJS
         throw createBackkErrorFromErrorCodeMessageAndStatus({
-          ...BACKK_ERRORS.MAX_ENTITY_COUNT_REACHED,
+          ...backkErrors.MAX_ENTITY_COUNT_REACHED,
           message:
             parentEntityClassAndPropertyNameForSubEntity[0].name +
             '.' +
             parentEntityClassAndPropertyNameForSubEntity[1] +
             ': ' +
-            BACKK_ERRORS.MAX_ENTITY_COUNT_REACHED.message
+            backkErrors.MAX_ENTITY_COUNT_REACHED.message
         });
       }
     }

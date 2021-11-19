@@ -616,8 +616,6 @@ i
 9src/metadata/getClassPropertyNameToPropertyTypeNameMap.ts,2/c/2c99dfa7222fffc105b2ccf51868d172e945c789
 Q
 !src/client/getPropertyTypeName.ts,2/8/28937a9d514cfa4dfbd9fd3c34e6436b239d2f70
-<
-src/index.ts,c/5/c5fb850250c7443c48a6c12b5cf6916773da31f1
 _
 /src/decorators/typeproperty/BooleanOrTinyInt.ts,a/4/a4af1814f309ff6bec60798a14532417607e2311
 n

@@ -1,6 +1,6 @@
 import { HttpStatusCodes } from "../constants/constants";
 
-export const errors = {
+export const backkErrors = {
   ENTITY_VERSION_MISMATCH: {
     errorCode: 'error.1',
     message:

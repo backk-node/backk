@@ -1,8 +1,8 @@
-import { registerDecorator, ValidationOptions } from "class-validator";
-import dayjs from "dayjs";
+import { registerDecorator, ValidationOptions } from 'class-validator';
+import dayjs from 'dayjs';
 
 export default function IsInPast(validationOptions?: ValidationOptions) {
-  return function(object: Record<string, any>, propertyName: string) {
+  return function (object: Record<string, any>, propertyName: string) {
     registerDecorator({
       name: 'isInPast',
       target: object.constructor,
@@ -12,8 +12,9 @@ export default function IsInPast(validationOptions?: ValidationOptions) {
       validator: {
         validate(value: any) {
           return dayjs(value).isBefore(dayjs());
-        }
-      }
+        },
+        defaultMessage: () => propertyName + ' must be a timestamp in the past',
+      },
     });
   };
 }

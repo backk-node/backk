@@ -8,7 +8,7 @@ export type UiProps = {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function UiProperties(uiProperties: UiProps) {
+export default function UiProperties(uiProperties: Partial<UiProps>) {
   return function() {
     // NO OPERATION
   };

@@ -95,8 +95,6 @@ export { default as Unique } from './decorators/typeproperty/Unique';
 export { default as NotUnique } from './decorators/typeproperty/NotUnique';
 export { default as IsSubject } from './decorators/typeproperty/IsSubject';
 export { default as AcceptFileTypes } from './decorators/typeproperty/acceptfiletypes/AcceptFileTypes';
-export { default as IsInPast } from './decorators/typeproperty/datetime/IsInPast';
-export { default as IsInFuture } from './decorators/typeproperty/datetime/IsInFuture';
 export { default as IsDateBetween } from './decorators/typeproperty/datetime/IsDateBetween';
 export { default as IsDateBetweenRelative } from './decorators/typeproperty/datetime/IsDateBetweenRelative';
 export { default as IsTimeBetween } from './decorators/typeproperty/datetime/IsTimeBetween';
@@ -104,7 +102,7 @@ export { default as IsTimestampBetween } from './decorators/typeproperty/datetim
 export { default as IsTimestampBetweenRelative } from './decorators/typeproperty/datetime/IsTimestampBetweenRelative';
 export { default as IsYearAndMonthBetween } from './decorators/typeproperty/datetime/IsYearAndMonthBetween';
 export { default as IsYearAndMonthBetweenRelative } from './decorators/typeproperty/datetime/IsYearAndMonthBetweenRelative';
-
+export { default as IsDayOfWeekBetween} from './decorators/typeproperty/datetime/IsDayOfWeekBetween'
 
 // Entity property decorators
 export { default as Encrypted } from './decorators/typeproperty/Encrypted';

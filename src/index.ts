@@ -103,6 +103,10 @@ export { default as IsTimestampBetweenRelative } from './decorators/typeproperty
 export { default as IsYearAndMonthBetween } from './decorators/typeproperty/datetime/IsYearAndMonthBetween';
 export { default as IsYearAndMonthBetweenRelative } from './decorators/typeproperty/datetime/IsYearAndMonthBetweenRelative';
 export { default as IsDayOfWeekBetween} from './decorators/typeproperty/datetime/IsDayOfWeekBetween'
+export { default as IsMinuteIn } from './decorators/typeproperty/datetime/IsMinuteIn';
+export { default as IsHourIn } from './decorators/typeproperty/datetime/IsHourIn';
+export { default as IsDayOfMonthIn } from './decorators/typeproperty/datetime/IsDayOfMonthIn';
+export { default as IsMonthIn } from './decorators/typeproperty/datetime/IsMonthIn';
 
 // Entity property decorators
 export { default as Encrypted } from './decorators/typeproperty/Encrypted';

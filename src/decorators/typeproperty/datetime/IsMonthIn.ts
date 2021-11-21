@@ -12,7 +12,7 @@ export default function IsMonthIn(values: number[], validationOptions?: Validati
       validator: {
         validate(value: any) {
           const date = dayjs(value);
-          const month = date.month();
+          const month = date.month() + 1;
           return values.includes(month);
         },
         defaultMessage: () =>

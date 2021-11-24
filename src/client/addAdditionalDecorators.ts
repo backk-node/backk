@@ -540,52 +540,57 @@ export default function addAdditionalDecorators(
   const propertyTypeName = getPropertyTypeName(classBodyNode, enumValues, isArray);
   const numericValue = typeof propertyTypeName === 'string' ? parseFloat(propertyTypeName) : propertyTypeName;
 
-  if (typeof propertyTypeName === 'string' && propertyTypeName.endsWith('[]')) {
-    classBodyNode.value = {
-      type: 'ArrayExpression',
-      elements: []
-    };
-    classBodyNode.definite = undefined;
-  }
-  else if (!isNaN(numericValue)) {
-    classBodyNode.value = {
-      type: 'NumericLiteral',
-      value: numericValue,
-    };
-    classBodyNode.definite = undefined;
-  } else if (propertyTypeName.startsWith("'") && propertyTypeName.endsWith("'")) {
-    classBodyNode.value = {
-      type: 'StringLiteral',
-      value: propertyTypeName.slice(1, -1),
-    };
-    classBodyNode.definite = undefined;
-  } else if (propertyTypeName === 'TSNumberKeyword') {
-    classBodyNode.value = {
-      type: 'Identifier',
-      name: 'NaN',
-    };
-    classBodyNode.definite = undefined;
+  if (!classBodyNode.value) {
+    if (typeof propertyTypeName === 'string' && propertyTypeName.endsWith('[]')) {
+      classBodyNode.value = {
+        type: 'ArrayExpression',
+        elements: []
+      };
+      classBodyNode.definite = undefined;
+    } else if (!isNaN(numericValue)) {
+      classBodyNode.value = {
+        type: 'NumericLiteral',
+        value: numericValue,
+      };
+      classBodyNode.definite = undefined;
+    } else if (propertyTypeName.startsWith("'") && propertyTypeName.endsWith("'")) {
+      classBodyNode.value = {
+        type: 'StringLiteral',
+        value: propertyTypeName.slice(1, -1),
+      };
+      classBodyNode.definite = undefined;
+    } else if (propertyTypeName === 'TSNumberKeyword') {
+      classBodyNode.value = {
+        type: 'Identifier',
+        name: 'NaN',
+      };
+      classBodyNode.definite = undefined;
+    }
   }
 
   if (propertyTypeName === 'TSStringKeyword') {
     addDecorator(classBodyNode.decorators, createStringValidationDecorator(false));
     pushIfNotExists(imports, 'IsString');
-    classBodyNode.value = {
-      type: 'StringLiteral',
-      value: '',
-    };
-    classBodyNode.definite = undefined;
+    if (!classBodyNode.value) {
+      classBodyNode.value = {
+        type: 'StringLiteral',
+        value: '',
+      };
+      classBodyNode.definite = undefined;
+    }
   } else if (propertyTypeName === 'TSStringKeyword[]') {
     addDecorator(classBodyNode.decorators, createStringValidationDecorator(true));
     pushIfNotExists(imports, 'IsString');
   } else if (propertyTypeName === 'TSBooleanKeyword') {
     addDecorator(classBodyNode.decorators, createBooleanValidationDecorator(false));
     pushIfNotExists(imports, 'IsBoolean');
-    classBodyNode.value = {
-      type: 'BooleanLiteral',
-      value: false,
-    };
-    classBodyNode.definite = undefined;
+    if (!classBodyNode.value) {
+      classBodyNode.value = {
+        type: 'BooleanLiteral',
+        value: false,
+      };
+      classBodyNode.definite = undefined;
+    }
   } else if (propertyTypeName === 'TSBooleanKeyword[]') {
     addDecorator(classBodyNode.decorators, createStringValidationDecorator(true));
     pushIfNotExists(imports, 'IsBoolean');

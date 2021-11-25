@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 // import bfj from 'bfj-pksilen';
-import yj from 'yiedlable-json';
+import yj from 'yieldable-json';
 import { createServer } from 'http';
 import { HttpStatusCodes, MAX_INT_VALUE } from '../constants/constants';
 import { backkErrors } from '../errors/backkErrors';

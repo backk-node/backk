@@ -21,7 +21,7 @@ type NonEmptyArray<T> = [T, ...T[]];
 export default class Microservice {
   constructor(public readonly dataStore: DataStore) {}
 
-  async initialize(
+  async run(
     commandLineArgs: string[],
     requestProcessors: NonEmptyArray<RequestProcessor>,
     shouldGeneratePostmanIntegrationTestsOnRestartInDevEnv = true

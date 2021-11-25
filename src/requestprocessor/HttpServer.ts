@@ -1,9 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
-// import bfj from 'bfj-pksilen';
 import yj from 'yieldable-json';
-import { promisify } from "util";
 import { createServer } from 'http';
+import http2 from 'http2';
+import { promisify } from 'util';
 import { HttpStatusCodes, MAX_INT_VALUE } from '../constants/constants';
 import { backkErrors } from '../errors/backkErrors';
 import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
@@ -16,16 +16,25 @@ import { CommunicationMethod } from '../remote/messagequeue/sendToRemoteService'
 import throwException from '../utils/exception/throwException';
 import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
 import { RequestProcessor } from './RequestProcessor';
+import Http2Response from "./Http2Response";
 
 const parseJsonAsync = promisify(yj.parseAsync);
 
 export default class HttpServer implements RequestProcessor {
   constructor(
-    private readonly options?: ServiceFunctionExecutionOptions,
-    private readonly httpVersion: HttpVersion = 1
+    private readonly httpVersion: HttpVersion = 1,
+    private readonly options?: ServiceFunctionExecutionOptions
   ) {}
 
   startProcessingRequests(microservice: Microservice): void {
+    if (this.httpVersion === 1) {
+      this.startProcessingHttp1Requests(microservice);
+    } else {
+      this.startProcessingHttp2Requests(microservice);
+    }
+  }
+
+  startProcessingHttp1Requests(microservice: Microservice): void {
     const server = createServer(async (request, response) => {
       request.setEncoding('utf8');
       const chunks: string[] = [];
@@ -82,8 +91,8 @@ export default class HttpServer implements RequestProcessor {
         } else {
           await new Promise((resolve) => {
             request.on('data', (data) => chunks.push(data));
-            request.on('end', () => resolve())
-          })
+            request.on('end', () => resolve());
+          });
 
           const data = chunks.join('');
           serviceFunctionArgument = data ? await parseJsonAsync(data) : null;
@@ -105,6 +114,119 @@ export default class HttpServer implements RequestProcessor {
         request.headers,
         request.method ?? '',
         response,
+        isClusterInternalCall,
+        this.options
+      );
+    });
+
+    function exit(signal: string) {
+      server.close(() => {
+        log(Severity.INFO, `HTTP server terminated due to signal: ${signal}`, '');
+        process.exitCode = 0;
+      });
+    }
+
+    process.once('SIGINT', exit);
+    process.once('SIGQUIT', exit);
+    process.once('SIGTERM', exit);
+
+    process.on('uncaughtExceptionMonitor', () => {
+      server.close();
+    });
+
+    const port = process.env.HTTP_SERVER_PORT ?? 3000;
+
+    log(Severity.INFO, `HTTP server started, listening to port ${port}`, '');
+    server.listen(port);
+  }
+
+  startProcessingHttp2Requests(microservice: Microservice): void {
+    const server = http2.createServer();
+
+    server.on('stream', async (stream, headers) => {
+      stream.setEncoding('utf-8');
+      const chunks: string[] = [];
+
+      const contentLength = headers['content-length'] ? parseInt(headers['content-length'], 10) : undefined;
+
+      const MAX_REQUEST_CONTENT_LENGTH_IN_BYTES = parseInt(
+        process.env.MAX_REQUEST_CONTENT_LENGTH_IN_BYTES ??
+          throwException('MAX_REQUEST_CONTENT_LENGTH_IN_BYTES environment variable must be defined'),
+        10
+      );
+
+      if (
+        headers[':method'] === 'POST' &&
+        (contentLength === undefined || contentLength > MAX_REQUEST_CONTENT_LENGTH_IN_BYTES)
+      ) {
+        const backkError = createBackkErrorFromErrorCodeMessageAndStatus(backkErrors.REQUEST_IS_TOO_LONG);
+        stream.respond({ ':status': backkError.statusCode, 'Content-Type': 'application/json' });
+        stream.write(JSON.stringify(backkError));
+        stream.end();
+        return;
+      }
+
+      const isClusterInternalCall = !headers[':path']?.includes(getNamespacedMicroserviceName());
+      let serviceFunctionArgument;
+      let responseHeaders = {};
+
+      if (!isClusterInternalCall) {
+        responseHeaders = {
+          'Access-Control-Allow-Origin':
+            process.env.NODE_ENV === 'development'
+              ? '*'
+              : process.env.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER ?? 'https://' + process.env.API_GATEWAY_FQDN,
+          'Access-Control-Allow-Headers': 'Content-Type, Content-Length, Authorization',
+        };
+      }
+
+      responseHeaders = {
+        ...responseHeaders,
+        'X-Content-Type-Options': 'nosniff',
+        'Strict-Transport-Security': 'max-age=' + MAX_INT_VALUE + '; includeSubDomains',
+        'X-Frame-Options': 'DENY',
+        'Content-Security-Policy': "frame-ancestors 'none'",
+      };
+
+      try {
+        if (headers[':method'] === 'OPTIONS') {
+          stream.respond({ ':status': HttpStatusCodes.SUCCESS, ...responseHeaders});
+          stream.end();
+          return;
+        }
+
+        if (headers[':method'] === 'GET') {
+          const serviceFunctionArgumentInJson = headers[':path']?.split('?arg=')[1];
+          serviceFunctionArgument = serviceFunctionArgumentInJson
+            ? JSON.parse(serviceFunctionArgumentInJson)
+            : undefined;
+        } else {
+          await new Promise((resolve) => {
+            stream.on('data', (data) => chunks.push(data as any));
+            stream.on('end', () => resolve());
+          });
+
+          const data = chunks.join('');
+          serviceFunctionArgument = data ? await parseJsonAsync(data) : null;
+        }
+      } catch (error) {
+        const backkError = createBackkErrorFromErrorCodeMessageAndStatus({
+          ...backkErrors.INVALID_ARGUMENT,
+          message: backkErrors.INVALID_ARGUMENT.message + error.message,
+        });
+        stream.respond({ ':status': backkError.statusCode, 'Content-Type': 'application/json' });
+        stream.write(JSON.stringify(backkError));
+        stream.end();
+        return;
+      }
+
+      tryExecuteServiceMethod(
+        microservice,
+        headers[':path']?.split('/').pop() ?? '',
+        serviceFunctionArgument ?? null,
+        headers,
+        headers[':method'] ?? '',
+        new Http2Response(stream),
         isClusterInternalCall,
         this.options
       );

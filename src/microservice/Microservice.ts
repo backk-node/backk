@@ -14,7 +14,7 @@ import { RequestProcessor } from '../requestprocessor/RequestProcessor';
 import areTypeDefinitionsUsedInTypeFilesChanged
   from "../typescript/utils/areTypeDefinitionsUsedInTypeFilesChanged";
 
-export type HttpVersion = 1;
+export type HttpVersion = 1 | 2;
 
 type NonEmptyArray<T> = [T, ...T[]];
 

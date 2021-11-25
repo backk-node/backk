@@ -2,6 +2,7 @@
 // @ts-ignore
 // import bfj from 'bfj-pksilen';
 import yj from 'yieldable-json';
+import { promisify } from "util";
 import { createServer } from 'http';
 import { HttpStatusCodes, MAX_INT_VALUE } from '../constants/constants';
 import { backkErrors } from '../errors/backkErrors';
@@ -15,6 +16,8 @@ import { CommunicationMethod } from '../remote/messagequeue/sendToRemoteService'
 import throwException from '../utils/exception/throwException';
 import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
 import { RequestProcessor } from './RequestProcessor';
+
+const parseJsonAsync = promisify(yj.parseAsync);
 
 export default class HttpServer implements RequestProcessor {
   constructor(
@@ -83,7 +86,7 @@ export default class HttpServer implements RequestProcessor {
           })
 
           const data = chunks.join('');
-          serviceFunctionArgument = await yj.parseAsync(data);
+          serviceFunctionArgument = await parseJsonAsync(data);
         }
       } catch (error) {
         const backkError = createBackkErrorFromErrorCodeMessageAndStatus({

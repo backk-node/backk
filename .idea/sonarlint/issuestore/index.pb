@@ -92,8 +92,6 @@ R
 ]
 -src/decorators/typeproperty/access/Private.ts,2/e/2efccbc8fb7519dc75e3596ef09dcd4aa8234736
 _
-/src/decorators/typeproperty/access/ReadWrite.ts,e/0/e0f6dc35092fdf5e2a33bdb58718494069a723ee
-_
 /src/decorators/typeproperty/access/WriteOnly.ts,4/1/41d1f77dbb4a3b9aaec7aed83b9fca2e71657c14
 `
 0src/decorators/typeproperty/access/UpdateOnly.ts,e/6/e64d25467af7210fc7846183423efb2b80cc030f
@@ -149,8 +147,6 @@ W
 0src/decorators/typeproperty/testing/TestValue.ts,c/7/c76ac586212674a91e9dfa262fd046969b5703bc
 T
 $src/decorators/typeproperty/Index.ts,f/2/f26e51e60716e64d15f8d47940df31e32f143de4
-X
-(src/decorators/typeproperty/OneToMany.ts,9/9/9916583dd19b9e6ff9e95e96a416836c2fc0ea71
 Y
 )src/decorators/typeproperty/ManyToMany.ts,e/4/e4e77eb1b64da98eede4b175e8368365748bc5dc
 Y
@@ -165,10 +161,6 @@ N
 src/datastore/hooks/PreHook.ts,2/9/29c10715c3cb41f8c1d6374438c15ecb4585a428
 O
 src/datastore/hooks/PostHook.ts,5/b/5b3637908f89509b2d93c0cccb4faf9813c90f12
-d
-4src/decorators/typeproperty/ShouldBeTrueForObject.ts,9/5/95d4ec8d2c61210883e6c6323ff8501debdfbfa6
-[
-+src/decorators/typeproperty/ShouldBeTrue.ts,5/6/563885c4b1057e569b1bc0d953bd53e43038d23c
 ]
 -src/file/tryGetSeparatedValuesFromTextFile.ts,7/0/70bb4fe2116361e19bbdd37d7dd6e4a1da06bb52
 d
@@ -488,8 +480,6 @@ P
  src/microservice/Microservice.ts,b/2/b203b2517f9ead474bfd9ed8b4aa05bb628a6597
 ^
 .src/remote/messagequeue/sendToRemoteService.ts,2/8/2898217950f733fa6c67c737e453b9d25969b79f
-X
-(src/requestprocessor/RequestProcessor.ts,8/0/80b44487b867e3a7fb89e23bce1cf91bf695e146
 U
 %src/requestprocessor/KafkaConsumer.ts,5/4/54978fb9386e91d4df80e1e6e7893e36b797a7a4
 U
@@ -568,8 +558,6 @@ c
 3src/typescript/parser/parseEnumValuesFromSrcFile.ts,0/b/0b73f87f9e7724615b646f10c621dcaa09e49382
 O
 src/client/createConstructor.ts,9/0/90fb33e93aa6091b5a496f5ed26f0e193c9f0480
-]
--src/decorators/typeproperty/ArrayNotUnique.ts,5/3/53e8042523f475f6b5f84d341761c1bf94fb297e
 p
 @src/validation/hasAtMostRepeatingOrConsecutiveCharacters.spec.ts,c/0/c044b6a18614e6b1da44419774f33392648d4968
 `

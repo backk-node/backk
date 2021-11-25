@@ -8,10 +8,10 @@ export default function ShouldBeTrueForObject<T>(
   // eslint-disable-next-line @typescript-eslint/ban-types
   return function(object: Object, propertyName: string) {
     registerDecorator({
-      name: 'shouldBeTrueForEntity',
+      name: 'shouldBeTrueForObject',
       target: object.constructor,
       propertyName: propertyName,
-      constraints: ['shouldBeTrueForEntity', validateObject],
+      constraints: ['shouldBeTrueForObject', validateObject],
       options: validationOptions,
       validator: {
         validate(value: any, args: ValidationArguments) {

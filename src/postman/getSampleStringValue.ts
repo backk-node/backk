@@ -495,7 +495,7 @@ export default function getSampleStringValue(
   if (
     sampleStringValue === undefined &&
     !doesClassPropertyContainCustomValidation(Class, propertyName, 'isAnyString') &&
-    !doesClassPropertyContainCustomValidation(Class, propertyName, 'shouldBeTrueForEntity') &&
+    !doesClassPropertyContainCustomValidation(Class, propertyName, 'shouldBeTrueForObject') &&
     !getPropertyValidationOfType(Class, propertyName, 'isAlpha') &&
     !getPropertyValidationOfType(Class, propertyName, 'isAlphanumeric') &&
     !getPropertyValidationOfType(Class, propertyName, 'isAscii') &&

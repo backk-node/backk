@@ -86,7 +86,7 @@ export default class HttpServer implements RequestProcessor {
           })
 
           const data = chunks.join('');
-          serviceFunctionArgument = await parseJsonAsync(data);
+          serviceFunctionArgument = data ? await parseJsonAsync(data) : null;
         }
       } catch (error) {
         const backkError = createBackkErrorFromErrorCodeMessageAndStatus({

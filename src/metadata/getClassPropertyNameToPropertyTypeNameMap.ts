@@ -1,7 +1,7 @@
 import { getFromContainer, MetadataStorage } from 'class-validator';
 import { ValidationMetadata } from 'class-validator/metadata/ValidationMetadata';
-import { DataStore } from '../datastore/DataStore';
 import { MAX_INT_VALUE } from '../constants/constants';
+import { DataStore } from '../datastore/DataStore';
 import typePropertyAnnotationContainer from '../decorators/typeproperty/typePropertyAnnotationContainer';
 import isEntityTypeName from '../utils/type/isEntityTypeName';
 
@@ -102,7 +102,7 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
       ) {
         if (!validationMetadata.groups?.includes('__backk_firstRoundWhenCreate__')) {
           validationMetadata.groups = validationMetadata.groups?.concat('__backk_firstRoundWhenCreate__') ?? [
-            '__backk_firstRoundWhenCreate__'
+            '__backk_firstRoundWhenCreate__',
           ];
         }
       } else if (
@@ -116,13 +116,13 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
       ) {
         if (!validationMetadata.groups?.includes('__backk_firstRoundWhenUpdate__')) {
           validationMetadata.groups = validationMetadata.groups?.concat('__backk_firstRoundWhenUpdate__') ?? [
-            '__backk_firstRoundWhenUpdate__'
+            '__backk_firstRoundWhenUpdate__',
           ];
         }
       } else {
         if (!validationMetadata.groups?.includes('__backk_firstRound__')) {
           validationMetadata.groups = validationMetadata.groups?.concat('__backk_firstRound__') ?? [
-            '__backk_firstRound__'
+            '__backk_firstRound__',
           ];
         }
       }
@@ -138,7 +138,7 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
     ) {
       if (!validationMetadata.groups?.includes('__backk_response__')) {
         validationMetadata.groups = validationMetadata.groups?.concat('__backk_response__') ?? [
-          '__backk_response__'
+          '__backk_response__',
         ];
       }
     }
@@ -150,7 +150,7 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
       if (undefinedValidation?.groups?.[0] === '__backk_update__' && !undefinedValidation.groups?.[1]) {
         if (!validationMetadata.groups?.includes('__backk_create__')) {
           validationMetadata.groups = validationMetadata.groups?.concat('__backk_create__') ?? [
-            '__backk_create__'
+            '__backk_create__',
           ];
         }
       } else if (
@@ -159,7 +159,7 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
       ) {
         if (!validationMetadata.groups?.includes('__backk_update__')) {
           validationMetadata.groups = validationMetadata.groups?.concat('__backk_update__') ?? [
-            '__backk_update__'
+            '__backk_update__',
           ];
         }
       } else if (
@@ -168,7 +168,7 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
       ) {
         if (!validationMetadata.groups?.includes('__backk_none__')) {
           validationMetadata.groups = validationMetadata.groups?.concat('__backk_none__') ?? [
-            '__backk_none__'
+            '__backk_none__',
           ];
         }
       } else {
@@ -178,7 +178,7 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
           !validationMetadata.groups?.includes('__backk_update__')
         ) {
           validationMetadata.groups = validationMetadata.groups?.concat('__backk_argument__') ?? [
-            '__backk_argument__'
+            '__backk_argument__',
           ];
         }
       }
@@ -276,10 +276,10 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
       if (!acceptFileTypesValidation) {
         throw new Error(
           'Property ' +
-          Class.name +
-          '.' +
-          validationMetadata.propertyName +
-          ": must be annotated with @AcceptFileTypes() decorator to specify accepted file types, for example: @AcceptFileTypes(['image/*']) or @AcceptFileTypes(['image/*', '.pdf'])"
+            Class.name +
+            '.' +
+            validationMetadata.propertyName +
+            ": must be annotated with @AcceptFileTypes() decorator to specify accepted file types, for example: @AcceptFileTypes(['image/*']) or @AcceptFileTypes(['image/*', '.pdf'])"
         );
       }
     }
@@ -320,17 +320,24 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
       const nonArrayValidationMetadatas = validationMetadatas.filter(
         (otherValidationMetadata: ValidationMetadata) =>
           otherValidationMetadata.propertyName === validationMetadata.propertyName &&
-          otherValidationMetadata.type !== 'arrayMinSize' && otherValidationMetadata.type !== 'arrayMaxSize'
-        && otherValidationMetadata.type !== 'arrayUnique' && !otherValidationMetadata.each
+          otherValidationMetadata.type !== 'arrayMinSize' &&
+          otherValidationMetadata.type !== 'arrayMaxSize' &&
+          otherValidationMetadata.type !== 'arrayUnique' &&
+          otherValidationMetadata.constraints?.[0] !== 'shouldBeTrueForObject' &&
+          otherValidationMetadata.constraints?.[0] !== 'arrayNotUnique' &&
+          otherValidationMetadata.constraints?.[0] !== 'isUndefined' &&
+          otherValidationMetadata.type !== 'conditionalValidation' &&
+          otherValidationMetadata.type !== 'isArray' &&
+          !otherValidationMetadata.each
       );
 
       if (nonArrayValidationMetadatas.length > 0) {
         throw new Error(
           'Property ' +
-          Class.name +
-          '.' +
-          validationMetadata.propertyName +
-          " has array type and and must { each: true } specified in each validation's options, e.g. @Min(0, { each: true })"
+            Class.name +
+            '.' +
+            validationMetadata.propertyName +
+            " has array type and and must { each: true } specified in each validation's options, e.g. @Min(0, { each: true })"
         );
       }
 
@@ -640,7 +647,7 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
           (propNameToIsOptionalMap[propName] ? '?' + finalPropType : finalPropType) +
           (propNameToDefaultValueMap[propName] === undefined
             ? ''
-            : ` = ${JSON.stringify(propNameToDefaultValueMap[propName])}`)
+            : ` = ${JSON.stringify(propNameToDefaultValueMap[propName])}`),
       };
     },
     {}

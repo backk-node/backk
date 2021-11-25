@@ -111,7 +111,7 @@ export default function getServiceFunctionReturnValueTests(
     const predicate = getCustomValidationConstraint(
       serviceTypes[returnValueTypeName],
       propertyName,
-      'shouldBeTrueForEntity',
+      'shouldBeTrueForObject',
       1
     );
 

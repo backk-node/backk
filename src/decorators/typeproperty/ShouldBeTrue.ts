@@ -15,7 +15,7 @@ export default function ShouldBeTrue(
       options: validationOptions,
       validator: {
         validate(value: any, args: ValidationArguments) {
-          return validateValue(args.object as any);
+          return validateValue(value);
         },
         defaultMessage: () =>
           errorMessage ? errorMessage : 'Property did not match predicate: ' + validateValue.toString()

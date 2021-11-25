@@ -1,29 +1,29 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import YAML from 'yaml';
-import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
-import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
-import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
-import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
 import { HttpStatusCodes } from '../constants/constants';
-import isCreateFunction from '../services/crudentity/utils/isCreateFunction';
-import isUpdateFunction from '../services/crudentity/utils/isUpdateFunction';
-import { backkErrors } from '../errors/backkErrors';
-import isReadFunction from '../services/crudentity/utils/isReadFunction';
-import getServiceFunctionTestArgument from '../postman/getServiceFunctionTestArgument';
-import getServiceFunctionExampleReturnValue from '../postman/getServiceFunctionExampleReturnValue';
 import { ErrorDef } from '../datastore/hooks/EntityPreHook';
-import getNamespacedMicroserviceName from "../utils/getNamespacedMicroserviceName";
+import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
+import { backkErrors } from '../errors/backkErrors';
+import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
+import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
+import getServiceFunctionExampleReturnValue from '../postman/getServiceFunctionExampleReturnValue';
+import getServiceFunctionTestArgument from '../postman/getServiceFunctionTestArgument';
+import isCreateFunction from '../services/crudentity/utils/isCreateFunction';
+import isReadFunction from '../services/crudentity/utils/isReadFunction';
+import isUpdateFunction from '../services/crudentity/utils/isUpdateFunction';
+import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
+import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
 
 function getErrorContent(errorDef: ErrorDef) {
   return {
     content: {
       'application/json': {
         schema: {
-          $ref: '#/components/schemas/BackkError'
+          $ref: '#/components/schemas/BackkError',
         },
-        example: errorDef
-      }
-    }
+        example: errorDef,
+      },
+    },
   };
 }
 
@@ -78,12 +78,12 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
         if (errorResponseMap[statusCode]) {
           errorResponseMap[statusCode] = {
             ...errorResponseMap[statusCode],
-            description: errorResponseMap[statusCode].description + '\n' + description
+            description: errorResponseMap[statusCode].description + '\n' + description,
           };
         } else {
           errorResponseMap[statusCode] = {
             description,
-            ...getErrorContent(errorDef)
+            ...getErrorContent(errorDef),
           };
         }
         return errorResponseMap;
@@ -100,7 +100,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
         commonErrorMap[HttpStatusCodes.CONFLICT] = {
           description:
             '1: Entity version or last modified timestamp conflict. Entity was updated before this request, please re-fetch the entity and try update again',
-          ...getErrorContent(backkErrors.ENTITY_VERSION_MISMATCH)
+          ...getErrorContent(backkErrors.ENTITY_VERSION_MISMATCH),
         };
       }
 
@@ -112,7 +112,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
       ) {
         commonErrorMap[HttpStatusCodes.CONFLICT] = {
           description: backkErrors.DUPLICATE_ENTITY.errorCode + ': ' + backkErrors.DUPLICATE_ENTITY.message,
-          ...getErrorContent(backkErrors.DUPLICATE_ENTITY)
+          ...getErrorContent(backkErrors.DUPLICATE_ENTITY),
         };
       }
 
@@ -128,14 +128,14 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
       ) {
         commonErrorMap[HttpStatusCodes.NOT_FOUND] = {
           description: backkErrors.ENTITY_NOT_FOUND.errorCode + ': ' + backkErrors.ENTITY_NOT_FOUND.message,
-          ...getErrorContent(backkErrors.ENTITY_NOT_FOUND)
+          ...getErrorContent(backkErrors.ENTITY_NOT_FOUND),
         };
       }
 
       if (functionMetadata.argType !== undefined) {
         commonErrorMap[HttpStatusCodes.BAD_REQUEST] = {
           description: backkErrors.INVALID_ARGUMENT.errorCode + ': ' + backkErrors.INVALID_ARGUMENT.message,
-          ...getErrorContent(backkErrors.INVALID_ARGUMENT)
+          ...getErrorContent(backkErrors.INVALID_ARGUMENT),
         };
       }
 
@@ -147,10 +147,8 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
       ) {
         commonErrorMap[HttpStatusCodes.UNAUTHORIZED] = {
           description:
-            backkErrors.USER_NOT_AUTHENTICATED.errorCode +
-            ': ' +
-            backkErrors.USER_NOT_AUTHENTICATED.message,
-          ...getErrorContent(backkErrors.USER_NOT_AUTHENTICATED)
+            backkErrors.USER_NOT_AUTHENTICATED.errorCode + ': ' + backkErrors.USER_NOT_AUTHENTICATED.message,
+          ...getErrorContent(backkErrors.USER_NOT_AUTHENTICATED),
         };
 
         commonErrorMap[HttpStatusCodes.FORBIDDEN] = {
@@ -158,7 +156,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             backkErrors.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED.errorCode +
             ': ' +
             backkErrors.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED.message,
-          ...getErrorContent(backkErrors.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED)
+          ...getErrorContent(backkErrors.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED),
         };
       }
 
@@ -168,7 +166,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             backkErrors.MAX_ENTITY_COUNT_REACHED.errorCode +
             ': ' +
             backkErrors.MAX_ENTITY_COUNT_REACHED.message,
-          ...getErrorContent(backkErrors.MAX_ENTITY_COUNT_REACHED)
+          ...getErrorContent(backkErrors.MAX_ENTITY_COUNT_REACHED),
         };
 
         commonErrorMap[HttpStatusCodes.NOT_ACCEPTABLE] = {
@@ -176,13 +174,13 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             backkErrors.MISSING_SERVICE_FUNCTION_ARGUMENT.errorCode +
             ': ' +
             backkErrors.MISSING_SERVICE_FUNCTION_ARGUMENT.message,
-          ...getErrorContent(backkErrors.MISSING_SERVICE_FUNCTION_ARGUMENT)
+          ...getErrorContent(backkErrors.MISSING_SERVICE_FUNCTION_ARGUMENT),
         };
 
         commonErrorMap[HttpStatusCodes.PAYLOAD_TOO_LARGE] = {
           description:
             backkErrors.REQUEST_IS_TOO_LONG.errorCode + ': ' + backkErrors.REQUEST_IS_TOO_LONG.message,
-          ...getErrorContent(backkErrors.REQUEST_IS_TOO_LONG)
+          ...getErrorContent(backkErrors.REQUEST_IS_TOO_LONG),
         };
       }
 
@@ -200,12 +198,12 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
                   content: {
                     'application/json': {
                       schema: {
-                        $ref: '#/components/schemas/' + functionMetadata.argType
+                        $ref: '#/components/schemas/' + functionMetadata.argType,
                       },
-                      example: requestExample
-                    }
-                  }
-                }
+                      example: requestExample,
+                    },
+                  },
+                },
               }),
           responses: {
             '200': {
@@ -220,20 +218,20 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
                             ? {
                                 type: 'array',
                                 items: {
-                                  $ref: '#/components/schemas/' + baseTypeName
-                                }
+                                  $ref: '#/components/schemas/' + baseTypeName,
+                                },
                               }
-                            : { $ref: '#/components/schemas/' + baseTypeName })
+                            : { $ref: '#/components/schemas/' + baseTypeName }),
                         },
-                        example: responseExample
-                      }
-                    }
-                  })
+                        example: responseExample,
+                      },
+                    },
+                  }),
             },
             ...errorResponseMap,
-            ...commonErrorMap
-          }
-        }
+            ...commonErrorMap,
+          },
+        },
       };
     });
 
@@ -247,9 +245,8 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
         const required: string[] = [];
 
         const properties = Object.entries(typeSpec).reduce((properties, [propertyName, propertyTypeName]) => {
-          const { baseTypeName, isArrayType, isOptionalType, isNullableType } = getTypeInfoForTypeName(
-            propertyTypeName
-          );
+          const { baseTypeName, isArrayType, isOptionalType, isNullableType } =
+            getTypeInfoForTypeName(propertyTypeName);
 
           const minimum: number | undefined = (serviceMetadata.validations as any)[typeName]?.[
             propertyName
@@ -456,7 +453,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
               ...(propertyTypeName.startsWith('Date') ? { format: 'date-time' } : {}),
               ...(propertyName.toLowerCase().includes('password') ? { format: 'password ' } : {}),
               ...(format === undefined ? {} : { format }),
-              ...(pattern === undefined ? {} : { pattern })
+              ...(pattern === undefined ? {} : { pattern }),
             };
           }
 
@@ -480,7 +477,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             ...(maxItems === undefined ? {} : { maxItems }),
             ...(uniqueItems === undefined ? {} : { uniqueItems }),
             ...(readOnly === undefined ? {} : { readOnly }),
-            ...(writeOnly === undefined ? {} : { writeOnly })
+            ...(writeOnly === undefined ? {} : { writeOnly }),
           };
 
           if (!isOptionalType) {
@@ -493,7 +490,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
         schemas[typeName] = {
           type: 'object',
           properties,
-          ...(required.length > 0 ? { required } : {})
+          ...(required.length > 0 ? { required } : {}),
         };
 
         return schemas;
@@ -518,74 +515,82 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
             contact: {
               ...(process.env.API_CONTACT_NAME ? { name: process.env.API_CONTACT_NAME } : {}),
               ...(process.env.API_CONTACT_EMAIL ? { email: process.env.API_CONTACT_EMAIL } : {}),
-              ...(process.env.API_CONTACT_URL ? { url: process.env.API_CONTACT_URL } : {})
-            }
+              ...(process.env.API_CONTACT_URL ? { url: process.env.API_CONTACT_URL } : {}),
+            },
           }
         : {}),
       ...(process.env.API_LICENSE_NAME
         ? {
             license: {
               ...(process.env.API_LICENSE_NAME ? { name: process.env.API_LICENSE_NAME } : {}),
-              ...(process.env.API_LICENSE_URL ? { url: process.env.API_LICENSE_URL } : {})
-            }
+              ...(process.env.API_LICENSE_URL ? { url: process.env.API_LICENSE_URL } : {}),
+            },
           }
         : {}),
       ...(process.env.API_EXTERNAL_DOCS_URL
         ? {
             externalDocs: {
               description: 'Find more about ' + appName + ' API',
-              url: process.env.API_EXTERNAL_DOCS_URL
-            }
+              url: process.env.API_EXTERNAL_DOCS_URL,
+            },
           }
-        : {})
+        : {}),
     },
     servers:
       process.env.NODE_ENV === 'development'
         ? [
             {
-              url: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${getNamespacedMicroserviceName()}`,
-              description: 'Local development server'
-            }
+              url: `http://localhost:${
+                process.env.HTTP_SERVER_PORT ?? 3000
+              }/${getNamespacedMicroserviceName()}`,
+              description: 'Local development server',
+            },
           ]
         : [
             {
               url: `https://${process.env.API_GATEWAY_FQDN}/${getNamespacedMicroserviceName()}`,
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              description: process.env.NODE_ENV!.toUpperCase() + process.env.NODE_ENV!.slice(1) + ' server'
-            }
+              description: process.env.NODE_ENV!.toUpperCase() + process.env.NODE_ENV!.slice(1) + ' server',
+            },
           ],
     components: {
       securitySchemes: {
         bearerAuth: {
           type: 'http',
           scheme: 'bearer',
-          bearerFormat: 'JWT'
-        }
+          bearerFormat: 'JWT',
+        },
+        openId: process.env.OPEN_ID_CONNECT_URL
+          ? {
+              type: 'openIdConnect',
+              openIdConnectUrl: process.env.OPEN_ID_CONNECT_URL,
+            }
+          : undefined,
       },
-      schemas
+      schemas,
     },
-    security: [{ bearerAuth: [] }],
-    paths
+    security: [{ bearerAuth: [] }, ...(process.env.OPEN_ID_CONNECT_URL ? [{ openId: [] }] : [])],
+    paths,
   };
 
   if (process.env.CI_API_GATEWAY_FQDN) {
     openApiSpec.servers.push({
       url: `https://${process.env.CI_API_GATEWAY_FQDN}/${getNamespacedMicroserviceName()}`,
-      description: 'CI server'
+      description: 'CI server',
     });
   }
 
   if (process.env.STAGING_API_GATEWAY_FQDN) {
     openApiSpec.servers.push({
       url: `https://${process.env.STAGING_API_GATEWAY_FQDN}/${getNamespacedMicroserviceName()}`,
-      description: 'Staging server'
+      description: 'Staging server',
     });
   }
 
   if (process.env.PRODUCTION_API_GATEWAY_FQDN) {
     openApiSpec.servers.push({
       url: `https://${process.env.PRODUCTION_API_GATEWAY_FQDN}/${getNamespacedMicroserviceName()}`,
-      description: 'Production server'
+      description: 'Production server',
     });
   }
 
@@ -614,8 +619,7 @@ export default function writeOpenApiSpecFile<T>(
   }
 
   writeFileSync(
-    process.cwd() +
-      `/generated/openapi/openApi${directory[0].toUpperCase()}${directory.slice(1)}Spec.yaml`,
+    process.cwd() + `/generated/openapi/openApi${directory[0].toUpperCase()}${directory.slice(1)}Spec.yaml`,
     YAML.stringify(openApiSpec)
   );
 }

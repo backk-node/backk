@@ -410,8 +410,6 @@ a
 1src/services/startup/types/entity/SampleEntity.ts,1/c/1c27cd9cd77add2229000bdc2581f5f7ad4424ee
 X
 (src/metadata/generateServicesMetadata.ts,1/c/1c07d967f31c20ff05a217e12bf580a7a42e2bff
-S
-#src/openapi/writeOpenApiSpecFile.ts,f/2/f2fd425c36694198fd59a76c96f5848e5bf5657c
 ^
 .src/scheduling/scheduleCronJobsForExecution.ts,0/7/07d0700ee09268cdb174c1505e3f60caf50c2b30
 R

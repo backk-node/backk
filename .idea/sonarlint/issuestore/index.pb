@@ -89,8 +89,6 @@ J
 src/errors/isBackkError.ts,b/e/be9946fedd9e6a796526ab143d7faed978620ccb
 R
 "src/utils/type/isEntityTypeName.ts,7/7/77f233f9d8aa69d2a30a0f26909118a0d6ec4618
-X
-(src/utils/type/getTypeInfoForTypeName.ts,5/a/5a598c1f84dcd1f73f8f2a53b13cf1449483a796
 ]
 -src/decorators/typeproperty/access/Private.ts,2/e/2efccbc8fb7519dc75e3596ef09dcd4aa8234736
 _
@@ -596,8 +594,6 @@ A
 package-lock.json,f/a/fa288d1472d29beccb489a676f68739ad365fc47
 <
 package.json,7/0/7030d0b2f71b999ff89a343de08c414af32fc93a
-i
-9src/metadata/getClassPropertyNameToPropertyTypeNameMap.ts,2/c/2c99dfa7222fffc105b2ccf51868d172e945c789
 _
 /src/decorators/typeproperty/BooleanOrTinyInt.ts,a/4/a4af1814f309ff6bec60798a14532417607e2311
 n

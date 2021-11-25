@@ -317,6 +317,23 @@ export default function getClassPropertyNameToPropertyTypeNameMap<T>(
         );
       }
 
+      const nonArrayValidationMetadatas = validationMetadatas.filter(
+        (otherValidationMetadata: ValidationMetadata) =>
+          otherValidationMetadata.propertyName === validationMetadata.propertyName &&
+          otherValidationMetadata.type !== 'arrayMinSize' && otherValidationMetadata.type !== 'arrayMaxSize'
+        && otherValidationMetadata.type !== 'arrayUnique' && !otherValidationMetadata.each
+      );
+
+      if (nonArrayValidationMetadatas.length > 0) {
+        throw new Error(
+          'Property ' +
+          Class.name +
+          '.' +
+          validationMetadata.propertyName +
+          " has array type and and must { each: true } specified in each validation's options, e.g. @Min(0, { each: true })"
+        );
+      }
+
       const instanceValidationMetadata = validationMetadatas.find(
         (otherValidationMetadata: ValidationMetadata) =>
           otherValidationMetadata.propertyName === validationMetadata.propertyName &&

@@ -1,6 +1,6 @@
 {
   "name": "backk",
-  "version": "1.0.0-alpha.367",
+  "version": "1.0.0-alpha.368",
   "description": "Backk - Node.js framework for creating secure cloud-native microservices for Kubernetes in Typescript",
   "author": {
     "name": "Petri Silen",

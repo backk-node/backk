@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
-import bfj from 'bfj-pksilen';
+// import bfj from 'bfj-pksilen';
+import JSONStream from 'JSONStream'
 import { createServer } from 'http';
 import { HttpStatusCodes, MAX_INT_VALUE } from '../constants/constants';
 import { backkErrors } from '../errors/backkErrors';
@@ -75,7 +76,12 @@ export default class HttpServer implements RequestProcessor {
             ? JSON.parse(serviceFunctionArgumentInJson)
             : undefined;
         } else {
-          serviceFunctionArgument = await bfj.parse(request);
+          serviceFunctionArgument = await new Promise<any>((resolve, reject) => {
+            const parser = JSONStream.parse();
+            parser.on('root', (object: any) => resolve(object));
+            parser.on('error', (error: any) => reject(error));
+            request.pipe(parser);
+          })
         }
       } catch (error) {
         const backkError = createBackkErrorFromErrorCodeMessageAndStatus({

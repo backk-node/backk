@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 // import bfj from 'bfj-pksilen';
-import JSONStream from 'JSONStream'
+import yj from 'yiedlable-json';
 import { createServer } from 'http';
 import { HttpStatusCodes, MAX_INT_VALUE } from '../constants/constants';
 import { backkErrors } from '../errors/backkErrors';
@@ -25,6 +25,7 @@ export default class HttpServer implements RequestProcessor {
   startProcessingRequests(microservice: Microservice): void {
     const server = createServer(async (request, response) => {
       request.setEncoding('utf8');
+      const chunks: string[] = [];
 
       const contentLength = request.headers['content-length']
         ? parseInt(request.headers['content-length'], 10)
@@ -76,12 +77,13 @@ export default class HttpServer implements RequestProcessor {
             ? JSON.parse(serviceFunctionArgumentInJson)
             : undefined;
         } else {
-          serviceFunctionArgument = await new Promise<any>((resolve, reject) => {
-            const parser = JSONStream.parse();
-            parser.on('root', (object: any) => resolve(object));
-            parser.on('error', (error: any) => reject(error));
-            request.pipe(parser);
+          await new Promise((resolve) => {
+            request.on('data', (data) => chunks.push(data));
+            request.on('end', () => resolve())
           })
+
+          const data = chunks.join('');
+          serviceFunctionArgument = await yj.parseAsync(data);
         }
       } catch (error) {
         const backkError = createBackkErrorFromErrorCodeMessageAndStatus({

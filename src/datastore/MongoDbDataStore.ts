@@ -1,77 +1,77 @@
-import { FilterQuery, MongoClient, ObjectId } from 'mongodb';
-import SqlExpression from './sql/expressions/SqlExpression';
-import  { Field, Many, One } from './DataStore';
-import { RecursivePartial } from '../types/RecursivePartial';
-import { PreHook } from './hooks/PreHook';
-import { BackkEntity } from '../types/entities/BackkEntity';
-import { PostQueryOperations } from '../types/postqueryoperations/PostQueryOperations';
-import createBackkErrorFromError from '../errors/createBackkErrorFromError';
-import UserDefinedFilter from '../types/userdefinedfilters/UserDefinedFilter';
-import { SubEntity } from '../types/entities/SubEntity';
-import tryStartLocalTransactionIfNeeded from './sql/operations/transaction/tryStartLocalTransactionIfNeeded';
-import tryExecutePreHooks from './hooks/tryExecutePreHooks';
-import hashAndEncryptEntity from '../crypt/hashAndEncryptEntity';
-import cleanupLocalTransactionIfNeeded from './sql/operations/transaction/cleanupLocalTransactionIfNeeded';
-import { getNamespace } from 'cls-hooked';
-import defaultServiceMetrics from '../observability/metrics/defaultServiceMetrics';
-import createInternalServerError from '../errors/createInternalServerError';
-import getClassPropertyNameToPropertyTypeNameMap from '../metadata/getClassPropertyNameToPropertyTypeNameMap';
-import typePropertyAnnotationContainer from '../decorators/typeproperty/typePropertyAnnotationContainer';
-import isEntityTypeName from '../utils/type/isEntityTypeName';
-import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
-import forEachAsyncParallel from '../utils/forEachAsyncParallel';
-import forEachAsyncSequential from '../utils/forEachAsyncSequential';
-import startDbOperation from './utils/startDbOperation';
-import recordDbOperationDuration from './utils/recordDbOperationDuration';
-import { JSONPath } from 'jsonpath-plus';
-import findParentEntityAndPropertyNameForSubEntity from '../metadata/findParentEntityAndPropertyNameForSubEntity';
 import { getFromContainer, MetadataStorage } from 'class-validator';
 import { ValidationMetadata } from 'class-validator/metadata/ValidationMetadata';
-import performPostQueryOperations from './mongodb/performPostQueryOperations';
-import tryFetchAndAssignSubEntitiesForManyToManyRelationships from './mongodb/tryFetchAndAssignSubEntitiesForManyToManyRelationships';
+import { getNamespace } from 'cls-hooked';
+import { JSONPath } from 'jsonpath-plus';
+import { FilterQuery, MongoClient, ObjectId } from 'mongodb';
+import { HttpStatusCodes } from '../constants/constants';
 import decryptEntities from '../crypt/decryptEntities';
-import updateDbLocalTransactionCount from './sql/operations/dql/utils/updateDbLocalTransactionCount';
-import removePrivateProperties from './mongodb/removePrivateProperties';
-import replaceIdStringsWithObjectIds from './mongodb/replaceIdStringsWithObjectIds';
-import removeSubEntities from './mongodb/removeSubEntities';
-import getJoinPipelines from './mongodb/getJoinPipelines';
-import convertUserDefinedFiltersToMatchExpression from './mongodb/convertUserDefinedFiltersToMatchExpression';
-import MongoDbQuery from './mongodb/MongoDbQuery';
-import getRootOperations from './mongodb/getRootOperations';
-import convertMongoDbQueriesToMatchExpression from './mongodb/convertMongoDbQueriesToMatchExpression';
-import paginateSubEntities from './mongodb/paginateSubEntities';
-import convertFilterObjectToMongoDbQueries from './mongodb/convertFilterObjectToMongoDbQueries';
-import { PostHook } from './hooks/PostHook';
-import tryExecutePostHook from './hooks/tryExecutePostHook';
-import getTableName from './utils/getTableName';
-import getFieldOrdering from './mongodb/getFieldOrdering';
-import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
+import hashAndEncryptEntity from '../crypt/hashAndEncryptEntity';
+import typePropertyAnnotationContainer from '../decorators/typeproperty/typePropertyAnnotationContainer';
 import { backkErrors } from '../errors/backkErrors';
-import { PromiseErrorOr } from '../types/PromiseErrorOr';
+import createBackkErrorFromError from '../errors/createBackkErrorFromError';
+import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
+import createInternalServerError from '../errors/createInternalServerError';
 import isBackkError from '../errors/isBackkError';
+import findParentEntityAndPropertyNameForSubEntity from '../metadata/findParentEntityAndPropertyNameForSubEntity';
+import getClassPropertyNameToPropertyTypeNameMap from '../metadata/getClassPropertyNameToPropertyTypeNameMap';
+import defaultServiceMetrics from '../observability/metrics/defaultServiceMetrics';
+import { BackkEntity } from '../types/entities/BackkEntity';
+import { SubEntity } from '../types/entities/SubEntity';
+import EntityCountRequest from '../types/EntityCountRequest';
 import { ErrorOr } from '../types/ErrorOr';
+import DefaultPostQueryOperations from '../types/postqueryoperations/DefaultPostQueryOperations';
+import { PostQueryOperations } from '../types/postqueryoperations/PostQueryOperations';
+import { PromiseErrorOr } from '../types/PromiseErrorOr';
+import { RecursivePartial } from '../types/RecursivePartial';
+import UserDefinedFilter from '../types/userdefinedfilters/UserDefinedFilter';
+import throwException from '../utils/exception/throwException';
+import forEachAsyncParallel from '../utils/forEachAsyncParallel';
+import forEachAsyncSequential from '../utils/forEachAsyncSequential';
+import getDbNameFromServiceName from '../utils/getDbNameFromServiceName';
+import findSubEntityClass from '../utils/type/findSubEntityClass';
+import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
+import isEntityTypeName from '../utils/type/isEntityTypeName';
+import AbstractDataStore from './AbstractDataStore';
+import { Field, Many, One } from './DataStore';
+import { EntitiesPostHook } from './hooks/EntitiesPostHook';
 import { EntityPreHook } from './hooks/EntityPreHook';
+import { PostHook } from './hooks/PostHook';
+import { PreHook } from './hooks/PreHook';
 import tryExecuteEntityPreHooks from './hooks/tryExecuteEntityPreHooks';
+import tryExecutePostHook from './hooks/tryExecutePostHook';
+import tryExecutePreHooks from './hooks/tryExecutePreHooks';
+import addSimpleSubEntitiesOrValuesByEntityId from './mongodb/addSimpleSubEntitiesOrValuesByEntityId';
+import addSimpleSubEntitiesOrValuesByFilters from './mongodb/addSimpleSubEntitiesOrValuesByFilters';
+import convertFilterObjectToMongoDbQueries from './mongodb/convertFilterObjectToMongoDbQueries';
+import convertMongoDbQueriesToMatchExpression from './mongodb/convertMongoDbQueriesToMatchExpression';
+import convertUserDefinedFiltersToMatchExpression from './mongodb/convertUserDefinedFiltersToMatchExpression';
+import getFieldOrdering from './mongodb/getFieldOrdering';
+import getJoinPipelines from './mongodb/getJoinPipelines';
+import getRootOperations from './mongodb/getRootOperations';
 import handleNestedManyToManyRelations from './mongodb/handleNestedManyToManyRelations';
 import handleNestedOneToManyRelations from './mongodb/handleNestedOneToManyRelations';
-import addSimpleSubEntitiesOrValuesByEntityId from './mongodb/addSimpleSubEntitiesOrValuesByEntityId';
+import MongoDbQuery from './mongodb/MongoDbQuery';
+import getEntitiesByFilters from './mongodb/operations/dql/getEntitiesByFilters';
+import getEntityByFilters from './mongodb/operations/dql/getEntityByFilters';
+import paginateSubEntities from './mongodb/paginateSubEntities';
+import performPostQueryOperations from './mongodb/performPostQueryOperations';
+import removeFieldValues from './mongodb/removeFieldValues';
+import removePrivateProperties from './mongodb/removePrivateProperties';
 import removeSimpleSubEntityById from './mongodb/removeSimpleSubEntityById';
 import removeSimpleSubEntityByIdFromEntityByFilters from './mongodb/removeSimpleSubEntityByIdFromEntityByFilters';
-import getEntitiesByFilters from './mongodb/operations/dql/getEntitiesByFilters';
-import removeFieldValues from './mongodb/removeFieldValues';
-import { HttpStatusCodes } from '../constants/constants';
-import { EntitiesPostHook } from './hooks/EntitiesPostHook';
-import findSubEntityClass from '../utils/type/findSubEntityClass';
-import getEntityByFilters from './mongodb/operations/dql/getEntityByFilters';
-import addSimpleSubEntitiesOrValuesByFilters from './mongodb/addSimpleSubEntitiesOrValuesByFilters';
-import DefaultPostQueryOperations from '../types/postqueryoperations/DefaultPostQueryOperations';
+import removeSubEntities from './mongodb/removeSubEntities';
+import replaceIdStringsWithObjectIds from './mongodb/replaceIdStringsWithObjectIds';
+import tryFetchAndAssignSubEntitiesForManyToManyRelationships from './mongodb/tryFetchAndAssignSubEntitiesForManyToManyRelationships';
+import SqlExpression from './sql/expressions/SqlExpression';
+import updateDbLocalTransactionCount from './sql/operations/dql/utils/updateDbLocalTransactionCount';
+import cleanupLocalTransactionIfNeeded from './sql/operations/transaction/cleanupLocalTransactionIfNeeded';
+import tryStartLocalTransactionIfNeeded from './sql/operations/transaction/tryStartLocalTransactionIfNeeded';
 import createCurrentPageTokens from './utils/createCurrentPageTokens';
-import tryEnsurePreviousOrNextPageIsRequested from './utils/tryEnsurePreviousOrNextPageIsRequested';
-import EntityCountRequest from '../types/EntityCountRequest';
-import throwException from '../utils/exception/throwException';
+import getTableName from './utils/getTableName';
 import getUserAccountIdFieldNameAndRequiredValue from './utils/getUserAccountIdFieldNameAndRequiredValue';
-import getDbNameFromServiceName from '../utils/getDbNameFromServiceName';
-import AbstractDataStore from "./AbstractDataStore";
+import recordDbOperationDuration from './utils/recordDbOperationDuration';
+import startDbOperation from './utils/startDbOperation';
+import tryEnsurePreviousOrNextPageIsRequested from './utils/tryEnsurePreviousOrNextPageIsRequested';
 
 export default class MongoDbDataStore extends AbstractDataStore {
   private readonly uri: string;
@@ -103,7 +103,17 @@ export default class MongoDbDataStore extends AbstractDataStore {
     } else {
       this.uri = `mongodb://${MONGODB_HOST}:${MONGODB_PORT}`;
     }
-    this.mongoClient = new MongoClient(this.uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+    if (process.env.MONGODB_TLS_CA_FILE_PATH_NAME) {
+      this.uri += '?tls=true';
+    }
+
+    this.mongoClient = new MongoClient(this.uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      tlsCAFile: process.env.MONGODB_TLS_CA_FILE_PATH_NAME,
+      tlsCertificateKeyFile: process.env.MONGODB_TLS_CERT_KEY_FILE_PATH_NAME,
+    });
   }
 
   getClient() {
@@ -187,10 +197,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       await this.tryReserveDbConnectionFromPool();
 
       await this.tryExecute(false, (client) =>
-        client
-          .db(this.getDbName())
-          .collection('__backk__')
-          .findOne({})
+        client.db(this.getDbName()).collection('__backk__').findOne({})
       );
 
       return true;
@@ -217,9 +224,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
   }
 
   cleanupTransaction() {
-    this.getClsNamespace()
-      ?.get('session')
-      ?.endSession();
+    this.getClsNamespace()?.get('session')?.endSession();
   }
 
   async executeInsideTransaction<T>(executable: () => PromiseErrorOr<T>): PromiseErrorOr<T> {
@@ -288,9 +293,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
         userAccountId !== undefined &&
         entity[userAccountIdFieldName] !== userAccountId
       ) {
-        throw createBackkErrorFromErrorCodeMessageAndStatus(
-          backkErrors.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED
-        );
+        throw createBackkErrorFromErrorCodeMessageAndStatus(backkErrors.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED);
       }
 
       return await this.tryExecute(shouldUseTransaction, async (client) => {
@@ -335,8 +338,8 @@ export default class MongoDbDataStore extends AbstractDataStore {
               null,
               createBackkErrorFromErrorCodeMessageAndStatus({
                 ...backkErrors.DUPLICATE_ENTITY,
-                message: `Duplicate ${EntityClass.name.charAt(0).toLowerCase()}${EntityClass.name.slice(1)}`
-              })
+                message: `Duplicate ${EntityClass.name.charAt(0).toLowerCase()}${EntityClass.name.slice(1)}`,
+              }),
             ];
           }
 
@@ -348,7 +351,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
         const [createdEntity, error] = isInternalCall
           ? [
               { metadata: { currentPageTokens: undefined, entityCounts: undefined }, data: { _id } as T },
-              null
+              null,
             ]
           : await this.getEntityById(
               EntityClass,
@@ -475,7 +478,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
           await tryExecuteEntityPreHooks(options?.entityPreHooks ?? [], currentEntity);
           const [parentEntity] = JSONPath({
             json: currentEntity,
-            path: subEntityPath + '^'
+            path: subEntityPath + '^',
           });
 
           const [subEntities] = JSONPath({ json: currentEntity, path: subEntityPath });
@@ -514,7 +517,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
                   '.' +
                   parentEntityClassAndPropertyNameForSubEntity[1] +
                   ': ' +
-                  backkErrors.MAX_ENTITY_COUNT_REACHED.message
+                  backkErrors.MAX_ENTITY_COUNT_REACHED.message,
               });
             }
           }
@@ -531,7 +534,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
             } else if (parentEntityClassAndPropertyNameForSubEntity) {
               parentEntity[parentEntityClassAndPropertyNameForSubEntity[1]].push({
                 ...(newSubEntity as any),
-                id: (maxSubItemId + 1 + index).toString()
+                id: (maxSubItemId + 1 + index).toString(),
               });
             }
           });
@@ -615,7 +618,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
           await tryExecuteEntityPreHooks(options?.entityPreHooks ?? [], currentEntity);
           const [parentEntity] = JSONPath({
             json: currentEntity,
-            path: subEntityPath + '^'
+            path: subEntityPath + '^',
           });
 
           const [subEntities] = JSONPath({ json: currentEntity, path: subEntityPath });
@@ -654,7 +657,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
                   '.' +
                   parentEntityClassAndPropertyNameForSubEntity[1] +
                   ': ' +
-                  backkErrors.MAX_ENTITY_COUNT_REACHED.message
+                  backkErrors.MAX_ENTITY_COUNT_REACHED.message,
               });
             }
           }
@@ -671,7 +674,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
             } else if (parentEntityClassAndPropertyNameForSubEntity) {
               parentEntity[parentEntityClassAndPropertyNameForSubEntity[1]].push({
                 ...(newSubEntity as any),
-                id: (maxSubItemId + 1 + index).toString()
+                id: (maxSubItemId + 1 + index).toString(),
               });
             }
           });
@@ -727,7 +730,10 @@ export default class MongoDbDataStore extends AbstractDataStore {
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
       const filter =
         userAccountIdFieldName && userAccountId !== undefined
-          ? { [userAccountIdFieldName]: userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId }
+          ? {
+              [userAccountIdFieldName]:
+                userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId,
+            }
           : {};
 
       const entities = await this.tryExecute(false, async (client) => {
@@ -756,11 +762,8 @@ export default class MongoDbDataStore extends AbstractDataStore {
         const [rows, count] = await Promise.all([
           cursor.toArray(),
           shouldReturnRootEntityCount
-            ? client
-                .db(this.getDbName())
-                .collection<T>(getTableName(EntityClass.name))
-                .countDocuments({})
-            : Promise.resolve(undefined)
+            ? client.db(this.getDbName()).collection<T>(getTableName(EntityClass.name)).countDocuments({})
+            : Promise.resolve(undefined),
         ]);
 
         if (count !== undefined) {
@@ -796,11 +799,11 @@ export default class MongoDbDataStore extends AbstractDataStore {
           metadata: {
             currentPageTokens: allowFetchingOnlyPreviousOrNextPage
               ? createCurrentPageTokens(postQueryOperations.paginations)
-              : undefined
+              : undefined,
           },
-          data: entities
+          data: entities,
         },
-        null
+        null,
       ];
     } catch (errorOrBackkError) {
       return isBackkError(errorOrBackkError)
@@ -880,7 +883,8 @@ export default class MongoDbDataStore extends AbstractDataStore {
       const rootUserDefinedFilters = rootFilters.filter((filter) => !(filter instanceof MongoDbQuery));
       const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbQuery);
 
-      const userDefinedFiltersMatchExpression = convertUserDefinedFiltersToMatchExpression( EntityClass,
+      const userDefinedFiltersMatchExpression = convertUserDefinedFiltersToMatchExpression(
+        EntityClass,
         this.getTypes(),
         rootUserDefinedFilters as UserDefinedFilter[]
       );
@@ -891,7 +895,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       matchExpression = {
         ...userDefinedFiltersMatchExpression,
-        ...mongoDbQueriesMatchExpression
+        ...mongoDbQueriesMatchExpression,
       };
     }
 
@@ -903,7 +907,8 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
     if (userAccountIdFieldName && userAccountId !== undefined) {
-      (matchExpression as any)[userAccountIdFieldName] = userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId;
+      (matchExpression as any)[userAccountIdFieldName] =
+        userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId;
     }
 
     try {
@@ -957,9 +962,9 @@ export default class MongoDbDataStore extends AbstractDataStore {
         return [
           {
             metadata: { currentPageTokens: undefined },
-            data: ({ _id } as unknown) as T
+            data: { _id } as unknown as T,
           },
-          null
+          null,
         ];
       }
 
@@ -1023,7 +1028,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
                 .db(this.getDbName())
                 .collection<T>(getTableName(EntityClass.name))
                 .countDocuments({ _id: new ObjectId(_id) } as object)
-            : Promise.resolve(undefined)
+            : Promise.resolve(undefined),
         ]);
 
         if (count !== undefined) {
@@ -1053,9 +1058,9 @@ export default class MongoDbDataStore extends AbstractDataStore {
         metadata: {
           currentPageTokens: allowFetchingOnlyPreviousOrNextPage
             ? createCurrentPageTokens(postQueryOperations.paginations)
-            : undefined
+            : undefined,
         },
-        data: entities[0]
+        data: entities[0],
       };
 
       let error = null;
@@ -1068,8 +1073,8 @@ export default class MongoDbDataStore extends AbstractDataStore {
             null,
             createBackkErrorFromErrorCodeMessageAndStatus({
               ...backkErrors.ENTITY_NOT_FOUND,
-              message: `${EntityClass.name} with _id: ${_id} not found`
-            })
+              message: `${EntityClass.name} with _id: ${_id} not found`,
+            }),
           ];
         }
       }
@@ -1122,7 +1127,11 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       let filter = { _id: { $in: _ids.map((_id: string) => new ObjectId(_id)) } };
       if (userAccountIdFieldName && userAccountId !== undefined) {
-        filter = { ...filter, [userAccountIdFieldName]: userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId };
+        filter = {
+          ...filter,
+          [userAccountIdFieldName]:
+            userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId,
+        };
       }
 
       const entities = await this.tryExecute(false, async (client) => {
@@ -1154,7 +1163,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
                 .db(this.getDbName())
                 .collection<T>(getTableName(EntityClass.name))
                 .countDocuments({ _id: { $in: _ids.map((_id: string) => new ObjectId(_id)) } } as object)
-            : Promise.resolve(undefined)
+            : Promise.resolve(undefined),
         ]);
 
         if (count !== undefined) {
@@ -1184,11 +1193,11 @@ export default class MongoDbDataStore extends AbstractDataStore {
           metadata: {
             currentPageTokens: allowFetchingOnlyPreviousOrNextPage
               ? createCurrentPageTokens(postQueryOperations.paginations)
-              : undefined
+              : undefined,
           },
-          data: entities
+          data: entities,
         },
-        null
+        null,
       ];
     } catch (errorOrBackkError) {
       return isBackkError(errorOrBackkError)
@@ -1257,7 +1266,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
             if ('version' in currentEntity && restOfEntity.version && restOfEntity.version !== -1) {
               eTagCheckPreHook = {
                 shouldSucceedOrBeTrue: ({ version }) => version === restOfEntity.version,
-                error: backkErrors.ENTITY_VERSION_MISMATCH
+                error: backkErrors.ENTITY_VERSION_MISMATCH,
               };
 
               finalEntityPreHooks = [eTagCheckPreHook, ...finalEntityPreHooks];
@@ -1269,7 +1278,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
               eTagCheckPreHook = {
                 shouldSucceedOrBeTrue: ({ lastModifiedTimestamp }) =>
                   lastModifiedTimestamp?.getTime() === (restOfEntity as any).lastModifiedTimestamp.getTime(),
-                error: backkErrors.ENTITY_LAST_MODIFIED_TIMESTAMP_MISMATCH
+                error: backkErrors.ENTITY_LAST_MODIFIED_TIMESTAMP_MISMATCH,
               };
 
               finalEntityPreHooks = [eTagCheckPreHook, ...finalEntityPreHooks];
@@ -1318,8 +1327,8 @@ export default class MongoDbDataStore extends AbstractDataStore {
             null,
             createBackkErrorFromErrorCodeMessageAndStatus({
               ...backkErrors.ENTITY_NOT_FOUND,
-              message: EntityClass.name + ' with id: ' + _id + ' not found'
-            })
+              message: EntityClass.name + ' with id: ' + _id + ' not found',
+            }),
           ];
         }
 
@@ -1381,7 +1390,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       matchExpression = {
         ...userDefinedFiltersMatchExpression,
-        ...mongoDbQueriesMatchExpression
+        ...mongoDbQueriesMatchExpression,
       };
 
       replaceIdStringsWithObjectIds(matchExpression);
@@ -1429,7 +1438,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
           .updateMany(matchExpression, {
             ...versionUpdate,
             ...lastModifiedTimestampUpdate,
-            $set: entityUpdate
+            $set: entityUpdate,
           });
 
         if (options?.postHook) {
@@ -1485,7 +1494,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       matchExpression = {
         ...userDefinedFiltersMatchExpression,
-        ...mongoDbQueriesMatchExpression
+        ...mongoDbQueriesMatchExpression,
       };
 
       replaceIdStringsWithObjectIds(matchExpression);
@@ -1498,7 +1507,8 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
       if (userAccountIdFieldName && userAccountId !== undefined) {
-        matchExpression[userAccountIdFieldName] = userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId;
+        matchExpression[userAccountIdFieldName] =
+          userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId;
       }
 
       const entityPropertyNameToPropertyTypeNameMap = getClassPropertyNameToPropertyTypeNameMap(EntityClass);
@@ -1522,7 +1532,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
           .updateMany(matchExpression, {
             ...versionUpdate,
             ...lastModifiedTimestampUpdate,
-            $set: entityUpdate
+            $set: entityUpdate,
           });
       });
 
@@ -1639,7 +1649,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       matchExpression = {
         ...userDefinedFiltersMatchExpression,
-        ...mongoDbQueriesMatchExpression
+        ...mongoDbQueriesMatchExpression,
       };
     }
 
@@ -1728,7 +1738,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       matchExpression = {
         ...userDefinedFiltersMatchExpression,
-        ...mongoDbQueriesMatchExpression
+        ...mongoDbQueriesMatchExpression,
       };
     }
 
@@ -1739,7 +1749,8 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
       if (userAccountIdFieldName && userAccountId !== undefined) {
-        matchExpression[userAccountIdFieldName] = userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId;
+        matchExpression[userAccountIdFieldName] =
+          userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId;
       }
 
       await this.tryExecute(shouldUseTransaction, async (client) => {
@@ -1843,12 +1854,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       );
     } else {
       const subEntityPath = `${subEntitiesJsonPath}[?(@.id == '${subEntityId}' || @._id == '${subEntityId}')]`;
-      response = await this.removeSubEntitiesFromEntityById(
-        subEntityPath,
-        EntityClass,
-        _id,
-        options
-      );
+      response = await this.removeSubEntitiesFromEntityById(subEntityPath, EntityClass, _id, options);
     }
 
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
@@ -1867,14 +1873,14 @@ export default class MongoDbDataStore extends AbstractDataStore {
       const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(this);
       const filter =
         userAccountIdFieldName && userAccountId !== undefined
-          ? { [userAccountIdFieldName]: userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId }
+          ? {
+              [userAccountIdFieldName]:
+                userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId,
+            }
           : {};
 
       await this.tryExecute(shouldUseTransaction, async (client) => {
-        await client
-          .db(this.getDbName())
-          .collection(EntityClass.name.toLowerCase())
-          .deleteMany(filter);
+        await client.db(this.getDbName()).collection(EntityClass.name.toLowerCase()).deleteMany(filter);
       });
 
       return [null, null];
@@ -1912,10 +1918,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       postHook?: PostHook<T>;
     }
   ): PromiseErrorOr<null> {
-    const dbOperationStartTimeInMillis = startDbOperation(
-      this,
-      'removeSubEntitiesFromEntityByFilters'
-    );
+    const dbOperationStartTimeInMillis = startDbOperation(this, 'removeSubEntitiesFromEntityByFilters');
     // noinspection AssignmentToFunctionParameterJS
     EntityClass = this.getType(EntityClass);
     let shouldUseTransaction = false;
@@ -2001,9 +2004,13 @@ export default class MongoDbDataStore extends AbstractDataStore {
   async addArrayFieldValuesToEntityById<T extends BackkEntity>(
     fieldName: keyof T & string,
     fieldValuesToAdd: (string | number | boolean)[],
-    EntityClass: { new(): T },
+    EntityClass: { new (): T },
     _id: string,
-    options?: { entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[]; postQueryOperations?: PostQueryOperations; postHook?: PostHook<T> }
+    options?: {
+      entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
+      postQueryOperations?: PostQueryOperations;
+      postHook?: PostHook<T>;
+    }
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'addArrayFieldValuesToEntityById');
     // noinspection AssignmentToFunctionParameterJS
@@ -2037,7 +2044,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
   async doesArrayFieldContainValueInEntityById<T extends BackkEntity>(
     fieldName: keyof T & string,
     fieldValue: string | number | boolean,
-    EntityClass: { new(): T },
+    EntityClass: { new (): T },
     _id: string
   ): PromiseErrorOr<boolean> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'addArrayFieldValuesToEntityById');
@@ -2060,7 +2067,11 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       let filter = { _id: new ObjectId(_id), [fieldName]: fieldValue };
       if (userAccountIdFieldName && userAccountId !== undefined) {
-        filter = { ...filter, [userAccountIdFieldName]: userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId };
+        filter = {
+          ...filter,
+          [userAccountIdFieldName]:
+            userAccountIdFieldName === '_id' ? new ObjectId(userAccountId) : userAccountId,
+        };
       }
 
       return await this.tryExecute(false, async (client) => {
@@ -2071,10 +2082,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
             .findOneAndUpdate({ _id: new ObjectId(_id) }, { $set: { _backkLock: new ObjectId() } });
         }
 
-        const cursor = client
-          .db(this.getDbName())
-          .collection(getTableName(EntityClass.name))
-          .find(filter);
+        const cursor = client.db(this.getDbName()).collection(getTableName(EntityClass.name)).find(filter);
 
         const rows = await cursor.toArray();
 
@@ -2095,9 +2103,13 @@ export default class MongoDbDataStore extends AbstractDataStore {
   async removeArrayFieldValuesFromEntityById<T extends BackkEntity>(
     fieldName: keyof T & string,
     fieldValuesToRemove: (string | number | boolean)[],
-    EntityClass: { new(): T },
+    EntityClass: { new (): T },
     _id: string,
-    options?: { entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[]; postQueryOperations?: PostQueryOperations; postHook?: PostHook<T> }
+    options?: {
+      entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
+      postQueryOperations?: PostQueryOperations;
+      postHook?: PostHook<T>;
+    }
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'addArrayFieldValuesToEntityById');
     // noinspection AssignmentToFunctionParameterJS

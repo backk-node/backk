@@ -1,7 +1,8 @@
+import { readFileSync } from 'fs';
 import mysql, { Pool } from 'mysql2/promise';
-import AbstractSqlDataStore from './AbstractSqlDataStore';
 import throwException from '../utils/exception/throwException';
-import getDbNameFromServiceName from "../utils/getDbNameFromServiceName";
+import getDbNameFromServiceName from '../utils/getDbNameFromServiceName';
+import AbstractSqlDataStore from './AbstractSqlDataStore';
 
 export default class MySqlDataStore extends AbstractSqlDataStore {
   private static readonly MAX_CHAR_TYPE_LENGTH = 16383;
@@ -26,17 +27,24 @@ export default class MySqlDataStore extends AbstractSqlDataStore {
       password: this.password,
       waitForConnections: true,
       connectionLimit: 100,
-      queueLimit: 0
+      queueLimit: 0,
+      ssl: process.env.MYSQL_TLS_CA_FILE_PATH_NAME
+        ? {
+            ca: readFileSync(process.env.MYSQL_TLS_CA_FILE_PATH_NAME, { encoding: 'UTF-8' }),
+            cert: process.env.MYSQL_TLS_CERT_FILE_PATH_NAME
+              ? readFileSync(process.env.MYSQL_TLS_CERT_FILE_PATH_NAME, { encoding: 'UTF-8' })
+              : undefined,
+            key: process.env.MYSQL_TLS_KEY_FILE_PATH_NAME
+              ? readFileSync(process.env.MYSQL_TLS_KEY_FILE_PATH_NAME, { encoding: 'UTF-8' })
+              : undefined,
+          }
+        : undefined,
     });
   }
 
   async isDbReady(): Promise<boolean> {
     try {
-      await this.tryExecuteSqlWithoutCls(
-        `SET GLOBAL SQL_MODE=ANSI_QUOTES`,
-        undefined,
-        false
-      );
+      await this.tryExecuteSqlWithoutCls(`SET GLOBAL SQL_MODE=ANSI_QUOTES`, undefined, false);
       await this.tryExecuteSqlWithoutCls(
         `SELECT * FROM ${this.getSchema().toLowerCase()}.__backk_db_initialization`,
         undefined,
@@ -74,7 +82,7 @@ export default class MySqlDataStore extends AbstractSqlDataStore {
       host: this.host,
       user: this.user,
       password: this.password,
-      database: this.getSchema()
+      database: this.getSchema(),
     });
   }
 

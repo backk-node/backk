@@ -1,8 +1,9 @@
-import AbstractSqlDataStore from './AbstractSqlDataStore';
+import { readFileSync } from 'fs';
 import { Pool, types } from 'pg';
 import { pg } from 'yesql';
 import throwException from '../utils/exception/throwException';
 import getDbNameFromServiceName from '../utils/getDbNameFromServiceName';
+import AbstractSqlDataStore from './AbstractSqlDataStore';
 
 export default class PostgreSqlDataStore extends AbstractSqlDataStore {
   private readonly pool: Pool;
@@ -27,7 +28,18 @@ export default class PostgreSqlDataStore extends AbstractSqlDataStore {
       port: parseInt(
         process.env.POSTGRESQL_PORT || throwException('POSTGRESQL_PORT environment variable must be defined'),
         10
-      )
+      ),
+      ssl: process.env.POSTGRES_TLS_CA_FILE_PATH_NAME
+        ? {
+            ca: readFileSync(process.env.POSTGRES_TLS_CA_FILE_PATH_NAME, { encoding: 'UTF-8' }),
+            cert: process.env.POSTGRES_TLS_CERT_FILE_PATH_NAME
+              ? readFileSync(process.env.POSTGRES_TLS_CERT_FILE_PATH_NAME, { encoding: 'UTF-8' })
+              : undefined,
+            key: process.env.POSTGRES_TLS_KEY_FILE_PATH_NAME
+              ? readFileSync(process.env.POSTGRES_TLS_KEY_FILE_PATH_NAME, { encoding: 'UTF-8' })
+              : undefined,
+          }
+        : undefined,
     });
   }
 

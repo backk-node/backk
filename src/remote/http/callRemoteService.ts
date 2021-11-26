@@ -22,7 +22,7 @@ export interface HttpRequestOptions {
     ca?: string | Buffer | Array<string | Buffer>;
     cert?: string | Buffer | Array<string | Buffer>;
     key?: string | Buffer | Array<Buffer | KeyObject>;
-  }
+  };
 }
 
 // noinspection FunctionTooLongJS
@@ -34,7 +34,7 @@ export default async function callRemoteService(
   options?: HttpRequestOptions
 ): PromiseErrorOr<object | null> {
   const server = `${microserviceName}.${microserviceNamespace}.svc.cluster.local`;
-  const scheme = options?.httpVersion === 2 ? 'http2' : 'http';
+  const scheme = options?.tls ? 'https' : options?.httpVersion === 2 ? 'http2' : 'http';
   const remoteServiceFunctionUrl = `${scheme}://${server}/${serviceFunctionName}`;
   const clsNamespace = getNamespace('serviceFunctionExecution');
   clsNamespace?.set('remoteServiceCallCount', clsNamespace?.get('remoteServiceCallCount') + 1);

@@ -9,16 +9,20 @@ function removeObjectReadDeniedProperties(result: any, EntityClass: Function, Ty
   Object.entries(entityMetadata).forEach(([fieldName, fieldTypeName]: [any, any]) => {
     const { baseTypeName, isArrayType } = getTypeInfoForTypeName(fieldTypeName);
 
-    if (isPropertyReadDenied(EntityClass, fieldName) && result[fieldName]) {
-      result[fieldName] = undefined;
-    }
+    if (result[fieldName]) {
 
-    if (isArrayType && isEntityTypeName(baseTypeName)) {
-      result[fieldName].forEach((subResult: any) =>
-        removeObjectReadDeniedProperties(subResult, (Types as any)[baseTypeName], Types)
-      );
-    } else if (isEntityTypeName(baseTypeName)) {
-      removeObjectReadDeniedProperties(result[fieldName], (Types as any)[baseTypeName], Types);
+      if (isPropertyReadDenied(EntityClass, fieldName)) {
+        result[fieldName] = undefined; // NOSONAR
+        return;
+      }
+
+      if (isArrayType && isEntityTypeName(baseTypeName)) {
+        result[fieldName].forEach((subResult: any) =>
+          removeObjectReadDeniedProperties(subResult, (Types as any)[baseTypeName], Types)
+        );
+      } else if (isEntityTypeName(baseTypeName)) {
+        removeObjectReadDeniedProperties(result[fieldName], (Types as any)[baseTypeName], Types);
+      }
     }
   });
 }

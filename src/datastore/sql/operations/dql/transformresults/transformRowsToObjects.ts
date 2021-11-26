@@ -19,6 +19,7 @@ function getMappedRows(
   resultMaps: any[],
   EntityClass: new () => any,
   dataStore: DataStore,
+  isInternalCall: boolean,
   startIndex?: number,
   endIndex?: number
 ) {
@@ -38,7 +39,9 @@ function getMappedRows(
 
   decryptEntities(mappedRows, EntityClass, Types);
   removeSingleSubEntitiesWithNullProperties(mappedRows);
-  removeReadDeniedProperties(mappedRows, EntityClass, Types);
+  if (!isInternalCall) {
+    removeReadDeniedProperties(mappedRows, EntityClass, Types);
+  }
   return mappedRows;
 }
 
@@ -68,6 +71,7 @@ export default function transformRowsToObjects<T>(
               resultMaps,
               EntityClass,
               dataStore,
+              isInternalCall,
               index * ROW_PROCESSING_BATCH_SIZE,
               (index + 1) * ROW_PROCESSING_BATCH_SIZE
             )
@@ -75,7 +79,7 @@ export default function transformRowsToObjects<T>(
         });
       });
   } else {
-    mappedRows = getMappedRows(rows, resultMaps, EntityClass, dataStore);
+    mappedRows = getMappedRows(rows, resultMaps, EntityClass, dataStore, isInternalCall);
   }
 
   if (!paginations) {

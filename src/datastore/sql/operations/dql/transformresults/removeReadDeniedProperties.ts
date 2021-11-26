@@ -10,9 +10,8 @@ function removeObjectReadDeniedProperties(result: any, EntityClass: Function, Ty
     const { baseTypeName, isArrayType } = getTypeInfoForTypeName(fieldTypeName);
 
     if (result[fieldName]) {
-
       if (isPropertyReadDenied(EntityClass, fieldName)) {
-        result[fieldName] = undefined; // NOSONAR
+        delete result[fieldName];
         return;
       }
 

@@ -1,7 +1,7 @@
 import { Base64 } from 'js-base64';
 import { verify } from 'jsonwebtoken';
 import _ from 'lodash';
-import { fetch } from 'fetch-h2';
+import { context, fetch } from "fetch-h2";
 import log, { Severity } from '../observability/logging/log';
 import throwException from '../utils/exception/throwException';
 import AuthorizationService from './AuthorizationService';
@@ -97,7 +97,19 @@ export default class JwtAuthorizationServiceImpl extends AuthorizationService {
   }
 
   private async tryGetPublicKey(): Promise<string> {
-    const response = await fetch(this.authServerPublicKeyUrl);
+    let fetchOrContextFetch = fetch;
+    if (process.env.AUTH_SERVER_TLS_CA_FILE_PATH_NAME) {
+      const fetchContext = context({
+        session: {
+          ca: process.env.AUTH_SERVER_TLS_CA_FILE_PATH_NAME,
+          cert: process.env.AUTH_SERVER_TLS_CERT_FILE_PATH_NAME,
+          key: process.env.AUTH_SERVER_TLS_KEY_FILE_PATH_NAME,
+        },
+      });
+      fetchOrContextFetch = fetchContext.fetch;
+    }
+
+    const response = await fetchOrContextFetch(this.authServerPublicKeyUrl);
     const responseBodyObject = await response.json();
     return _.get(responseBodyObject, this.publicKeyPath);
   }

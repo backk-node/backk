@@ -95,7 +95,6 @@
     "@types/mongodb": "3.6.12",
     "@types/mustache": "4.1.2",
     "@types/node": "13.13.48",
-    "@types/node-fetch": "2.5.12",
     "@types/pg": "7.14.11",
     "@types/rimraf": "^3.0.2",
     "@types/xmldom": "0.1.30",

@@ -9,6 +9,7 @@ import convertTinyIntegersToBooleans from './convertTinyIntegersToBooleans';
 import { DataStore } from '../../../../DataStore';
 import { Values } from "../../../../../constants/constants";
 import EntityCountRequest from "../../../../../types/EntityCountRequest";
+import removeReadDeniedProperties from "./removeReadDeniedProperties";
 
 const parsedRowProcessingBatchSize = parseInt(process.env.ROW_PROCESSING_BATCH_SIZE ?? '500', 10);
 const ROW_PROCESSING_BATCH_SIZE = isNaN(parsedRowProcessingBatchSize) ? Values._500 : parsedRowProcessingBatchSize;
@@ -37,6 +38,7 @@ function getMappedRows(
 
   decryptEntities(mappedRows, EntityClass, Types);
   removeSingleSubEntitiesWithNullProperties(mappedRows);
+  removeReadDeniedProperties(mappedRows, EntityClass, Types);
   return mappedRows;
 }
 

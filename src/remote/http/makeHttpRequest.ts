@@ -1,12 +1,12 @@
-import { HttpRequestOptions } from "./callRemoteService";
-import fetch from "node-fetch";
-import { HttpStatusCodes } from "../../constants/constants";
-import log, { Severity } from "../../observability/logging/log";
-import defaultServiceMetrics from "../../observability/metrics/defaultServiceMetrics";
-import { backkErrorSymbol } from "../../types/BackkError";
-import createBackkErrorFromError from "../../errors/createBackkErrorFromError";
-import { getNamespace } from "cls-hooked";
-import { PromiseErrorOr } from "../../types/PromiseErrorOr";
+import { getNamespace } from 'cls-hooked';
+import { context, fetch } from 'fetch-h2';
+import { HttpStatusCodes } from '../../constants/constants';
+import createBackkErrorFromError from '../../errors/createBackkErrorFromError';
+import log, { Severity } from '../../observability/logging/log';
+import defaultServiceMetrics from '../../observability/metrics/defaultServiceMetrics';
+import { backkErrorSymbol } from '../../types/BackkError';
+import { PromiseErrorOr } from '../../types/PromiseErrorOr';
+import { HttpRequestOptions } from './callRemoteService';
 
 export default async function makeHttpRequest(
   requestUrl: string,
@@ -17,17 +17,29 @@ export default async function makeHttpRequest(
   clsNamespace?.set('remoteServiceCallCount', clsNamespace?.get('remoteServiceCallCount') + 1);
   const authHeader = getNamespace('serviceFunctionExecution')?.get('authHeader');
 
+  let fetchOrContextFetch = fetch;
+  if (options?.tls) {
+    const fetchContext = context({
+      session: {
+        ca: options.tls.ca,
+        cert: options.tls.cert,
+        key: options.tls.key,
+      },
+    });
+    fetchOrContextFetch = fetchContext.fetch;
+  }
+
   try {
-    const response = await fetch(requestUrl, {
-      method: options?.httpMethod?.toLowerCase() ?? 'get',
+    const response = await fetchOrContextFetch(requestUrl, {
+      method: (options?.httpMethod?.toUpperCase() as any) ?? 'GET',
       body: requestBodyObject ? JSON.stringify(requestBodyObject) : undefined,
       headers: {
         ...(requestBodyObject ? { 'Content-Type': 'application/json' } : {}),
-        Authorization: authHeader
-      }
+        Authorization: authHeader,
+      },
     });
 
-    const responseBody: any = response.size > 0 ? await response.json() : undefined;
+    const responseBody: any = await response.json();
 
     if (response.status >= HttpStatusCodes.ERRORS_START) {
       const message = responseBody.message ?? JSON.stringify(responseBody);
@@ -38,7 +50,7 @@ export default async function makeHttpRequest(
         log(Severity.ERROR, message, stackTrace, {
           errorCode,
           statusCode: response.status,
-          requestUrl
+          requestUrl,
         });
 
         defaultServiceMetrics.incrementSyncRemoteServiceHttp5xxErrorResponseCounter(requestUrl);
@@ -46,7 +58,7 @@ export default async function makeHttpRequest(
         log(Severity.DEBUG, message, stackTrace, {
           errorCode,
           statusCode: response.status,
-          requestUrl
+          requestUrl,
         });
 
         if (response.status === HttpStatusCodes.FORBIDDEN) {
@@ -61,15 +73,15 @@ export default async function makeHttpRequest(
           message,
           stackTrace,
           [backkErrorSymbol]: true,
-          statusCode: response.status
-        }
+          statusCode: response.status,
+        },
       ];
     }
 
     return [responseBody, null];
   } catch (error) {
     log(Severity.ERROR, error.message, error.stack, {
-      requestUrl
+      requestUrl,
     });
 
     defaultServiceMetrics.incrementRemoteServiceCallErrorCountByOne(requestUrl);

@@ -1,21 +1,28 @@
-import fetch from "node-fetch";
-import log, { Severity } from "../../observability/logging/log";
-import createBackkErrorFromError from "../../errors/createBackkErrorFromError";
-import getRemoteResponseTestValue from "./getRemoteResponseTestValue";
-import { getNamespace } from "cls-hooked";
-import defaultServiceMetrics from "../../observability/metrics/defaultServiceMetrics";
-import { HttpStatusCodes } from "../../constants/constants";
+import { getNamespace } from 'cls-hooked';
+import { context, fetch } from 'fetch-h2';
+import fs from 'fs';
+import { KeyObject } from 'tls';
+import { HttpStatusCodes } from '../../constants/constants';
+import createBackkErrorFromError from '../../errors/createBackkErrorFromError';
+import log, { Severity } from '../../observability/logging/log';
+import defaultServiceMetrics from '../../observability/metrics/defaultServiceMetrics';
+import { backkErrorSymbol } from '../../types/BackkError';
+import { PromiseErrorOr } from '../../types/PromiseErrorOr';
+import parseRemoteServiceFunctionCallUrlParts from '../utils/parseRemoteServiceFunctionCallUrlParts';
 import {
   remoteMicroserviceNameToControllerMap,
-  validateServiceFunctionArguments
-} from "../utils/validateServiceFunctionArguments";
-import parseRemoteServiceFunctionCallUrlParts from "../utils/parseRemoteServiceFunctionCallUrlParts";
-import fs from "fs";
-import { PromiseErrorOr } from "../../types/PromiseErrorOr";
-import { backkErrorSymbol } from "../../types/BackkError";
+  validateServiceFunctionArguments,
+} from '../utils/validateServiceFunctionArguments';
+import getRemoteResponseTestValue from './getRemoteResponseTestValue';
 
 export interface HttpRequestOptions {
   httpMethod?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  httpVersion?: 1 | 2;
+  tls?: {
+    ca?: string | Buffer | Array<string | Buffer>;
+    cert?: string | Buffer | Array<string | Buffer>;
+    key?: string | Buffer | Array<Buffer | KeyObject>;
+  }
 }
 
 // noinspection FunctionTooLongJS
@@ -26,8 +33,9 @@ export default async function callRemoteService(
   microserviceNamespace = process.env.MICROSERVICE_NAMESPACE,
   options?: HttpRequestOptions
 ): PromiseErrorOr<object | null> {
-  const server = `${microserviceName}.${microserviceNamespace}.svc.cluster.local`
-  const remoteServiceFunctionUrl = `http://${server}/${serviceFunctionName}`;
+  const server = `${microserviceName}.${microserviceNamespace}.svc.cluster.local`;
+  const scheme = options?.httpVersion === 2 ? 'http2' : 'http';
+  const remoteServiceFunctionUrl = `${scheme}://${server}/${serviceFunctionName}`;
   const clsNamespace = getNamespace('serviceFunctionExecution');
   clsNamespace?.set('remoteServiceCallCount', clsNamespace?.get('remoteServiceCallCount') + 1);
 
@@ -39,7 +47,7 @@ export default async function callRemoteService(
       {
         serviceFunctionUrl: remoteServiceFunctionUrl,
         serviceFunctionArgument: serviceFunctionArgument,
-      }
+      },
     ]);
     const { topic, serviceFunctionName } = parseRemoteServiceFunctionCallUrlParts(remoteServiceFunctionUrl);
 
@@ -55,17 +63,29 @@ export default async function callRemoteService(
 
   const authHeader = getNamespace('serviceFunctionExecution')?.get('authHeader');
 
+  let fetchOrContextFetch = fetch;
+  if (options?.tls) {
+    const fetchContext = context({
+      session: {
+        ca: options.tls.ca,
+        cert: options.tls.cert,
+        key: options.tls.key,
+      },
+    });
+    fetchOrContextFetch = fetchContext.fetch;
+  }
+
   try {
-    const response = await fetch(remoteServiceFunctionUrl, {
-      method: options?.httpMethod?.toLowerCase() ?? 'post',
+    const response = await fetchOrContextFetch(remoteServiceFunctionUrl, {
+      method: (options?.httpMethod?.toUpperCase() as any) ?? 'POST',
       body: serviceFunctionArgument ? JSON.stringify(serviceFunctionArgument) : undefined,
       headers: {
         ...(serviceFunctionArgument ? { 'Content-Type': 'application/json' } : {}),
-        Authorization: authHeader
-      }
+        Authorization: authHeader,
+      },
     });
 
-    const responseBody: any = response.size > 0 ? await response.json() : undefined;
+    const responseBody: any = await response.json();
 
     if (response.status >= HttpStatusCodes.ERRORS_START) {
       const message = responseBody.message ?? JSON.stringify(responseBody);
@@ -76,7 +96,7 @@ export default async function callRemoteService(
         log(Severity.ERROR, message, stackTrace, {
           errorCode,
           statusCode: response.status,
-          remoteServiceFunctionCallUrl: remoteServiceFunctionUrl
+          remoteServiceFunctionCallUrl: remoteServiceFunctionUrl,
         });
 
         defaultServiceMetrics.incrementSyncRemoteServiceHttp5xxErrorResponseCounter(remoteServiceFunctionUrl);
@@ -84,7 +104,7 @@ export default async function callRemoteService(
         log(Severity.DEBUG, message, stackTrace, {
           errorCode,
           statusCode: response.status,
-          remoteServiceFunctionCallUrl: remoteServiceFunctionUrl
+          remoteServiceFunctionCallUrl: remoteServiceFunctionUrl,
         });
 
         if (response.status === HttpStatusCodes.FORBIDDEN) {
@@ -99,15 +119,15 @@ export default async function callRemoteService(
           message,
           stackTrace,
           [backkErrorSymbol]: true,
-          statusCode: response.status
-        }
+          statusCode: response.status,
+        },
       ];
     }
 
     return [responseBody, null];
   } catch (error) {
     log(Severity.ERROR, error.message, error.stack, {
-      remoteServiceFunctionCallUrl: remoteServiceFunctionUrl
+      remoteServiceFunctionCallUrl: remoteServiceFunctionUrl,
     });
 
     defaultServiceMetrics.incrementRemoteServiceCallErrorCountByOne(remoteServiceFunctionUrl);

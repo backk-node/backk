@@ -1,7 +1,7 @@
 import { Base64 } from 'js-base64';
 import { verify } from 'jsonwebtoken';
 import _ from 'lodash';
-import fetch from 'node-fetch';
+import { fetch } from 'fetch-h2';
 import log, { Severity } from '../observability/logging/log';
 import throwException from '../utils/exception/throwException';
 import AuthorizationService from './AuthorizationService';

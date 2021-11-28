@@ -101,8 +101,12 @@ export default class MySqlDataStore extends AbstractSqlDataStore {
   getVarCharType(maxLength: number): string {
     if (maxLength < MySqlDataStore.MAX_CHAR_TYPE_LENGTH) {
       return `VARCHAR(${maxLength})`;
+    } else if (maxLength < 65535) {
+      return 'TEXT'
+    } else if (maxLength < 16777215) {
+      return 'MEDIUMTEXT'
     }
-    return 'TEXT';
+    return 'LONGTEXT';
   }
 
   getResultRows(result: any): any[] {

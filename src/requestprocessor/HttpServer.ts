@@ -1,10 +1,11 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import yj from 'yieldable-json';
-import { createServer } from 'http';
+import { createServer, ServerResponse } from 'http';
 import http2 from 'http2';
 import { promisify } from 'util';
 import { HttpStatusCodes, MAX_INT_VALUE } from '../constants/constants';
+import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
 import { backkErrors } from '../errors/backkErrors';
 import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
 import tryExecuteServiceMethod, {
@@ -15,8 +16,9 @@ import log, { Severity } from '../observability/logging/log';
 import { CommunicationMethod } from '../remote/messagequeue/sendToRemoteService';
 import throwException from '../utils/exception/throwException';
 import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
+import Http2Response from './Http2Response';
 import { RequestProcessor } from './RequestProcessor';
-import Http2Response from "./Http2Response";
+import subscriptionManager from 'src/subscription/subscriptionManager';
 
 const parseJsonAsync = promisify(yj.parseAsync);
 
@@ -107,9 +109,21 @@ export default class HttpServer implements RequestProcessor {
         return;
       }
 
+      const serviceFunctionName = request.url?.split('/').pop() ?? '';
+      const [serviceName, functionName] = serviceFunctionName.split('.');
+      const ServiceClass = (microservice as any)[serviceName]?.constructor;
+
+      if (serviceFunctionAnnotationContainer.isSubscription(ServiceClass, functionName)) {
+        request.on('close', () => {
+          subscriptionManager.removeSubscription(serviceFunctionName, response);
+        });
+
+        subscriptionManager.addSubscription(serviceFunctionName, response)
+      }
+
       tryExecuteServiceMethod(
         microservice,
-        request.url?.split('/').pop() ?? '',
+        serviceFunctionName,
         serviceFunctionArgument ?? null,
         request.headers,
         request.method ?? '',
@@ -190,7 +204,7 @@ export default class HttpServer implements RequestProcessor {
 
       try {
         if (headers[':method'] === 'OPTIONS') {
-          stream.respond({ ':status': HttpStatusCodes.SUCCESS, ...responseHeaders});
+          stream.respond({ ':status': HttpStatusCodes.SUCCESS, ...responseHeaders });
           stream.end();
           return;
         }

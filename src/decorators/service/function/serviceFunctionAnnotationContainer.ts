@@ -42,6 +42,7 @@ class ServiceFunctionAnnotationContainer {
   private readonly serviceFunctionNameToIsDeleteFunctionMap: { [key: string]: boolean } = {};
   private readonly serviceFunctionNameToResponseStatusCodeMap: { [key: string]: number } = {};
   private readonly serviceFunctionNameToTestSetupMap: { [key: string]: (string | TestSetupSpec)[] } = {};
+  private readonly serviceFunctionNameToSubscriptionMap: { [key: string]: boolean } = {};
 
   addNoCaptchaAnnotation(serviceClass: Function, functionName: string) {
     this.serviceFunctionNameToHasNoCaptchaAnnotationMap[`${serviceClass.name}${functionName}`] = true;
@@ -171,6 +172,10 @@ class ServiceFunctionAnnotationContainer {
       shouldLog,
       attributesToLog
     };
+  }
+
+  addSubscription(serviceClass: Function, functionName: string) {
+    this.serviceFunctionNameToSubscriptionMap[`${serviceClass.name}${functionName}`] = true;
   }
 
   expectServiceFunctionReturnValueToContainInTests(
@@ -544,6 +549,18 @@ class ServiceFunctionAnnotationContainer {
     }
 
     return undefined;
+  }
+
+  isSubscription(serviceClass: Function, functionName: string) {
+    let proto = Object.getPrototypeOf(new (serviceClass as new () => any)());
+    while (proto !== Object.prototype) {
+      if (this.serviceFunctionNameToSubscriptionMap[`${proto.constructor.name}${functionName}`] !== undefined) {
+        return true;
+      }
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    return false;
   }
 }
 

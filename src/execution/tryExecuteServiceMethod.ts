@@ -82,6 +82,13 @@ export default async function tryExecuteServiceMethod(
   let [serviceName, functionName] = serviceFunctionName.split('.');
   const ServiceClass = microservice[serviceName]?.constructor;
 
+  if (
+    serviceFunctionAnnotationContainer.isSubscription(ServiceClass, functionName) &&
+    typeof resp.setHeader === 'function'
+  ) {
+    resp.setHeader('Connection', 'keep-alive');
+  }
+
   try {
     if (httpMethod !== 'GET' && httpMethod !== 'POST') {
       throw createBackkErrorFromErrorCodeMessageAndStatus(backkErrors.INVALID_HTTP_METHOD);
@@ -744,7 +751,9 @@ export default async function tryExecuteServiceMethod(
     if (ttl) {
       if (typeof resp.setHeader === 'function') {
         resp.setHeader('Cache-Control', 'max-age=' + ttl);
-      } else {
+      }
+    } else {
+      if (typeof resp.setHeader === 'function') {
         resp.setHeader('Cache-Control', 'no-store');
       }
     }
@@ -778,7 +787,11 @@ export default async function tryExecuteServiceMethod(
       responseStatusCode && process.env.NODE_ENV !== 'development'
         ? responseStatusCode
         : HttpStatusCodes.SUCCESS,
-      { 'Content-Type': 'application/json' }
+      {
+        'Content-Type': serviceFunctionAnnotationContainer.isSubscription(ServiceClass, functionName)
+          ? 'text/event-stream'
+          : 'application/json',
+      }
     );
 
     resp.end(JSON.stringify(response));

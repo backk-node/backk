@@ -185,8 +185,6 @@ W
 'docs/api/MICROSERVICE_INITIALIZATION.MD,7/3/731ce54e9b15c990f2d2a4166230eb6b1ee8fa72
 C
 docs/GET_STARTED.MD,c/8/c841c6a68c176a73f38f5dc87c8a0631e97748fb
-d
-4src/postman/writeTestsPostmanCollectionExportFile.ts,8/7/87e4fabf982d3fcb19cf6b5bd33aacaa35eb79bb
 P
  src/utils/getMicroserviceName.ts,8/5/858e4c569eb323ab07d080c32caf8ce0ac4e9a53
 j

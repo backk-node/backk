@@ -141,6 +141,9 @@ export default function writeTestsPostmanCollectionExportFile<T>(
         serviceFunctionAnnotationContainer.hasOnStartUp(
           (controller as any)[serviceMetadata.serviceName].constructor,
           functionMetadata.functionName
+        ) || serviceFunctionAnnotationContainer.isSubscription(
+          (controller as any)[serviceMetadata.serviceName].constructor,
+          functionMetadata.functionName
         )
       ) {
         return;

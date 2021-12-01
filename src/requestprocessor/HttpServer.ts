@@ -234,9 +234,21 @@ export default class HttpServer implements RequestProcessor {
         return;
       }
 
+      const serviceFunctionName = headers[':path']?.split('/').pop() ?? '';
+      const [serviceName, functionName] = serviceFunctionName.split('.');
+      const ServiceClass = (microservice as any)[serviceName]?.constructor;
+
+      if (serviceFunctionAnnotationContainer.isSubscription(ServiceClass, functionName)) {
+        stream.on('close', () => {
+          subscriptionManager.removeSubscription(serviceFunctionName, stream);
+        });
+
+        subscriptionManager.addSubscription(serviceFunctionName, stream)
+      }
+
       tryExecuteServiceMethod(
         microservice,
-        headers[':path']?.split('/').pop() ?? '',
+        serviceFunctionName,
         serviceFunctionArgument ?? null,
         headers,
         headers[':method'] ?? '',

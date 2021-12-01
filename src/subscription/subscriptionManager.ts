@@ -1,5 +1,6 @@
 import { ServerResponse } from 'http';
 import Subscription from './Subscription';
+import { ServerHttp2Stream } from "http2";
 
 class SubscriptionManager {
   private readonly serviceFunctionNameToSubscriptionsMap: { [key: string]: Subscription[] } = {};
@@ -10,7 +11,7 @@ class SubscriptionManager {
     );
   }
 
-  addSubscription(serviceFunctionName: string, response: ServerResponse) {
+  addSubscription(serviceFunctionName: string, response: ServerResponse | ServerHttp2Stream) {
     if (this.serviceFunctionNameToSubscriptionsMap[serviceFunctionName]) {
       this.serviceFunctionNameToSubscriptionsMap[serviceFunctionName].push(new Subscription(response));
     } else {
@@ -18,7 +19,7 @@ class SubscriptionManager {
     }
   }
 
-  removeSubscription(serviceFunctionName: string, response: ServerResponse) {
+  removeSubscription(serviceFunctionName: string, response: ServerResponse | ServerHttp2Stream) {
     if (this.serviceFunctionNameToSubscriptionsMap[serviceFunctionName]) {
       this.serviceFunctionNameToSubscriptionsMap[serviceFunctionName] =
         this.serviceFunctionNameToSubscriptionsMap[serviceFunctionName].filter(

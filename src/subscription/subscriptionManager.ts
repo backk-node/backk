@@ -5,7 +5,7 @@ import { ServerHttp2Stream } from "http2";
 class SubscriptionManager {
   private readonly serviceFunctionNameToSubscriptionsMap: { [key: string]: Subscription[] } = {};
 
-  publishToSubscriptions(serviceFunctionName: string, data: any) {
+  publishToSubscribers(serviceFunctionName: string, data: any) {
     this.serviceFunctionNameToSubscriptionsMap[serviceFunctionName]?.forEach((subscription) =>
       subscription.publish(data)
     );

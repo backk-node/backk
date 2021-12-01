@@ -64,6 +64,7 @@ export {
 export { default as ResponseStatusCode } from './decorators/service/function/ResponseStatusCode';
 export { UpdateType, default as Update } from './decorators/service/function/Update';
 export { default as AllowHttpGetMethod } from './decorators/service/function/AllowHttpGetMethod';
+export { default as Subscription } from './decorators/service/function/Subscription';
 
 // Entity decorators
 export { default as CompositeIndex } from './decorators/entity/CompositeIndex';

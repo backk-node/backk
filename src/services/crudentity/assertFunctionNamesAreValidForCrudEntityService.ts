@@ -15,7 +15,8 @@ export default function assertFunctionNamesAreValidForCrudEntityService(
       !isReadFunction(ServiceClass, functionName) &&
       !isUpdateFunction(ServiceClass, functionName) &&
       !isDeleteFunction(ServiceClass, functionName) &&
-      !serviceFunctionAnnotationContainer.hasOnStartUp(ServiceClass, functionName)
+      !serviceFunctionAnnotationContainer.hasOnStartUp(ServiceClass, functionName) &&
+      !serviceFunctionAnnotationContainer.isSubscription(ServiceClass, functionName)
     ) {
       throw new Error(
         'Invalid function name: ' +

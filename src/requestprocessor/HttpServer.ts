@@ -1,26 +1,24 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
-import yj from "yieldable-json";
-import { createServer } from "http";
-import http2 from "http2";
-import { promisify } from "util";
-import { HttpStatusCodes, MAX_INT_VALUE } from "../constants/constants";
-import serviceFunctionAnnotationContainer
-  from "../decorators/service/function/serviceFunctionAnnotationContainer";
-import { backkErrors } from "../errors/backkErrors";
-import createBackkErrorFromErrorCodeMessageAndStatus
-  from "../errors/createBackkErrorFromErrorCodeMessageAndStatus";
+import { createServer } from 'http';
+import http2 from 'http2';
+import { promisify } from 'util';
+import yj from 'yieldable-json';
+import { HttpStatusCodes, MAX_INT_VALUE } from '../constants/constants';
+import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
+import { backkErrors } from '../errors/backkErrors';
+import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
 import tryExecuteServiceMethod, {
-  ServiceFunctionExecutionOptions
-} from "../execution/tryExecuteServiceMethod";
-import Microservice, { HttpVersion } from "../microservice/Microservice";
-import log, { Severity } from "../observability/logging/log";
-import { CommunicationMethod } from "../remote/messagequeue/sendToRemoteService";
-import throwException from "../utils/exception/throwException";
-import getNamespacedMicroserviceName from "../utils/getNamespacedMicroserviceName";
-import Http2Response from "./Http2Response";
-import { RequestProcessor } from "./RequestProcessor";
-import subscriptionManager from "../subscription/subscriptionManager";
+  ServiceFunctionExecutionOptions,
+} from '../execution/tryExecuteServiceMethod';
+import Microservice, { HttpVersion } from '../microservice/Microservice';
+import log, { Severity } from '../observability/logging/log';
+import { CommunicationMethod } from '../remote/messagequeue/sendToRemoteService';
+import subscriptionManager from '../subscription/subscriptionManager';
+import throwException from '../utils/exception/throwException';
+import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
+import Http2Response from './Http2Response';
+import { RequestProcessor } from './RequestProcessor';
 
 const parseJsonAsync = promisify(yj.parseAsync);
 
@@ -115,12 +113,15 @@ export default class HttpServer implements RequestProcessor {
       const [serviceName, functionName] = serviceFunctionName.split('.');
       const ServiceClass = (microservice as any)[serviceName]?.constructor;
 
-      if (typeof ServiceClass === 'function' && serviceFunctionAnnotationContainer.isSubscription(ServiceClass, functionName)) {
+      if (
+        typeof ServiceClass === 'function' &&
+        serviceFunctionAnnotationContainer.isSubscription(ServiceClass, functionName)
+      ) {
         request.on('close', () => {
           subscriptionManager.removeSubscription(serviceFunctionName, response);
         });
 
-        subscriptionManager.addSubscription(serviceFunctionName, response)
+        subscriptionManager.addSubscription(serviceFunctionName, response);
       }
 
       tryExecuteServiceMethod(
@@ -240,12 +241,15 @@ export default class HttpServer implements RequestProcessor {
       const [serviceName, functionName] = serviceFunctionName.split('.');
       const ServiceClass = (microservice as any)[serviceName]?.constructor;
 
-      if (typeof ServiceClass === 'function' && serviceFunctionAnnotationContainer.isSubscription(ServiceClass, functionName)) {
+      if (
+        typeof ServiceClass === 'function' &&
+        serviceFunctionAnnotationContainer.isSubscription(ServiceClass, functionName)
+      ) {
         stream.on('close', () => {
           subscriptionManager.removeSubscription(serviceFunctionName, stream);
         });
 
-        subscriptionManager.addSubscription(serviceFunctionName, stream)
+        subscriptionManager.addSubscription(serviceFunctionName, stream);
       }
 
       tryExecuteServiceMethod(

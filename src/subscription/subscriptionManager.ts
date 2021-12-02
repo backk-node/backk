@@ -1,6 +1,6 @@
 import { ServerResponse } from 'http';
-import Subscription from './Subscription';
 import { ServerHttp2Stream } from "http2";
+import Subscription from './Subscription';
 
 class SubscriptionManager {
   private readonly serviceFunctionNameToSubscriptionsMap: { [key: string]: Subscription[] } = {};
@@ -29,4 +29,5 @@ class SubscriptionManager {
   }
 }
 
-export default new SubscriptionManager();
+const subscriptionManager = new SubscriptionManager();
+export default subscriptionManager;

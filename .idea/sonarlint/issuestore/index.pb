@@ -211,8 +211,6 @@ K
 docs/api/DELETE_ENTITIES.MD,b/c/bcf9f4e7dbdebd2c36adc04dd6ca37027cbcefcc
 N
 docs/api/REMOVE_SUBENTITIES.MD,a/9/a97e8bd46ede34b7aef2159f348dab0f9798cfa7
-K
-docs/api/ADD_SUBENTITIES.MD,3/c/3cbfee68d6c74570915a3137e96692deaf9da3c8
 I
 docs/api/ENTITY_ARRAYS.MD,2/8/28abfc2838503496d05d28a32e8b4d5e10f4f398
 Z
@@ -283,8 +281,6 @@ c
 3src/observability/metrics/defaultPrometheusMeter.ts,f/4/f48cea031a89acea4159adb25350f76868696671
 K
 docs/usage/OBSERVABILITY.MD,4/d/4d9b1b6d3f0a0e8206402fca26b682aefa7844e6
-Q
-!docs/usage/INTEGRATION_TESTING.MD,2/7/27bbf692ce0e66e11df118e86dc8d7a8238529bd
 S
 #docs/usage/KUBERNETES_DEPLOYMENT.MD,f/5/f541f7ef81691bf26b9b26ed336d831a49be62a5
 D

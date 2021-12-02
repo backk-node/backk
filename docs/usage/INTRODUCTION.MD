@@ -9,12 +9,13 @@ Backk microservice consist of one or more services. You should place your servic
 It is recommended to have a dedicated directory for each service. If multiple services share common code, it
 should be placed in a separate shared directory, for example `src/services/common` or `src/services/shared`.
 
-Let's create a `SalesItemService` service class for handling sales items. The service class file should be placed in
-`src/services/salesitem` directory in Backk microservice project. You extend your service class from [BaseService](../api/BASE_SERVICES.MD#baseservice)
+Let's create a `SalesItemService` service for handling sales items. The service files should be placed in
+`src/services/salesitem` directory in Backk microservice project. First, you create a service inteface extending `Service` interface.
+Second, you create a class to implement the interface. Your class should extend from [BaseService](../api/BASE_SERVICES.MD#baseservice)
 or [CrudEntityService](../api/BASE_SERVICES.MD#crudentityservice). In this case, when we are performing CRUD operations on a resource (or entity) it is natural
-to use `CrudEntityService` as base service. 
+to use `CrudEntityService` as base service implementation. 
 
-In the `SalesItemService` class, we write the service functions that we want to implement.
+In the `SalesItemService` interface, we write the service functions that we want to later implement.
 Each service function can have either zero or exactly one argument, and the argument must be a JavaScript object.
 
 Each service function should return a value of type `PromiseErrorOr<T>`. If your service function does not return a value,
@@ -45,30 +46,35 @@ type One<T> = {
 Backk generates automatically integration tests for your service. If you want to benefit from them, it is important in which order, you
 define the service functions. They should be defined in order in which they should be tested. 
 
+In `src/services/salesitem` directory,
+create an `SalesItemService` interface for your service by extending the `Service` interface:
+
 SalesItemService.ts
 ```ts
-import { _Id, CrudEntityService, Many, One, PromiseErrorOr } from 'backk';
+import { _Id, Many, One, PromiseErrorOr, Service } from 'backk';
 import GetSalesItemsArg from './types/args/GetSalesItemsArg';
 import SalesItem from './types/entities/SalesItem';
 
-export default abstract class SalesItemService extends CrudEntityService {
-  abstract deleteAllSalesItems(): PromiseErrorOr<null>;
-  abstract createSalesItem(arg: SalesItem): PromiseErrorOr<One<SalesItem>>;
-  abstract getSalesItems(arg: GetSalesItemsArg): PromiseErrorOr<Many<SalesItem>>;
-  abstract getSalesItem(arg: _Id): PromiseErrorOr<One<SalesItem>>;
-  abstract updateSalesItem(arg: SalesItem): PromiseErrorOr<null>;
-  abstract deleteSalesItem(arg: _Id): PromiseErrorOr<null>;
+export interface SalesItemService extends Service {
+  deleteAllSalesItems(): PromiseErrorOr<null>;
+  createSalesItem(arg: SalesItem): PromiseErrorOr<One<SalesItem>>;
+  getSalesItems(arg: GetSalesItemsArg): PromiseErrorOr<Many<SalesItem>>;
+  getSalesItem(arg: _Id): PromiseErrorOr<One<SalesItem>>;
+  updateSalesItem(arg: SalesItem): PromiseErrorOr<null>;
+  deleteSalesItem(arg: _Id): PromiseErrorOr<null>;
 }
 ```
 
-Next you should provide implementation of you service in a separate class. Let's create a `SalesItemServiceImpl`
-class in `src/services/salesitem` directory
+Next you should provide implementation of you service in a class. Let's create a `SalesItemServiceImpl`
+class in `src/services/salesitem` directory. Our implementation class should extend from `CrudResourceService`and
+it should also implement the interface you just created.
 
 SalesItemServiceImpl.ts
 ```ts
+import { CrudEntityService } from 'backk';
 import SalesItemService from './SalesItemService';
 
-export default class SalesItemServiceImpl extends SalesItemService {
+export default class SalesItemServiceImpl extends CrudEntityService implements SalesItemService {
 }
 ```
 
@@ -85,11 +91,11 @@ class MicroserviceImpl extends Microservice {
 ### Create service constructor
 SalesItemServiceImpl.ts
 ```ts
-import { AbstractDataStore } from 'backk';
+import { CrudEntityService, DataStore } from 'backk';
 import SalesItemService from './SalesItemService';
 
-export default class SalesItemServiceImpl extends SalesItemService {
-  constructor(dataStore: AbstractDataStore) {
+export default class SalesItemServiceImpl extends CrudEntityService implements SalesItemService {
+  constructor(dataStore: DataStore) {
     super({}, dataStore);
   }
 }
@@ -198,11 +204,11 @@ Let´s implement the function:
 
 SalesItemServiceImpl.ts
 ```ts
-import { AllowForTests, PromiseErrorOr } from 'backk';
+import { AllowForTests, CrudEntityService, PromiseErrorOr } from 'backk';
 import SalesItemService from './SalesItemService';
 import SalesItem from './types/entities/SalesItem';
 
-export default class SalesItemServiceImpl extends SalesItemService {
+export default class SalesItemServiceImpl extends CrudEntityService implements SalesItemService {
   @AllowForTests()
   deleteAllSalesItems(): PromiseErrorOr<null> {
     return this.dataStore.deleteAllEntities(SalesItem);
@@ -254,11 +260,11 @@ describe('SalesItemService', () => {
 
 SalesItemServiceImpl.ts
 ```ts
-import {  AllowForUserRoles, PromiseErrorOr } from 'backk';
+import { AllowForUserRoles, CrudEntityService, PromiseErrorOr } from 'backk';
 import SalesItemService from './SalesItemService';
 import SalesItem from './types/entities/SalesItem';
 
-export default class SalesItemServiceImpl extends SalesItemService {
+export default class SalesItemServiceImpl extends CrudEntityService implements SalesItemService {
   @AllowForUserRoles(['admin', 'salesAdmin'])
   createSalesItem(salesItem: SalesItem): PromiseErrorOr<null> {
     return this.dataStore.createEntity(SalesItem, salesItem);
@@ -273,19 +279,17 @@ Creating a new sales item is only allowed for logged-in users with either `admin
 We skip the unit test writing for the rest of the SalesItemService implementation.
 
 ```ts
-import { AllowForEveryUser, PromiseErrorOr, SqlExpression } from 'backk';
+import { AllowForEveryUser, CrudEntityService, PromiseErrorOr, SqlExpression } from 'backk';
 import SalesItemService from './SalesItemService';
 import SalesItem from './types/entities/SalesItem';
 
-export default class SalesItemServiceImpl extends SalesItemService {
+export default class SalesItemServiceImpl  extends CrudEntityService implements SalesItemService {
   @AllowForEveryUser()
   getSalesItems({ nameSubString }: GetSalesItemsArg): PromiseErrorOr<Many<SalesItem>> {
     const filter = new SqlExpression('name LIKE :nameSubString', {
       nameSubString: nameSubString ? `%${nameSubString}%` : undefined
     });
-    
     const postQueryOperations = new DefaultPostQueryOperations();
-
     return this.dataStore.getEntitiesByFilters(SalesItem, [filter], postQueryOperations, false);
   }
 }
@@ -336,11 +340,11 @@ The response will contain the `pageNumber` page of results with page size `pageS
 ### Implement rest of the SalesItemService
 
 ```ts
-import { AllowForEveryUser, PromiseErrorOr } from 'backk';
+import { AllowForEveryUser, CrudEntityService, PromiseErrorOr } from 'backk';
 import SalesItemService from './SalesItemService';
 import SalesItem from './types/entities/SalesItem';
 
-export default class SalesItemServiceImpl extends SalesItemService {
+export default class SalesItemServiceImpl extends CrudEntityService implements SalesItemService {
   getSalesItem({ _id }: _Id): PromiseErrorOr<One<SalesItem>> {
     return this.dataStore.getEntityById(SalesItem, _id);
   }
@@ -365,7 +369,7 @@ npm run start:dev
 Wait your microservice to start. Launch Postman and in Postman import following `generated/integrationtests/integrationTestsPostmanCollection.json`
 file to Postman. Now you can run the tests in the Postman collection in Postman.
 
-You can also run integrations test from command line:
+You can also run integrations test from the command line:
 ```ts
 npm run integrationtest:dev
 ```

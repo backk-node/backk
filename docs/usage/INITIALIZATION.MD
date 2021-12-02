@@ -34,6 +34,7 @@ initializeDefaultJaegerTracing();
 microservice.start(process.argv, [new HttpServer(2), new KafkaConsumer(), new RedisConsumer()]);
 ```
 
+
 #### Environment Variables for Configuring Request Processors
 
 | Environment variable | Description                    | 

@@ -5,8 +5,8 @@
 
 ### <a name="automaticintegrationtests"></a> Automatic Integration Tests
 By default, Backk Microservice will automatically generate integration tests for your `CrudEntityService` based 
-services. The integration tests are generated as Postman collection which you import to Postman application or
-they can be run using `newman`from command line:
+services. The integration tests are generated as a Postman collection, which you import to Postman application or
+run using `newman`. Integration tests can be executed from command line with following command:
 
 ```bash
 npm run integrationtest:dev
@@ -14,7 +14,7 @@ npm run integrationtest:dev
 
 **IMPORTANT**!
 *The automatic integration tests are created for services in the same order as services are declared in the `Microservice`
-class. The automatic integration tests per service are also created in the same order as the service functions are
+implementation class. The automatic integration tests per service are also created in the same order as the service functions are
 declared in the service class. As a good rule of thumb, declare first a `deleteAll<Entities>` operation to clean up the data store.
 Then you should typically declare rest of the service functions in CRUD-order. I.e. first create entity method, then read/get entity/entities methods,
 then update entity method(s) and finally delete method.*
@@ -22,7 +22,7 @@ then update entity method(s) and finally delete method.*
 ### <a name="manualintegrationtests"></a> Manual Integration Tests
 Automatic integration tests are typically not enough. They don't handle special cases or error situations.
 For these, you need to create the integration tests manually. Manual integration tests are created in directory
-`integrationtests`. You should create a sub-directory for each service you have in the Backk microservice.
+`integrationtests`. You should create a subdirectory for each service you have in the Backk microservice.
 Place each service's integration tests to the respective service folder inside `integrationtests` folder.
 Manual integration tests can be written in YAML or JSON.
 

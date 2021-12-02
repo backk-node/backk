@@ -75,6 +75,8 @@ In many cases, you should not directly manipulate entity's sub-entity arrays or 
 - [Add/Check/Remove Entity's Primitive Array Field Values](../api/ENTITY_ARRAYS.MD)
 
 The above methods are performance optimized to add/remove items from arrays without the need to replace the whole array.
+For example, if you have a Shopping Cart service, you can have service functions to add and remove item from a shopping cart,
+and those service function can use Add sub-entities and Remove sub-entities methods of the Data Store interface.
 
 ### <a name="query-filters></a> Query Filters
 When you need to filter the entities queried from the data store, you can use [Query Filters](../api/QUERY_FILTERS.MD).

@@ -1,18 +1,19 @@
-import { DataStore } from '../datastore/DataStore';
-import log, { Severity } from '../observability/logging/log';
-import initializeMicroservice from './initializeMicroservice';
-import changePackageJsonNameProperty from '../utils/changePackageJsonNameProperty';
-import initializeCls from '../continuationlocalstorage/initializeCls';
-import StartupCheckService from '../services/startup/StartupCheckService';
-import logEnvironment from '../observability/logging/logEnvironment';
-import defaultSystemAndNodeJsMetrics from '../observability/metrics/defaultSystemAndNodeJsMetrics';
-import initializeDatabase from '../datastore/sql/operations/ddl/initializeDatabase';
-import scheduleCronJobsForExecution from '../scheduling/scheduleCronJobsForExecution';
-import scheduleJobsForExecution from '../scheduling/scheduleJobsForExecution';
-import reloadLoggingConfigOnChange from '../configuration/reloadLoggingConfigOnChange';
-import { RequestProcessor } from '../requestprocessor/RequestProcessor';
+import { uniqBy } from "lodash";
+import reloadLoggingConfigOnChange from "../configuration/reloadLoggingConfigOnChange";
+import initializeCls from "../continuationlocalstorage/initializeCls";
+import { DataStore } from "../datastore/DataStore";
+import initializeDatabase from "../datastore/sql/operations/ddl/initializeDatabase";
+import log, { Severity } from "../observability/logging/log";
+import logEnvironment from "../observability/logging/logEnvironment";
+import defaultSystemAndNodeJsMetrics from "../observability/metrics/defaultSystemAndNodeJsMetrics";
+import { RequestProcessor } from "../requestprocessor/RequestProcessor";
+import scheduleCronJobsForExecution from "../scheduling/scheduleCronJobsForExecution";
+import scheduleJobsForExecution from "../scheduling/scheduleJobsForExecution";
+import StartupCheckService from "../services/startup/StartupCheckService";
 import areTypeDefinitionsUsedInTypeFilesChanged
   from "../typescript/utils/areTypeDefinitionsUsedInTypeFilesChanged";
+import changePackageJsonNameProperty from "../utils/changePackageJsonNameProperty";
+import initializeMicroservice from "./initializeMicroservice";
 
 export type HttpVersion = 1 | 2;
 
@@ -33,6 +34,15 @@ export default class Microservice {
     ) {
       throw new Error(
         'NODE_ENV environment variable must be defined and have one of following values: development, integration or production'
+      );
+    }
+
+    const uniqueRequestProcessors = uniqBy(requestProcessors, (requestProcessor) =>
+      requestProcessor.getCommunicationMethod()
+    );
+    if (requestProcessors.length > uniqueRequestProcessors.length || requestProcessors.length > 3) {
+      throw new Error(
+        'You can have at maximum one of each request processors: HttpServer, KafkaConsumer and RedisConsumer'
       );
     }
 
@@ -90,6 +100,6 @@ export default class Microservice {
     reloadLoggingConfigOnChange();
     log(Severity.INFO, 'Microservice initialized', '');
 
-    requestProcessors.forEach(requestProcessor => requestProcessor.startProcessingRequests(this));
+    requestProcessors.forEach((requestProcessor) => requestProcessor.startProcessingRequests(this));
   }
 }

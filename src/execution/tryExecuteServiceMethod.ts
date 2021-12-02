@@ -83,6 +83,7 @@ export default async function tryExecuteServiceMethod(
   const ServiceClass = microservice[serviceName]?.constructor;
 
   if (
+    typeof ServiceClass === 'function' &&
     serviceFunctionAnnotationContainer.isSubscription(ServiceClass, functionName) &&
     typeof resp.setHeader === 'function'
   ) {
@@ -788,9 +789,11 @@ export default async function tryExecuteServiceMethod(
         ? responseStatusCode
         : HttpStatusCodes.SUCCESS,
       {
-        'Content-Type': serviceFunctionAnnotationContainer.isSubscription(ServiceClass, functionName)
-          ? 'text/event-stream'
-          : 'application/json',
+        'Content-Type':
+          typeof ServiceClass === 'function' &&
+          serviceFunctionAnnotationContainer.isSubscription(ServiceClass, functionName)
+            ? 'text/event-stream'
+            : 'application/json',
       }
     );
 

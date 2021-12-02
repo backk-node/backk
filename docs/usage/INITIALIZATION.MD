@@ -1,48 +1,40 @@
-## Microservice Initialization
-
-### Initialize Microservice
+## Starting Microservice
 
 In microservice's `main.ts` file, you need to initialize microservice:
 
 ```ts
-import { initialize } from 'backk';
+i// organize-imports-ignore
+import 'reflect-metadata';
+import { HttpServer, initializeDefaultJaegerTracing } from 'backk';
 import microservice from './microservice';
 
-async function startMicroservice() {
-  await initialize(microservice, process.argv);
-}
-
-startMicroservice();
+initializeDefaultJaegerTracing();
+microservice.start(process.argv, [new HttpServer()]);
 ```
 
-The second argument for the `initialize` function is the command line arguments.
-The third argument `shouldGeneratePostmanIntegrationTestsOnRestartInDevEnv` for the `initialize` function is optional and default value is true.
+The first argument of `start` method is the command line arguments.
+The second argument is the list of request processor instances to be started.
+Following request processors classes are available:
+- `HttpServer`
+- `KafkaConsumer`
+- `RedisConsumer`
 
-### Start HTTP Server and/or Kafka/Redis Consumers
+For `HttpServer` constructor you can specify the HTTP version `1` or `2`, where `1` is the defalt.
 
-The last phase of the initialization is to start needed HTTP Server and/or Kafka/Redis consumers in `main.ts`.
-
-The below example will start HTTP server and both Kafka and Redis consumers:
+### Request Processors
+The below example will start HTTP/2 server and both Kafka and Redis consumers:
 
 ```ts
-import { initialize } from 'backk';
+i// organize-imports-ignore
+import 'reflect-metadata';
+import { HttpServer, KafkaConsumer, RedisConsumer, initializeDefaultJaegerTracing } from 'backk';
 import microservice from './microservice';
 
-async function startMicroservice() {
-  await initialize(microservice, process.argv);
-
-  // Remove below a 'startXXX' call when you don't need it
-  await startHttpServerFor(microservice);
-  await startKafkaConsumerFor(microservice);
-  await startRedisConsumerFor(microservice);
-}
-
-startMicroservice();
+initializeDefaultJaegerTracing();
+microservice.start(process.argv, [new HttpServer(2), new KafkaConsumer(), new RedisConsumer()]);
 ```
 
-#### HTTP Server, Kafka and Redis Configuration
-
-Used Http server and Kafka/Redis consumer is configured via environement variables:
+#### Environment Variables for Configuring Request Processors
 
 | Environment variable | Description                    | 
 | -------------------- | ------------------------------ | 

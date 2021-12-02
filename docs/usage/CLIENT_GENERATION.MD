@@ -8,7 +8,10 @@ You can also generate clients using following command:
 npm run generateClientsOnly
 ```
 
-Clients are generated in directory `generated/clients`.
+Clients are generated in directory `generated/clients/frontend` and `generated/clients/internal`.
+
+Internal client is meant to be used inside Kubernetes cluster for other microservices to connect to your microservice.
+Frontend client is meant to be used in apps running in web browser.
 
 There are several ways that you can use the clients:
 - You can reference the directory containing the clients directly from other project if you are using a monorepo

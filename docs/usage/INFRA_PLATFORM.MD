@@ -3,7 +3,7 @@
 - [Kubernetes Cloud Infrastructure Deployment](#iac)
 - [Platform Services](#platformservices)
   - [Ingress Controller and API Gateway (Emissary)](#ingressapigateway)
-  - [Service Mesh (Linkerd or Istio)](#servicemesh)
+  - [Service Mesh (Linkerd)](#servicemesh)
   - [Identity and Access Management and Single Sign On (Keycloak)](#iamsso)
   - [Monitoring and Alerting (Prometheus + Grafana)](#monitoringandalerting)
   - [Tracing (Jaeger)](#tracing)
@@ -24,10 +24,6 @@ Terraform provide tutorials and ready-made code for deploying Kubernetes cluster
 - [Provision an AKS Cluster (Azure)](https://learn.hashicorp.com/tutorials/terraform/aks?in=terraform/kubernetes)
 - [Provision a GKE Cluster (Google Cloud)](https://learn.hashicorp.com/tutorials/terraform/gke?in=terraform/kubernetes)
 - [Deploy Federated Multi-Cloud Kubernetes Clusters](https://learn.hashicorp.com/tutorials/terraform/multicloud-kubernetes?in=terraform/kubernetes)
-
-You may want to expose your Kubernetes cluster to internet. To achieve that, you may need to configure
-additional steps to above solutions in order to enable the internet access, for example, configuration of AWS Internet Gateway
-or Google Cloud NAT.
 
 Another possibility is to use a comprehensive enterprise solution, for example [Rancher](https://rancher.com/), to deploy and manage multiple Kubernetes clusters
 
@@ -50,7 +46,7 @@ is recommended to act as an API Gateway. In addition to routing, Emissary API Ga
 access logging, advanced load balancing, Automatic retries, circuit breakers, canary releases,
 HTTP header manipulation and response Gzip compression.
 
-#### <a name="servicemesh"></a> Service Mesh (Linkerd or Istio)
+#### <a name="servicemesh"></a> Service Mesh (Linkerd)
 
 Service mesh is needed for following functionalities:
 
@@ -61,9 +57,6 @@ Service mesh is needed for following functionalities:
 
 [Linkerd](https://linkerd.io/) is recommended as Service mesh. Linkerd is fast and lightweight,
 and it is [CNCF graduated project](https://landscape.cncf.io/).
-
-Another recommended service mesh is [Istio](https://istio.io/latest/).
-Istio is currently a bit more feature rich, but also more complex to configure and operate.
 
 #### <a name="iamsso"></a> Identity and Access Management and Single Sign On (Keycloak)
 
@@ -100,5 +93,5 @@ Kubernetes cluster can communicate with each other.
 
 ### <a name="platformdeployment"></a> Platform Deployment to Kubernetes Cluster
 
-The above-mentioned platform services can be installed using `backk-platform`(https://github.com/backk-node/backk-platform) as a helm chart template
+The above-mentioned platform services can be installed using [`backk-platform`](https://github.com/backk-node/backk-platform) as a helm chart template
 for your own platform deployment.

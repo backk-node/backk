@@ -223,8 +223,6 @@ Z
 0src/datastore/sql/expressions/SqlInExpression.ts,0/e/0ed136e9c64ee1f0e0c0445be948d2b30bb6130f
 c
 3src/datastore/sql/expressions/SqlNotInExpression.ts,5/c/5cf20beb85813763ad8386c9a326bb9054c97d00
-L
-docs/usage/INITIALIZATION.MD,a/6/a62c3ffd197112147d4150ed91dffaa363ed9b7b
 c
 3src/types/_id/_IdAndCaptchaAndCreatedAtTimestamp.ts,d/e/de76bd9e09bbcc766494d260823b79578b21cbd3
 …
@@ -263,10 +261,6 @@ Q
 !src/scheduling/scheduleCronJob.ts,f/d/fdce8306d871683b9118b4f0c193c5d57578fe6d
 c
 3docs/usage/SCHEDULING_SERVICE_FUNCTION_EXECUTION.MD,a/f/af442472e187623548a4ccd4e6a5973604e6bf60
-J
-docs/usage/INTRODUCTION.MD,2/8/2888e4fef5d7ab7f15923757594f0f1a8ba04a34
-H
-docs/usage/DATA_STORE.MD,e/f/efe328cd8f66b54116f6fee130ddf0cb8169d9c3
 Q
 !docs/api/POST_QUERY_OPERATIONS.MD,0/f/0fbbee26ad9d56244cfc139151b14ef4d8ca012c
 b
@@ -277,8 +271,6 @@ Z
 *src/postman/createPostmanCollectionItem.ts,0/4/04b6ca3341973e79516b19b840e72f5d46010297
 S
 #docs/usage/MICROSERVICE_METADATA.MD,d/8/d871bca4101499475e31f84c6e6f47975caa7357
-V
-&docs/usage/DOCUMENTING_MICROSERVICE.MD,0/c/0cd3f27a354e7b58f9ae4538ce2869f575cb67e4
 I
 docs/api/OBSERVABILITY.MD,d/e/de26c745d47694e67ee89b5bac1664b649d90a96
 `
@@ -295,8 +287,6 @@ Q
 !docs/usage/INTEGRATION_TESTING.MD,2/7/27bbf692ce0e66e11df118e86dc8d7a8238529bd
 S
 #docs/usage/KUBERNETES_DEPLOYMENT.MD,f/5/f541f7ef81691bf26b9b26ed336d831a49be62a5
-L
-docs/usage/INFRA_PLATFORM.MD,5/d/5d8b1efeed212d40be9fbc407e5fb5890039d5be
 D
 src/crypt/encrypt.ts,c/9/c98ecef47c9a70590c3bdafe95d104c5c01df85f
 I
@@ -590,18 +580,12 @@ X
 (src/requestprocessor/RequestProcessor.ts,8/0/80b44487b867e3a7fb89e23bce1cf91bf695e146
 S
 #src/openapi/writeOpenApiSpecFile.ts,f/2/f2fd425c36694198fd59a76c96f5848e5bf5657c
-P
- src/microservice/Microservice.ts,b/2/b203b2517f9ead474bfd9ed8b4aa05bb628a6597
 I
 src/errors/backkErrors.ts,9/d/9de565af347d623f5e99e6a6ab0d8ad581e1dc6d
 R
 "src/remote/http/makeHttpRequest.ts,6/3/638d167128ba5c5cb0465430a3e6af7d84b27653
 ;
 .prettierrc,2/0/20137a9e94744624390b6748bc96df5ca1579b71
-T
-$src/datastore/PostgreSqlDataStore.ts,1/9/19c7770c2a7dd99299bd1c49a5bffaf057af287d
-Q
-!src/datastore/MongoDbDataStore.ts,7/f/7f6815388428de13693ae11762a77f1789593f07
 T
 $src/remote/http/callRemoteService.ts,4/e/4e5f54640166ccdf6297f9fee279284c902e04de
 <
@@ -620,8 +604,6 @@ a
 Osrc/datastore/sql/operations/dql/transformresults/removeReadDeniedProperties.ts,f/d/fd8157c102db09b5f12179e7e4fbf5f7bebbcefb
 }
 Msrc/datastore/sql/operations/dql/transformresults/transformNonEntityArrays.ts,0/a/0ac961a56de3ae412e2d3f0b558d3fdc5dec58b0
-O
-src/datastore/MySqlDataStore.ts,8/f/8f134bc4a4f1e8125d58c46d089a814d427d922b
 \
 ,src/decorators/service/function/TestSetup.ts,e/e/eea76718fe98d368508cdea5deaf4d2f3633eed8
 u

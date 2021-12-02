@@ -1,9 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
+import yj from 'yieldable-json';
 import { createServer } from 'http';
 import http2 from 'http2';
 import { promisify } from 'util';
-import yj from 'yieldable-json';
 import { HttpStatusCodes, MAX_INT_VALUE } from '../constants/constants';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
 import { backkErrors } from '../errors/backkErrors';

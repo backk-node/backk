@@ -14,9 +14,14 @@ Possible entity property types:
 - `number`
 - `boolean`
 - `string`
+- `Date`
 - number or string union type, for example: `1 | 5 | 10` or `'forSale' | 'sold'`
 - another entity type
 - Arrays of above types
+- Following nullable types
+  - `number | null`
+  - `boolean | null`
+  - `string | null`
 
 Entity class can be a _logical entity_ class when a reference to another (physical) entity is given:
 
@@ -84,6 +89,14 @@ Each entity property having a sub-entity array type must have one of following d
 - `@OneToMany()`
 - `@ManyToMany()`
 
+There is no `@ManyToOne()` mapping, it can be achieved with a combination of following 3 annotations:
+
+```ts
+@ManyToMany()
+@ArrayMinSize(1)
+@ArrayMaxSize(1)
+```
+
 Each array type property that IS NOT read-only must have the following decorators or an exception will be thrown:
 
 - `@ArrayMinSize()`
@@ -114,7 +127,7 @@ class MyEntity extends _Id {
 }
 ```
 
-### Entity Class Property Composition
+### Defining Entity Class Using Property Composition
 
 You can make an entity class by composing its properties of one or more properties of another entity class.
 To take advantage of this feature, you need to declare the entity class in special `.type` file.

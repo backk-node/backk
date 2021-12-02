@@ -6,13 +6,10 @@ Possible property types are:
 - `number`
 - `boolean`
 - `string`
+- `Date`
 - number or string union type, for example: `1 | 5 | 10` or `'forSale' | 'sold'`
 - another entity type
 - Arrays of above types
-- Following nullable types
-  - `number | null`
-  - `boolean | null`
-  - `string | null`
 
 Any property can be optional:
 ```ts

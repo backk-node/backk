@@ -115,7 +115,7 @@ export default class HttpServer implements RequestProcessor {
       const [serviceName, functionName] = serviceFunctionName.split('.');
       const ServiceClass = (microservice as any)[serviceName]?.constructor;
 
-      if (serviceFunctionAnnotationContainer.isSubscription(ServiceClass, functionName)) {
+      if (typeof ServiceClass === 'function' && serviceFunctionAnnotationContainer.isSubscription(ServiceClass, functionName)) {
         request.on('close', () => {
           subscriptionManager.removeSubscription(serviceFunctionName, response);
         });
@@ -240,7 +240,7 @@ export default class HttpServer implements RequestProcessor {
       const [serviceName, functionName] = serviceFunctionName.split('.');
       const ServiceClass = (microservice as any)[serviceName]?.constructor;
 
-      if (serviceFunctionAnnotationContainer.isSubscription(ServiceClass, functionName)) {
+      if (typeof ServiceClass === 'function' && serviceFunctionAnnotationContainer.isSubscription(ServiceClass, functionName)) {
         stream.on('close', () => {
           subscriptionManager.removeSubscription(serviceFunctionName, stream);
         });

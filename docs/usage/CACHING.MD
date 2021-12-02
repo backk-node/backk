@@ -5,14 +5,30 @@
 
 ### <a name="cachingservicefunctionresponses"></a> Caching Service Function Responses
 
-In order to cache service function response, you need to provide an implementation for
-`ResponseCacheConfigService` class in your microservice.
+In order to cache service function response, you need to provide a response cache config service implementation class 
+that extends the `ResponseCacheConfigService` abstract class.
 
-You need to implement following functions:
+You need to implement your class:
 
 ```ts
-shouldCacheServiceFunctionCallResponse(serviceFunctionName: string, serviceFunctionArgument: object): boolean;
-getCachingDurationInSecs(serviceFunctionName: string, serviceFunctionArgument: object): number;
+import { ResponseCacheConfigService } from 'backk';
+
+class ResponseCacheConfigServiceImpl extends ResponseCacheConfigService {
+  shouldCacheServiceFunctionCallResponse(serviceFunctionName: string, serviceFunctionArgument: object): boolean {
+    // Provide implementation...
+  }
+
+  getCachingDurationInSecs(serviceFunctionName: string, serviceFunctionArgument: object): number {
+    // Provide implementation...
+  }
+}
+```
+
+Instantiate your response cache config service in your microservice implementation class:
+```ts
+class MicroserviceImpl extends Microservice {
+  private readonly responseCacheConfigService = new ResponseCacheConfigServiceImpl();
+}
 ```
 
 After these functions are implemented, Backk will automatically cache service function call response based

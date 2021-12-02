@@ -9,6 +9,17 @@ Possible property types are:
 - number or string union type, for example: `1 | 5 | 10` or `'forSale' | 'sold'`
 - another entity type
 - Arrays of above types
+- Following nullable types
+  - `number | null`
+  - `boolean | null`
+  - `string | null`
+
+Any property can be optional:
+```ts
+class MyServiceFunctionArg {
+    someOptionalValue?: string;
+}
+```
 
 Number type properties must be annotated with one of following decorators otherwise an exception will be thrown:
 
@@ -23,7 +34,7 @@ The possible value range of number type properties must be validated with follow
 - `@Min()` and `@Max()`
 - `@MinMax()`
 
-The maximum lenght of string type properties must validated with following decorators or an exception will be thrown:
+The maximum length of string type properties must validated with following decorators or an exception will be thrown:
 
 - `@MaxLength()`
 - `@Length()`
@@ -45,7 +56,7 @@ class MyClass {
 }
 ```
 
-### Class Property Composition
+### Defining a Class with Property Composition
 
 You can make a class by composing its properties of one or more properties of another class.
 To take advantage of this feature, you need to declare the class in special `.type` file.

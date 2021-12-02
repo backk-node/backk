@@ -32,12 +32,13 @@
 ## <a name="features"></a> Features
 
 - Create synchronous and asynchronous microservices using
-  - HTTP
+  - HTTP/1.1 or HTTP2
   - Apache Kafka
   - Redis
-- Write our microservices using Typescript and plain functions that are called by remote clients
+- Write your microservices using Typescript and plain functions that are called by remote clients
   - No need for learning any technology like REST, GraphQL or gRPC
   - Can be used both for resource and RPC style microservices
+- Support subscription endpoints via Server Sent Events (SSE) in HTTP/1.1 or HTTP2
 - Supports multiple databases
   - PostgreSQL
   - MySQL
@@ -60,8 +61,11 @@
 - Redis Response Cache support
 - Automatic microservice documentation generation
   - TypeDoc
-  - Postman
-- Automatic microservice integration test generation
+- Automatic microservice metadata/specification generation
+  - OpenAPI v3
+  - Backk custom format that contains additional info compared to OpenAPI v3 spec
+- Metadata endpoints can be called to retrieve microservice metadata for dynamic clients
+- Automatic microservice integration test generation for Postman
 - Built-in Observability
   - Distributed tracing using OpenTelemetry API (Jaeger)
   - Logging using Open Telemetry specification
@@ -109,11 +113,11 @@ export default class MicroserviceImpl extends Microservice {
 
 SalesItemService.ts
 ```ts
-import { AbstractDataStore, CrudEntityService, Many, One, PromiseErrorOr } from 'backk';
+import { DataStore, CrudEntityService, Many, One, PromiseErrorOr } from 'backk';
 import SalesItem from './types/entities/SalesItem';
 
 export default class SalesItemService extends CrudEntityService {
-  constructor(dataStore: AbstractDataStore) {
+  constructor(dataStore: DataStore) {
     super({}, dataStore);
   }
   

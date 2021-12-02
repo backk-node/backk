@@ -173,18 +173,12 @@ k
 ;src/errors/createBackkErrorFromErrorMessageAndStatusCode.ts,3/f/3f91cbf61f981da36b338ef6e33082fa2bd42f99
 U
 %.github/workflows/codeql-analysis.yml,c/3/c3aa8b7f1c613e43d3bb9d5ac52ac6603d945e89
-I
-docs/API_DOCUMENTATION.MD,2/9/29b9cb5c22223e12290d94047cf343cfa7cb9196
-E
-docs/PREREQUISITES.MD,7/1/71b175673ee1e11b95221df3ed611687ff16551b
 H
 docs/api/FILE_READING.MD,1/3/1342c3a860c9cdd9cd8b250114dad6c43f12a43e
 N
 docs/api/MICROSERVICE_CLASS.MD,1/e/1ee74b159ced5b554357ec42e7bb2c2079388415
 W
 'docs/api/MICROSERVICE_INITIALIZATION.MD,7/3/731ce54e9b15c990f2d2a4166230eb6b1ee8fa72
-C
-docs/GET_STARTED.MD,c/8/c841c6a68c176a73f38f5dc87c8a0631e97748fb
 P
  src/utils/getMicroserviceName.ts,8/5/858e4c569eb323ab07d080c32caf8ce0ac4e9a53
 j
@@ -247,8 +241,6 @@ O
 docs/api/ABSTRACT_DATA_STORE.MD,9/f/9f9a3f8c3e178256b2e64e8fd9b35a9e4d2c1bd4
 I
 docs/api/QUERY_FILTERS.MD,7/8/783feae41c35f7357778cbeed16c1f7346c940fe
-W
-'docs/usage/ARGUMENT_RESPONSE_CLASSES.MD,e/c/ecea065309b787617fb62934b6eaffcd93243907
 e
 5src/decorators/typeproperty/FetchFromRemoteService.ts,7/4/748f74847fd0f98e5bfef277f1921ce711d5ee3f
 Q
@@ -273,8 +265,6 @@ Q
 !src/scheduling/scheduleCronJob.ts,f/d/fdce8306d871683b9118b4f0c193c5d57578fe6d
 c
 3docs/usage/SCHEDULING_SERVICE_FUNCTION_EXECUTION.MD,a/f/af442472e187623548a4ccd4e6a5973604e6bf60
-E
-docs/usage/CACHING.MD,3/2/3272dfdf9f4d59c30b43503355a7927f89aa9224
 J
 docs/usage/INTRODUCTION.MD,2/8/2888e4fef5d7ab7f15923757594f0f1a8ba04a34
 H
@@ -309,24 +299,12 @@ S
 #docs/usage/KUBERNETES_DEPLOYMENT.MD,f/5/f541f7ef81691bf26b9b26ed336d831a49be62a5
 L
 docs/usage/INFRA_PLATFORM.MD,5/d/5d8b1efeed212d40be9fbc407e5fb5890039d5be
-@
-docs/usage/CI.MD,a/4/a41b72ec0b8155bbcda6528a68bab9b6520cc770
-@
-docs/usage/CD.MD,f/4/f4bb3bc87af66f827524294c4550c0cf5e8fb23e
-I
-docs/SECURITY_FEATURES.MD,4/f/4fd40ad1cc01a1cc8b5572b74a7e398e7e58980f
 D
 src/crypt/encrypt.ts,c/9/c98ecef47c9a70590c3bdafe95d104c5c01df85f
-O
-docs/OWASP_TOP_TEN_CHECKLIST.MD,f/7/f7e07f41d07950c8ed08e26bb67993ed4f0f54b1
-K
-docs/USAGE_DOCUMENTATION.MD,c/6/c6809f519eb9a39ee442e446434f68505863d1ef
 I
 docs/api/BASE_SERVICES.MD,3/3/33d3d9570e36ce5015d1d2f15ee752b88474a3f3
 F
 docs/usage/SECURITY.MD,4/3/434ec9eeae4046992d61e689f9b1c4121642247e
-9
-	README.MD,9/6/968e80af9562e09cebe594968b130076952eafe1
 Z
 *src/datastore/mongodb/getRootOperations.ts,d/f/df7898ea7d725eb8ac0c6883e577946b810445e8
 s
@@ -628,8 +606,6 @@ Q
 !src/datastore/MongoDbDataStore.ts,7/f/7f6815388428de13693ae11762a77f1789593f07
 T
 $src/remote/http/callRemoteService.ts,4/e/4e5f54640166ccdf6297f9fee279284c902e04de
-`
-0src/authorization/JwtAuthorizationServiceImpl.ts,b/8/b82cefea0a7f99d8d7473b1072daa5b71ffb5527
 <
 package.json,7/0/7030d0b2f71b999ff89a343de08c414af32fc93a
 V

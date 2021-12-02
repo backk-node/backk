@@ -14,6 +14,7 @@
 - [Documenting Microservice](usage/DOCUMENTING_MICROSERVICE.MD)
 - [Observability](usage/OBSERVABILITY.MD)
 - [Integration Testing](usage/INTEGRATION_TESTING.MD)
+- [Client Generation](usage/CLIENT_GENERATION.MD)
 - [Kubernetes Deployment](usage/KUBERNETES_DEPLOYMENT.MD)
 - [Infrastructure and Platform](usage/INFRA_PLATFORM.MD)
 - [Continuous Integration](usage/CI.MD)

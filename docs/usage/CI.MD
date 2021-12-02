@@ -38,3 +38,7 @@ You should have the following steps in your CI pipeline:
   - Lint Helm chart with command `helm lint helm/<backk-microservice-name>`
   - Package helm chart with command `helm package helm/<backk-microservice-name>`
   - Push Helm chart package to Helm chart repository
+
+If you have generated client code, you can have steps in your CI pipeline to:
+- first set the correct version of client in package.json
+- publish the package to NPM registry with `npm publish`

@@ -4,15 +4,16 @@
 
 Follow the below steps: (In the future, there will be [backk-cli](https://github.com/backk-node/backk-cli) available, which can be used to generate a Backk project based on a set of questions)
 
-1. Clone [Backk starter project](https://github.com/backk-node/backk-starter) to a directory named after your microservice
+1. Clone [Backk starter](https://github.com/backk-node/backk-starter) project to a directory named after your microservice
 
    ```bash
    # Using SSH
-   git clone git@github.com:backk-node/backk-starter.git <your-microservice-value>
+   git clone git@github.com:backk-node/backk-starter.git <your-microservice-name>
+   
    # Or using HTTPS
-   git clone https://github.com/backk-node/backk-starter.git <your-microservice-value>
+   git clone https://github.com/backk-node/backk-starter.git <your-microservice-name>
 
-   cd <your-microservice-value>
+   cd <your-microservice-name>
    ```
 
 2. Complete all 3 TODOs in `src/main.ts` and `src/MyMicroservice.ts` files

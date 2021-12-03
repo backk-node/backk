@@ -83,24 +83,26 @@
 - Ready-made CI pipelines (currently only Github workflow)
 
 ## <a name="howbackkworks"></a> How Backk Works?
-Backk microservices are written using Node.js and Typescript. Backk microservice consists of one or more services classes with their dedicated purpose.
+Backk microservices are written using Node.js and Typescript. A Backk microservice consists of one or more services classes with their dedicated purpose.
 Each service class can contain one or more service functions (class methods) that implement the service functionality.
-Each service function can have zero or one parameter of JavaScript Class type. 
+Each service function can have zero or exactly one parameter of JavaScript Class type. 
 Service function returns a value, which can be `null`, a JavaScript value that can be converted to JSON or error.
 
-Synchronously, Backk microservice can be accessed via HTTP. By default, each service and service function in Backk microservice is accessible via HTTP POST method.
-But it is possible to configure accessing service functions via HTTP GET.
+Synchronously, Backk microservice can be accessed via HTTP. By default, each service function in the Backk microservice is accessible via HTTP POST method.
+But it is possible to configure to access service functions via HTTP GET method.
 
 Asynchronously, Backk microservices can be accessed via Kafka and/or Redis. In case of Kafka, Backk microservice reads messages
 from a topic named after the microservice and message key tells the service function to execute and message value is the argument for the service function.
 In case of Redis, Backk microservice uses a list named after the microservice and pops service function calls from the list.
 
-It is possible to access the same Backk microservice both synchronously and asynchronously with all the three methods: HTTP, Kafka and Redis
+It is possible to simultaneously access the Backk microservice both synchronously and asynchronously using any combinations of all the three communication methods: HTTP, Kafka and Redis
 
 Let's have a short example to showcase accessing Backk microservice over HTTP.
 
-Our microservice consist of one service that is for creating and getting the created sales items, 
-and it is using MySQL as a persistent data store.
+Our microservice consist of one service `SalesItemService` that is for creating sales items and getting the created sales items, 
+and it is using a MySQL database as a persistent data store.
+
+Let's create the microservice implementation class:
 
 MicroserviceImpl.ts
 ```ts
@@ -109,12 +111,25 @@ import { Microservice, MySqlDataStore } from 'backk';
 const dataStore = new MySqlDataStore();
 
 export default class MicroserviceImpl extends Microservice {
-  private readonly salesItemService = new SalesItemService(dataStore);
+  private readonly salesItemService = new SalesItemServiceImpl(dataStore);
   // If you had other services in you microservice, you would instantiate them here
 
   constructor() {
     super(dataStore);
   }
+}
+```
+
+Let's create the interface of the service:
+
+SalesItemService.ts
+```ts
+import { Many, One, PromiseErrorOr, Service } from 'backk';
+import SalesItem from './types/entities/SalesItem';
+
+export default class SalesItemService implements Service {
+  createSalesItem(salesItem: SalesItem): PromiseErrorOr<One<SalesItem>>;
+  getSalesItems(): PromiseErrorOr<Many<SalesItem>>;
 }
 ```
 

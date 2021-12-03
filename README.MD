@@ -70,7 +70,7 @@
 - Automatic client code generation for Kubernetes cluster internal and web frontend clients
 - Built-in Observability
   - Distributed tracing using OpenTelemetry API (Jaeger)
-  - Logging using Open Telemetry specification
+  - Log file format conforming to Open Telemetry specification
   - Metrics collection using OpenTelemetry API (Prometheus)
 - Startup functions which are executed once on microservice startup
 - Scheduled functions

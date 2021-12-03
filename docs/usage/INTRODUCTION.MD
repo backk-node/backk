@@ -20,12 +20,22 @@ Each service function can have either zero or exactly one argument, and the argu
 
 Each service function should return a value of type `PromiseErrorOr<T>`. If your service function does not return a value,
 its return value should be `PromiseErrorOr<null>`. If your service function returns one entity, its return type should
-`PromiseErrorOr<One<E>>`, where `E` is type of the entity. If you service function returns multiple entities, its return
-type should `PromiseErrorOr<Many<E>>`, where `E` is type of the entity. Any service function can always return an error.
-Here are the type definitions for `PromiseErrorOr<T>`, `Many` and `One`:
+`PromiseErrorOr<One<T>>`, where `T` is type of the entity. If you service function returns multiple entities, its return
+type should `PromiseErrorOr<Many<T>>`, where `T` is type of the entity. Any service function can always return an error.
+`PromiseErrorOr<T>` is 2-tuple type where the first value of the tuple is the service function return value `T`, or in case of error, it is
+null or undefined. The second value of the tuple is `BackkError` in case of service function execution failure or null or undefined on success.
+
+Here are the type definitions for `PromiseErrorOr<T>`, `BackkError`, `Many` and `One`:
 
 ```ts
 type PromiseErrorOr<T> = Promise<[T | null | undefined, BackkError | null | undefined]>;
+
+type BackkError = {
+  statusCode: number;
+  message: string;
+  errorCode?: string;
+  stackTrace?: string;
+}
 
 type Many<T> = {
   metadata: {
@@ -43,6 +53,8 @@ type One<T> = {
   data: T;
 };
 ```
+
+If you want, your service function can return custom metadata by adding custom properties to `metadata` object of `One<T>` and `Many<T>`.
 
 Backk generates automatically integration tests for your service. If you want to benefit from them, it is important in which order, you
 define the service functions. They should be defined in order in which they should be tested. 
@@ -102,9 +114,12 @@ export default class SalesItemServiceImpl extends CrudEntityService implements S
 }
 ```
 
-You need supply `dataStore` for your service, if it is using a database. Your service can use only one data store.
+You need supply `dataStore` for your service, if it is using a database, otherwise provide an instance of `NullDataStore`.
+
+NOTE!
+Your microservice can use only one data store.
 If you service requires multiple data store, your service is not probably a microservice. You should then split
-you service to smaller pieces, so that each microservice requires only one data store to operate on.
+your service into smaller pieces, so that each microservice requires only one data store to operate on.
 
 For `CrudEntityService`, you need to give two parameters:
 - map of error definitions (or an empty object if the service does not raise any errors specific to business logic in your service functions)

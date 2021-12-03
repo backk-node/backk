@@ -38,7 +38,7 @@
 - Write your microservices using Typescript and plain functions that are called by remote clients
   - No need for learning any technology like REST, GraphQL or gRPC
   - Can be used both for resource and RPC style microservices
-- Support subscription endpoints via Server Sent Events (SSE) in HTTP/1.1 or HTTP2
+- Supports subscription endpoints via Server Sent Events (SSE) in HTTP/1.1 or HTTP2
 - Supports multiple databases
   - PostgreSQL
   - MySQL
@@ -49,7 +49,8 @@
   - CockroachDB (PostgreSQL compatible)
 - ORM (Object-relational mapper)
   - Entities
-  - Validations
+  - Comprehensive set of validations for all data types (number, string, Date, Arrays)
+  - Drastically simplifies the definition of DTOs or totally removes the need for DTOs
 - Automatic database schema generation
 - Security
   - OAuth 2.0 Authorization support
@@ -58,7 +59,7 @@
   - Automatic PII encryption/decryption
   - Mandatory validation required by Entity field type
     - e.g. string fields must have a maximum length validation
-- Redis Response Cache support
+- Supports a response cache using Redis
 - Automatic microservice documentation generation
   - TypeDoc
 - Automatic microservice metadata/specification generation
@@ -66,6 +67,7 @@
   - Backk custom format that contains additional info compared to OpenAPI v3 spec
 - Metadata endpoints can be called to retrieve microservice metadata for dynamic clients
 - Automatic microservice integration test generation for Postman
+- Automatic client code generation for Kubernetes cluster internal and web frontend clients
 - Built-in Observability
   - Distributed tracing using OpenTelemetry API (Jaeger)
   - Logging using Open Telemetry specification
@@ -74,6 +76,9 @@
   - Scheduled as per client request
   - Cron jobs
 - Liveness, Readiness and Startup probes support
+- Ready-made Dockerfiles
+- Ready-made Helm templates for Kubernetes deployment
+- Ready-made CI pipelines (currently only Github workflow)
 
 ## <a name="howbackkworks"></a> How Backk Works?
 Backk microservices are written using Node.js and Typescript. Backk microservice consists of one or more services classes with their dedicated purpose.

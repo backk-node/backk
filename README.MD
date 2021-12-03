@@ -61,7 +61,7 @@
     - e.g. string fields must have a maximum length validation
 - Supports a response cache using Redis
 - Automatic microservice documentation generation
-  - TypeDoc
+  - [TypeDoc](https://typedoc.org/)
 - Automatic microservice metadata/specification generation
   - OpenAPI v3
   - Backk custom format that contains additional info compared to OpenAPI v3 spec

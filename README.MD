@@ -133,12 +133,14 @@ export default class SalesItemService implements Service {
 }
 ```
 
-SalesItemService.ts
+Let's create the implementation class of the service:
+
+SalesItemServiceImpl.ts
 ```ts
 import { DataStore, CrudEntityService, Many, One, PromiseErrorOr } from 'backk';
 import SalesItem from './types/entities/SalesItem';
 
-export default class SalesItemService extends CrudEntityService {
+export default class SalesItemServiceImpl extends CrudEntityService implements SalesItemService {
   constructor(dataStore: DataStore) {
     super({}, dataStore);
   }
@@ -152,6 +154,8 @@ export default class SalesItemService extends CrudEntityService {
   }
 }
 ```
+
+Let's create the `SalesItem` entity class:
 
 SalesItem.ts
 ```ts
@@ -237,7 +241,7 @@ Content-Type: application/json
 
 ## <a name="example-backk-microservice"></a> Example Backk Microservice
 
-If you want to dive right into the deep end, check out the [Backk example microservice.](https://github.com/backk-node/backk-example-project)
+If you want to dive right into the deep end, check out the [Backk example microservice.](https://github.com/backk-node/backk-example-microservice)
 
 ## <a name="feedback"></a> Feedback
 

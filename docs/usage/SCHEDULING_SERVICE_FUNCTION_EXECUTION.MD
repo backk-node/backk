@@ -44,7 +44,6 @@ So the complete service function argument will in the example be:
 You can then create another service function to access generated sales report by the job id:
 ```
 POST /reportingService.getGeneratedReportByJobId
-
 {
    "jobId": "234"
 }

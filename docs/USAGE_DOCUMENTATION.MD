@@ -1,6 +1,6 @@
 ## Usage Documentation
 - [Introduction](usage/INTRODUCTION.MD)
-- [Microservice Initialization](usage/INITIALIZATION.MD)
+- [Starting Microservice](usage/INITIALIZATION.MD)
 - [Creating Entity Classes](usage/CREATING_ENTITY_CLASSES.MD)
 - [Creating Service Function Argument and Response Classes](usage/ARGUMENT_RESPONSE_CLASSES.MD)
 - [Data Store](usage/DATA_STORE.MD)

@@ -1,4 +1,4 @@
-## AbstractDataStore
+## DataStore
 
 - [Create Entities](CREATE_ENTITIES.MD)
 - [Get Entities](GET_ENTITIES.MD)
@@ -14,7 +14,7 @@
 ### <a name="executeinsidetransaction"></a> executeInsideTransaction
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   executeInsideTransaction<T>(executable: () => PromiseErrorOr<T>): PromiseErrorOr<T>
 }
 ```

@@ -6,7 +6,7 @@
 ### <a name="addsubentitiestoentitybyid"></a> addSubEntitiesToEntityById
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   addSubEntitiesToEntityById<T extends BackkEntity, U extends SubEntity>(
     subEntityPath: string,
     subEntities: Array<Omit<U, 'id'> | { _id: string }>,
@@ -43,7 +43,7 @@ Returns nothing or error.
 ### <a name="addsubentitiestoentitybyfilters"></a> addSubEntitiesToEntityByFilters
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   addSubEntitiesToEntityByFilters<T extends BackkEntity, U extends SubEntity>(
     subEntityPath: string,
     subEntities: Array<Omit<U, 'id'> | { _id: string }>,

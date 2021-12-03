@@ -108,7 +108,7 @@ User defined filters are filters that clients can specify in service function ca
 Example of using user defined filters to query sales items:
 
 ```ts
-class SalesItemService extends CrudEntityService {
+class SalesItemServiceImpl extends CrudEntityService {
  getSalesItemsByUserDefinedFilters(
    { filters }: GetSalesItemsByUserDefinedFiltersArg
   ): PromiseErrorOr<Many<SalesItem>> {

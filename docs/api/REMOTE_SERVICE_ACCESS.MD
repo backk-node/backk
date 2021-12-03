@@ -16,13 +16,20 @@ async function callRemoteService(
 ): PromiseErrorOr<object | null>
 
 interface HttpRequestOptions {
-  httpMethod?: 'GET' | 'POST';
+  httpMethod?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  httpVersion?: 1 | 2;
+  tls?: {
+    ca?: string | Buffer | Array<string | Buffer>;
+    cert?: string | Buffer | Array<string | Buffer>;
+    key?: string | Buffer | Array<Buffer | KeyObject>;
+  };
 }
 ```
 
 Calls a remote Backk microservice `microserviceName` and executes remote service function `serviceFunctionName` with argument `serviceFunctionArgument`.
 The remote Backk microservice Kubernetes namespace is defined using `microserviceNamespace` argument.
 The HTTP method used can be defined in `options`. By default, HTTP POST method is used.
+The default HTTP version used in 1.
 
 Returns an object, null or error.
 
@@ -36,12 +43,18 @@ async function makeHttpRequest(
 
 interface HttpRequestOptions {
   httpMethod?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  tls?: {
+    ca?: string | Buffer | Array<string | Buffer>;
+    cert?: string | Buffer | Array<string | Buffer>;
+    key?: string | Buffer | Array<Buffer | KeyObject>;
+  };
 }
 ```
 
 Makes an HTTP or HTTPS request to URL `requestUrl` with given `requestBodyObject`. Request content type is `application/json`.
 Authorization header is automatically added to the made HTTP request.
 The request is made using HTTP GET method by default. The method can be changed by supplying `options.httpMethod`.
+The default HTTP version is 1. HTTP/2 request without TLS can be made using scheme `http2://`
 
 ### <a name="sentoremoteservice"></a> sendToRemoteService
 

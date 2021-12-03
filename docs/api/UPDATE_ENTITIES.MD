@@ -7,7 +7,7 @@
 ### <a name="updateentity"></a> updateEntity
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   updateEntity<T extends BackkEntity>(
     EntityClass: { new (): T },
     entityUpdate: RecursivePartial<T> & { _id: string },
@@ -36,7 +36,7 @@ Returns nothing or error.
 ### <a name="updateentitybyfilters"></a> updateEntityByFilters
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   updateEntityByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
     filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
@@ -64,7 +64,7 @@ Returns nothing or error.
 ### <a name="updateentitiesbyfilters"></a> updateEntitiesByFilters
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   updateEntitiesByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
     filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,

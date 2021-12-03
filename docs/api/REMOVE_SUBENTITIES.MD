@@ -8,7 +8,7 @@
 ### <a name="removesubentityfromentitybyid"></a> removeSubEntityFromEntityById
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   removeSubEntityFromEntityById<T extends BackkEntity>(
     subEntityPath: string,
     subEntityId: string,
@@ -36,7 +36,7 @@ Returns nothing or error.
 ### <a name="removesubentitiesfromentitybyid"></a> removeSubEntitiesFromEntityById
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   removeSubEntitiesFromEntityById<T extends BackkEntity>(
     subEntitiesJsonPath: string,
     EntityClass: { new (): T },
@@ -63,7 +63,7 @@ Returns nothing or error.
 ### <a name="removesubentityfromentitybyfilters"></a> removeSubEntityFromEntityByFilters
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   removeSubEntityFromEntityByFilters<T extends BackkEntity>(
     subEntityPath: string,
     subEntityId: string,
@@ -91,7 +91,7 @@ Returns nothing or error.
 ### <a name="removesubentitiesfromentitybyfilters"></a> removeSubEntitiesFromEntityByFilters
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   removeSubEntitiesFromEntityByFilters<T extends BackkEntity, U extends object>(
     subEntitiesJsonPath: string,
     EntityClass: { new (): T },

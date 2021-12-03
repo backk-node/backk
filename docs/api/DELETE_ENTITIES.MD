@@ -9,7 +9,7 @@
 ### <a name="deleteallentities"></a> deleteAllEntities
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   deleteAllEntities<T>(EntityClass: new () => T): PromiseErrorOr<null>;
 }
 ```
@@ -21,7 +21,7 @@ Returns nothing or error.
 ### <a name="deleteentitybyid"></a> deleteEntityById
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   deleteEntityById<T extends BackkEntity>(
     EntityClass: { new (): T },
     _id: string,
@@ -41,7 +41,7 @@ Returns nothing or error.
 ### <a name="deleteentitiesbyids"></a> deleteEntitiesByIds
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   deleteEntitiesByIds<T extends BackkEntity>(
     EntityClass: { new (): T },
     _ids: string[]
@@ -56,7 +56,7 @@ Returns nothing or error.
 ### <a name="deleteentitybyfilters"></a> deleteEntityByFilters
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   deleteEntityByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
     filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
@@ -82,7 +82,7 @@ Returns nothing or error.
 ### <a name="deleteentitiesbyfilters"></a> deleteEntitiesByFilters
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   deleteEntitiesByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
     filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object

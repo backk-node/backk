@@ -7,7 +7,7 @@
 ### <a name="addarrayfieldvaluestoentitybyid"></a> addArrayFieldValuesToEntityById
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   addArrayFieldValuesToEntityById<T extends BackkEntity>(
     arrayFieldName: keyof T & string,
     arrayFieldValuesToAdd: ArrayFieldValue[],
@@ -37,7 +37,7 @@ Returns nothing or error.
 ### <a name="doesarrayfieldcontainvalueinentitybyid"></a> doesArrayFieldContainValueInEntityById
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   doesArrayFieldContainValueInEntityById<T extends BackkEntity>(
     arrayFieldName: keyof T & string,
     arrayFieldValue: ArrayFieldValue,
@@ -56,7 +56,7 @@ Returns true, false or error.
 ### <a name="removearrayfieldvaluesfromentitybyid"></a> removeArrayFieldValuesFromEntityById
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   removeArrayFieldValuesFromEntityById<T extends BackkEntity>(
     arrayFieldName: keyof T & string,
     arrayFieldValuesToRemove: ArrayFieldValue[],

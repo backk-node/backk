@@ -173,8 +173,6 @@ k
 ;src/errors/createBackkErrorFromErrorMessageAndStatusCode.ts,3/f/3f91cbf61f981da36b338ef6e33082fa2bd42f99
 U
 %.github/workflows/codeql-analysis.yml,c/3/c3aa8b7f1c613e43d3bb9d5ac52ac6603d945e89
-H
-docs/api/FILE_READING.MD,1/3/1342c3a860c9cdd9cd8b250114dad6c43f12a43e
 N
 docs/api/MICROSERVICE_CLASS.MD,1/e/1ee74b159ced5b554357ec42e7bb2c2079388415
 W
@@ -199,8 +197,6 @@ J
 src/utils/executeForAll.ts,e/4/e4c87a1b93177bf077e69e9bbbf19d35ef74bd23
 e
 5src/scheduling/tryInitializeCronJobSchedulingTable.ts,2/1/21066a879a3e84fe5c839ca47764c2e0a2834348
-H
-docs/api/GET_ENTITIES.MD,9/5/9549abbb19e5ed8f30ad9d7347dcd2b15ec18b24
 K
 docs/api/UPDATE_ENTITIES.MD,e/e/eebdc47e8db894055f17a22af6d1b04c7a877998
 N

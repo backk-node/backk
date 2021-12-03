@@ -10,7 +10,7 @@
 ### <a name="getallentities"></a> getAllEntities
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   getAllEntities<T extends BackkEntity>(
     EntityClass: new () => T,
     postQueryOperations: PostQueryOperations,
@@ -29,7 +29,7 @@ Returns the retrieved entities or error.
 ### <a name="getentitycount"></a> getEntityCount
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   getEntityCount<T extends BackkEntity>(
     EntityClass: new () => T,
     filters?: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object
@@ -46,7 +46,7 @@ Returns the number of entities or error.
 ### <a name="getentitybyid"></a> getEntityById
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   getEntityById<T extends BackkEntity>(
     EntityClass: { new (): T },
     _id: string,
@@ -78,7 +78,7 @@ Returns the entity or error.
 ### <a name="getentitiesbyids"></a> getEntitiesByIds
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   getEntitiesByIds<T extends BackkEntity>(
     EntityClass: { new (): T },
     _ids: string[],
@@ -98,7 +98,7 @@ Returns the entities or error.
 ### <a name="getentitybyfilters"></a> getEntityByFilters
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   getEntityByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
     filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
@@ -130,7 +130,7 @@ Returns the entity or error.
 ### <a name="getentitiesbyfilters"></a> getEntitiesByFilters
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   getEntitiesByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
     filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,

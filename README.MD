@@ -72,11 +72,13 @@
   - Distributed tracing using OpenTelemetry API (Jaeger)
   - Logging using Open Telemetry specification
   - Metrics collection using OpenTelemetry API (Prometheus)
+- Startup functions which are executed once on microservice startup
 - Scheduled functions
   - Scheduled as per client request
   - Cron jobs
-- Liveness, Readiness and Startup probes support
+- Built-in Kubernetes Liveness, Readiness and Startup probes support
 - Ready-made Dockerfiles
+- Ready-made Docker Compose file setting up an integration testing environment
 - Ready-made Helm templates for Kubernetes deployment
 - Ready-made CI pipelines (currently only Github workflow)
 

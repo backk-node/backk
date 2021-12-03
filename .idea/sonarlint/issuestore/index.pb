@@ -173,10 +173,6 @@ k
 ;src/errors/createBackkErrorFromErrorMessageAndStatusCode.ts,3/f/3f91cbf61f981da36b338ef6e33082fa2bd42f99
 U
 %.github/workflows/codeql-analysis.yml,c/3/c3aa8b7f1c613e43d3bb9d5ac52ac6603d945e89
-N
-docs/api/MICROSERVICE_CLASS.MD,1/e/1ee74b159ced5b554357ec42e7bb2c2079388415
-W
-'docs/api/MICROSERVICE_INITIALIZATION.MD,7/3/731ce54e9b15c990f2d2a4166230eb6b1ee8fa72
 P
  src/utils/getMicroserviceName.ts,8/5/858e4c569eb323ab07d080c32caf8ce0ac4e9a53
 j
@@ -384,10 +380,6 @@ z
 Jsrc/typescript/generator/generateTypescriptFilesFromTypeDefinitionFiles.ts,b/7/b7cca6f35d8c9e702c044fe7ac7e1ca1c9ceaf0f
 _
 /src/utils/file/getSrcFilePathNameForTypeName.ts,0/e/0e8b631c4da7d29df106b7fda6bc971ce9fc27a1
-U
-%src/requestprocessor/KafkaConsumer.ts,5/4/54978fb9386e91d4df80e1e6e7893e36b797a7a4
-U
-%src/requestprocessor/RedisConsumer.ts,5/0/50dc18ff4d5a87dc5cd75379cf4421cfe9553f4e
 d
 4src/remote/utils/validateServiceFunctionArguments.ts,0/e/0e6af11b7ab9460e696901b331a33cfd10b075ab
 [

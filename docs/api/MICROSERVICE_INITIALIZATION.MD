@@ -1,26 +1,21 @@
-## Microservice Initialization
+## Request Processors
 
-- [initialize](#initialize)
-- [startHttpServerFor](#startHttpServerFor)
-- [startKafkaConsumerFor](#startKafkaConsumerFor)
-- [startRedisConsumerFor](#startRedisConsumerFor)
+- [HttpServer](#httpServer)
+- [KafkaConsumer](#kafkaConsumer)
+- [RedisConsumer](#redisConsumer)
 
-### <a name="initialize"></a> initialize
-
-```typescript
-async function initialize(microservice: Microservice);
-```
-
-Initializes the microservice.
-
-### <a name="startHttpServerFor"></a> startHttpServerFor
+### <a name="httpServer"></a> HttpServer
 
 ```typescript
-async function startHttpServerFor(
-  microservice: Microservice,
-  options?: ServiceFunctionExecutionOptions,
-  httpVersion: HttpVersion = 1
-);
+export default class HttpServer implements RequestProcessor {
+  constructor(
+    private readonly httpVersion: HttpVersion = 1,
+    private readonly options?: ServiceFunctionExecutionOptions
+  ) {
+  }
+}
+
+type HttpVersion = 1 | 2;
 
 interface ServiceFunctionExecutionOptions {
   isMetadataServiceEnabled?: boolean;
@@ -35,23 +30,20 @@ interface ServiceFunctionExecutionOptions {
     regExpForAllowedRemoteServiceFunctionCalls?: RegExp;
   };
 }
-
-type HttpVersion = 1;
 ```
 
-Starts an HTTP server for the microservice.
+Represents a HTTP server for the microservice.
 Uses port defined in HTTP_SERVER_PORT environment variable or port 3000.
-Currently, only HTTP/1.1 is support (HTTP/2 support is coming).
-`initialize(microservice)` must be called before starting HTTP server.
 
-### <a name="startKafkaConsumerFor"></a> startKafkaConsumerFor
+### <a name="kafkaConsumer"></a> KafkaConsumer
 
 ```typescript
-async function startKafkaConsumerFor(
-  microservice: Microservice,
-  defaultTopicConfig?: Omit<ITopicConfig, 'topic'>,
-  additionalTopics?: string[]
-);
+class KafkaConsumer extends AbstractAsyncRequestProcessor {
+  constructor(
+    private readonly defaultTopicConfig?: Omit<ITopicConfig, 'topic'>,
+    private readonly additionalTopics?: string[]
+  )
+}
 
 interface ITopicConfig {
   numPartitions?: number;
@@ -61,18 +53,17 @@ interface ITopicConfig {
 }
 ```
 
-Starts a Kafka consumer for the microservice.
-Kafka host is defined in environment variable KAFKA_SERVER. If environment variable is not defined, an exception will be thrown.
-Consumer is listening to topic named: `<service-name>.<service-namespace>`, e.g. my-service.default or notification-service.platform
-`initialize(microservice)` must be called before starting Kafka consumer.
+Represents a Kafka consumer for the microservice.
+Kafka server is defined with environment variables `KAFKA_HOST` and `KAFKA_PORT`. If environment variables are not defined, an exception will be thrown.
+KafkaConsumer is consuming from topic named: `<microservice-name>.<service-namespace>`, e.g. `my-microservice.default` or `notification-service.platform`
 
-### <a name="startRedisConsumerFor"></a> startRedisConsumerFor
+### <a name="redisConsumer"></a> RedisConsumer
 
 ```typescript
-async function startRedisConsumerFor(microservice: Microservice);
+class RedisConsumer extends AbstractAsyncRequestProcessor {
+}
 ```
 
-Starts a Redis consumer for the microservice.
-Redis host is defined in environment variable REDIS_SERVER. If the environment variable is not defined, an exception will be thrown.
-Redis consumer is reading a list with a key named: `<service-name>.<service-namespace>`, e.g. my-service.default or notification-service.platform
-`initialize(microservice)` must be called before starting Redis consumer.
+Represents a Redis consumer for the microservice.
+Redis server is defined with environment variables `REDIS_HOST` and `REDIS_PORT`. If the environment variables are not defined, an exception will be thrown.
+Redis consumer is consuming from the head of a list with a key named: `<microservice-name>.<service-namespace>`, e.g. `my-microservice.default` or `notification-service.platform`

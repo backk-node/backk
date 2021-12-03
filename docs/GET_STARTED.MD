@@ -16,7 +16,7 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
    cd <your-microservice-name>
    ```
 
-2. Complete all 3 TODOs in `src/main.ts` and `src/MyMicroservice.ts` files
+2. Complete all the 3 TODOs in `src/main.ts` and `src/microservice.ts` files
 3. Check that the environment variable values in the `.env.dev` file are correct for your development environment
     - If you are using MongoDB, check
         - `MONGODB_HOST`
@@ -42,7 +42,7 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
     - if you are using Redis as a response cache, check
         - `REDIS_CACHE_HOST`
         - `REDIS_CACHE_PORT`
-4. OPTIONAL STEP: Remove unnecessary dependencies from `package.json`file
+4. OPTIONAL STEP: Remove unnecessary dependencies from `package.json` file
     - If you are using MongoDB, remove following lines:
       ```
       "@opentelemetry/plugin-mysql": "0.11.0",
@@ -93,7 +93,7 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
    ```
 
    There is one example service in `src/services/example` directory that you can use as a basis for your own service(s).
-   If/When you don't need that example service anymore, just delete the `src/services/example` directory and remove example service from `MicroserviceImpl` class.
+   If/When you don't need that example service anymore, just delete the `src/services/example` directory and remove the example service instantiation also from the `MicroserviceImpl` class in `src/microservice.ts` file.
 6. Generate the [OpenAPI 3](https://swagger.io/specification/) API specs for your API implementation with following command:
    ```bash
    npm run generateApiSpecs

@@ -16,12 +16,13 @@ or [CrudEntityService](../api/BASE_SERVICES.MD#crudentityservice). In this case,
 to use `CrudEntityService` as base service implementation. 
 
 In the `SalesItemService` interface, we write the service functions that we want to later implement.
-Each service function can have either zero or exactly one argument, and the argument must be a JavaScript object.
+Each service function can have either zero or exactly one argument, and the argument must be of JavaScript class type.
 
 Each service function should return a value of type `PromiseErrorOr<T>`. If your service function does not return a value,
 its return value should be `PromiseErrorOr<null>`. If your service function returns one entity, its return type should
 `PromiseErrorOr<One<E>>`, where `E` is type of the entity. If you service function returns multiple entities, its return
 type should `PromiseErrorOr<Many<E>>`, where `E` is type of the entity. Any service function can always return an error.
+Here are the type definitions for `PromiseErrorOr<T>`, `Many` and `One`:
 
 ```ts
 type PromiseErrorOr<T> = Promise<[T | null | undefined, BackkError | null | undefined]>;

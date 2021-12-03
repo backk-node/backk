@@ -29,6 +29,10 @@ function call argument and response as arguments and then returns the argument t
 
 Entity properties annotated with `@FetchFromRemoteService` are always implicitly read-only properties.
 
+In the below example, user's own sales items are fetched from remote `sales-item-service` microservice using service function
+`salesItemService.getUsersSalesItems`. `{ userAccountId: <your user account id> }` will sent as a argument for the remote service function call. For example, if you request service function `userAccountService.getUserAccount`,
+you will get your own sales items automatically fetched from the remote microservice. 
+
 ```ts
 import { FetchFromRemoteService, ReadOnly } from 'backk';
 
@@ -65,7 +69,19 @@ callRemoteService(
 `callRemoteService` accepts fourth argument which is the Kubernetes namespace of the remote microservice.
 By default, it is the same as microservice calling the remote microservice.
 
-`callRemoteService` accepts fifth argument where HTTP method can be specified, default is POST.
+`callRemoteService` accepts fifth argument where HTTP request options can be specified:
+
+```ts
+interface HttpRequestOptions {
+  httpMethod?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  httpVersion?: 1 | 2;
+  tls?: {
+    ca?: string | Buffer | Array<string | Buffer>;
+    cert?: string | Buffer | Array<string | Buffer>;
+    key?: string | Buffer | Array<Buffer | KeyObject>;
+  };
+}
+```
 
 #### <a name="makehttprequest"></a> Make HTTP Requests
 Accessing non-Backk microservices and HTTP endpoints from Backk microservice is easy using `makeHttpRequest` function.
@@ -83,6 +99,12 @@ function makeHttpRequest(
 
 interface HttpRequestOptions {
   httpMethod?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  httpVersion?: 1 | 2;
+  tls?: {
+    ca?: string | Buffer | Array<string | Buffer>;
+    cert?: string | Buffer | Array<string | Buffer>;
+    key?: string | Buffer | Array<Buffer | KeyObject>;
+  };
 }
 ```
 

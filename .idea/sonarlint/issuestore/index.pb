@@ -235,30 +235,20 @@ O
 docs/api/ABSTRACT_DATA_STORE.MD,9/f/9f9a3f8c3e178256b2e64e8fd9b35a9e4d2c1bd4
 I
 docs/api/QUERY_FILTERS.MD,7/8/783feae41c35f7357778cbeed16c1f7346c940fe
-e
-5src/decorators/typeproperty/FetchFromRemoteService.ts,7/4/748f74847fd0f98e5bfef277f1921ce711d5ee3f
 Q
 !docs/api/REMOTE_SERVICE_ACCESS.MD,b/0/b0685b4ca6fc0ba042874203e366ff0320bb9359
-S
-#docs/usage/REMOTE_SERVICE_ACCESS.MD,e/6/e6a30d0d166d73d944dd261b9ec9fba066a5637e
 W
 'src/scheduling/defaultRetryIntervals.ts,a/c/acef35a3c59f362638e09c8171917638c60c8912
 Z
 *src/decorators/service/function/CronJob.ts,a/8/a88bb6510ffce012c9290828e536a4fcac1de31e
-\
-,docs/usage/SPECIAL_SERVICE_FUNCTION_TYPES.MD,c/3/c382d7df5090b56087c9ac25a73d6bb5ca410105
 Y
 )src/execution/isExecuteMultipleRequest.ts,d/2/d2482742299ac42fc87a8f2123cf69f65806b61b
 T
 $src/execution/ServiceFunctionCall.ts,d/7/d769150ff5903b8b45f738b13d835f55b8282547
-]
--docs/usage/MULTIPLE_SERVICE_FUNCTION_CALLS.MD,0/d/0dcf4f2c1aaf839293469ddd2d16d9d734c85417
 X
 (src/scheduling/entities/JobScheduling.ts,9/b/9b9457714c11119b32f245c1df42a2d1000b2031
 Q
 !src/scheduling/scheduleCronJob.ts,f/d/fdce8306d871683b9118b4f0c193c5d57578fe6d
-c
-3docs/usage/SCHEDULING_SERVICE_FUNCTION_EXECUTION.MD,a/f/af442472e187623548a4ccd4e6a5973604e6bf60
 Q
 !docs/api/POST_QUERY_OPERATIONS.MD,0/f/0fbbee26ad9d56244cfc139151b14ef4d8ca012c
 b
@@ -267,8 +257,6 @@ U
 %src/metadata/types/ServiceMetadata.ts,2/a/2a124f7e1ccd06de80242f478e3bbc82039af313
 Z
 *src/postman/createPostmanCollectionItem.ts,0/4/04b6ca3341973e79516b19b840e72f5d46010297
-S
-#docs/usage/MICROSERVICE_METADATA.MD,d/8/d871bca4101499475e31f84c6e6f47975caa7357
 I
 docs/api/OBSERVABILITY.MD,d/e/de26c745d47694e67ee89b5bac1664b649d90a96
 `
@@ -279,16 +267,10 @@ w
 Gsrc/observability/distributedtracinig/initializeDefaultJaegerTracing.ts,5/f/5f3199e9c932d37e47604ff31aa6d843c94be7f3
 c
 3src/observability/metrics/defaultPrometheusMeter.ts,f/4/f48cea031a89acea4159adb25350f76868696671
-K
-docs/usage/OBSERVABILITY.MD,4/d/4d9b1b6d3f0a0e8206402fca26b682aefa7844e6
-S
-#docs/usage/KUBERNETES_DEPLOYMENT.MD,f/5/f541f7ef81691bf26b9b26ed336d831a49be62a5
 D
 src/crypt/encrypt.ts,c/9/c98ecef47c9a70590c3bdafe95d104c5c01df85f
 I
 docs/api/BASE_SERVICES.MD,3/3/33d3d9570e36ce5015d1d2f15ee752b88474a3f3
-F
-docs/usage/SECURITY.MD,4/3/434ec9eeae4046992d61e689f9b1c4121642247e
 Z
 *src/datastore/mongodb/getRootOperations.ts,d/f/df7898ea7d725eb8ac0c6883e577946b810445e8
 s
@@ -578,8 +560,6 @@ R
 "src/remote/http/makeHttpRequest.ts,6/3/638d167128ba5c5cb0465430a3e6af7d84b27653
 ;
 .prettierrc,2/0/20137a9e94744624390b6748bc96df5ca1579b71
-T
-$src/remote/http/callRemoteService.ts,4/e/4e5f54640166ccdf6297f9fee279284c902e04de
 <
 package.json,7/0/7030d0b2f71b999ff89a343de08c414af32fc93a
 V

@@ -6,7 +6,7 @@
 ### <a name="createentity"></a> createEntity
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   createEntity<T extends BackkEntity>(
     EntityClass: { new (): T },
     entity: Omit<T, '_id' | 'createdAtTimestamp' | 'version' | 'lastModifiedTimestamp'>,
@@ -30,7 +30,7 @@ Returns the created entity or error.
 ### <a name="createentity"></a> createEntities
 
 ```ts
-class AbstractDataStore {
+interface DataStore {
   createEntities<T extends BackkEntity>(
     EntityClass: { new (): T },
     entities: Array<Omit<T, '_id' | 'createdAtTimestamp' | 'version' | 'lastModifiedTimestamp'>>,

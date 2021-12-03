@@ -33,20 +33,20 @@
 
 - Create synchronous and asynchronous microservices using
   - HTTP/1.1 or HTTP2
-  - Apache Kafka
-  - Redis
+  - [Apache Kafka](https://kafka.apache.org/)
+  - [Redis](https://redis.io/)
 - Write your microservices using Typescript and plain functions that are called by remote clients
   - No need for learning any technology like REST, GraphQL or gRPC
   - Can be used both for resource and RPC style microservices
-- Supports subscription endpoints via Server Sent Events (SSE) in HTTP/1.1 or HTTP2
+- Supports subscription endpoints using Server Sent Events (SSE) in HTTP/1.1 and HTTP/2
 - Supports multiple databases
-  - PostgreSQL
-  - MySQL
-  - MongoDB
-  - MariaDB
-  - Vitess (MySQL compatible)
-  - YugabyteDB (PostgreSQL compatible)
-  - CockroachDB (PostgreSQL compatible)
+  - [PostgreSQL](https://www.postgresql.org/)
+  - [MySQL](https://www.mysql.com/)
+  - [MongoDB](https://www.mongodb.com/)
+  - [MariaDB](https://mariadb.org/)
+  - [Vitess](https://vitess.io/) (MySQL compatible)
+  - [YugabyteDB](https://www.yugabyte.com/) (PostgreSQL compatible)
+  - [CockroachDB](https://www.cockroachlabs.com/) (PostgreSQL compatible)
 - ORM (Object-relational mapper)
   - Entities
   - Comprehensive set of validations for all data types (number, string, Date, Arrays)
@@ -63,10 +63,10 @@
 - Automatic microservice documentation generation
   - [TypeDoc](https://typedoc.org/)
 - Automatic microservice metadata/specification generation
-  - OpenAPI v3
+  - [OpenAPI v3](https://swagger.io/docs/specification/about/)
   - Backk custom format that contains additional info compared to OpenAPI v3 spec
 - Metadata endpoints can be called to retrieve microservice metadata for dynamic clients
-- Automatic microservice integration test generation for Postman
+- Automatic microservice integration test generation for [Postman](https://www.postman.com/) and [Newman](https://www.npmjs.com/package/newman)
 - Automatic client code generation for Kubernetes cluster internal and web frontend clients
 - Built-in Observability
   - Distributed tracing using OpenTelemetry API (Jaeger)

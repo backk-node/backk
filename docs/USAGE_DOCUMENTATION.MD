@@ -6,7 +6,7 @@
 - [Data Store](usage/DATA_STORE.MD)
 - [Security](usage/SECURITY.MD)
 - [Accessing Remote Services](usage/REMOTE_SERVICE_ACCESS.MD)
-- [Special Service Function Types](usage/SPECIAL_SERVICE_FUNCTION_TYPES)
+- [Special Service Function Types](usage/SPECIAL_SERVICE_FUNCTION_TYPES.MD)
 - [Executing Multiple Service Functions within One Request](usage/MULTIPLE_SERVICE_FUNCTION_CALLS.MD)
 - [Scheduling Service Function Execution](usage/SCHEDULING_SERVICE_FUNCTION_EXECUTION.MD)
 - [Caching](usage/CACHING.MD)

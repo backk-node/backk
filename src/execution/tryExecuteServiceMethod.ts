@@ -113,7 +113,7 @@ export default async function tryExecuteServiceMethod(
         throw new Error('Missing maxServiceFunctionCountInMultipleServiceFunctionExecution option');
       }
 
-      if (serviceFunctionName === 'executeMultipleInParallelWithoutTransaction') {
+      if (serviceFunctionName === 'executeMultipleServiceFunctionsInParallelWithoutTransaction') {
         return await executeMultipleServiceFunctions(
           true,
           false,
@@ -124,7 +124,7 @@ export default async function tryExecuteServiceMethod(
           isClusterInternalCall,
           options
         );
-      } else if (serviceFunctionName === 'executeMultipleInSequenceWithoutTransaction') {
+      } else if (serviceFunctionName === 'executeMultipleServiceFunctionsInSequenceWithoutTransaction') {
         return await executeMultipleServiceFunctions(
           false,
           false,
@@ -135,7 +135,7 @@ export default async function tryExecuteServiceMethod(
           isClusterInternalCall,
           options
         );
-      } else if (serviceFunctionName === 'executeMultipleInParallelInsideTransaction') {
+      } else if (serviceFunctionName === 'executeMultipleServiceFunctionsInParallelInsideTransaction') {
         return await executeMultipleServiceFunctions(
           true,
           true,
@@ -146,7 +146,7 @@ export default async function tryExecuteServiceMethod(
           isClusterInternalCall,
           options
         );
-      } else if (serviceFunctionName === 'executeMultipleInSequenceInsideTransaction') {
+      } else if (serviceFunctionName === 'executeMultipleServiceFunctionsInSequenceInsideTransaction') {
         return executeMultipleServiceFunctions(
           false,
           true,
@@ -165,7 +165,7 @@ export default async function tryExecuteServiceMethod(
 
     const serviceFunctionCallStartTimeInMillis = Date.now();
 
-    if (serviceFunctionName === 'scheduleJobExecution') {
+    if (serviceFunctionName === 'scheduleServiceFunctionExecution') {
       return await tryScheduleJobExecution(microservice, serviceFunctionArgument, headers, resp);
     }
 

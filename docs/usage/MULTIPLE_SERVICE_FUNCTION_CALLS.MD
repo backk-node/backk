@@ -22,10 +22,10 @@ interface ServiceFunctionExecutionOptions {
 ```
 
 When you want to execute multiple service functions, you should send the HTTP request to one of the following endpoints:
-- `executeMultipleInParallelInsideTransaction`
-- `executeMultipleInParallelWithoutTransaction`
-- `executeMultipleInSequenceInsideTransaction`
-- `executeMultipleInSequenceWithoutTransaction`
+- `executeMultipleServiceFunctionsInParallelInsideTransaction`
+- `executeMultipleServiceFunctionsInParallelWithoutTransaction`
+- `executeMultipleServiceFunctionsInSequenceInsideTransaction`
+- `executeMultipleServiceFunctionsInSequenceWithoutTransaction`
 
 If you are executing service functions that modify data in the database, you should use the transactional endpoints, but
 if you are just querying database data, you might want to use the non-transactional endpoints.
@@ -33,7 +33,7 @@ if you are just querying database data, you might want to use the non-transactio
 For the HTTP request body, you should specify the to be executed service functions and their arguments as JSON object:
 
 ```
-POST /executeMultipleInParallelWithoutTransaction
+POST /executeMultipleServiceFunctionsInParallelWithoutTransaction
 ```
 
 ```json
@@ -58,7 +58,7 @@ If the service function exists in a remote Backk microservice, you need to speci
 microservice name (and namespace, if it is not same). For example:
 
 ```
-POST /executeMultipleInParallelWithoutTransaction
+POST /executeMultipleServiceFunctionsInParallelWithoutTransaction
 ```
 
 ```json

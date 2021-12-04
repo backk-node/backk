@@ -1,11 +1,11 @@
 ## Client Generation
 
 Backk generates internal and frontend clients automatically when using th default git commit pre-hook
-that comes with the backk-starter project.
+that comes with the `backk-starter` project.
 
-You can also generate clients using following command:
+You can also generate clients using the following command:
 ```bash
-npm run generateClientsOnly
+npm run generateClients
 ```
 
 Clients are generated in directory `generated/clients/frontend` and `generated/clients/internal`.

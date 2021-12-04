@@ -1,6 +1,6 @@
 ## Observability
 
-- [Implement Liveness, Readiness and Startup Checks for Kubernetes Container Probes](#probes)
+- [Implement Liveness, Readiness and Startup Checks for Kubernetes Probes](#probes)
 - [Logging](#logging)
   - [Changing Logging Level](#changelogginglevel)
 - [Distributed Tracing with Jaeger](#distributedtracing)
@@ -8,11 +8,11 @@
   - [Default Metrics](#defaultmetrics)
   - [Collecting Custom Metrics](#custommetrics)
 
-### <a name="probes"></a> Implement Liveness, Readiness and Startup Checks for Kubernetes Container Probes
+### <a name="probes"></a> Implement Liveness, Readiness and Startup Checks for Kubernetes Probes
 
 Backk microservice Kubernetes deployment defines liveness, readiness and startup probes.
 
-The default implementation of liveness and readiness checks in Backk microservice is to return HTTP status
+The default implementation of liveness and readiness checks in a Backk microservice is to return HTTP status
 `200 OK`.
 
 The default implementation of startup check is to return HTTP status `200 OK` when the data store is initialized.
@@ -83,7 +83,7 @@ to `log` function in `attributes` argument.
 #### <a name="changelogginglevel"></a> Changing Logging Level
 The default logging level is `INFO`.
 
-You can change the logging level by edit your Backk microservice's Kubernetes ConfigMap:
+You can change the logging level by editing Backk microservice's Kubernetes ConfigMap:
 ```bash
 kubectl edit configmap <your-microservice-name>
 ```
@@ -94,7 +94,7 @@ In the text editor, change the default `INFO` value to one of the following:
 - `ERROR`
 - `FATAL`
 
-Save and close the editor. The new logging level should now be effective.
+Save and close the editor. The new logging level should be now effective.
 
 ### <a name="distributedtracing"></a> Distributed Tracing with Jaeger
 

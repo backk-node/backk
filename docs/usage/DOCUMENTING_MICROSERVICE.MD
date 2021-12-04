@@ -5,4 +5,4 @@ You can generate a documentation website for your Backk microservice with follow
 npm run generateDoc
 ```
 
-The documentation will be generated to directory `generated/docs`.
+After generation, the documentation will be available in directory `generated/docs`.

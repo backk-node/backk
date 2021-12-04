@@ -66,6 +66,7 @@ Number type properties must be annotated with one of following decorators otherw
 - `IsBigInt()`
 
 String type properties must be annotated with one of the string validators or with `IsAnyString()` decorator, otherwise an exception will be thrown.
+String validation decorators are listed [here](../api/DECORATORS.MD#validation-decorators)
 
 String and integer type properties must be annotated with one of following to validate the uniqueness of values in the database,
 otherwise an exception will be thrown:

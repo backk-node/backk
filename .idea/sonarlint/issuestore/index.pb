@@ -269,12 +269,8 @@ b
 2src/decorators/service/function/ResponseHeaders.ts,3/1/3172561fe52ce4cd3bcd9f210fee5a09f8f1a1e2
 ^
 .src/initialization/tryExecuteOnStartupTasks.ts,b/f/bfc801c413813f1457bebd7c5ca6aa5b91ed625e
-e
-5src/remote/messagequeue/kafka/sendOneOrMoreToKafka.ts,c/8/c85e63005baa112768508fc435ef3f685516a669
 V
 &src/remote/messagequeue/sendToKafka.ts,a/6/a6d3de11e1acf25957c19b8b6311ad057c353c31
-o
-?src/remote/messagequeue/sendToRemoteServiceInsideTransaction.ts,8/5/85b6b92b6f40a0f38a1f3277c423ff3749ff443d
 d
 4src/decorators/service/function/AllowForEveryUser.ts,8/3/83ff187a7fbb3434e468019f76ea81486266353e
 s

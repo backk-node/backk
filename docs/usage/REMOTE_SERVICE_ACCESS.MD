@@ -16,8 +16,7 @@ The second way is to call another Backk microservice to synchronously fetch data
 Third way is to make a generic HTTP request to any HTTP based service.
 
 #### <a name="fetchfromremoteservice"></a> Declarative Fetch of Sub-Entities From Backk Remote Services
-
-In the below example, Backk microservice `user-account-service` has an entity named `UserAccoount`.
+In the below example, Backk microservice `user-account-service` has an entity named `UserAccount`.
 When a `UserAccount` entity is fetched from data store at the same time also user's own sales items are fetched
 automatically from a remote Backk microservice named `sales-item-service`, where service function named
 `salesItemService.getUsersSalesItem` is called with argument containing `userAccountId`.
@@ -30,7 +29,7 @@ function call argument and response as arguments and then returns the argument t
 Entity properties annotated with `@FetchFromRemoteService` are always implicitly read-only properties.
 
 In the below example, user's own sales items are fetched from remote `sales-item-service` microservice using service function
-`salesItemService.getUsersSalesItems`. `{ userAccountId: <your user account id> }` will sent as a argument for the remote service function call. For example, if you request service function `userAccountService.getUserAccount`,
+`salesItemService.getUsersSalesItems`. `{ userAccountId: <your user account id> }` will be sent as the argument for the remote service function call. For example, if you request service function `userAccountService.getUserAccount` that returns a `UserAccount`,
 you will get your own sales items automatically fetched from the remote microservice. 
 
 ```ts
@@ -52,7 +51,7 @@ By default, it is the same as microservice calling the remote microservice.
 #### <a name="callremoteservice"></a> Call Backk Remote Services
 Backk microservice can easily call service functions in another Backk microservice using `callRemoteService` function.
 The below example calls service function `salesItemService.getUsersSalesItems` in Backk microservice `sales-item-service`,
-giving `userAccountId` as service function argument.
+giving `userAccountId` as service function argument. Current request´s authorization header is added to the new request.
 
 ```ts
 import { callRemoteService } from 'backk';
@@ -87,8 +86,6 @@ interface HttpRequestOptions {
 Accessing non-Backk microservices and HTTP endpoints from Backk microservice is easy using `makeHttpRequest` function.
 `makeHttpRequest` will accept `requestUrl` argument and a JavaScript object as request body. The HTTP request
 is always made with content type `application/json`. Current request´s authorization header is added to the new request.
-Making HTTPS request is possible, but you should not use HTTPS, but instead configure Kubernetes service mesh mTLS 
-between microservices and Kubernetes cluster external services.
 
 ```ts
 function makeHttpRequest(
@@ -113,11 +110,51 @@ There are three different ways to access asynchronously remote Backk services fr
 
 First way is to access them by sending a remote service function call request to Kafka, 
 the second way is to access them by sending a remote service function call request to Redis.
-
 The third way is to access multiple remote Backk services via Kafka inside a transaction.
 
 #### <a name="sendtokafka"></a> Send to Remote Backk Service via Kafka
 Sending service function call request to a remote Backk microservice can be achieved with a call to `sendToRemoteService` function.
+
+```ts
+async function sendToRemoteService(
+  communicationMethod: 'kafka' | 'redis',
+  microserviceName: string,
+  serviceFunctionName: string,
+  serviceFunctionArgument: object,
+  microserviceNamespace = process.env.MICROSERVICE_NAMESPACE,
+  server?: string,
+  sendResponseTo?: ResponseSendToSpec,
+  options?: SendToOptions
+): PromiseErrorOr<null>
+
+interface ResponseSendToSpec {
+  communicationMethod: CommunicationMethod;
+  microserviceName: string;
+  microserviceNamespace: string | undefined;
+  serviceFunctionName: string;
+  server: string;
+}
+
+interface SendToOptions {
+  compressionType?: CompressionTypes;
+  sendAcknowledgementType?: SendAcknowledgementType;
+}
+
+enum CompressionTypes {
+  None = 0,
+  GZIP = 1,
+  Snappy = 2,
+  LZ4 = 3,
+  ZSTD = 4,
+}
+
+enum SendAcknowledgementType {
+  NONE,
+  LEADER_ONLY,
+  ALL_REPLICAS = -1
+}
+```
+
 In the below example a service function call request for service function `refundService.refundOrder` in
 Backk microservice named `refund-service` is sent to Kafka with service function argument containing the `orderId`
 

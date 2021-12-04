@@ -21,12 +21,11 @@ class MicroserviceImpl extends Microservice {
 ```
 
 Backk provides following data stores out of the box:
-
 - `MySqlDataStore`
 - `PostgreSqlDataStore`
 - `MongoDbDataStore`
 
-In addition to above data stores, Backk provides `NullDataStore` which is intended to use when writing unit tests.
+In addition to above data stores, Backk provides `NullDataStore` which is intended to be used when no actual data store is used or when writing unit tests.
 
 Data store connection parameters are defined with following environment variables:
 

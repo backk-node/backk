@@ -19,25 +19,22 @@ class MyServiceFunctionArg {
 ```
 
 Number type properties must be annotated with one of following decorators otherwise an exception will be thrown:
-
 - `IsInt()`
 - `IsFloat()`
 - `IsBigInt()`
 
 String type properties must be annotated with one of the string validators or with `IsAnyString()` decorator, otherwise an exception will be thrown.
+String validation decorators are listed [here](../api/DECORATORS.MD#validation-decorators) 
 
 The possible value range of number type properties must be validated with following decorators or an exception will be thrown:
-
 - `@Min()` and `@Max()`
 - `@MinMax()`
 
-The maximum length of string type properties must validated with following decorators or an exception will be thrown:
-
+The maximum length of string type properties must be validated with following decorators or an exception will be thrown:
 - `@MaxLength()`
 - `@Length()`
 
 Each array type property must have the following decorators or an exception will be thrown:
-
 - `@ArrayMinSize()`
 - `@ArrayMaxSize()`
 

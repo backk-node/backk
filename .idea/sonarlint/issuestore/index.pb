@@ -440,8 +440,6 @@ p
 @src/validation/hasAtMostRepeatingOrConsecutiveCharacters.spec.ts,c/0/c044b6a18614e6b1da44419774f33392648d4968
 a
 1src/remote/messagequeue/kafka/consumeFromKafka.ts,e/2/e236cb3878b06d9ac3d16895a3fe2c553382926c
-`
-0src/execution/executeMultipleServiceFunctions.ts,d/4/d4d12c723aacc7da131331d4a853a2b0f225a2db
 j
 :src/observability/metrics/defaultSystemAndNodeJsMetrics.ts,a/9/a9d275087b478f88f0e9eb315ea2cac5d2dfa9c1
 j

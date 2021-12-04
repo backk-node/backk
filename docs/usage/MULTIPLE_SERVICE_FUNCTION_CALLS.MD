@@ -1,20 +1,17 @@
 ## Executing Multiple Service Functions within One Request
+
 It is possible to execute multiple service function calls from one HTTP request. By default, this feature is not enabled, 
-but when starting the HTTP server using `startHttpServerFor`, `options` can be provided to allow multiple service function execution:
+but when instantiating an `HttpServer`, `options` can be provided to allow multiple service function execution:
 
 ```ts
-function startHttpServerFor(
-  microservice: Microservice,
-  options?: ServiceFunctionExecutionOptions,
-  httpVersion: HttpVersion = 1
-);
+class HttpServer implements RequestProcessor {
+  constructor(
+    private readonly httpVersion: HttpVersion = 1,
+    private readonly options?: ServiceFunctionExecutionOptions
+  )
+}
 
 interface ServiceFunctionExecutionOptions {
-  isMetadataServiceEnabled?: boolean;
-  httpGetRequests?: {
-    regExpForAllowedServiceFunctionNames?: RegExp;
-    deniedServiceFunctionNames?: string[];
-  };
   multipleServiceFunctionExecution?: {
     isAllowed?: boolean;
     maxServiceFunctionCount?: number;
@@ -25,15 +22,18 @@ interface ServiceFunctionExecutionOptions {
 ```
 
 When you want to execute multiple service functions, you should send the HTTP request to one of the following endpoints:
-- executeMultipleInParallelInsideTransaction
-- executeMultipleInParallelWithoutTransaction
-- executeMultipleInSequenceInsideTransaction
-- executeMultipleInSequenceWithoutTransaction
+- `executeMultipleInParallelInsideTransaction`
+- `executeMultipleInParallelWithoutTransaction`
+- `executeMultipleInSequenceInsideTransaction`
+- `executeMultipleInSequenceWithoutTransaction`
+
+If you are executing service functions that modify data in the database, you should use the transactional endpoints, but
+if you are just querying database data, you might want to use the non-transactional endpoints.
 
 For the HTTP request body, you should specify the to be executed service functions and their arguments as JSON object:
 
 ```
-POST /executeMultipleInParallelInsideTransaction
+POST /executeMultipleInParallelWithoutTransaction
 ```
 
 ```json
@@ -53,11 +53,12 @@ POST /executeMultipleInParallelInsideTransaction
 }
 ```
 
+You can also execute remote microservice requests.
 If the service function exists in a remote Backk microservice, you need to specify the remote Backk
 microservice name (and namespace, if it is not same). For example:
 
 ```
-POST /executeMultipleInParallelInsideTransaction
+POST /executeMultipleInParallelWithoutTransaction
 ```
 
 ```json
@@ -71,6 +72,7 @@ POST /executeMultipleInParallelInsideTransaction
   },
   "allTags": {
     "microserviceName": "tag-service",
+    "microserviceNamespace": "default",
     "serviceFunctionName": "tagService.getSalesItems",
     "serviceFunctionArgument": {
       "nameFilter": ""

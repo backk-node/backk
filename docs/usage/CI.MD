@@ -3,9 +3,9 @@
 1. Setup a Kubernetes cluster or namespace to be used as CI environment
 2. Install [Flux](https://fluxcd.io/) GitOps solution to the CI environment.
 3. Create a Git repository for End-To-End tests and implement the tests. E2E test should be implemented as Kubernetes CronJob and deployable by a Helm chart.
-4. Create a Git repository for CI environment where you create HelmRelease for each of your Backk platform, Backk microservices and E2E tests. 
+4. Create a Git repository for CI environment where you create HelmRelease for Backk platform, Backk microservices and E2E tests. 
 5. In HelmReleases, set the Helm chart version to `>=1.0.0'. In this way, CI environment is automatically updated when new Helm chart version is available. 
-6. Take into use the GitHub CI workflow in `.github/workflows/ci.yaml` or implement your own CI pipeline.
+6. Take into use the GitHub CI workflow in `.github/workflows/ci.yaml` or implement your own CI pipeline (next section).
 
 ### Implement your own CI pipeline
 

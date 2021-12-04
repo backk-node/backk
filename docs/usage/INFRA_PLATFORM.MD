@@ -19,7 +19,6 @@ principle. The best way is to use a declarative way of defining the needed infra
 It is recommended to use a comprehensive IaC tool like [Terraform](https://www.terraform.io/)
 
 Terraform provide tutorials and ready-made code for deploying Kubernetes cluster to Cloud:
-
 - [Provision an EKS Cluster (AWS)](https://learn.hashicorp.com/tutorials/terraform/eks?in=terraform/kubernetes)
 - [Provision an AKS Cluster (Azure)](https://learn.hashicorp.com/tutorials/terraform/aks?in=terraform/kubernetes)
 - [Provision a GKE Cluster (Google Cloud)](https://learn.hashicorp.com/tutorials/terraform/gke?in=terraform/kubernetes)

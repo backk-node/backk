@@ -34,8 +34,8 @@ class FollowedUserAccount {
 
 In the above example `FollowedUserAccount` entity is a logical entity that is a reference to `UserAccount` entity.
 This means that `FollowedUserAccount` entities are actually stored in the database table of physical entity `UserAccount`.
-Separation between logical and physical entity is needed to avoid infinite recursion.
-The following example is not valid due to infinite recursion:
+Separation between logical and physical entity is needed to avoid infinite recursion when defining nested entities.
+The following example **is not valid** due to infinite recursion when `UserAccount` refers to itself:
 
 ```ts
 import { BaseUserAccount } from 'backk';
@@ -61,7 +61,6 @@ class UserAccount extends BaseUserAccount {
 ```
 
 Number type properties must be annotated with one of following decorators otherwise an exception will be thrown:
-
 - `IsInt()`
 - `IsFloat()`
 - `IsBigInt()`
@@ -69,27 +68,23 @@ Number type properties must be annotated with one of following decorators otherw
 String type properties must be annotated with one of the string validators or with `IsAnyString()` decorator, otherwise an exception will be thrown.
 
 String and integer type properties must be annotated with one of following to validate the uniqueness of values in the database,
-otherwise an execption will be thrown:
-
+otherwise an exception will be thrown:
 - `@Unique()`
 - `@NotUnique()`
 
 The possible value range of number type properties must be validated with following decorators or an exception will be thrown:
-
 - `@Min()` and `@Max()`
 - `@MinMax()`
 
 The maximum length of string type properties must be validated with following decorators or an exception will be thrown:
-
 - `@MaxLength()`
 - `@Length()`
 
 Each entity property having a sub-entity array type must have one of following decorators or an exception will be thrown:
-
 - `@OneToMany()`
 - `@ManyToMany()`
 
-There is no `@ManyToOne()` mapping, it can be achieved with a combination of following 3 annotations:
+There is no `@ManyToOne()` annotation, but it can be achieved with a combination of following 3 annotations:
 
 ```ts
 @ManyToMany()
@@ -98,14 +93,12 @@ There is no `@ManyToOne()` mapping, it can be achieved with a combination of fol
 ```
 
 Each array type property that IS NOT read-only must have the following decorators or an exception will be thrown:
-
 - `@ArrayMinSize()`
 - `@ArrayMaxSize()`
 
 Each entity property must be annotated with property access mode decorator or an exception will be thrown.
 Access mode defines how the property can be accessed by the microservice clients. Private properties cannot be accessed by clients
 and read-write properties offer full access. Access mode decorators are:
-
 - `@Private()`
 - `@ReadWrite()`
 - `@ReadOnly()`
@@ -143,7 +136,6 @@ class FollowedUserAccount {
 ```
 
 In the above example, `FollowedUserAccount` class is composed by picking following properties from `UserAccount` class:
-
 - `_id`
 - `displayName`
 - `city`

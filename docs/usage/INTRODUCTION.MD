@@ -114,14 +114,14 @@ export default class SalesItemServiceImpl extends CrudEntityService implements S
 }
 ```
 
-You need supply `dataStore` for your service, if it is using a database, otherwise provide an instance of `NullDataStore`.
+You need supply `dataStore` for your service, if it is using a database, otherwise you can use an instance of `NullDataStore`.
 
 NOTE!
 Your microservice can use only one data store.
 If you service requires multiple data store, your service is not probably a microservice. You should then split
 your service into smaller pieces, so that each microservice requires only one data store to operate on.
 
-For `CrudEntityService`, you need to give two parameters:
+For the `CrudEntityService` class constructor, you need to give two parameters:
 - map of error definitions (or an empty object if the service does not raise any errors specific to business logic in your service functions)
 - dataStore
 
@@ -154,12 +154,12 @@ the table in the database.
 For each property in the entity class, you need define a validator or validators. For `string` type properties,
 you need to define a string validator, for example `@IsAcii()`. If you accept any string value, you should annotate
 the string property with `@IsAnyString()` decorator. Additionally, you need to define what is the maximum length of
-accepted string. You can use `@MaxLength` or `@Length()` decorator. The latter of which also defines the minimum length of 
+accepted string. You can use `@MaxLength()` or `@Length()` decorator. The latter of which also defines the minimum length of 
 the string. Limiting the maximum length of the string is crucial to prevent possible DoS (Denial of Service) attacks.
 
 For number type properties, you must define one of following:
 `@IsInt()`, `@IsFloat` or `@IsBigInt()`. In addition to that, you need to define the allowed range of values with
-`@MinMax()` decorator. If some needed validators is missing, Backk will throw an exception about that.
+`@MinMax()` decorator. If some needed validators is missing, Backk will throw an exception.
 
 For each property you must define the access mode of the property. The access mode defines the visibility of the 
 property to the clients of the microservice. The following access mode decorators are available:
@@ -171,8 +171,8 @@ property to the clients of the microservice. The following access mode decorator
 - `@CreateOnly()`
 - `@UpdateOnly()`
 
-The exclamation mark (!) after property names is needed because properties are not initialized in constructor.
-Otherwise, you will get a TypeScript compiler warnings.
+The exclamation mark (!) after property names is needed because properties are not initialized in the class constructor.
+If the exclamation mark is missing, you will get a TypeScript compiler warnings.
 
 ### Implement deleteAllSalesItems
 
@@ -182,7 +182,6 @@ configured for unit testing with Jest.
 First we will write our spec file to specify the functionality of the `deleteAllEntities` method:
 
 SalesItemServiceImpl.spec.ts
-
 ```ts
 import { NullDataStore } from 'backk';
 import SalesItemService from './SalesItemService';
@@ -193,17 +192,17 @@ const salesItemService = new SalesItemService(dataStore);
 
 describe('SalesItemService', () => {
   describe('deleteAllEntities', () => {
-    it('should call the data store´s deleteAllEntities method once with SalesItem entity class as parameter and return null without error', async () => {
+    it('should call the data store´s deleteAllEntities method once with SalesItem entity class as parameter and return null as result without an error', async () => {
       // GIVEN
       dataStore.deleteAllEntities = jest.fn().mockReturnValue(Promise.resolve([null, null]));
       
       // WHEN
-      const [entity, error] = await salesItemService.deleteAllEntities();
+      const [result, error] = await salesItemService.deleteAllEntities();
       
       // THEN
       expect(dataStore.deleteAllEntities).toHaveBeenCalledTimes(1);
       expect(dataStore.deleteAllEntities).toHaveBeenCalledWith(SalesItem);
-      expect(entity).toBeNull();
+      expect(result).toBeNull();
       expect(error).toBeNull();
     })
   })
@@ -215,7 +214,7 @@ Let's test our unit test by executing:
 npm test
 ```
 
-Test will fail because we havent implemented the `deleteAllEntities` function in `SalesItemServiceImpl` class.
+Test will fail because we haven't implemented the `deleteAllEntities` function in `SalesItemServiceImpl` class.
 Let´s implement the function:
 
 SalesItemServiceImpl.ts
@@ -234,9 +233,10 @@ export default class SalesItemServiceImpl extends CrudEntityService implements S
 
 Now we can execute `npm test` again and make our unit test to pass.
 
-Each Backk service function must have an authorization annotation for improved security reasons.
+Each Backk service function must have an authorization annotation for improved security reasons. By explicitly
+requiring an authorization annotation, it makes impossible to forget such an annotation.
 For the above service function, we use `@AllowForTests` decorator to indicate that this service function
-can only be accessed when executing tests, it cannot be accessed by any outside clients at all.
+can only be accessed when executing tests, it cannot be accessed by any clients at all.
 
 There are following possible authorization decorators available for use:
 - `@AllowForEveryUser()`
@@ -252,7 +252,7 @@ SalesItemService.spec.ts
 ```ts
 describe('SalesItemService', () => {
   describe('createSalesItem', () => {
-    it('should call the data store´s createEntity method once with SalesItem class as first parameter and sales item entity as second parameter and should return the entity.', async () => {
+    it('should call the data store´s createEntity method once with SalesItem class as first parameter and sales item entity as second parameter and should return the entity withour error', async () => {
       // GIVEN
       const salesItem = {
         name: 'Sales item 1',
@@ -299,7 +299,7 @@ import { AllowForEveryUser, CrudEntityService, PromiseErrorOr, SqlExpression } f
 import SalesItemService from './SalesItemService';
 import SalesItem from './types/entities/SalesItem';
 
-export default class SalesItemServiceImpl  extends CrudEntityService implements SalesItemService {
+export default class SalesItemServiceImpl extends CrudEntityService implements SalesItemService {
   @AllowForEveryUser()
   getSalesItems({ nameSubString }: GetSalesItemsArg): PromiseErrorOr<Many<SalesItem>> {
     const filter = new SqlExpression('name LIKE :nameSubString', {
@@ -328,7 +328,6 @@ export default class GetSalesItemsArg {
 
 For data store's `getEntitiesByFilters` you need to supply `postQueryOperations`.
 They are needed and used to define what response fields are wanted, how returned entities are sorted and paginated.
-
 
 In this example, we are using the default post query operations provided by the class `DefaultPostQueryOperations`.
 You can provide an instance of your own class matching the `PostQueryOperations` interface, or you can get this
@@ -378,7 +377,7 @@ export default class SalesItemServiceImpl extends CrudEntityService implements S
 ### Run Integration Tests with Postman
 
 Start your created Backk microservice:
-```ts
+```bash
 npm run start:dev
 ```
 
@@ -386,6 +385,6 @@ Wait your microservice to start. Launch Postman and in Postman import following 
 file to Postman. Now you can run the tests in the Postman collection in Postman.
 
 You can also run integrations test from the command line:
-```ts
+```bash
 npm run integrationtest:dev
 ```

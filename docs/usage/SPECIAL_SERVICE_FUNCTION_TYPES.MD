@@ -4,22 +4,23 @@
 - [Cron Jobs](#cronjobs)
 
 ### <a name="startuptasks"></a> Startup Tasks
-In your service, you can specify a service function that is a startup task. Startup tasks are service functions
-that are executed upon microservice startup, and they cannot be executed by any clients. 
+In your service, you can specify a service functions that are startup tasks. Startup tasks are service functions
+that are executed once upon microservice startup, and they cannot be executed by any clients. 
 
 To mark a service function as startup task, annotate it with `@ExecuteOnStartup()` decorator.
 
-You can use startup tasks to initialize an entity table or migrate entity table from one version to another.
-Example of both of these is available [here](https://github.com/backk-node/backk-example-project/blob/main/src/services/tag/TagServiceImpl.ts)
+You can use startup tasks to initialize an entity database table or migrate entity database table from one version to another.
+An example of both of these is available [here](https://github.com/backk-node/backk-example-project/blob/main/src/services/tag/TagServiceImpl.ts)
 
 ### <a name="cronjobs"></a> Cron Jobs
-In your service, you can specify a service function that is a cron job. Cron jobs are service functions that
+In your service, you can specify service functions that are cron jobs. Cron jobs are service functions that
 are executed on given schedule, and they cannot be executed by any clients.
 
 To mark a service function as startup task, annotate it with `@CronJob(cronSchedule: CronSchedule, retryIntervalsInSecs: number[] = defaultRetryIntervals)` decorator.
 
 ```ts
 type CronSchedule = {
+  // 0-59
   minutes?: number | number[] | Range | 'any';
   minuteInterval?: number;
   
@@ -27,14 +28,15 @@ type CronSchedule = {
   hours?: number | number[] | Range | 'any';
   hourInterval?: number;
   
+  // 1-31
   daysOfMonth?: number | number[] | Range | 'any';
   dayInterval?: number;
 
-  // 0 - 11
+  // 0 - 11 (Jan=0, Dec=11)
   months?: number | number[] | Range | 'any';
   monthInterval?: number;
 
-  // 0-6 (Sun-Sat)
+  // 0-6 (Sun=0, Sat=6)
   daysOfWeek?: number | number[] | Range;
   weekDayInterval?: number;
 };

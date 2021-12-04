@@ -8,7 +8,7 @@
 In order to cache service function response, you need to provide a response cache config service implementation class 
 that extends the `ResponseCacheConfigService` abstract class.
 
-You need to implement your class:
+You need to implement the needed methods in your class:
 
 ```ts
 import { ResponseCacheConfigService } from 'backk';
@@ -31,12 +31,11 @@ class MicroserviceImpl extends Microservice {
 }
 ```
 
-After these functions are implemented, Backk will automatically cache service function call response based
+Backk will automatically cache service function call response based
 on the result of call to `shouldCacheServiceFunctionCallResponse`. If the call returns `true`, Backk will
 check if cache already contains a response for same service function name and same serviceFunctionArgument.
 If the response is found from the cache, it is returned from the cache instead of executing the actual
-service function. 
-
+service function.
 
 ### <a name="genericlocalinmemorycaching"></a> Generic Local In-Memory Caching
 

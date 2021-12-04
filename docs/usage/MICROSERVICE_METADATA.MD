@@ -1,10 +1,10 @@
 ## Microservice Metadata
 
-- [Backk Metadata](#backkmetadata)
-- [Backk Metadata in OpenAPI 3 Format](#openapi)
+- [Microservice Metadata](#microservicemetadata)
+- [Microservice Metadata in OpenAPI 3 Format](#openapi)
 
-### <a name="backkmetadata"></a> Backk Metadata
-Backk provides its metadata from HTTP endpoint. This metadata can be used to build a dynamic client.
+### <a name="microservicemetadata"></a> Microservice Metadata
+Backk microservice provides its metadata from an HTTP endpoint. This metadata can be used to build a dynamic client.
 
 Backk microservice provides its metadata from the following HTTP endpoint:
 ```
@@ -12,7 +12,6 @@ POST /metadataService.getServicesMetadata
 ```
 
 Backk microservice metadata is provided in following format:
-
 ```json
 {
   "services": [
@@ -91,8 +90,8 @@ Backk microservice metadata is provided in following format:
 }
 ```
 
-### <a name="openapi"></a> Backk Metadata in OpenAPI 3 Format
-Backk provides its metadata in OpenAPI 3 format from HTTP endpoint. This metadata can be used to build a dynamic client.
+### <a name="openapi"></a> Microservice Metadata in OpenAPI 3 Format
+Backk microservice provides its metadata also in OpenAPI 3 format from an HTTP endpoint. This metadata can be used to build a dynamic client.
 
 Backk microservice provides its metadata in OpenAPI 3 format from the following HTTP endpoint:
 ```

@@ -7,6 +7,8 @@ The request to schedule a service function execution should be done to following
 POST /scheduleServiceFunctionExecution
 ```
 
+For the request body, you specify the service function name, argument and scheduled execution timestamp:
+
 ```json
 {
   "serviceFunctionName": "reportingService.generateSalesReport",
@@ -28,10 +30,11 @@ HTTP/1.1 200 OK
 }
 ```
 
-The `reportingService.generateSalesReport` will generate the report at specified time, and it should
-store the generated report to data store with the job id. The job id is given to service function `reportingService.generateSalesReport`
-inside the service function argument in field `_jobId`. 
-So the complete service function argument will in the example be:
+The implementation of `reportingService.generateSalesReport` will generate the report for a specified region for a specific date, and it should
+store the generated report to data store with the job id. The job id is given to the service function `reportingService.generateSalesReport`
+in the service function argument in field `_jobId`. 
+
+So the complete service function argument for `reportingService.generateSalesReport` will in this example be:
 
 ```json
 {

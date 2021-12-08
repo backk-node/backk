@@ -1,9 +1,9 @@
 export default function isExecuteMultipleRequest(serviceFunctionName: string) {
   if (
-    serviceFunctionName === 'executeMultipleInParallelInsideTransaction' ||
-    serviceFunctionName === 'executeMultipleInParallelWithoutTransaction' ||
-    serviceFunctionName === 'executeMultipleInSequenceInsideTransaction' ||
-    serviceFunctionName === 'executeMultipleInSequenceWithoutTransaction'
+    serviceFunctionName === 'executeMultipleServiceFunctionsInParallelInsideTransaction' ||
+    serviceFunctionName === 'executeMultipleServiceFunctionsInParallelWithoutTransaction' ||
+    serviceFunctionName === 'executeMultipleServiceFunctionsInSequenceInsideTransaction' ||
+    serviceFunctionName === 'executeMultipleServiceFunctionsInSequenceWithoutTransaction'
   ) {
     return true;
   }

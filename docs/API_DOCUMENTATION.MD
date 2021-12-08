@@ -1,6 +1,6 @@
 ## API Documentation
 
-- [Microservice Class](api/MICROSERVICE_CLASS.MD)
+- [Microservice](api/MICROSERVICE_CLASS.MD)
 - [Request Processors](api/MICROSERVICE_INITIALIZATION.MD)
 - [Base Services](api/BASE_SERVICES.MD)
 - [Decorators](api/DECORATORS.MD)

@@ -13,13 +13,15 @@ class HttpServer implements RequestProcessor {
 
 interface ServiceFunctionExecutionOptions {
   multipleServiceFunctionExecution?: {
-    isAllowed?: boolean;
     maxServiceFunctionCount?: number;
-    shouldAllowTemplates?: boolean;
     regExpForAllowedRemoteServiceFunctionCalls?: RegExp;
   };
 }
 ```
+
+`multipleServiceFunctionExecution.maxServiceFunctionCount` specifies how many service functions can be called in one request.
+`multipleServiceFunctionExecution.regExpForAllowedRemoteServiceFunctionCalls` is a regular expression that specifies which remote service functions can be called when executing multiple service function calls. If you want that your microservice enables execution of remote service functions you need to supply this parameter.
+For example: `/.+/`
 
 When you want to execute multiple service functions, you should send the HTTP request to one of the following endpoints:
 - `executeMultipleServiceFunctionsInParallelInsideTransaction`

@@ -1,9 +1,13 @@
 ## Microservice Class
 
+- [constructor](#constructor)
 - [start](#start)
 
+### <a name="constructor"></a> constructor
+
 Create a new `MicroserviceImpl` class by extending the class `Microservice`.
-Add your one or more service(s) that comprise the microservice as private readonly fields of the `MicroserviceImpl` class.
+Add your one or more service(s) that comprise the microservice as fields of the `MicroserviceImpl` class.
+Instantiate your data store and supply it as parameter to your service(s) and super class constructor:
 
 ```typescript
 import { MySqlDataStore } from 'backk';
@@ -19,31 +23,24 @@ class MicroserviceImpl extends Microservice {
 }
 ```
 
-In the example above, there is one service `userAccountService` in the microservice which can be accessed over HTTP like this:
-
-```
-POST https://<user-account-microservice-host>:<port>/userAccountService
-```
-
-If the `userAccountService` has function `createUser`, it can be accessed over HTTP like this:
+In the example above, if the `userAccountService` has function `createUser`, it can be accessed over HTTP like this:
 
 ```
 POST https://<user-account-microservice-host>:<port>/userAccountService.createUser
 ```
 
-The argument for the service function call `userAccountService.createUser` is sent in the HTTP POST request message body encoded in JSON
+The argument for the service function call `userAccountService.createUser` is sent in the HTTP POST request body encoded in JSON
 
 ### <a name="start"></a> start
 
 ```ts
 export default class Microservice {
   async start(
-    commandLineArgs: string[],
     requestProcessors: NonEmptyArray<RequestProcessor>,
     shouldGeneratePostmanIntegrationTestsOnRestartInDevEnv = true
   )
 }
 ```
 
-start the microservice with given command line arguments and request processors. You must define at least one
-request processor.
+starts the microservice with the given request processor(s). You must define at least one
+[Request Processor](MICROSERVICE_INITIALIZATION.MD).

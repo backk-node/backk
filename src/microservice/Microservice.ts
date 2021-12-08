@@ -20,7 +20,6 @@ export default class Microservice {
   constructor(public readonly dataStore: DataStore) {}
 
   async start(
-    commandLineArgs: string[],
     requestProcessors: NonEmptyArray<RequestProcessor>,
     shouldGeneratePostmanIntegrationTestsOnRestartInDevEnv = true
   ) {
@@ -33,6 +32,8 @@ export default class Microservice {
         'NODE_ENV environment variable must be defined and have one of following values: development, integration or production'
       );
     }
+
+    const commandLineArgs = process.argv;
 
     const uniqueRequestProcessors = uniqBy(requestProcessors, (requestProcessor) =>
       requestProcessor.getCommunicationMethod()

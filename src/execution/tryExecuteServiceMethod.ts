@@ -95,14 +95,11 @@ export default async function tryExecuteServiceMethod(
       throw createBackkErrorFromErrorCodeMessageAndStatus(backkErrors.INVALID_HTTP_METHOD);
     }
 
-    if (
-      options?.multipleServiceFunctionExecution?.isAllowed &&
-      isExecuteMultipleRequest(serviceFunctionName)
-    ) {
-      if (options?.multipleServiceFunctionExecution.maxServiceFunctionCount) {
+    if (isExecuteMultipleRequest(serviceFunctionName)) {
+      if (options?.multipleServiceFunctionExecution?.maxServiceFunctionCount) {
         if (
           Object.keys(serviceFunctionArgument).length >
-          options?.multipleServiceFunctionExecution.maxServiceFunctionCount
+          (options?.multipleServiceFunctionExecution?.maxServiceFunctionCount)
         ) {
           throw createBackkErrorFromErrorCodeMessageAndStatus({
             ...backkErrors.INVALID_ARGUMENT,
@@ -110,7 +107,7 @@ export default async function tryExecuteServiceMethod(
           });
         }
       } else {
-        throw new Error('Missing maxServiceFunctionCountInMultipleServiceFunctionExecution option');
+        throw new Error("Missing 'multipleServiceFunctionExecution.maxServiceFunctionCount' option in HttpServer");
       }
 
       if (serviceFunctionName === 'executeMultipleServiceFunctionsInParallelWithoutTransaction') {

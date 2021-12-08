@@ -6,7 +6,7 @@ import { CommunicationMethod } from "../remote/messagequeue/sendToRemoteService"
 
 export default class KafkaConsumer extends AbstractAsyncRequestProcessor {
   constructor(
-    private readonly defaultTopicConfig?: Omit<ITopicConfig, 'topic'>,
+    private readonly defaultTopicConfig?: Omit<ITopicConfig, 'topic' | 'numPartitions' | 'replicationFactor'>,
     private readonly additionalTopics?: string[]
   ) {
     super();

@@ -43,7 +43,7 @@ async function executeMultiple<T>(
       const response = new BackkResponse();
 
       let renderedServiceFunctionArgument = serviceFunctionArgument;
-      if ((options?.multipleServiceFunctionExecution?.shouldAllowTemplates && !isConcurrent) ?? false) {
+      if (!isConcurrent) {
         renderedServiceFunctionArgument = Mustache.render(
           JSON.stringify(serviceFunctionArgument),
           serviceFunctionCallIdToResponseMap

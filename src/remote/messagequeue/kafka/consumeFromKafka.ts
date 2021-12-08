@@ -1,26 +1,26 @@
+import { CanonicalCode, Span } from '@opentelemetry/api';
 import { ITopicConfig, Kafka } from 'kafkajs';
+import { HttpStatusCodes } from '../../../constants/constants';
+import BackkResponse from '../../../execution/BackkResponse';
 import tryExecuteServiceMethod from '../../../execution/tryExecuteServiceMethod';
 import tracerProvider from '../../../observability/distributedtracinig/tracerProvider';
 import log, { Severity } from '../../../observability/logging/log';
-import { CanonicalCode, Span } from '@opentelemetry/api';
 import defaultServiceMetrics from '../../../observability/metrics/defaultServiceMetrics';
 import forEachAsyncParallel from '../../../utils/forEachAsyncParallel';
-import { HttpStatusCodes } from '../../../constants/constants';
-import sendToRemoteService from '../sendToRemoteService';
 import getNamespacedMicroserviceName from '../../../utils/getNamespacedMicroserviceName';
-import BackkResponse from '../../../execution/BackkResponse';
 import wait from '../../../utils/wait';
-import minimumLoggingSeverityToKafkaLoggingLevelMap from './minimumLoggingSeverityToKafkaLoggingLevelMap';
-import logCreator from './logCreator';
-import { ResponseSendToSpec } from '../sendToRemoteServiceInsideTransaction';
 import callRemoteService from '../../http/callRemoteService';
+import sendToRemoteService from '../sendToRemoteService';
+import { ResponseSendToSpec } from '../sendToRemoteServiceInsideTransaction';
+import logCreator from './logCreator';
+import minimumLoggingSeverityToKafkaLoggingLevelMap from './minimumLoggingSeverityToKafkaLoggingLevelMap';
 
 export default async function consumeFromKafka(
   controller: any,
   host: string | undefined,
   port: string | undefined,
   defaultTopic: string = getNamespacedMicroserviceName(),
-  defaultTopicConfig?: Omit<ITopicConfig, 'topic'>,
+  defaultTopicConfig?: Omit<ITopicConfig, 'topic' | 'numPartitions' | 'replicationFactor'>,
   additionalTopics?: string[]
 ) {
   if (!host) {
@@ -36,29 +36,36 @@ export default async function consumeFromKafka(
   const replicationFactor =
     process.env.NODE_ENV === 'development'
       ? 1
-      : parseInt(process.env.KAFKA_DEFAULT_TOPIC_NUM_PARTITIONS ?? '3', 10);
+      : parseInt(process.env.KAFKA_DEFAULT_TOPIC_REPLICATION_FACTOR ?? '3', 10);
 
   const numPartitions =
     process.env.NODE_ENV === 'development'
       ? 1
       : parseInt(process.env.KAFKA_DEFAULT_TOPIC_NUM_PARTITIONS ?? '3', 10);
 
-  const finalDefaultTopicConfig = defaultTopicConfig ?? {
+  const hasRetentionMsConfigEntry = defaultTopicConfig?.configEntries?.find(
+    (configEntry: any) => configEntry.name === 'retention.ms'
+  );
+  const finalDefaultTopicConfig = {
     replicationFactor,
     numPartitions,
     configEntries: [
-      {
-        name: 'retention.ms',
-        value: process.env.KAFKA_DEFAULT_TOPIC_RETENTION_MS ?? (5 * 60 * 1000).toString()
-      }
-    ]
+      ...(hasRetentionMsConfigEntry ? [] : [
+        {
+          name: 'retention.ms',
+          value: process.env.KAFKA_DEFAULT_TOPIC_RETENTION_MS ?? (30 * 60 * 1000).toString(),
+        },
+      ]),
+      ...(defaultTopicConfig?.configEntries ?? []),
+    ],
+    ...defaultTopicConfig,
   };
 
   const kafkaClient = new Kafka({
     clientId: getNamespacedMicroserviceName(),
     logLevel: minimumLoggingSeverityToKafkaLoggingLevelMap[process.env.LOG_LEVEL ?? 'INFO'],
     brokers: [server],
-    logCreator
+    logCreator,
   });
 
   const consumer = kafkaClient.consumer({ groupId: getNamespacedMicroserviceName() });
@@ -94,7 +101,7 @@ export default async function consumeFromKafka(
     hasFetchError = true;
     fetchSpan?.setStatus({
       code: CanonicalCode.UNKNOWN,
-      message: error
+      message: error,
     });
   });
 
@@ -104,7 +111,7 @@ export default async function consumeFromKafka(
     hasFetchError = true;
     fetchSpan?.setStatus({
       code: CanonicalCode.UNKNOWN,
-      message: 'Consumer request to server has timed out'
+      message: 'Consumer request to server has timed out',
     });
   });
 
@@ -122,7 +129,7 @@ export default async function consumeFromKafka(
     fetchSpan?.setAttribute('kafka.consumer.fetch.numberOfBatches', event.numberOfBatches);
     if (!hasFetchError) {
       fetchSpan?.setStatus({
-        code: CanonicalCode.OK
+        code: CanonicalCode.OK,
       });
     }
     fetchSpan?.end();
@@ -155,15 +162,15 @@ export default async function consumeFromKafka(
           topics: [
             {
               topic: defaultTopic,
-              ...finalDefaultTopicConfig
-            }
-          ]
+              ...finalDefaultTopicConfig,
+            },
+          ],
         });
 
         if (didCreateDefaultTopic) {
           log(Severity.INFO, 'Kafka admin client info: created default topic', '', {
             defaultTopic,
-            ...finalDefaultTopicConfig
+            ...finalDefaultTopicConfig,
           });
         }
       }
@@ -172,7 +179,7 @@ export default async function consumeFromKafka(
     } catch (error) {
       log(Severity.ERROR, 'Kafka admin client error: ' + error.message, error.stack, {
         consumerType: 'kafka',
-        server
+        server,
       });
 
       await wait(10000);
@@ -230,8 +237,8 @@ export default async function consumeFromKafka(
               microserviceName,
               serviceFunctionName,
               microserviceNamespace,
-              server
-            } = (headers?.sendResponseTo as unknown) as ResponseSendToSpec;
+              server,
+            } = headers?.sendResponseTo as unknown as ResponseSendToSpec;
 
             if (communicationMethod === 'kafka' || communicationMethod === 'redis') {
               await sendToRemoteService(
@@ -243,15 +250,10 @@ export default async function consumeFromKafka(
                 server
               );
             } else {
-              callRemoteService(
-                microserviceName,
-                serviceFunctionName,
-                response,
-                microserviceNamespace
-              );
+              callRemoteService(microserviceName, serviceFunctionName, response, microserviceNamespace);
             }
           }
-        }
+        },
       });
 
       hasStartedConsumer = true;
@@ -260,7 +262,7 @@ export default async function consumeFromKafka(
         consumerType: 'kafka',
         server,
         defaultTopic,
-        additionalTopics: additionalTopics?.join(', ')
+        additionalTopics: additionalTopics?.join(', '),
       });
 
       defaultServiceMetrics.incrementKafkaConsumerErrorsByOne();

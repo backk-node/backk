@@ -115,7 +115,7 @@ export default function generateServicesMetadata<T>(
           const functionStr = service[functionName].toString();
           const errors = Object.entries(service.errorNameToErrorDefinitionMap as ErrorNameToErrorDefinitionMap ?? [])
             .filter(([errorName]) => functionStr.includes(errorName))
-            .map(([, errorDefinition]) => errorDefinition);
+            .map(([, errorDefinition]) => ({...errorDefinition, errorCode: serviceName + '.' + errorDefinition.errorCode}));
 
           return {
             functionName,

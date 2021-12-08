@@ -798,6 +798,9 @@ export default async function tryExecuteServiceMethod(
   } catch (errorOrBackkError) {
     storedError = errorOrBackkError;
     if (isBackkError(errorOrBackkError)) {
+      if (Number.isInteger(errorOrBackkError.errorCode)) {
+        errorOrBackkError.errorCode = serviceName + '.' + errorOrBackkError.errorCode;
+      }
       resp.writeHead((errorOrBackkError as BackkError).statusCode, { 'Content-Type': 'application/json' });
       resp.end(JSON.stringify(errorOrBackkError));
     } else {

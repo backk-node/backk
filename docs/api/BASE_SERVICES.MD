@@ -89,9 +89,33 @@ If the above rules are not followed, an exception will be thrown.
 Implement your own service class by extending `CrudEntityService` class.
 
 When calling base class constructor, you must provide:
-
 - error definitions for your service (or empty object, if your service does not raise any errors)
 - data store used by your service (if you are not using a data store, provide an instance of `NullDataStore`)
+
+Example of error definitions:
+
+```ts
+import { HttpStatusCodes } from 'backk';
+
+export const orderServiceErrors = {
+  cannotRemoveDeliveredOrderItem: {
+    statusCode: HttpStatusCodes.BAD_REQUEST,
+    errorCode: 1,
+    message: 'Cannot remove delivered order item',
+  },
+  invalidOrderItemCurrentState: {
+    statusCode: HttpStatusCodes.BAD_REQUEST,
+    errorCode: 2,
+    message: 'Cannot update order item state due to invalid current state',
+  }
+}
+```
+
+When error is reported to a client, Backk will add the service name to the beginning the error code, for example: `orderService.1`.
+This ensures that all error codes reported by the services of the microservice have unique error codes towards clients.
+Backk will also check your `errorNameToErrorDefinitionMap` for potential duplicates in error codes and error messages.
+If duplicates are found, an exception will be thrown. This ensures that you don't accidentally use same error code or message twice.
+
 
 Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
 

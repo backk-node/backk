@@ -157,10 +157,9 @@ export interface AuthorizationService {
 
 `authHeader` argument contains the Authorization header content, e.g. `Bearer vF9dft4qmT...`.
 
-Create an `AuthorizationServiceImpl` class that implements the `AuthorizationService` interface and provide implementations for the functions.
-
-`hasUserRoleIn` should return true if user has at least one role in `roles`
-`getSubject` should return the unique id of the user in the IAM system. For example, this info is available in OAuth 2.0 Access Token's `sub` claim.
+Create an `AuthorizationServiceImpl` class that implements the `AuthorizationService` interface and provide implementations for the functions:
+- `hasUserRoleIn` should return true if user has at least one role in `roles`
+- `getSubject` should return the unique id of the user in the IAM system. For example, this info is available in OAuth 2.0 Access Token's `sub` claim.
 
 Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
 
@@ -201,29 +200,23 @@ Caches service function call responses in Redis for a defined period of time. Ca
 Caching is performed only for HTTP requests with GET method.
 
 For security reasons, each microservice should have its own Redis cache instance with following requirements:
-
 - Redis authentication with password is required
 - Redis persistence is not used
 - Connection between microservice and Redis is secured (mTLS by a service mesh)
 
 ```typescript
-export default abstract class ResponseCacheConfigService {
-  abstract shouldCacheServiceFunctionCallResponse(
-    serviceFunctionName: string,
-    serviceFunctionArgument: object
-  ): boolean;
-  abstract getCachingDurationInSecs(serviceFunctionName: string, serviceFunctionArgument: object): number;
+export interface ResponseCacheConfigService {
+  shouldCacheServiceFunctionCallResponse(serviceFunctionName: string, serviceFunctionArgument: object): boolean;
+  getCachingDurationInSecs(serviceFunctionName: string, serviceFunctionArgument: object): number;
 }
 ```
 
 This service requires following environment variables to be defined:
-
 - `REDIS_CACHE_HOST` which denotes the Redis cache server host
 - `REDIS_CACHE_PORT` which denotes the Redis cache server port
 - `REDIS_CACHE_PASSWORD` which denotes the Redis server password
 
-Implement a class that extends the `ResponseCacheConfigService` class and provide implementations for functions:
-
+Implement a `ResponseCacheConfigServiceImpl` class that extends the `ResponseCacheConfigService` class and provide implementations for the needed functions:
 - shouldCacheServiceFunctionCallResponse
 - getCachingDurationInSecs
 

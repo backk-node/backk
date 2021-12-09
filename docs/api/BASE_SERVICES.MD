@@ -230,7 +230,7 @@ export default class MicroserviceImpl extends Microservice {
 
 ### <a name="captchaverificationservice"></a> CaptchaVerificationService
 
-Verifies captcha send in service function call argument in `captchaToken` property:
+Verifies captcha sent in service function call argument in `captchaToken` property:
 
 ```json
 {

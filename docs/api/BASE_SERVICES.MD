@@ -2,7 +2,7 @@
 
 - [BaseService](#baseservice)
 - [CrudEntityService](#crudentityservice)
-- [UserAccountBaseService](#useraccountbaseservice)
+- [UserBaseService](#userbaseservice)
 - [AuthorizationService](#authorizationservice)
 - [JwtAuthorizationServiceImpl](#jwtauthorizationserviceimpl)
 - [ResponseCacheConfigService](#responsecacheconfigservice)
@@ -116,7 +116,6 @@ This ensures that all error codes reported by the services of the microservice h
 Backk will also check your `errorNameToErrorDefinitionMap` for potential duplicates in error codes and error messages.
 If duplicates are found, an exception will be thrown. This ensures that you don't accidentally use same error code or message twice.
 
-
 Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
 
 ```typescript
@@ -125,41 +124,43 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-### <a name="useraccountbaseservice"></a> UserAccountBaseService
+### <a name="userbaseservice"></a> UserBaseService
 
-Each microservice which has one or more service functions that have annotation `@AllowForSelf()`
-must implement a service extending `UserAccountBaseService`. Otherwise, an exception is thrown upon authorization.
+Each microservice which has one or more service functions that have annotation `@AllowForEveryUserForOwnResources()`
+must implement a service extending `UserBaseService`. Otherwise, an exception is thrown upon authorization.
 
-Implement your own service class by extending `UserAccountBaseService` class and
-implement following function:
+Implement your own service class `UserServiceImpl` by extending `UserBaseService` class and
+implement the following function:
+- `getIdBySubject(subject: Subject): PromiseErrorOr<One<_Id>>`
 
-- getUserNameById
+This function should return user's `_id` given `subject` as argument. Subject is the unique id of the user from the IAM system.
 
 Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
 
 ```typescript
 export default class MicroserviceImpl extends Microservice {
-  private readonly myService = new MyServiceImpl();
+  private readonly userService = new UserServiceImpl();
 }
 ```
 
 ### <a name="authorizationservice"></a>AuthorizationService
 
-Authorizes client requests based on Authorization header
+Authorizes client requests based on Authorization header. This is a generic service, and if you are using OAuth 2.0 and JWT, you
+should use `JwtAuthorizationServiceImpl` class for your authorization service (see next section).
 
 ```typescript
-export default abstract class AuthorizationService {
-  abstract hasUserRoleIn(roles: string[], authHeader: string | string[] | undefined): Promise<boolean>;
-  abstract getSubject(authHeader: string | string[] | undefined): Promise<string | undefined>;
+export interface AuthorizationService {
+  hasUserRoleIn(roles: string[], authHeader: string | string[] | undefined): Promise<boolean>;
+  getSubject(authHeader: string | string[] | undefined): Promise<string | undefined>;
 }
 ```
 
 `authHeader` argument contains the Authorization header content, e.g. `Bearer vF9dft4qmT...`.
 
-Implement a class that extends the `AuthorizationService` class and provide implementations for function:
+Create an `AuthorizationServiceImpl` class that implements the `AuthorizationService` interface and provide implementations for the functions.
 
-- hasUserRoleIn
-- getSubject
+`hasUserRoleIn` should return true if user has at least one role in `roles`
+`getSubject` should return the unique id of the user in the IAM system. For example, this info is available in OAuth 2.0 Access Token's `sub` claim.
 
 Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
 

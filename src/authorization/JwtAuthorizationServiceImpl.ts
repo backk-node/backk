@@ -4,17 +4,15 @@ import _ from 'lodash';
 import { context, fetch } from "fetch-h2";
 import log, { Severity } from '../observability/logging/log';
 import throwException from '../utils/exception/throwException';
-import AuthorizationService from './AuthorizationService';
+import {AuthorizationService} from './AuthorizationService';
 
-export default class JwtAuthorizationServiceImpl extends AuthorizationService {
+export default class JwtAuthorizationServiceImpl implements AuthorizationService {
   private signSecretOrPublicKey: string | undefined;
   private readonly authServerPublicKeyUrl: string;
   private readonly rolesClaimPath: string;
   private readonly publicKeyPath: string;
 
   constructor() {
-    super();
-
     this.rolesClaimPath =
       process.env.JWT_ROLES_CLAIM_PATH ??
       throwException('`JWT_ROLES_CLAIM_PATH` environment variable must be defined');

@@ -40,7 +40,7 @@ Returns the retrieved entities or error.
 interface DataStore {
   getEntityCount<T extends BackkEntity>(
     EntityClass: new () => T,
-    filters?: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object
+    filters?: QueryFilters<T>
   ): PromiseErrorOr<number>;
 }
 ```
@@ -117,7 +117,7 @@ Returns the entities or error.
 interface DataStore {
   getEntityByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: QueryFilters<T>,
     postQueryOperations: PostQueryOperations,
     allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
     options?: {
@@ -155,7 +155,7 @@ Returns the entity or error.
 interface DataStore {
   getEntitiesByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: QueryFilters<T>,
     postQueryOperations: PostQueryOperations,
     allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
     options?: {

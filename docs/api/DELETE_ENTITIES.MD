@@ -67,7 +67,7 @@ Returns nothing or error.
 interface DataStore {
   deleteEntityByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: QueryFilters<T>,
     options?: {
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
       postQueryOperations?: PostQueryOperations;
@@ -97,7 +97,7 @@ Returns nothing or error.
 interface DataStore {
   deleteEntitiesByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object
+    filters: QueryFilters<T>
   ): PromiseErrorOr<null>;
 }
 ```

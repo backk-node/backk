@@ -42,7 +42,7 @@ Returns nothing or error.
 interface DataStore {
   updateEntityByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: QueryFilters<T>,
     entityUpdate: RecursivePartial<T>,
     options?: {
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
@@ -74,7 +74,7 @@ Returns nothing or error.
 interface DataStore {
   updateEntitiesByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: QueryFilters<T>,
     entityUpdate: RecursivePartial<T>
   ): PromiseErrorOr<null>;
 }

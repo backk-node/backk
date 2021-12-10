@@ -21,7 +21,7 @@ import entityAnnotationContainer from '../../../../decorators/entity/entityAnnot
 import { PostHook } from '../../../hooks/PostHook';
 import tryExecutePostHook from '../../../hooks/tryExecutePostHook';
 import createErrorFromErrorCodeMessageAndStatus from '../../../../errors/createErrorFromErrorCodeMessageAndStatus';
-import { backkErrors } from '../../../../errors/backkErrors';
+import { BACKK_ERRORS } from '../../../../errors/BACKK_ERRORS';
 import getSingularName from '../../../../utils/getSingularName';
 import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
 import isBackkError from '../../../../errors/isBackkError';
@@ -84,7 +84,7 @@ export default async function updateEntity<T extends BackkEntity>(
       if ('version' in currentEntity.data && restOfEntity.version && restOfEntity.version !== -1) {
         eTagCheckPreHook = {
           shouldSucceedOrBeTrue: ({ version }) => version === restOfEntity.version,
-          error: backkErrors.ENTITY_VERSION_MISMATCH
+          error: BACKK_ERRORS.ENTITY_VERSION_MISMATCH
         };
 
         finalPreHooks = [eTagCheckPreHook, ...finalPreHooks];
@@ -96,7 +96,7 @@ export default async function updateEntity<T extends BackkEntity>(
         eTagCheckPreHook = {
           shouldSucceedOrBeTrue: ({ lastModifiedTimestamp }) =>
             lastModifiedTimestamp?.getTime() === (restOfEntity as any).lastModifiedTimestamp.getTime(),
-          error: backkErrors.ENTITY_LAST_MODIFIED_TIMESTAMP_MISMATCH
+          error: BACKK_ERRORS.ENTITY_LAST_MODIFIED_TIMESTAMP_MISMATCH
         };
 
         finalPreHooks = [eTagCheckPreHook, ...finalPreHooks];
@@ -250,8 +250,8 @@ export default async function updateEntity<T extends BackkEntity>(
           if (isNaN(numericId)) {
             // noinspection ExceptionCaughtLocallyJS
             throw createErrorFromErrorCodeMessageAndStatus({
-              ...backkErrors.INVALID_ARGUMENT,
-              message: backkErrors.INVALID_ARGUMENT.message + idFieldName + ': must be a numeric id'
+              ...BACKK_ERRORS.INVALID_ARGUMENT,
+              message: BACKK_ERRORS.INVALID_ARGUMENT.message + idFieldName + ': must be a numeric id'
             });
           }
 
@@ -309,8 +309,8 @@ export default async function updateEntity<T extends BackkEntity>(
       if (isNaN(numericId)) {
         // noinspection ExceptionCaughtLocallyJS
         throw createErrorFromErrorCodeMessageAndStatus({
-          ...backkErrors.INVALID_ARGUMENT,
-          message: backkErrors.INVALID_ARGUMENT.message + idFieldName + ': must be a numeric id'
+          ...BACKK_ERRORS.INVALID_ARGUMENT,
+          message: BACKK_ERRORS.INVALID_ARGUMENT.message + idFieldName + ': must be a numeric id'
         });
       }
     }

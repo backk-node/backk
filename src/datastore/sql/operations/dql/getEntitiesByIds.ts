@@ -6,7 +6,7 @@ import getSqlSelectStatementParts from './utils/getSqlSelectStatementParts';
 import updateDbLocalTransactionCount from './utils/updateDbLocalTransactionCount';
 import getTableName from '../../../utils/getTableName';
 import createBackkErrorFromErrorCodeMessageAndStatus from '../../../../errors/createBackkErrorFromErrorCodeMessageAndStatus';
-import { backkErrors } from '../../../../errors/backkErrors';
+import { BACKK_ERRORS } from '../../../../errors/BACKK_ERRORS';
 import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
 import { getNamespace } from 'cls-hooked';
 import getClassPropertyNameToPropertyTypeNameMap from '../../../../metadata/getClassPropertyNameToPropertyTypeNameMap';
@@ -64,8 +64,8 @@ export default async function getEntitiesByIds<T>(
 
       if (isNaN(numericId)) {
         throw createBackkErrorFromErrorCodeMessageAndStatus({
-          ...backkErrors.INVALID_ARGUMENT,
-          message: backkErrors.INVALID_ARGUMENT.message + ' all _ids must be numeric values'
+          ...BACKK_ERRORS.INVALID_ARGUMENT,
+          message: BACKK_ERRORS.INVALID_ARGUMENT.message + ' all _ids must be numeric values'
         });
       }
 
@@ -115,7 +115,7 @@ export default async function getEntitiesByIds<T>(
       return [
         null,
         createBackkErrorFromErrorCodeMessageAndStatus({
-          ...backkErrors.ENTITY_NOT_FOUND,
+          ...BACKK_ERRORS.ENTITY_NOT_FOUND,
           message: `${EntityClass.name}s with _ids: ${_ids.join(', ')} not found`
         })
       ];

@@ -216,7 +216,7 @@ This service requires following environment variables to be defined:
 - `REDIS_CACHE_PORT` which denotes the Redis cache server port
 - `REDIS_CACHE_PASSWORD` which denotes the Redis server password
 
-Implement a `ResponseCacheConfigServiceImpl` class that extends the `ResponseCacheConfigService` class and provide implementations for the needed functions:
+Create a `ResponseCacheConfigServiceImpl` class that implements the `ResponseCacheConfigService` interface and provide implementations for the needed functions:
 - shouldCacheServiceFunctionCallResponse
 - getCachingDurationInSecs
 
@@ -239,13 +239,12 @@ Verifies captcha sent in service function call argument in `captchaToken` proper
 ```
 
 ```typescript
-export default abstract class CaptchaVerificationService {
-  abstract verifyCaptcha(captchaToken: string): Promise<boolean>;
+export interface CaptchaVerificationService {
+  verifyCaptcha(captchaToken: string): Promise<boolean>;
 }
 ```
 
-Implement a class that extends the `CaptchaVerificationService` class and provide implementations for function:
-
+Create a `CaptchaVerificationServiceImpl` class that implements the `CaptchaVerificationService` interface and provide implementations for function:
 - verifyCaptcha
 
 Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
@@ -257,8 +256,9 @@ export default class MicroserviceImpl extends Microservice {
 ```
 
 ### <a name="livenesscheckservice"></a> LivenessCheckService
-
 This service is called by Kubernetes pod's liveness probe to check if microservice is alive.
+The default liveness check service provided by Backk will always return 200 OK with no content.
+If you need some custom behaviour, follow the below steps to create your on liveness check service implementation.
 
 ```typescript
 export default abstract class LivenessCheckService extends BaseService {
@@ -266,8 +266,7 @@ export default abstract class LivenessCheckService extends BaseService {
 }
 ```
 
-Implement a class that extends the `LivenessCheckService` class and provide implementations for function:
-
+Create a class `LivenessCheckServiceImpl` that extends the `LivenessCheckService` class and provide implementation for function:
 - isMicroserviceAlive
 
 Simplest implementation for the function is:
@@ -291,7 +290,6 @@ export default class MicroserviceImpl extends Microservice {
 ```
 
 ### <a name="readinesscheckservice"></a> ReadinessCheckService
-
 This service is called by Kubernetes pod's readiness probe to check if microservice is ready for handling requests
 
 ```typescript
@@ -300,26 +298,18 @@ export default abstract class ReadinessCheckService extends BaseService {
 }
 ```
 
-Implement a class that extends the `ReadinessCheckService` class and provide implementations for function:
-
+Create a class `ReadinessCheckServiceImpl` that extends the `ReadinessCheckService` class and provide implementation for function:
 - isMicroserviceReady
 
-Example implementation, where you need to implement the `isReady` function by yourself:
+Example implementation:
 
 ```typescript
-import { HttpStatusCodes, createBackkErrorFromErrorMessageAndStatusCode } from 'backk';
+import { BACKK_ERRORS, HttpStatusCodes } from 'backk';
 
 export default class ReadinessCheckServiceImpl extends ReadinessCheckService {
   async isMicroserviceReady(): PromiseErrorOr<null> {
-    if (await isReady()) {
-      return [null, null];
-    }
-
-    const error = createBackkErrorFromErrorMessageAndStatusCode(
-      'Microservice is not ready',
-      HttpStatusCodes.SERVICE_UNAVAILABLE
-    );
-    return [null, error];
+    // isReady is some function implemented by you to perform checks for microservice readiness
+    return await isReady() ? [null, null] : [null, BACKK_ERRORS.MICROSERVICE_NOT_READY];
   }
 }
 ```
@@ -332,8 +322,7 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-### <a name="startupcheckservice"></a> StartupCheckService and StartupCheckServiceImpl
-
+### <a name="startupcheckservice"></a> StartupCheckService and DefaultStartupCheckServiceImpl
 This service is called by Kubernetes pod's startup probe to check if microservice is started successfully.
 
 ```typescript
@@ -342,11 +331,27 @@ export default abstract class StartupCheckService extends BaseService {
 }
 ```
 
-`StartupCheckServiceImpl` is the default implementation that checks if database is initialized and jobs are scheduled.
-If you need to make additional checks, implement a class that extends the `StartupCheckServiceImpl` class and provide implementations for function `isMicroserviceStarted`.
-Your implementation for the function should first call the base class method and then execute additional checks.
+`DefaultStartupCheckServiceImpl` is the Backk default implementation for the startup check service. It checks if database is successfully initialized and jobs are scheduled.
+If you need to perform additional checks, create a new class that extends the `DefaultStartupCheckServiceImpl` class and provide implementation for the `isMicroserviceStarted` function.
+NOTE! Your implementation should first call the base class method and then execute additional checks. For example:
 
-Instantiate `StartupCheckServiceImpl` or your own class and store it as a field in your `MicroserviceImpl` class:
+```typescript
+import { BACKK_ERRORS, HttpStatusCodes } from 'backk';
+
+export default class StartupCheckServiceImpl extends DefaultStartupCheckServiceImpl {
+  async isMicroserviceStarted(): PromiseErrorOr<null> {
+    const [, error] = await super();
+    if (error) {
+      return [null, error];
+    }
+
+    // isStarted is some function implemented by you to perform additional startup checks
+    return await isStarted() ? [ null, null] : [null, BACKK_ERRORS.MICROSERVICE_NOT_STARTED]
+  }
+}
+```
+
+Instantiate the Backk default `StartupCheckServiceImpl` class or your own class and store it as a field in your `MicroserviceImpl` class:
 
 ```typescript
 export default class MicroserviceImpl extends Microservice {

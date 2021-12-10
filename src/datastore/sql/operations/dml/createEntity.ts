@@ -17,7 +17,7 @@ import tryExecutePostHook from '../../../hooks/tryExecutePostHook';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import createBackkErrorFromErrorCodeMessageAndStatus from '../../../../errors/createBackkErrorFromErrorCodeMessageAndStatus';
 import createErrorFromErrorCodeMessageAndStatus from '../../../../errors/createErrorFromErrorCodeMessageAndStatus';
-import { backkErrors } from '../../../../errors/backkErrors';
+import { BACKK_ERRORS } from '../../../../errors/BACKK_ERRORS';
 import getSingularName from '../../../../utils/getSingularName';
 import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
 import isBackkError from '../../../../errors/isBackkError';
@@ -59,7 +59,7 @@ export default async function createEntity<T extends BackkEntity>(
 
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
     if (!isRecursiveCall && userAccountIdFieldName  && userAccountId !== undefined && entity[userAccountIdFieldName] !== userAccountId) {
-      throw createBackkErrorFromErrorCodeMessageAndStatus(backkErrors.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED);
+      throw createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED);
     }
 
     if (!isRecursiveCall) {
@@ -93,9 +93,9 @@ export default async function createEntity<T extends BackkEntity>(
 
             if (isNaN(numericId)) {
               throw createErrorFromErrorCodeMessageAndStatus({
-                ...backkErrors.INVALID_ARGUMENT,
+                ...BACKK_ERRORS.INVALID_ARGUMENT,
                 message:
-                  backkErrors.INVALID_ARGUMENT.message +
+                  BACKK_ERRORS.INVALID_ARGUMENT.message +
                   EntityClass.name +
                   '.' +
                   fieldName +
@@ -169,9 +169,9 @@ export default async function createEntity<T extends BackkEntity>(
               } else {
                 if (parseInt(subEntity.id, 10) !== index) {
                   throw createErrorFromErrorCodeMessageAndStatus({
-                    ...backkErrors.INVALID_ARGUMENT,
+                    ...BACKK_ERRORS.INVALID_ARGUMENT,
                     message:
-                      backkErrors.INVALID_ARGUMENT.message +
+                      BACKK_ERRORS.INVALID_ARGUMENT.message +
                       EntityClass.name +
                       '.' +
                       fieldName +
@@ -258,7 +258,7 @@ export default async function createEntity<T extends BackkEntity>(
       return [
         null,
         createBackkErrorFromErrorCodeMessageAndStatus({
-          ...backkErrors.DUPLICATE_ENTITY,
+          ...BACKK_ERRORS.DUPLICATE_ENTITY,
           message: `Duplicate ${EntityClass.name.charAt(0).toLowerCase()}${EntityClass.name.slice(1)}`
         })
       ];

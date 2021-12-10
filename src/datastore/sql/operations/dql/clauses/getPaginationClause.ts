@@ -2,7 +2,7 @@ import assertIsNumber from "../../../../../assertions/assertIsNumber";
 import Pagination from "../../../../../types/postqueryoperations/Pagination";
 import createErrorFromErrorCodeMessageAndStatus
   from "../../../../../errors/createErrorFromErrorCodeMessageAndStatus";
-import { backkErrors } from "../../../../../errors/backkErrors";
+import { BACKK_ERRORS } from "../../../../../errors/BACKK_ERRORS";
 
 export default function getPaginationClause(subEntityPath: string, paginations: Pagination[]) {
   let limitAndOffsetStatement = '';
@@ -18,8 +18,8 @@ export default function getPaginationClause(subEntityPath: string, paginations: 
 
   if (!pagination && subEntityPath === '') {
     throw createErrorFromErrorCodeMessageAndStatus({
-      ...backkErrors.INVALID_ARGUMENT,
-      message: backkErrors.INVALID_ARGUMENT.message + "missing pagination for root entity (subEntityPath: '')"
+      ...BACKK_ERRORS.INVALID_ARGUMENT,
+      message: BACKK_ERRORS.INVALID_ARGUMENT.message + "missing pagination for root entity (subEntityPath: '')"
     });
   }
 

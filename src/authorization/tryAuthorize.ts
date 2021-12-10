@@ -1,6 +1,6 @@
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
 import serviceAnnotationContainer from '../decorators/service/serviceAnnotationContainer';
-import { backkErrors } from '../errors/backkErrors';
+import { BACKK_ERRORS } from '../errors/BACKK_ERRORS';
 import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
 import defaultServiceMetrics from '../observability/metrics/defaultServiceMetrics';
 import BaseService from '../services/BaseService';
@@ -35,7 +35,7 @@ export default async function tryAuthorize(
         return [undefined, undefined];
       }
     } else {
-      throw createBackkErrorFromErrorCodeMessageAndStatus(backkErrors.USER_NOT_AUTHENTICATED);
+      throw createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.USER_NOT_AUTHENTICATED);
     }
   } else {
     if (
@@ -76,5 +76,5 @@ export default async function tryAuthorize(
   }
 
   defaultServiceMetrics.incrementAuthorizationFailuresByOne();
-  throw createBackkErrorFromErrorCodeMessageAndStatus(backkErrors.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED);
+  throw createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED);
 }

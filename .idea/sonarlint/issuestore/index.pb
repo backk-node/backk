@@ -109,8 +109,6 @@ M
 src/types/RecursivePartial.ts,5/1/512f2f0c31c7700389405c044b30ccea154313dd
 b
 2src/documentation/generateServicesDocumentation.ts,f/9/f9e42631db65e72b80c7f6a4559abd3f1d1e1654
-W
-'src/errors/createBackkErrorFromError.ts,3/c/3c479d180de0a556992992700325275df844d6f5
 P
  src/assertions/assertIsNumber.ts,7/0/7025f149ce85dcda7d6d0dff399c05434803dd7b
 Y
@@ -159,10 +157,6 @@ $src/file/tryGetObjectsFromCsvFile.ts,3/0/3007bb4c0b5546f8f7a00bd879d413c37581e
 .src/file/tryGetValuesByJsonPathFromJsonFile.ts,4/7/478eafdeda05ad8301b5f4a5fbc78bdd007a277b
 Z
 *src/file/tryGetValuesByXPathFromXmlFile.ts,9/9/995739107b82bef2036cc07e8f7f0e7d9ee11312
-^
-.src/errors/createErrorMessageWithStatusCode.ts,1/6/16c55c9d4f5a17047b3ddfabaa5458b5464aaa1d
-k
-;src/errors/createBackkErrorFromErrorMessageAndStatusCode.ts,3/f/3f91cbf61f981da36b338ef6e33082fa2bd42f99
 U
 %.github/workflows/codeql-analysis.yml,c/3/c3aa8b7f1c613e43d3bb9d5ac52ac6603d945e89
 P
@@ -296,8 +290,6 @@ a
 .src/scheduling/scheduleCronJobsForExecution.ts,0/7/07d0700ee09268cdb174c1505e3f60caf50c2b30
 R
 "src/client/generateClients.spec.ts,a/6/a6fecbc0f79bc3f56abb07935443fc7a2856df5c
-U
-%src/services/ReadinessCheckService.ts,a/c/aca76d51d139ac7a3a39bedf668ebb966286244a
 n
 >src/decorators/typeproperty/typePropertyAnnotationContainer.ts,c/8/c810282510d9ae8ef1f187c69f3bc3db0d6976fb
 Z
@@ -310,16 +302,10 @@ j
 :src/datastore/sql/operations/ddl/removeDbInitialization.ts,f/4/f4bc2fa091626a0f50a39f7481b42e38812f7127
 Y
 )src/scheduling/tryScheduleJobExecution.ts,2/3/23fcc302ed066feb49193824bdbb201ea215a4c6
-T
-$src/services/LivenessCheckService.ts,7/1/71ba80695e96c2ea83c502bbb99d37751d7135bf
 f
 6src/observability/logging/audit/AuditLoggingService.ts,5/0/5094a81c71e92af423372d5e716a29f584c57805
 R
 "src/datastore/AbstractDataStore.ts,f/4/f4558eca7b6689c835badee5ef621c5595dedca7
-[
-+src/services/startup/StartupCheckService.ts,5/6/5654861c9a9b9770edae3756116107b2d82a678b
-_
-/src/services/startup/StartupCheckServiceImpl.ts,e/0/e01f3b4f41c2b06e32009b658aa2d226ed8e13c5
 N
 src/datastore/NullDataStore.ts,2/e/2e928b6ee6da950485438ecb838be1ab236d6091
 ]
@@ -494,8 +480,6 @@ _
 /src/decorators/service/function/Subscription.ts,b/f/bfc96f76cd4a771af3fda23b76b9d9edec9c8b87
 P
  src/subscription/Subscription.ts,c/5/c5f65ee051d635c3e6319b7ae952d8da092a5f90
-<
-src/index.ts,c/5/c5fb850250c7443c48a6c12b5cf6916773da31f1
 d
 4src/postman/writeTestsPostmanCollectionExportFile.ts,8/7/87e4fabf982d3fcb19cf6b5bd33aacaa35eb79bb
 z

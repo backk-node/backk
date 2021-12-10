@@ -7,7 +7,7 @@ import { promisify } from "util";
 import { HttpStatusCodes, MAX_INT_VALUE } from "../constants/constants";
 import serviceFunctionAnnotationContainer
   from "../decorators/service/function/serviceFunctionAnnotationContainer";
-import { backkErrors } from "../errors/backkErrors";
+import { BACKK_ERRORS } from "../errors/BACKK_ERRORS";
 import createBackkErrorFromErrorCodeMessageAndStatus
   from "../errors/createBackkErrorFromErrorCodeMessageAndStatus";
 import tryExecuteServiceMethod, {
@@ -59,7 +59,7 @@ export default class HttpServer implements RequestProcessor {
         request.method === 'POST' &&
         (contentLength === undefined || contentLength > MAX_REQUEST_CONTENT_LENGTH_IN_BYTES)
       ) {
-        const backkError = createBackkErrorFromErrorCodeMessageAndStatus(backkErrors.REQUEST_IS_TOO_LONG);
+        const backkError = createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.REQUEST_IS_TOO_LONG);
         response.writeHead(backkError.statusCode, { 'Content-Type': 'application/json' });
         response.end(JSON.stringify(backkError));
         return;
@@ -105,8 +105,8 @@ export default class HttpServer implements RequestProcessor {
         }
       } catch (error) {
         const backkError = createBackkErrorFromErrorCodeMessageAndStatus({
-          ...backkErrors.INVALID_ARGUMENT,
-          message: backkErrors.INVALID_ARGUMENT.message + error.message,
+          ...BACKK_ERRORS.INVALID_ARGUMENT,
+          message: BACKK_ERRORS.INVALID_ARGUMENT.message + error.message,
         });
         response.writeHead(backkError.statusCode, { 'Content-Type': 'application/json' });
         response.end(JSON.stringify(backkError));
@@ -180,7 +180,7 @@ export default class HttpServer implements RequestProcessor {
         headers[':method'] === 'POST' &&
         (contentLength === undefined || contentLength > MAX_REQUEST_CONTENT_LENGTH_IN_BYTES)
       ) {
-        const backkError = createBackkErrorFromErrorCodeMessageAndStatus(backkErrors.REQUEST_IS_TOO_LONG);
+        const backkError = createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.REQUEST_IS_TOO_LONG);
         stream.respond({ ':status': backkError.statusCode, 'Content-Type': 'application/json' });
         stream.write(JSON.stringify(backkError));
         stream.end();
@@ -232,8 +232,8 @@ export default class HttpServer implements RequestProcessor {
         }
       } catch (error) {
         const backkError = createBackkErrorFromErrorCodeMessageAndStatus({
-          ...backkErrors.INVALID_ARGUMENT,
-          message: backkErrors.INVALID_ARGUMENT.message + error.message,
+          ...BACKK_ERRORS.INVALID_ARGUMENT,
+          message: BACKK_ERRORS.INVALID_ARGUMENT.message + error.message,
         });
         stream.respond({ ':status': backkError.statusCode, 'Content-Type': 'application/json' });
         stream.write(JSON.stringify(backkError));

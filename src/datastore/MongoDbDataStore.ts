@@ -7,7 +7,7 @@ import { HttpStatusCodes } from '../constants/constants';
 import decryptEntities from '../crypt/decryptEntities';
 import hashAndEncryptEntity from '../crypt/hashAndEncryptEntity';
 import typePropertyAnnotationContainer from '../decorators/typeproperty/typePropertyAnnotationContainer';
-import { backkErrors } from '../errors/backkErrors';
+import { BACKK_ERRORS } from '../errors/BACKK_ERRORS';
 import createBackkErrorFromError from '../errors/createBackkErrorFromError';
 import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
 import createInternalServerError from '../errors/createInternalServerError';
@@ -293,7 +293,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
         userAccountId !== undefined &&
         entity[userAccountIdFieldName] !== userAccountId
       ) {
-        throw createBackkErrorFromErrorCodeMessageAndStatus(backkErrors.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED);
+        throw createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED);
       }
 
       return await this.tryExecute(shouldUseTransaction, async (client) => {
@@ -337,7 +337,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
             return [
               null,
               createBackkErrorFromErrorCodeMessageAndStatus({
-                ...backkErrors.DUPLICATE_ENTITY,
+                ...BACKK_ERRORS.DUPLICATE_ENTITY,
                 message: `Duplicate ${EntityClass.name.charAt(0).toLowerCase()}${EntityClass.name.slice(1)}`,
               }),
             ];
@@ -511,13 +511,13 @@ export default class MongoDbDataStore extends AbstractDataStore {
             ) {
               // noinspection ExceptionCaughtLocallyJS
               throw createBackkErrorFromErrorCodeMessageAndStatus({
-                ...backkErrors.MAX_ENTITY_COUNT_REACHED,
+                ...BACKK_ERRORS.MAX_ENTITY_COUNT_REACHED,
                 message:
                   parentEntityClassAndPropertyNameForSubEntity[0].name +
                   '.' +
                   parentEntityClassAndPropertyNameForSubEntity[1] +
                   ': ' +
-                  backkErrors.MAX_ENTITY_COUNT_REACHED.message,
+                  BACKK_ERRORS.MAX_ENTITY_COUNT_REACHED.message,
               });
             }
           }
@@ -651,13 +651,13 @@ export default class MongoDbDataStore extends AbstractDataStore {
             ) {
               // noinspection ExceptionCaughtLocallyJS
               throw createBackkErrorFromErrorCodeMessageAndStatus({
-                ...backkErrors.MAX_ENTITY_COUNT_REACHED,
+                ...BACKK_ERRORS.MAX_ENTITY_COUNT_REACHED,
                 message:
                   parentEntityClassAndPropertyNameForSubEntity[0].name +
                   '.' +
                   parentEntityClassAndPropertyNameForSubEntity[1] +
                   ': ' +
-                  backkErrors.MAX_ENTITY_COUNT_REACHED.message,
+                  BACKK_ERRORS.MAX_ENTITY_COUNT_REACHED.message,
               });
             }
           }
@@ -1072,7 +1072,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
           return [
             null,
             createBackkErrorFromErrorCodeMessageAndStatus({
-              ...backkErrors.ENTITY_NOT_FOUND,
+              ...BACKK_ERRORS.ENTITY_NOT_FOUND,
               message: `${EntityClass.name} with _id: ${_id} not found`,
             }),
           ];
@@ -1266,7 +1266,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
             if ('version' in currentEntity && restOfEntity.version && restOfEntity.version !== -1) {
               eTagCheckPreHook = {
                 shouldSucceedOrBeTrue: ({ version }) => version === restOfEntity.version,
-                error: backkErrors.ENTITY_VERSION_MISMATCH,
+                error: BACKK_ERRORS.ENTITY_VERSION_MISMATCH,
               };
 
               finalEntityPreHooks = [eTagCheckPreHook, ...finalEntityPreHooks];
@@ -1278,7 +1278,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
               eTagCheckPreHook = {
                 shouldSucceedOrBeTrue: ({ lastModifiedTimestamp }) =>
                   lastModifiedTimestamp?.getTime() === (restOfEntity as any).lastModifiedTimestamp.getTime(),
-                error: backkErrors.ENTITY_LAST_MODIFIED_TIMESTAMP_MISMATCH,
+                error: BACKK_ERRORS.ENTITY_LAST_MODIFIED_TIMESTAMP_MISMATCH,
               };
 
               finalEntityPreHooks = [eTagCheckPreHook, ...finalEntityPreHooks];
@@ -1326,7 +1326,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
           return [
             null,
             createBackkErrorFromErrorCodeMessageAndStatus({
-              ...backkErrors.ENTITY_NOT_FOUND,
+              ...BACKK_ERRORS.ENTITY_NOT_FOUND,
               message: EntityClass.name + ' with id: ' + _id + ' not found',
             }),
           ];

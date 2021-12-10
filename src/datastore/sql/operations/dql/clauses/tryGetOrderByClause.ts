@@ -3,7 +3,7 @@ import assertIsSortDirection from '../../../../../assertions/assertIsSortDirecti
 import SortBy from '../../../../../types/postqueryoperations/SortBy';
 import AbstractSqlDataStore from '../../../../AbstractSqlDataStore';
 import createErrorFromErrorCodeMessageAndStatus from '../../../../../errors/createErrorFromErrorCodeMessageAndStatus';
-import { backkErrors } from '../../../../../errors/backkErrors';
+import { BACKK_ERRORS } from '../../../../../errors/BACKK_ERRORS';
 
 export default function tryGetOrderByClause<T>(
   dataStore: AbstractSqlDataStore,
@@ -36,8 +36,8 @@ export default function tryGetOrderByClause<T>(
       } catch (error) {
         if (sortBy.subEntityPath !== '*') {
           throw createErrorFromErrorCodeMessageAndStatus({
-            ...backkErrors.INVALID_ARGUMENT,
-            message: backkErrors.INVALID_ARGUMENT.message + 'invalid sort field: ' + sortBy.fieldName
+            ...BACKK_ERRORS.INVALID_ARGUMENT,
+            message: BACKK_ERRORS.INVALID_ARGUMENT.message + 'invalid sort field: ' + sortBy.fieldName
           });
         }
       }

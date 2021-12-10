@@ -9,9 +9,9 @@ export { default as KafkaConsumer } from './requestprocessor/KafkaConsumer';
 export { default as RedisConsumer } from './requestprocessor/RedisConsumer';
 
 // Base services
-export { default as AuthorizationService } from './authorization/AuthorizationService';
-export { default as ResponseCacheConfigService } from './cache/ResponseCacheConfigService';
-export { default as CaptchaVerificationService } from './captcha/CaptchaVerificationService';
+export { AuthorizationService } from './authorization/AuthorizationService';
+export { ResponseCacheConfigService } from './cache/ResponseCacheConfigService';
+export { CaptchaVerificationService } from './captcha/CaptchaVerificationService';
 export { default as CrudEntityService } from './services/crudentity/CrudEntityService';
 export { default as StartupCheckService } from './services/startup/StartupCheckService';
 export { Service } from './services/Service';
@@ -21,7 +21,7 @@ export { default as BaseService } from './services/BaseService';
 export { default as LivenessCheckService } from './services/LivenessCheckService';
 export { default as ReadinessCheckService } from './services/ReadinessCheckService';
 export { default as AuditLoggingService } from './observability/logging/audit/AuditLoggingService';
-export { default as StartupCheckServiceImpl } from './services/startup/StartupCheckServiceImpl';
+export { default as StartupCheckServiceImpl } from './services/startup/DefaultStartupCheckServiceImpl';
 export { default as JwtAuthorizationServiceImpl } from './authorization/JwtAuthorizationServiceImpl';
 export {
   UserOperationResult,
@@ -227,9 +227,9 @@ export { default as UserAccountId } from './types/useraccount/UserAccountId';
 export { default as Subject } from './types/useraccount/Subject';
 export { default as Issuer } from './types/useraccount/Issuer';
 
-// Generate error
-export { default as createBackkErrorFromErrorMessageAndStatusCode } from './errors/createBackkErrorFromErrorMessageAndStatusCode';
+// Errors
 export { BackkError } from './types/BackkError';
+export { BACKK_ERRORS } from './errors/BACKK_ERRORS';
 
 // Utils
 export { default as getMicroserviceName } from './utils/getMicroserviceName';

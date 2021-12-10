@@ -8,7 +8,7 @@ import tryVerifyCaptchaToken from '../captcha/tryVerifyCaptchaToken';
 import { Durations, HttpStatusCodes, Values } from '../constants/constants';
 import getClsNamespace from '../continuationlocalstorage/getClsNamespace';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
-import { backkErrors } from '../errors/backkErrors';
+import { BACKK_ERRORS } from '../errors/BACKK_ERRORS';
 import createBackkErrorFromError from '../errors/createBackkErrorFromError';
 import createBackkErrorFromErrorCodeMessageAndStatus from '../errors/createBackkErrorFromErrorCodeMessageAndStatus';
 import createErrorFromErrorCodeMessageAndStatus from '../errors/createErrorFromErrorCodeMessageAndStatus';
@@ -92,7 +92,7 @@ export default async function tryExecuteServiceMethod(
 
   try {
     if (httpMethod !== 'GET' && httpMethod !== 'POST') {
-      throw createBackkErrorFromErrorCodeMessageAndStatus(backkErrors.INVALID_HTTP_METHOD);
+      throw createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.INVALID_HTTP_METHOD);
     }
 
     if (isExecuteMultipleRequest(serviceFunctionName)) {
@@ -102,8 +102,8 @@ export default async function tryExecuteServiceMethod(
           (options?.multipleServiceFunctionExecution?.maxServiceFunctionCount)
         ) {
           throw createBackkErrorFromErrorCodeMessageAndStatus({
-            ...backkErrors.INVALID_ARGUMENT,
-            message: backkErrors.INVALID_ARGUMENT.message + 'too many service functions called',
+            ...BACKK_ERRORS.INVALID_ARGUMENT,
+            message: BACKK_ERRORS.INVALID_ARGUMENT.message + 'too many service functions called',
           });
         }
       } else {
@@ -174,7 +174,7 @@ export default async function tryExecuteServiceMethod(
           options?.httpGetRequests?.deniedServiceFunctionNames?.includes(serviceFunctionName)) &&
         !serviceFunctionAnnotationContainer.doesServiceFunctionAllowHttpGetMethod(ServiceClass, functionName)
       ) {
-        throw createErrorFromErrorCodeMessageAndStatus(backkErrors.HTTP_METHOD_MUST_BE_POST);
+        throw createErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.HTTP_METHOD_MUST_BE_POST);
       }
 
       // noinspection AssignmentToFunctionParameterJS
@@ -185,9 +185,9 @@ export default async function tryExecuteServiceMethod(
         serviceFunctionArgument = JSON.parse(serviceFunctionArgument);
       } catch (error) {
         throw createBackkErrorFromErrorCodeMessageAndStatus({
-          ...backkErrors.INVALID_ARGUMENT,
+          ...BACKK_ERRORS.INVALID_ARGUMENT,
           message:
-            backkErrors.INVALID_ARGUMENT.message +
+            BACKK_ERRORS.INVALID_ARGUMENT.message +
             'argument not valid or too long. Argument must be a URI encoded JSON string',
         });
       }
@@ -210,8 +210,8 @@ export default async function tryExecuteServiceMethod(
         return;
       } else {
         throw createBackkErrorFromErrorCodeMessageAndStatus({
-          ...backkErrors.UNKNOWN_SERVICE,
-          message: backkErrors.UNKNOWN_SERVICE.message + serviceName,
+          ...BACKK_ERRORS.UNKNOWN_SERVICE,
+          message: BACKK_ERRORS.UNKNOWN_SERVICE.message + serviceName,
         });
       }
     } else if (serviceFunctionName === 'metadataService.getServicesMetadata') {
@@ -222,14 +222,14 @@ export default async function tryExecuteServiceMethod(
             services: isClusterInternalCall
               ? microservice.internalServicesMetadata ?? generateInternalServicesMetadata(microservice)
               : microservice.publicServicesMetadata ?? generatePublicServicesMetadata(microservice),
-            commonErrors: backkErrors,
+            commonErrors: BACKK_ERRORS,
           })
         );
         return;
       } else {
         throw createBackkErrorFromErrorCodeMessageAndStatus({
-          ...backkErrors.UNKNOWN_SERVICE,
-          message: backkErrors.UNKNOWN_SERVICE.message + serviceName,
+          ...BACKK_ERRORS.UNKNOWN_SERVICE,
+          message: BACKK_ERRORS.UNKNOWN_SERVICE.message + serviceName,
         });
       }
     } else if (serviceFunctionName === 'livenessCheckService.isMicroserviceAlive') {
@@ -266,8 +266,8 @@ export default async function tryExecuteServiceMethod(
 
     if (!microservice[serviceName]) {
       throw createBackkErrorFromErrorCodeMessageAndStatus({
-        ...backkErrors.UNKNOWN_SERVICE,
-        message: backkErrors.UNKNOWN_SERVICE.message + serviceName,
+        ...BACKK_ERRORS.UNKNOWN_SERVICE,
+        message: BACKK_ERRORS.UNKNOWN_SERVICE.message + serviceName,
       });
     }
 
@@ -276,8 +276,8 @@ export default async function tryExecuteServiceMethod(
 
     if (!microservice[serviceName][functionName] || !serviceFunctionResponseValueTypeName) {
       throw createBackkErrorFromErrorCodeMessageAndStatus({
-        ...backkErrors.UNKNOWN_SERVICE_FUNCTION,
-        message: backkErrors.UNKNOWN_SERVICE_FUNCTION.message + serviceFunctionName,
+        ...BACKK_ERRORS.UNKNOWN_SERVICE_FUNCTION,
+        message: BACKK_ERRORS.UNKNOWN_SERVICE_FUNCTION.message + serviceFunctionName,
       });
     }
 
@@ -290,8 +290,8 @@ export default async function tryExecuteServiceMethod(
       (serviceFunctionArgumentTypeName && serviceFunctionArgument === null)
     ) {
       throw createBackkErrorFromErrorCodeMessageAndStatus({
-        ...backkErrors.INVALID_ARGUMENT,
-        message: backkErrors.INVALID_ARGUMENT.message + 'argument must be a JSON object',
+        ...BACKK_ERRORS.INVALID_ARGUMENT,
+        message: BACKK_ERRORS.INVALID_ARGUMENT.message + 'argument must be a JSON object',
       });
     }
 
@@ -341,7 +341,7 @@ export default async function tryExecuteServiceMethod(
       );
 
       if (!instantiatedServiceFunctionArgument) {
-        throw createBackkErrorFromErrorCodeMessageAndStatus(backkErrors.MISSING_SERVICE_FUNCTION_ARGUMENT);
+        throw createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.MISSING_SERVICE_FUNCTION_ARGUMENT);
       }
 
       await tryValidateServiceFunctionArgument(
@@ -448,7 +448,7 @@ export default async function tryExecuteServiceMethod(
                 subjectToUserAccountIdCache.removeItem(subject);
               } else {
                 throw createBackkErrorFromErrorCodeMessageAndStatus(
-                  backkErrors.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED
+                  BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED
                 );
               }
             } else if (microservice[serviceName] instanceof TenantBaseService) {
@@ -463,7 +463,7 @@ export default async function tryExecuteServiceMethod(
                 issuerToTenantIdCache.removeItem(issuer);
               } else {
                 throw createBackkErrorFromErrorCodeMessageAndStatus(
-                  backkErrors.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED
+                  BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED
                 );
               }
             }

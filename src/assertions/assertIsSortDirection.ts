@@ -1,13 +1,13 @@
 import createBackkErrorFromErrorCodeMessageAndStatus
   from "../errors/createBackkErrorFromErrorCodeMessageAndStatus";
-import { backkErrors } from "../errors/backkErrors";
+import { BACKK_ERRORS } from "../errors/BACKK_ERRORS";
 
 export default function assertIsSortDirection(value: any) {
   if (value.toUpperCase() !== 'ASC' && value.toUpperCase() !== 'DESC') {
     throw createBackkErrorFromErrorCodeMessageAndStatus({
-      ...backkErrors.INVALID_ARGUMENT,
+      ...BACKK_ERRORS.INVALID_ARGUMENT,
       message:
-        backkErrors.INVALID_ARGUMENT.message + `${value} in 'sortDirection' property is not a valid sort direction`
+        BACKK_ERRORS.INVALID_ARGUMENT.message + `${value} in 'sortDirection' property is not a valid sort direction`
     });
   }
 }

@@ -8,7 +8,7 @@ import scheduleJobsForExecution, { scheduledJobs } from "../../scheduling/schedu
 import { PromiseErrorOr } from "../../types/PromiseErrorOr";
 import AllowForEveryUser from "../../decorators/service/function/AllowForEveryUser";
 
-export default class StartupCheckServiceImpl extends StartupCheckService {
+export default class DefaultStartupCheckServiceImpl extends StartupCheckService {
   constructor(dataStore: DataStore) {
     super({}, dataStore);
   }

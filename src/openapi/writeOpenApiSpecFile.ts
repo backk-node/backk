@@ -3,7 +3,7 @@ import YAML from 'yaml';
 import { HttpStatusCodes } from '../constants/constants';
 import { ErrorDef } from '../datastore/hooks/EntityPreHook';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
-import { backkErrors } from '../errors/backkErrors';
+import { BACKK_ERRORS } from '../errors/BACKK_ERRORS';
 import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
 import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
 import getServiceFunctionExampleReturnValue from '../postman/getServiceFunctionExampleReturnValue';
@@ -100,7 +100,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
         commonErrorMap[HttpStatusCodes.CONFLICT] = {
           description:
             '1: Entity version or last modified timestamp conflict. Entity was updated before this request, please re-fetch the entity and try update again',
-          ...getErrorContent(backkErrors.ENTITY_VERSION_MISMATCH),
+          ...getErrorContent(BACKK_ERRORS.ENTITY_VERSION_MISMATCH),
         };
       }
 
@@ -111,8 +111,8 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
         )
       ) {
         commonErrorMap[HttpStatusCodes.CONFLICT] = {
-          description: backkErrors.DUPLICATE_ENTITY.errorCode + ': ' + backkErrors.DUPLICATE_ENTITY.message,
-          ...getErrorContent(backkErrors.DUPLICATE_ENTITY),
+          description: BACKK_ERRORS.DUPLICATE_ENTITY.errorCode + ': ' + BACKK_ERRORS.DUPLICATE_ENTITY.message,
+          ...getErrorContent(BACKK_ERRORS.DUPLICATE_ENTITY),
         };
       }
 
@@ -127,15 +127,15 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
         )
       ) {
         commonErrorMap[HttpStatusCodes.NOT_FOUND] = {
-          description: backkErrors.ENTITY_NOT_FOUND.errorCode + ': ' + backkErrors.ENTITY_NOT_FOUND.message,
-          ...getErrorContent(backkErrors.ENTITY_NOT_FOUND),
+          description: BACKK_ERRORS.ENTITY_NOT_FOUND.errorCode + ': ' + BACKK_ERRORS.ENTITY_NOT_FOUND.message,
+          ...getErrorContent(BACKK_ERRORS.ENTITY_NOT_FOUND),
         };
       }
 
       if (functionMetadata.argType !== undefined) {
         commonErrorMap[HttpStatusCodes.BAD_REQUEST] = {
-          description: backkErrors.INVALID_ARGUMENT.errorCode + ': ' + backkErrors.INVALID_ARGUMENT.message,
-          ...getErrorContent(backkErrors.INVALID_ARGUMENT),
+          description: BACKK_ERRORS.INVALID_ARGUMENT.errorCode + ': ' + BACKK_ERRORS.INVALID_ARGUMENT.message,
+          ...getErrorContent(BACKK_ERRORS.INVALID_ARGUMENT),
         };
       }
 
@@ -147,40 +147,40 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
       ) {
         commonErrorMap[HttpStatusCodes.UNAUTHORIZED] = {
           description:
-            backkErrors.USER_NOT_AUTHENTICATED.errorCode + ': ' + backkErrors.USER_NOT_AUTHENTICATED.message,
-          ...getErrorContent(backkErrors.USER_NOT_AUTHENTICATED),
+            BACKK_ERRORS.USER_NOT_AUTHENTICATED.errorCode + ': ' + BACKK_ERRORS.USER_NOT_AUTHENTICATED.message,
+          ...getErrorContent(BACKK_ERRORS.USER_NOT_AUTHENTICATED),
         };
 
         commonErrorMap[HttpStatusCodes.FORBIDDEN] = {
           description:
-            backkErrors.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED.errorCode +
+            BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED.errorCode +
             ': ' +
-            backkErrors.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED.message,
-          ...getErrorContent(backkErrors.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED),
+            BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED.message,
+          ...getErrorContent(BACKK_ERRORS.SERVICE_FUNCTION_CALL_NOT_AUTHORIZED),
         };
       }
 
       if (functionMetadata.argType !== undefined) {
         commonErrorMap[HttpStatusCodes.UNPROCESSABLE_ENTITY] = {
           description:
-            backkErrors.MAX_ENTITY_COUNT_REACHED.errorCode +
+            BACKK_ERRORS.MAX_ENTITY_COUNT_REACHED.errorCode +
             ': ' +
-            backkErrors.MAX_ENTITY_COUNT_REACHED.message,
-          ...getErrorContent(backkErrors.MAX_ENTITY_COUNT_REACHED),
+            BACKK_ERRORS.MAX_ENTITY_COUNT_REACHED.message,
+          ...getErrorContent(BACKK_ERRORS.MAX_ENTITY_COUNT_REACHED),
         };
 
         commonErrorMap[HttpStatusCodes.NOT_ACCEPTABLE] = {
           description:
-            backkErrors.MISSING_SERVICE_FUNCTION_ARGUMENT.errorCode +
+            BACKK_ERRORS.MISSING_SERVICE_FUNCTION_ARGUMENT.errorCode +
             ': ' +
-            backkErrors.MISSING_SERVICE_FUNCTION_ARGUMENT.message,
-          ...getErrorContent(backkErrors.MISSING_SERVICE_FUNCTION_ARGUMENT),
+            BACKK_ERRORS.MISSING_SERVICE_FUNCTION_ARGUMENT.message,
+          ...getErrorContent(BACKK_ERRORS.MISSING_SERVICE_FUNCTION_ARGUMENT),
         };
 
         commonErrorMap[HttpStatusCodes.PAYLOAD_TOO_LARGE] = {
           description:
-            backkErrors.REQUEST_IS_TOO_LONG.errorCode + ': ' + backkErrors.REQUEST_IS_TOO_LONG.message,
-          ...getErrorContent(backkErrors.REQUEST_IS_TOO_LONG),
+            BACKK_ERRORS.REQUEST_IS_TOO_LONG.errorCode + ': ' + BACKK_ERRORS.REQUEST_IS_TOO_LONG.message,
+          ...getErrorContent(BACKK_ERRORS.REQUEST_IS_TOO_LONG),
         };
       }
 

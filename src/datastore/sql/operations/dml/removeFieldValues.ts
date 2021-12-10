@@ -4,7 +4,7 @@ import AbstractSqlDataStore from '../../../AbstractSqlDataStore';
 import tryStartLocalTransactionIfNeeded from '../transaction/tryStartLocalTransactionIfNeeded';
 import getEntityById from '../dql/getEntityById';
 import createErrorFromErrorCodeMessageAndStatus from '../../../../errors/createErrorFromErrorCodeMessageAndStatus';
-import { backkErrors } from '../../../../errors/backkErrors';
+import { BACKK_ERRORS } from '../../../../errors/BACKK_ERRORS';
 import forEachAsyncParallel from '../../../../utils/forEachAsyncParallel';
 import tryCommitLocalTransactionIfNeeded from '../transaction/tryCommitLocalTransactionIfNeeded';
 import tryRollbackLocalTransactionIfNeeded from '../transaction/tryRollbackLocalTransactionIfNeeded';
@@ -63,8 +63,8 @@ export default async function removeFieldValues<T extends BackkEntity>(
     if (isNaN(numericId)) {
       // noinspection ExceptionCaughtLocallyJS
       throw createErrorFromErrorCodeMessageAndStatus({
-        ...backkErrors.INVALID_ARGUMENT,
-        message: backkErrors.INVALID_ARGUMENT.message + '_id: must be a numeric id'
+        ...BACKK_ERRORS.INVALID_ARGUMENT,
+        message: BACKK_ERRORS.INVALID_ARGUMENT.message + '_id: must be a numeric id'
       });
     }
 

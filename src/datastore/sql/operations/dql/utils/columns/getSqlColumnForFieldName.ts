@@ -3,7 +3,7 @@ import getSqlColumnFromProjection from "./getSqlColumnFromProjection";
 import AbstractSqlDataStore from "../../../../../AbstractSqlDataStore";
 import createErrorFromErrorCodeMessageAndStatus
   from "../../../../../../errors/createErrorFromErrorCodeMessageAndStatus";
-import { backkErrors } from "../../../../../../errors/backkErrors";
+import { BACKK_ERRORS } from "../../../../../../errors/BACKK_ERRORS";
 
 export default function tryGetSqlColumnForFieldName(
   fieldName: string,
@@ -16,8 +16,8 @@ export default function tryGetSqlColumnForFieldName(
     projection = tryGetProjection(dataStore, { includeResponseFields: [fieldName] }, entityClass, Types);
   } catch (error) {
     throw createErrorFromErrorCodeMessageAndStatus({
-      ...backkErrors.INVALID_ARGUMENT,
-      message: backkErrors.INVALID_ARGUMENT.message + 'invalid sub pagination field: ' + fieldName
+      ...BACKK_ERRORS.INVALID_ARGUMENT,
+      message: BACKK_ERRORS.INVALID_ARGUMENT.message + 'invalid sub pagination field: ' + fieldName
     });
   }
 

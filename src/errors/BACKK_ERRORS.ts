@@ -1,6 +1,7 @@
 import { HttpStatusCodes } from "../constants/constants";
+import { BackkError } from "../types/BackkError";
 
-export const backkErrors = {
+export const BACKK_ERRORS: Readonly<{[errorName: string]: BackkError}> = {
   ENTITY_VERSION_MISMATCH: {
     errorCode: 'error.1',
     message:
@@ -93,4 +94,14 @@ export const backkErrors = {
     message: 'Invalid HTTP method. HTTP method must be POST or GET',
     statusCode: HttpStatusCodes.METHOD_NOT_ALLOWED
   },
+  MICROSERVICE_NOT_READY: {
+    errorCode: 'error.19',
+    message: 'Microservice is not ready',
+    statusCode: HttpStatusCodes.SERVICE_UNAVAILABLE
+  },
+  MICROSERVICE_NOT_STARTED: {
+    errorCode: 'error.20',
+    message: 'Microservice is not started',
+    statusCode: HttpStatusCodes.SERVICE_UNAVAILABLE
+  }
 };

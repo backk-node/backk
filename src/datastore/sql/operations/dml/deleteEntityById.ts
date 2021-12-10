@@ -10,7 +10,7 @@ import cleanupLocalTransactionIfNeeded from '../transaction/cleanupLocalTransact
 import { PostHook } from '../../../hooks/PostHook';
 import tryExecutePostHook from '../../../hooks/tryExecutePostHook';
 import createErrorFromErrorCodeMessageAndStatus from '../../../../errors/createErrorFromErrorCodeMessageAndStatus';
-import { backkErrors } from '../../../../errors/backkErrors';
+import { BACKK_ERRORS } from '../../../../errors/BACKK_ERRORS';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
 import isBackkError from '../../../../errors/isBackkError';
@@ -63,8 +63,8 @@ export default async function deleteEntityById<T extends BackkEntity>(
     if (isNaN(numericId)) {
       // noinspection ExceptionCaughtLocallyJS
       throw createErrorFromErrorCodeMessageAndStatus({
-        ...backkErrors.INVALID_ARGUMENT,
-        message: backkErrors.INVALID_ARGUMENT.message + '_id: must be a numeric id'
+        ...BACKK_ERRORS.INVALID_ARGUMENT,
+        message: BACKK_ERRORS.INVALID_ARGUMENT.message + '_id: must be a numeric id'
       });
     }
 

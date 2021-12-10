@@ -1,13 +1,13 @@
 import createBackkErrorFromErrorCodeMessageAndStatus
   from "../errors/createBackkErrorFromErrorCodeMessageAndStatus";
-import { backkErrors } from "../errors/backkErrors";
+import { BACKK_ERRORS } from "../errors/BACKK_ERRORS";
 
 export default function assertIsNumber(propertyName: string, value: any) {
   if (typeof value !== 'number') {
     throw createBackkErrorFromErrorCodeMessageAndStatus({
-      ...backkErrors.INVALID_ARGUMENT,
+      ...BACKK_ERRORS.INVALID_ARGUMENT,
       message:
-        backkErrors.INVALID_ARGUMENT.message + `value ${value} in ${propertyName} property must be a number`
+        BACKK_ERRORS.INVALID_ARGUMENT.message + `value ${value} in ${propertyName} property must be a number`
     });
   }
 }

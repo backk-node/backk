@@ -24,7 +24,7 @@ interface DataStore {
 
 Finds an entity of class `EntityClass` by id `_id`, then adds sub-entities `subEntities` to path `subEntityPath`.
 
-For example, if you have an `Order` entity with a property `orderItems: OrderItem[]`, you can add an order items sub-entities (of class `OrderItem`) to path `orderItems`:
+For example, if you have an `Order` entity with a property `orderItems: OrderItem[]`, you can add order items sub-entities (of class `OrderItem`) to path `orderItems`:
 
 ```ts
 addSubEntitiesToEntityById('orderItems', orderItems, Order, orderId);

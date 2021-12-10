@@ -172,7 +172,7 @@ Retrieves the entities of class `EntityClass` matching filter(s) `filters` from 
 `filters` defines filter(s) for the query. See [Query Filters](QUERY_FILTERS.MD) for details.
 
 `postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of sub-entities and pagination of sub-entities. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
-1
+
 `allowFetchingOnlyCurrentOrPreviousOrNextPage` specifies if client can fetch any page or only current, previous or next page.
 
 `preHooks` are executed before the retrieve operation and if any of the pre-hooks fails, the whole retrieve operation fails. See [Hooks](HOOKS.MD) for details.

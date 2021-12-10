@@ -207,7 +207,7 @@ export interface DataStore {
   updateEntityByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
     filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
-    entityUpdate: Partial<T>,
+    entityUpdate: RecursivePartial<T>,
     options?: {
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
       postQueryOperations?: PostQueryOperations;
@@ -218,7 +218,7 @@ export interface DataStore {
   updateEntitiesByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
     filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
-    entityUpdate: Partial<T>
+    entityUpdate: RecursivePartial<T>
   ): PromiseErrorOr<null>;
 
   deleteEntityById<T extends BackkEntity>(

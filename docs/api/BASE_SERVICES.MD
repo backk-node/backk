@@ -304,9 +304,13 @@ Create a class `ReadinessCheckServiceImpl` that extends the `ReadinessCheckServi
 Example implementation:
 
 ```typescript
-import { BACKK_ERRORS, HttpStatusCodes } from 'backk';
+import { BACKK_ERRORS, HttpStatusCodes, ReadinessCheckService } from 'backk';
 
 export default class ReadinessCheckServiceImpl extends ReadinessCheckService {
+  constructor() {
+    super({});
+  }
+  
   async isMicroserviceReady(): PromiseErrorOr<null> {
     // isReady is some function implemented by you to perform checks for microservice readiness
     return await isReady() ? [null, null] : [null, BACKK_ERRORS.MICROSERVICE_NOT_READY];
@@ -336,11 +340,15 @@ If you need to perform additional checks, create a new class that extends the `D
 NOTE! Your implementation should first call the base class method and then execute additional checks. For example:
 
 ```typescript
-import { BACKK_ERRORS, HttpStatusCodes } from 'backk';
+import { BACKK_ERRORS, DataStore, DefaultStartupCheckServiceImpl, HttpStatusCodes } from 'backk';
 
 export default class StartupCheckServiceImpl extends DefaultStartupCheckServiceImpl {
+  constructor(dataStore: DataStore) {
+    super({}, dataStore);
+  }
+  
   async isMicroserviceStarted(): PromiseErrorOr<null> {
-    const [, error] = await super();
+    const [, error] = await super.isMicroserviceStarted();
     if (error) {
       return [null, error];
     }
@@ -351,7 +359,31 @@ export default class StartupCheckServiceImpl extends DefaultStartupCheckServiceI
 }
 ```
 
-Instantiate the Backk default `StartupCheckServiceImpl` class or your own class and store it as a field in your `MicroserviceImpl` class:
+You can also implement the same as above you class composition instead of inheritance: 
+```typescript
+import { BACKK_ERRORS, DefaultStartupCheckServiceImpl, HttpStatusCodes, StartupCheckService } from 'backk';
+
+export default class StartupCheckServiceImpl extends StartupCheckService {
+  private readonly defaultStartupCheckService: StartupCheckService;
+
+  constructor(dataStore: DataStore) {
+    super({}, dataStore);
+    this.defaultStartupCheckService = new DefaultStartupCheckServiceImpl(dataStore);
+  }
+  
+  async isMicroserviceStarted(): PromiseErrorOr<null> {
+    const [, error] = await this.defaultStartupCheckService.isMicroserviceStarted();
+    if (error) {
+      return [null, error];
+    }
+
+    // isStarted is some function implemented by you to perform additional startup checks
+    return await isStarted() ? [ null, null] : [null, BACKK_ERRORS.MICROSERVICE_NOT_STARTED]
+  }
+}
+```
+
+Instantiate the `DefaultStartupCheckServiceImpl` class or your own implementation class and store it as a field in your `MicroserviceImpl` class:
 
 ```typescript
 export default class MicroserviceImpl extends Microservice {
@@ -360,15 +392,12 @@ export default class MicroserviceImpl extends Microservice {
 ```
 
 ### <a name="auditloggingservice"></a> AuditLoggingService
-
 This service is called to log requests made to the microservice.
 
 ```typescript
-export default abstract class AuditLoggingService {
-  abstract async log(auditLogEntry: AuditLogEntry): Promise<void>;
+export interface AuditLoggingService {
+  log(auditLogEntry: AuditLogEntry): Promise<void>;
 }
-
-export type UserOperationResult = 'success' | 'failure';
 
 export interface AuditLogEntry {
   Timestamp: string;
@@ -385,16 +414,17 @@ export interface AuditLogEntry {
   Resource: Resource;
   Attributes?: { [key: string]: string | number | boolean | undefined };
 }
+
+export type UserOperationResult = 'success' | 'failure';
 ```
 
-Implement a class that extends the `AuditLoggingService` class and provide implementations for function:
-
-- log
+Create a class `AuditLoggingServiceImpl` that implements the `AuditLoggingService` interface and provides implementation for the `log` function.
+You `log` function implementation should store the `auditLogEntry` information to a safe remote location. In the implementation, you can use for example `makeHttpRequest`.
 
 Instantiate your class and store it as a field in your `MicroserviceImpl` class:
 
 ```typescript
 export default class MicroserviceImpl extends Microservice {
-  private readonly auditLogService = new AuditLogServiceImpl();
+  private readonly auditLoggingService = new AuditLoggingServiceImpl();
 }
 ```

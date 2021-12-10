@@ -1,10 +1,26 @@
 import serviceFunctionAnnotationContainer from './serviceFunctionAnnotationContainer';
 import defaultRetryIntervals from '../../../scheduling/defaultRetryIntervals';
+import { DayOfWeek } from 'src/decorators/typeproperty/datetime/IsDayOfWeekBetween';
 
 export type Range = {
   start: number;
   end: number;
 };
+
+export enum Month {
+  Jan,
+  Feb,
+  Mar,
+  Apr,
+  May,
+  Jun,
+  Jul,
+  Aug,
+  Sep,
+  Oct,
+  Nov,
+  Dec
+}
 
 export type CronSchedule = {
   minutes?: number | number[] | Range | 'any';
@@ -18,11 +34,11 @@ export type CronSchedule = {
   dayInterval?: number;
 
   // 0 - 11
-  months?: number | number[] | Range | 'any';
+  months?: Month | Month[] | Range | 'any';
   monthInterval?: number;
 
   // 0-6 (Sun-Sat)
-  daysOfWeek?: number | number[] | Range;
+  daysOfWeek?: DayOfWeek | DayOfWeek[] | Range;
   weekDayInterval?: number;
 };
 

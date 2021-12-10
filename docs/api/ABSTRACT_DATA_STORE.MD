@@ -18,4 +18,4 @@ interface DataStore {
   executeInsideTransaction<T>(executable: () => PromiseErrorOr<T>): PromiseErrorOr<T>
 }
 ```
-Execute data store commands in `executable` inside a transaction.
+Executes data store operations in `executable` inside a transaction.

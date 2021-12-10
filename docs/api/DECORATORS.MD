@@ -21,33 +21,28 @@ You can use following decorators for your service implementation class:
 
 You can use following decorators for you service class's functions:
 
-| Decorator                                                                       | Description                                                                                                                               |
-|---------------------------------------------------------------------------------| ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `@AllowForEveryUser()`                                                          | Service function can be accessed by any user                                                                                              |
-| `@AllowForUserRoles(roles: string[])`                                           | Service function can be accessed only by users with specific role or roles                                                                |
-| `@AllowForKubeClusterInternalUse()`                                             | Service function can be accessed only from inside of Kubernetes cluster                                                                   |
-| `@AllowForMicroserviceInternalUse()`                                            | Service function can be accessed only inside the Backk microservice.                                                                   |
-| `@AllowForEveryUserForOwnResources()`                                           | Service function can be accessed by any user, but only for own resources                                                                  |
-| `@AllowForTests()`                                                              | Service function can be accessed by integration tests only                                                                                |
-| `@NoAutoTests()`                                                                | Automatic integration tests are not generated for this service function                                                                   |
-| `@CronJob(cronSchedule: CronSchedule, retryIntervalsInSecs: number[])`          | Service function is a cron job that is executed according to given cron schedule. Type definition for `CronSchedule` is below this table. |
-| `@Create()`                                                                     | Service function is used to create a resource                                                                                             |
-| `@Update(updateType: UpdateType)`                                               | Service function is used to update a resource                                                                                             |
-| `@Delete()`                                                                     | Service function is used to delete a resource                                                                                             |
-| `@ExecuteOnStartup()`                                                           | Service function is executed when microservice is started                                                                                 |
-| `@NoCaptcha()`                                                                  | This denotes that Captcha is not required when service function is creating a resource                                                    |
-| `@NoTransactionNeeded(reason: string)`                                          | Service function execution does not require a transaction due to given reason                                                             |
-| `@NoDistributedTransactionNeeded(reason: string)`                               | Service function execution does not require a distributed transaction due to given reason                                                 |
-| `@ResponseHeaders<T extends object, U extends any>(headers: HttpHeaders<T, U>)` | Given headers are sent with the service function response. Type definition for `HttpHeaders` is below this table.                         |
-| `@ResponseStatusCode(statusCode: number)`                                       | Service function response is sent with given status code                                                                                  |
- | `@Subscription()`                                                               | Service function is for subscribing events. The topic of the subscription is the name of the service function | 
+| Decorator                                                                                                     | Description                                                                                                                                          |
+|---------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `@AllowForEveryUser()`                                                                                        | Service function can be accessed by any user                                                                                                         |
+| `@AllowForUserRoles(roles: string[])`                                                                         | Service function can be accessed only by users with specific role or roles                                                                           |
+| `@AllowForKubeClusterInternalUse()`                                                                           | Service function can be accessed only from inside of Kubernetes cluster                                                                              |
+| `@AllowForMicroserviceInternalUse()`                                                                          | Service function can be accessed only inside the Backk microservice.                                                                                 |
+| `@AllowForEveryUserForOwnResources()`                                                                         | Service function can be accessed by any user, but only for user's own resources                                                                      |
+| `@AllowForTests()`                                                                                            | Service function can be accessed by integration tests only                                                                                           |
+| `@NoAutoTests()`                                                                                              | Automatic integration tests are not generated for this service function                                                                              |
+| `@CronJob(cronSchedule: CronSchedule, retryIntervalsInSecs: number[])`                                        | Service function is a cron job that is executed according to given cron schedule. Type definition for `CronSchedule` is below this table.            |
+| `@Create()`                                                                                                   | Service function is used to create a resource                                                                                                        |
+| `@Update(updateType: UpdateType)`                                                                             | Service function is used to update a resource. `updateType` can be 'update' or 'addOrRemove'. updateType is an instruction for auto test generation. |
+| `@Delete()`                                                                                                   | Service function is used to delete a resource                                                                                                        |
+| `@ExecuteOnStartup()`                                                                                         | Service function is executed when microservice is started                                                                                            |
+| `@NoCaptcha()`                                                                                                | This denotes that Captcha is not required when service function is creating a resource                                                               |
+| `@NoTransactionNeeded(reason: string)`                                                                        | Service function execution does not require a transaction due to given reason                                                                        |
+| `@NoDistributedTransactionNeeded(reason: string)`                                                             | Service function execution does not require a distributed transaction due to given reason                                                            |
+| `@ResponseHeaders<ArgType extends object, RetValType extends any>(headers: HttpHeaders<ArgType, RetValType>)` | Given headers are sent with the service function response. Type definition for `HttpHeaders` is below this table.                                    |
+| `@ResponseStatusCode(statusCode: number)`                                                                     | Service function response is sent with given status code                                                                                             |
+ | `@Subscription()`                                                                                             | Service function is for subscribing events. The topic of the subscription is the name of the service function                                        | 
 
 ```ts
-type Range = {
-  start: number;
-  end: number;
-};
-
 type CronSchedule = {
   minutes?: number | number[] | Range | 'any';
   minuteInterval?: number;
@@ -55,24 +50,25 @@ type CronSchedule = {
   hourInterval?: number;
   daysOfMonth?: number | number[] | Range | 'any';
   dayInterval?: number;
-
-  // 0 - 11
-  months?: number | number[] | Range | 'any';
+  months?: Month | Month[] | Range | 'any';
   monthInterval?: number;
-
-  // 0-6 (Sun-Sat)
-  daysOfWeek?: number | number[] | Range;
+  daysOfWeek?: DayOfWeek | DayOfWeek[] | Range;
   weekDayInterval?: number;
 };
 
-type HeaderValueGenerator<T extends object, U extends any> = (
-  argument: T,
-  returnValue: U
-) => string | undefined;
-
-type HttpHeaders<T extends object, U extends any> = {
-  [key: string]: string | HeaderValueGenerator<T, U> | undefined;
+type Range = {
+ start: number;
+ end: number;
 };
+
+type HttpHeaders<ArgType extends object, RetValType extends any> = {
+  [key: string]: string | HeaderValueGenerator<ArgType, RetValType> | undefined;
+};
+
+type HeaderValueGenerator<ArgType extends object, RetValType extends any> = (
+  argument: ArgType,
+  returnValue: RetValType
+) => string | undefined;
 ```
 
 ### <a name="entity-decorators"></a> Entity Decorators
@@ -90,12 +86,12 @@ You can use following decorators for your entity classes:
 You can use following decorators for the properties of your entity classes:
 
 | Decorator                                                                                                                                                                      | Description                                                                                                                                                        |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `@IsExternalId()`                                                                                                                                                              | Entity property is an id property in some external system, not an id in this microservice's database                                                               |
 | `@Unique()`                                                                                                                                                                    | Entity property values must be unique in database                                                                                                                  |
 | `@NotUnique()`                                                                                                                                                                 | Entity property values are not unique in database                                                                                                                  |
 | `@Encrypted()`                                                                                                                                                                 | Entity property value is encrypted in database                                                                                                                     |
-| `@Encrypted(reason: string)`                                                                                                                                                   | Entity property value is not needed to be encrypted in database because of given reason                                                                            |
+| `@NotEncrypted(reason: string)`                                                                                                                                                | Entity property value is not needed to be encrypted in database because of given reason                                                                            |
 | `@Hashed()`                                                                                                                                                                    | Entity property value is hashed in database                                                                                                                        |
 | `@NotHashed(reason: string)`                                                                                                                                                   | Entity property value is not needed to be hashed in database because of given reason                                                                               |
 | `@TestValue(testValue: any)`                                                                                                                                                   | Entity property should have this value in automatic integration tests                                                                                              |
@@ -126,7 +122,7 @@ You can use following decorators for the properties of your classes to validate 
 
 | Decorator                                                                                                                                                              | Description                                                                                                                                                                                           |
 |------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `@ShouldBeTrueForObject(validateObject: (object: T) => boolean, errorMessage?: string)`                                                                                | This validator can used on any class property to validate using other properties of the object with the `validateObject` function                                                                     |
+| `@ShouldBeTrueForObject<T extends Record<string, any>>(validateObject: (object: T) => boolean, errorMessage?: string)`                                                 | This validator can used on any class property to validate using other properties of the object with the `validateObject` function                                                                     |
 | `@ShouldBeTrue(validateValue: (value: any) => boolean, errorMessage?: string)`                                                                                         | Validates the value of the property with `validateValue` function                                                                                                                                     |
 | **Number validation decorators**                                                                                                                                       |                                                                                                                                                                                                       |
 | `@IsInt()`                                                                                                                                                             | Checks if the value is an integer number.                                                                                                                                                             |
@@ -142,7 +138,7 @@ You can use following decorators for the properties of your classes to validate 
 | `@MinDate(date: Date)`                                                                                                                                                 | Checks if the value is a date that's after the specified date.                                                                                                                                        |
 | `@MaxDate(date: Date)`                                                                                                                                                 | Checks if the value is a date that's before the specified date.                                                                                                                                       |  
 | `@IsDateBetween(startValue: string, endValue: string`                                                                                                                  | Chcecks if the date is between startValue and endValue (inclusive). StartValue and endValue should be in format 'YYYY-MM-DD'                                                                          |
-| `@IsDateBetween(startValueSubtractAmount: number, startValueSubtractUnit: dayjs.UnitType, endValueAddAmount: number, endValueAddUnit: dayjs.UnitType)`                 | Checks that date is between the specified relative dates (inclusive)                                                                                                                                  |  
+| `@IsDateBetweenRelative(startValueSubtractAmount: number, startValueSubtractUnit: dayjs.UnitType, endValueAddAmount: number, endValueAddUnit: dayjs.UnitType)`         | Checks that date is between the specified relative dates (inclusive)                                                                                                                                  |  
  | `@IsDayOfMonthIn(values: number[])`                                                                                                                                    | Checks if date is a day of month that matches one of the given values                                                                                                                                 |
  | `@IsDayOfWeekBetween(startValue: DayOfWeek, endValue: DayOfWeek)`                                                                                                      | Checks if date is a day of week that is between startValue and endValue (inclusive)                                                                                                                   |            
  | `@IsHourIn(values: number[])`                                                                                                                                          | Checks if time has hour that matches one of the given values                                                                                                                                          |
@@ -242,3 +238,6 @@ You can use following decorators for the properties of your classes to validate 
 | `@ArrayMaxSize(max: number)`                                                                                                                                           | Checks if the array's length is less or equal to the specified number.                                                                                                                                |
 | `@ArrayUnique(identifier?: (o) => any)`                                                                                                                                | Checks if all array's values are unique. Comparison for objects is reference-based. Optional function can be speciefied which return value will be used for the comparsion.                           |
 | `@ArrayNotUnique()`                                                                                                                                                    | Array's values don't need to be unique                                                                                                                                                                |
+
+Some of the validators are from [class-validator](https://github.com/typestack/class-validator).
+You can check for further info there.

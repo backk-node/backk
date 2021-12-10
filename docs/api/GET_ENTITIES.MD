@@ -76,12 +76,12 @@ Retrieves the entity of class `EntityClass` identified by id `_id` from the data
 
 `allowFetchingOnlyCurrentOrPreviousOrNextPage` specifies if client can fetch any page or only current, previous or next page.
 
-`preHooks` are executed before the retrieve operation and if any of the pre-hooks fails, the whole retrieve operation fails.
+`preHooks` are executed before the retrieve operation and if any of the pre-hooks fails, the whole retrieve operation fails. See [Hooks](HOOKS.MD) for details.
 
 if entity by given id is not found, then entity given by `ifEntityNotFoundReturn` will be returned.
 
 `postHook` is executed after the retrieve operation. If post-hook fails, the whole retrieve operation fails. A post-hook can be used
-for example to notify other microservices about the operation.
+for example to notify other microservices about the operation. See [Hooks](HOOKS.MD) for details.
 
 `entityCountRequests` specifies which entity counts should be returned to the client. For example `[ {subEntityPath: ''' }]` returns entity counts for the root entity. Entity count is available in property `_count`
 
@@ -138,12 +138,12 @@ Retrieves the entity of class `EntityClass` matching filter(s) `filters` from th
 
 `allowFetchingOnlyCurrentOrPreviousOrNextPage` specifies if client can fetch any page or only current, previous or next page.
 
-`preHooks` are executed before the retrieve operation and if any of the pre-hooks fails, the whole retrieve operation fails.
+`preHooks` are executed before the retrieve operation and if any of the pre-hooks fails, the whole retrieve operation fails. See [Hooks](HOOKS.MD) for details.
 
 if entity by given id is not found, then entity given by `ifEntityNotFoundReturn` will be returned.
 
 `postHook` is executed after the retrieve operation. If post-hook fails, the whole retrieve operation fails. A post-hook can be used
-for example to notify other microservices about the operation.
+for example to notify other microservices about the operation. See [Hooks](HOOKS.MD) for details.
 
 `entityCountRequests` specifies which entity counts should be returned to the client. For example `[ {subEntityPath: ''' }]` returns entity counts for the root entity. Entity count is available in property `_count`
 
@@ -175,10 +175,10 @@ Retrieves the entities of class `EntityClass` matching filter(s) `filters` from 
 1
 `allowFetchingOnlyCurrentOrPreviousOrNextPage` specifies if client can fetch any page or only current, previous or next page.
 
-`preHooks` are executed before the retrieve operation and if any of the pre-hooks fails, the whole retrieve operation fails.
+`preHooks` are executed before the retrieve operation and if any of the pre-hooks fails, the whole retrieve operation fails. See [Hooks](HOOKS.MD) for details.
 
 `postHook` is executed after the retrieve operation. If post-hook fails, the whole retrieve operation fails. A post-hook can be used
-for example to notify other microservices about the operation.
+for example to notify other microservices about the operation. See [Hooks](HOOKS.MD) for details.
 
 `entityCountRequests` specifies which entity counts should be returned to the client. For example `[ {subEntityPath: ''' }]` returns entity counts for the root entity. Entity count is available in property `_count`
 

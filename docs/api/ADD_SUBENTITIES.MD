@@ -30,13 +30,15 @@ For example, if you have an `Order` entity with a property `orderItems: OrderIte
 addSubEntitiesToEntityById('orderItems', orderItems, Order, orderId);
 ```
 
-If entity by id `_id` is not found, then entity provided by `ifEntityNotFoundUse` function will be used instead.
+If entity by id `_id` is not found, then entity provided by `options.ifEntityNotFoundUse` function will be used instead.
 
-`preHooks` are executed before the add operation and if any of the pre-hooks fails, the whole add operation fails.
-A pre-hook gets the entity as argument, and it can be used to validate the proper state of entity before the add operation.
+`options.entityPreHooks` are executed before the add operation and if any of the pre-hooks fails, the whole add operation fails.
+A pre-hook gets the entity as argument, and it can be used to validate the proper state of entity before the add operation. See [Hooks](HOOKS.MD) for details.
 
-`postHook` is executed after add operation. If post-hook fails, the whole add operation fails. A post-hook can be used
-for example to notify other microservices about the operation.
+`options.postQueryOperations` is used to define post query operations for querying the entity before adding sub-entities. (E.g. for use in `entityPreHooks`). See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+
+`options.postHook` is executed after add operation. If post-hook fails, the whole add operation fails. A post-hook can be used
+for example to notify other microservices about the operation. See [Hooks](HOOKS.MD) for details.
 
 Returns nothing or error.
 
@@ -67,12 +69,16 @@ For example, if you have an `ShoppingCart` entity found by `userAccountId` with 
 addSubEntitiesToEntityByFilters('shoppingCartItems', shoppingCartItems, ShoppingCart, { userAccountId });
 ```
 
-If entity by filters `filters` is not found, then entity provided by `ifEntityNotFoundUse` function will be used instead.
+`filters` defines filter(s). See [Query Filters](QUERY_FILTERS.MD) for details.
 
-`preHooks` are executed before the add operation and if any of the pre-hooks fails, the whole add operation fails.
-A pre-hook gets the entity as argument, and it can be used to validate the proper state of entity before the add operation.
+If entity by filters `filters` is not found, then entity provided by `options.ifEntityNotFoundUse` function will be used instead.
 
-`postHook` is executed after add operation. If post-hook fails, the whole add operation fails. A post-hook can be used
-for example to notify other microservices about the operation.
+`options.entityPreHooks` are executed before the add operation and if any of the pre-hooks fails, the whole add operation fails.
+A pre-hook gets the entity as argument, and it can be used to validate the proper state of entity before the add operation. See [Hooks](HOOKS.MD) for details.
+
+`options.postQueryOperations` is used to define post query operations for querying the entity before adding sub-entities. (E.g. for use in `entityPreHooks`). See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+
+`options.postHook` is executed after add operation. If post-hook fails, the whole add operation fails. A post-hook can be used
+for example to notify other microservices about the operation. See [Hooks](HOOKS.MD) for details.
 
 Returns nothing or error.

@@ -18,11 +18,19 @@ interface DataStore {
     entityCountRequests?: EntityCountRequest[]
   ): PromiseErrorOr<Many<T>>;
 }
+
+export default class EntityCountRequest {
+  constructor(public readonly subEntityPath: string) {}
+}
 ```
 
 Retrieves entities of class `EntityClass` from the data store.
 
-`postQueryOperations` defines which entity fields are retrieved, the sorting order of entities and pagination of entities.
+`postQueryOperations` defines which entity fields are retrieved, the sorting order of entities and pagination of entities. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+
+`allowFetchingOnlyCurrentOrPreviousOrNextPage` specifies if client can fetch any page or only current, previous or next page.
+
+`entityCountRequests` specifies which entity counts should be returned to the client. For example `[ {subEntityPath: ''' }]` returns entity counts for the root entity. Entity count is available in property `_count`
 
 Returns the retrieved entities or error.
 
@@ -39,7 +47,7 @@ interface DataStore {
 
 Retrieves the count of entities of class `EntityClass` from the data store.
 
-`filters` defined filter(s) for the count query.
+`filters` defines filter(s) for the count query. See [Query Filters](QUERY_FILTERS.MD) for details.
 
 Returns the number of entities or error.
 
@@ -64,7 +72,9 @@ interface DataStore {
 
 Retrieves the entity of class `EntityClass` identified by id `_id` from the data store.
 
-`postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of sub-entities and pagination of sub-entities.
+`postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of sub-entities and pagination of sub-entities. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+
+`allowFetchingOnlyCurrentOrPreviousOrNextPage` specifies if client can fetch any page or only current, previous or next page.
 
 `preHooks` are executed before the retrieve operation and if any of the pre-hooks fails, the whole retrieve operation fails.
 
@@ -72,6 +82,8 @@ if entity by given id is not found, then entity given by `ifEntityNotFoundReturn
 
 `postHook` is executed after the retrieve operation. If post-hook fails, the whole retrieve operation fails. A post-hook can be used
 for example to notify other microservices about the operation.
+
+`entityCountRequests` specifies which entity counts should be returned to the client. For example `[ {subEntityPath: ''' }]` returns entity counts for the root entity. Entity count is available in property `_count`
 
 Returns the entity or error.
 
@@ -91,7 +103,11 @@ interface DataStore {
 
 Retrieves the entities of class `EntityClass` identified by ids `_ids` from the data store.
 
-`postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of entities/sub-entities and pagination of entities/sub-entities.
+`postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of entities/sub-entities and pagination of entities/sub-entities. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+
+`allowFetchingOnlyCurrentOrPreviousOrNextPage` specifies if client can fetch any page or only current, previous or next page.
+
+`entityCountRequests` specifies which entity counts should be returned to the client. For example `[ {subEntityPath: ''' }]` returns entity counts for the root entity. Entity count is available in property `_count`
 
 Returns the entities or error.
 
@@ -116,7 +132,11 @@ interface DataStore {
 
 Retrieves the entity of class `EntityClass` matching filter(s) `filters` from the data store.
 
-`postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of sub-entities and pagination of sub-entities.
+`filters` defines filter(s) for the query. See [Query Filters](QUERY_FILTERS.MD) for details.
+
+`postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of sub-entities and pagination of sub-entities. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+
+`allowFetchingOnlyCurrentOrPreviousOrNextPage` specifies if client can fetch any page or only current, previous or next page.
 
 `preHooks` are executed before the retrieve operation and if any of the pre-hooks fails, the whole retrieve operation fails.
 
@@ -124,6 +144,8 @@ if entity by given id is not found, then entity given by `ifEntityNotFoundReturn
 
 `postHook` is executed after the retrieve operation. If post-hook fails, the whole retrieve operation fails. A post-hook can be used
 for example to notify other microservices about the operation.
+
+`entityCountRequests` specifies which entity counts should be returned to the client. For example `[ {subEntityPath: ''' }]` returns entity counts for the root entity. Entity count is available in property `_count`
 
 Returns the entity or error.
 
@@ -147,11 +169,17 @@ interface DataStore {
 
 Retrieves the entities of class `EntityClass` matching filter(s) `filters` from the data store.
 
-`postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of sub-entities and pagination of sub-entities.
+`filters` defines filter(s) for the query. See [Query Filters](QUERY_FILTERS.MD) for details.
+
+`postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of sub-entities and pagination of sub-entities. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+1
+`allowFetchingOnlyCurrentOrPreviousOrNextPage` specifies if client can fetch any page or only current, previous or next page.
 
 `preHooks` are executed before the retrieve operation and if any of the pre-hooks fails, the whole retrieve operation fails.
 
 `postHook` is executed after the retrieve operation. If post-hook fails, the whole retrieve operation fails. A post-hook can be used
 for example to notify other microservices about the operation.
+
+`entityCountRequests` specifies which entity counts should be returned to the client. For example `[ {subEntityPath: ''' }]` returns entity counts for the root entity. Entity count is available in property `_count`
 
 Returns the entities or error.

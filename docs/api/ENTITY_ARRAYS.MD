@@ -26,11 +26,13 @@ type ArrayFieldValue = string | number | boolean;
 
 Finds an entity of class `EntityClass` by id `_id`, then adds values `arrayFieldValuesToAdd` to entity field `arrayFieldName`.
 
-`entityPreHooks` are executed before the delete operation, and they get the current entity as argument.
-if any of the pre-hooks fails, the whole delete operation fails.
+`options.entityPreHooks` are executed before the add operation, and they get the current entity as argument.
+if any of the pre-hooks fails, the whole add operation fails. See [Hooks](HOOKS.MD) for details.
 
-`postHook` is executed after the delete operation. If post-hook fails, the whole delete operation fails. A post-hook can be used
-for example to notify other microservices about the operation.
+`options.postQueryOperations` is used to define post query operations for querying the entity before adding field values (E.g. for use in `entityPreHooks`). See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+
+`options.postHook` is executed after the add operation. If post-hook fails, the whole add operation fails. A post-hook can be used
+for example to notify other microservices about the operation. See [Hooks](HOOKS.MD) for details.
 
 Returns nothing or error.
 
@@ -75,10 +77,12 @@ type ArrayFieldValue = string | number | boolean;
 
 Finds an entity of class `EntityClass` by id `_id`, then removes values `arrayFieldValuesToRemove` from entity field `arrayFieldName`.
 
-`entityPreHooks` are executed before the delete operation, and they get the current entity as argument.
-if any of the pre-hooks fails, the whole delete operation fails.
+`options.entityPreHooks` are executed before the remove operation, and they get the current entity as argument.
+if any of the pre-hooks fails, the whole remove operation fails.  See [Hooks](HOOKS.MD) for details.
 
-`postHook` is executed after the delete operation. If post-hook fails, the whole delete operation fails. A post-hook can be used
-for example to notify other microservices about the operation.
+`options.postQueryOperations` is used to define post query operations for querying the entity before removing field values (E.g. for use in `entityPreHooks`). See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+
+`options.postHook` is executed after the remvoe operation. If post-hook fails, the whole remove operation fails. A post-hook can be used
+for example to notify other microservices about the operation. See [Hooks](HOOKS.MD) for details.
 
 Returns nothing or error.

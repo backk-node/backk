@@ -1,11 +1,11 @@
-import SqlExpression from '../../expressions/SqlExpression';
+import SqlFilter from '../../expressions/SqlFilter';
 import AbstractSqlDataStore from '../../../AbstractSqlDataStore';
 import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
 import getSqlSelectStatementParts from './utils/getSqlSelectStatementParts';
 import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
 import updateDbLocalTransactionCount from './utils/updateDbLocalTransactionCount';
 import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
-import MongoDbQuery from '../../../mongodb/MongoDbQuery';
+import MongoDbFilter from '../../../mongodb/MongoDbFilter';
 import convertFilterObjectToSqlEquals from './utils/convertFilterObjectToSqlEquals';
 import getTableName from '../../../utils/getTableName';
 import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
@@ -14,13 +14,13 @@ import SqlEquals from '../../expressions/SqlEquals';
 
 export default async function getEntitiesCount<T>(
   dataStore: AbstractSqlDataStore,
-  filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | object | undefined,
+  filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | object | undefined,
   EntityClass: new () => T
 ): PromiseErrorOr<number> {
   if (typeof filters === 'object' && !Array.isArray(filters)) {
     // noinspection AssignmentToFunctionParameterJS
     filters = convertFilterObjectToSqlEquals(filters);
-  } else if (filters?.find((filter) => filter instanceof MongoDbQuery)) {
+  } else if (filters?.find((filter) => filter instanceof MongoDbFilter)) {
     throw new Error('filters must be an array of SqlExpressions and/or UserDefinedFilters');
   }
 
@@ -38,7 +38,7 @@ export default async function getEntitiesCount<T>(
       dataStore,
       new DefaultPostQueryOperations(),
       EntityClass,
-      filters as SqlExpression[] | UserDefinedFilter[] | undefined
+      filters as SqlFilter[] | UserDefinedFilter[] | undefined
     );
 
     const tableName = getTableName(EntityClass.name);

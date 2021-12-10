@@ -1,5 +1,5 @@
-import MongoDbQuery from '../../../mongodb/MongoDbQuery';
-import SqlExpression from '../../expressions/SqlExpression';
+import MongoDbFilter from '../../../mongodb/MongoDbFilter';
+import SqlFilter from '../../expressions/SqlFilter';
 import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
 import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
 import convertFilterObjectToSqlEquals from '../dql/utils/convertFilterObjectToSqlEquals';
@@ -20,18 +20,18 @@ import SqlEquals from '../../expressions/SqlEquals';
 // noinspection DuplicatedCode
 export default async function updateEntitiesByFilters<T extends BackkEntity>(
   dataStore: AbstractSqlDataStore,
-  filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+  filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
   update: Partial<T>,
   EntityClass: new () => T
 ): PromiseErrorOr<null> {
   if (typeof filters === 'object' && !Array.isArray(filters)) {
     // noinspection AssignmentToFunctionParameterJS
     filters = convertFilterObjectToSqlEquals(filters);
-  } else if (filters.find((filter) => filter instanceof MongoDbQuery)) {
+  } else if (filters.find((filter) => filter instanceof MongoDbFilter)) {
     throw new Error('filters must be an array of SqlExpressions and/or UserDefinedFilters');
   }
 
-  const nonRootFilters = (filters as Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter>).find(
+  const nonRootFilters = (filters as Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter>).find(
     (filter) => filter.subEntityPath !== ''
   );
 

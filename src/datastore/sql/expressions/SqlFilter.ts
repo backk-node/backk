@@ -2,7 +2,7 @@ import shouldUseRandomInitializationVector from "../../../crypt/shouldUseRandomI
 import shouldEncryptValue from "../../../crypt/shouldEncryptValue";
 import encrypt from "../../../crypt/encrypt";
 
-export default class SqlExpression {
+export default class SqlFilter {
   constructor(readonly sqlExpression: string, readonly values?: object, readonly subEntityPath = '') {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

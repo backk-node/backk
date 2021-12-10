@@ -1,9 +1,9 @@
-import SqlExpression from "./SqlExpression";
+import SqlFilter from "./SqlFilter";
 import shouldUseRandomInitializationVector from "../../../crypt/shouldUseRandomInitializationVector";
 import shouldEncryptValue from "../../../crypt/shouldEncryptValue";
 import encrypt from "../../../crypt/encrypt";
 
-export default class SqlEquals<T> extends SqlExpression {
+export default class SqlEquals<T> extends SqlFilter {
   constructor(private readonly filters: Partial<T>, subEntityPath: string = '') {
     super('', {}, subEntityPath);
   }

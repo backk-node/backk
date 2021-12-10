@@ -8,7 +8,7 @@ import isEntityTypeName from "../../../../../utils/type/isEntityTypeName";
 import tryGetWhereClause from "./tryGetWhereClause";
 import tryGetSortClause from "./tryGetOrderByClause";
 import getPaginationClause from "./getPaginationClause";
-import SqlExpression from "../../../expressions/SqlExpression";
+import SqlFilter from "../../../expressions/SqlFilter";
 import UserDefinedFilter from "../../../../../types/userdefinedfilters/UserDefinedFilter";
 import AbstractSqlDataStore from "../../../../AbstractSqlDataStore";
 import SortBy from "../../../../../types/postqueryoperations/SortBy";
@@ -21,7 +21,7 @@ export default function getJoinClauses(
   dataStore: AbstractSqlDataStore,
   subEntityPath: string,
   projection: Projection,
-  filters: SqlExpression[] | UserDefinedFilter[] | undefined,
+  filters: SqlFilter[] | UserDefinedFilter[] | undefined,
   sortBys: SortBy[],
   paginations: Pagination[],
   entityCountRequests: EntityCountRequest[] | undefined,

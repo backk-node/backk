@@ -10,8 +10,8 @@ import { MongoClient } from 'mongodb';
 import typePropertyAnnotationContainer from '../../decorators/typeproperty/typePropertyAnnotationContainer';
 import getClassPropertyNameToPropertyTypeNameMap from '../../metadata/getClassPropertyNameToPropertyTypeNameMap';
 import { HttpStatusCodes } from '../../constants/constants';
-import MongoDbQuery from './MongoDbQuery';
-import SqlExpression from '../sql/expressions/SqlExpression';
+import MongoDbFilter from './MongoDbFilter';
+import SqlFilter from '../sql/expressions/SqlFilter';
 import UserDefinedFilter from '../../types/userdefinedfilters/UserDefinedFilter';
 import convertFilterObjectToMongoDbQueries from './convertFilterObjectToMongoDbQueries';
 import getRootOperations from './getRootOperations';
@@ -27,7 +27,7 @@ export default async function addSimpleSubEntitiesOrValuesByFilters<
 >(
   client: MongoClient,
   dataStore: MongoDbDataStore,
-  filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+  filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
   subEntityPath: string,
   newSubEntities: Array<Omit<U, 'id'> | { _id: string } | string | number | boolean>,
   EntityClass: new () => T,
@@ -39,7 +39,7 @@ export default async function addSimpleSubEntitiesOrValuesByFilters<
   }
 ): PromiseErrorOr<null> {
   let matchExpression: any;
-  let finalFilters: Array<MongoDbQuery<T> | UserDefinedFilter | SqlExpression>;
+  let finalFilters: Array<MongoDbFilter<T> | UserDefinedFilter | SqlFilter>;
 
   if (typeof filters === 'object' && !Array.isArray(filters)) {
     finalFilters = convertFilterObjectToMongoDbQueries(filters);
@@ -47,12 +47,12 @@ export default async function addSimpleSubEntitiesOrValuesByFilters<
     finalFilters = filters;
   }
 
-  if (Array.isArray(finalFilters) && finalFilters?.find((filter) => filter instanceof SqlExpression)) {
-    throw new Error('SqlExpression is not supported for MongoDB');
+  if (Array.isArray(finalFilters) && finalFilters?.find((filter) => filter instanceof SqlFilter)) {
+    throw new Error('SqlFilter is not supported for MongoDB');
   } else {
     const rootFilters = getRootOperations(finalFilters, EntityClass, dataStore.getTypes());
-    const rootUserDefinedFilters = rootFilters.filter((filter) => !(filter instanceof MongoDbQuery));
-    const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbQuery);
+    const rootUserDefinedFilters = rootFilters.filter((filter) => !(filter instanceof MongoDbFilter));
+    const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbFilter);
 
     const userDefinedFiltersMatchExpression = convertUserDefinedFiltersToMatchExpression(
       EntityClass,
@@ -61,7 +61,7 @@ export default async function addSimpleSubEntitiesOrValuesByFilters<
     );
 
     const mongoDbQueriesMatchExpression = convertMongoDbQueriesToMatchExpression(
-      rootMongoDbQueries as Array<MongoDbQuery<T>>
+      rootMongoDbQueries as Array<MongoDbFilter<T>>
     );
 
     matchExpression = {

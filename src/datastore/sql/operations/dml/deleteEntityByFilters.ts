@@ -6,11 +6,11 @@ import tryStartLocalTransactionIfNeeded from "../transaction/tryStartLocalTransa
 import tryCommitLocalTransactionIfNeeded from "../transaction/tryCommitLocalTransactionIfNeeded";
 import tryRollbackLocalTransactionIfNeeded from "../transaction/tryRollbackLocalTransactionIfNeeded";
 import cleanupLocalTransactionIfNeeded from "../transaction/cleanupLocalTransactionIfNeeded";
-import SqlExpression from "../../expressions/SqlExpression";
+import SqlFilter from "../../expressions/SqlFilter";
 import UserDefinedFilter from "../../../../types/userdefinedfilters/UserDefinedFilter";
 import tryGetWhereClause from "../dql/clauses/tryGetWhereClause";
 import getFilterValues from "../dql/utils/getFilterValues";
-import MongoDbQuery from "../../../mongodb/MongoDbQuery";
+import MongoDbFilter from "../../../mongodb/MongoDbFilter";
 import convertFilterObjectToSqlEquals from "../dql/utils/convertFilterObjectToSqlEquals";
 import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
 import isBackkError from "../../../../errors/isBackkError";
@@ -26,7 +26,7 @@ import getUserAccountIdFieldNameAndRequiredValue
 
 export default async function deleteEntityByFilters<T extends object>(
   dataStore: AbstractSqlDataStore,
-  filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | object,
+  filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | object,
   EntityClass: new () => T,
   options?: {
     entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
@@ -37,11 +37,11 @@ export default async function deleteEntityByFilters<T extends object>(
   if (typeof filters === 'object' && !Array.isArray(filters)) {
     // noinspection AssignmentToFunctionParameterJS
     filters = convertFilterObjectToSqlEquals(filters);
-  } else if (filters.find((filter) => filter instanceof MongoDbQuery)) {
+  } else if (filters.find((filter) => filter instanceof MongoDbFilter)) {
     throw new Error('filters must be an array of SqlExpressions and/or UserDefinedFilters');
   }
 
-  const nonRootFilters = (filters as Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter>).find(
+  const nonRootFilters = (filters as Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter>).find(
     (filter) => filter.subEntityPath !== ''
   );
 

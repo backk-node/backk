@@ -1,9 +1,9 @@
-import SqlExpression from './SqlExpression';
+import SqlFilter from './SqlFilter';
 import shouldUseRandomInitializationVector from "../../../crypt/shouldUseRandomInitializationVector";
 import shouldEncryptValue from "../../../crypt/shouldEncryptValue";
 import encrypt from "../../../crypt/encrypt";
 
-export default class SqlInExpression extends SqlExpression {
+export default class SqlInFilter extends SqlFilter {
   constructor(
     readonly fieldName: string,
     readonly inExpressionValues?: any[],

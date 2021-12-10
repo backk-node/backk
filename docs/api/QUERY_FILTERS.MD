@@ -1,10 +1,10 @@
 ## Query Filters
 
-Query filters are defined using following types:
+Query filters are defined as follows:
 
 ```ts
-type QueryFilters = Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | CommonFilters
-type CommonFilters = Partial<T> | object
+type QueryFilters<T> = CommonEqFilters<T> | Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter>
+type CommonEqFilters<T> = Partial<T> | object
 ```
 
 [Common Equality Filters](#common-equality-filters)
@@ -32,7 +32,7 @@ type CommonFilters = Partial<T> | object
 ```ts
 import { FilterQuery } from 'mongodb';
 
-class MongoDbQuery<T> {
+class MongoDbFilter<T> {
   constructor(filterQuery: FilterQuery<T>, subEntityPath?: string);
 }
 ```
@@ -43,11 +43,11 @@ Sub-entity path is given with dot notation, for example: `orders.orderItems`
 
 For syntax of `filterQuery`, check [MongoDB documentation for query filter](https://docs.mongodb.com/manual/tutorial/query-documents/).
 
-Example of query filter with one instance of `MongoDbQuery`:
+Example of query filter with one instance of `MongoDbFilter`:
 
 ```ts
 const filters = [
-  new MongoDbQuery({ 
+  new MongoDbFilter({ 
     _id: { $in: salesItemIds },
     state: currentStateFilter,
     buyerUserAccountId: buyerUserAccountIdFilter,
@@ -58,7 +58,7 @@ const filters = [
 ### <a name="sql-specific-filters"></a> SQL Specific Filters
 
 ```ts
-class SqlExpression {
+class SqlFilter {
   constructor(sqlExpression: string, values?: object, subEntityPath = '');
 }
 ```
@@ -68,15 +68,15 @@ It can contain named parameters. Named parameters start with a colon, e.g. `:nam
 
 `values` is an object of values for named parameters in given `sqlExpression`
 
-Examples:
+Example:
 
 ```ts
 const filters = [
-  new SqlExpression('name LIKE :nameSubString', {
+  new SqlFilter('name LIKE :nameSubString', {
     nameSubString: nameSubString ? `%${nameSubString}%` : undefined
   }),
-  new SqlExpression('price >= :minPrice', { minPrice }),
-  new SqlExpression('price <= :maxPrice', { maxPrice })
+  new SqlFilter('price >= :minPrice', { minPrice }),
+  new SqlFilter('price <= :maxPrice', { maxPrice })
 ];
 ```
 
@@ -84,17 +84,19 @@ const filters = [
 Empty sub-entity path means the root entity.
 Sub-entity path is given with dot notation, for example: `orders.orderItems`
 
+Following subclasses of `SqlFilter` are also available:
+
 ```ts
-class SqlEquals<T> extends SqlExpression {
+class SqlEquals<T> extends SqlFilter {
   constructor(filters: Partial<T>, subEntityPath: string = '');
 }
 
-class SqlInExpression extends SqlExpression {
-  constructor(fieldName: string, inExpressionValues?: any[], subEntityPath = '', fieldExpression?: string);
+class SqlInFilter extends SqlFilter {
+  constructor(fieldName: string, values?: any[], subEntityPath = '', fieldExpression?: string);
 }
 
-class SqlNotInExpression extends SqlExpression {
-  constructor(fieldName: string, notInExpressionValues?: any[], subEntityPath = '', fieldExpression?: string);
+class SqlNotInFilter extends SqlFilter {
+  constructor(fieldName: string, values?: any[], subEntityPath = '', fieldExpression?: string);
 }
 ```
 
@@ -104,13 +106,13 @@ Below example of `SqlEquals` will check that root entity's `transactionId` field
 new SqlEquals({ transactionId: null });
 ```
 
-Below example of `SqlInExpression` will check that root entity's `_id` field has one of the values given in `salesItemIds`
+Below example of `SqlInFilter` will check that root entity's `_id` field has one of the values given in `salesItemIds`
 
 ```ts
-new SqlInExpression('_id', salesItemIds);
+new SqlInFilter('_id', salesItemIds);
 ```
 
-### User Defined Filters
+### <a name="user-defined-filters"></a> User Defined Filters
 
 User defined filters are filters that clients can specify in service function call arguments.
 

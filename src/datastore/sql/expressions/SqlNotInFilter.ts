@@ -1,6 +1,6 @@
-import SqlInExpression from './SqlInExpression';
+import SqlInFilter from './SqlInFilter';
 
-export default class SqlNotInExpression extends SqlInExpression {
+export default class SqlNotInFilter extends SqlInFilter {
   constructor(
     readonly fieldName: string,
     readonly notInExpressionValues?: any[],

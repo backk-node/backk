@@ -26,8 +26,8 @@ import { EntityPreHook } from '../../../hooks/EntityPreHook';
 import tryExecuteEntityPreHooks from '../../../hooks/tryExecuteEntityPreHooks';
 import { HttpStatusCodes } from '../../../../constants/constants';
 import findSubEntityClass from '../../../../utils/type/findSubEntityClass';
-import MongoDbQuery from '../../../mongodb/MongoDbQuery';
-import SqlExpression from '../../expressions/SqlExpression';
+import MongoDbFilter from '../../../mongodb/MongoDbFilter';
+import SqlFilter from '../../expressions/SqlFilter';
 import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
 import getEntityByFilters from '../dql/getEntityByFilters';
 import { One } from '../../../DataStore';
@@ -38,7 +38,7 @@ import { getNamespace } from "cls-hooked";
 // noinspection OverlyComplexFunctionJS,FunctionTooLongJS
 export default async function addSubEntitiesByFilters<T extends BackkEntity, U extends SubEntity>(
   dataStore: AbstractSqlDataStore,
-  filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+  filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
   subEntityPath: string,
   newSubEntities: Array<Omit<U, 'id'> | { _id: string }>,
   EntityClass: new () => T,

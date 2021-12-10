@@ -1,4 +1,4 @@
-import SqlExpression from '../../expressions/SqlExpression';
+import SqlFilter from '../../expressions/SqlFilter';
 import AbstractSqlDataStore from '../../../AbstractSqlDataStore';
 import transformRowsToObjects from './transformresults/transformRowsToObjects';
 import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
@@ -6,7 +6,7 @@ import { PostQueryOperations } from '../../../../types/postqueryoperations/PostQ
 import getSqlSelectStatementParts from './utils/getSqlSelectStatementParts';
 import updateDbLocalTransactionCount from './utils/updateDbLocalTransactionCount';
 import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
-import MongoDbQuery from '../../../mongodb/MongoDbQuery';
+import MongoDbFilter from '../../../mongodb/MongoDbFilter';
 import convertFilterObjectToSqlEquals from './utils/convertFilterObjectToSqlEquals';
 import getTableName from '../../../utils/getTableName';
 import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
@@ -30,7 +30,7 @@ import SqlEquals from '../../expressions/SqlEquals';
 
 export default async function getEntityByFilters<T>(
   dataStore: AbstractSqlDataStore,
-  filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | object,
+  filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | object,
   EntityClass: new () => T,
   postQueryOperations: PostQueryOperations,
   allowFetchingOnlyPreviousOrNextPage: boolean,
@@ -53,7 +53,7 @@ export default async function getEntityByFilters<T>(
   if (typeof filters === 'object' && !Array.isArray(filters)) {
     // noinspection AssignmentToFunctionParameterJS
     filters = convertFilterObjectToSqlEquals(filters);
-  } else if (filters.find((filter) => filter instanceof MongoDbQuery)) {
+  } else if (filters.find((filter) => filter instanceof MongoDbFilter)) {
     throw new Error('filters must be an array of SqlExpressions and/or UserDefinedFilters');
   }
 

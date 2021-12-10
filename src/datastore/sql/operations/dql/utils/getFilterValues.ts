@@ -1,10 +1,10 @@
-import SqlExpression from '../../../expressions/SqlExpression';
+import SqlFilter from '../../../expressions/SqlFilter';
 import UserDefinedFilter from '../../../../../types/userdefinedfilters/UserDefinedFilter';
-import SqlInExpression from '../../../expressions/SqlInExpression';
-import SqlNotInExpression from '../../../expressions/SqlNotInExpression';
+import SqlInFilter from '../../../expressions/SqlInFilter';
+import SqlNotInFilter from '../../../expressions/SqlNotInFilter';
 
 function getUserDefinedFilterValues(
-  filters: (SqlExpression | UserDefinedFilter)[],
+  filters: (SqlFilter | UserDefinedFilter)[],
   parentIndex?: number
 ): object {
   return filters
@@ -40,9 +40,9 @@ function getUserDefinedFilterValues(
       };
 
       if (userDefinedFilter.operator === 'IN') {
-        filterValues = new SqlInExpression(userDefinedFilter.fieldName, userDefinedFilter.value).getValues();
+        filterValues = new SqlInFilter(userDefinedFilter.fieldName, userDefinedFilter.value).getValues();
       } else if (userDefinedFilter.operator === 'NOT IN') {
-        filterValues = new SqlNotInExpression(
+        filterValues = new SqlNotInFilter(
           userDefinedFilter.fieldName,
           userDefinedFilter.value
         ).getValues();
@@ -55,17 +55,17 @@ function getUserDefinedFilterValues(
     }, {});
 }
 
-export default function getFilterValues<T>(filters?: (SqlExpression | UserDefinedFilter)[]): object {
+export default function getFilterValues<T>(filters?: (SqlFilter | UserDefinedFilter)[]): object {
   if (Array.isArray(filters)) {
     if (filters.length === 0) {
       return {};
     } else {
       const sqlExpressionFilterValues = filters
-        .filter((filter) => filter instanceof SqlExpression)
+        .filter((filter) => filter instanceof SqlFilter)
         .reduce(
           (accumulatedFilterValues, filter) => ({
             ...accumulatedFilterValues,
-            ...(filter as SqlExpression).getValues()
+            ...(filter as SqlFilter).getValues()
           }),
           {}
         );

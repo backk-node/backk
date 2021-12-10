@@ -50,7 +50,7 @@ import getJoinPipelines from './mongodb/getJoinPipelines';
 import getRootOperations from './mongodb/getRootOperations';
 import handleNestedManyToManyRelations from './mongodb/handleNestedManyToManyRelations';
 import handleNestedOneToManyRelations from './mongodb/handleNestedOneToManyRelations';
-import MongoDbQuery from './mongodb/MongoDbQuery';
+import MongoDbFilter from './mongodb/MongoDbFilter';
 import getEntitiesByFilters from './mongodb/operations/dql/getEntitiesByFilters';
 import getEntityByFilters from './mongodb/operations/dql/getEntityByFilters';
 import paginateSubEntities from './mongodb/paginateSubEntities';
@@ -62,7 +62,7 @@ import removeSimpleSubEntityByIdFromEntityByFilters from './mongodb/removeSimple
 import removeSubEntities from './mongodb/removeSubEntities';
 import replaceIdStringsWithObjectIds from './mongodb/replaceIdStringsWithObjectIds';
 import tryFetchAndAssignSubEntitiesForManyToManyRelationships from './mongodb/tryFetchAndAssignSubEntitiesForManyToManyRelationships';
-import SqlExpression from './sql/expressions/SqlExpression';
+import SqlFilter from './sql/expressions/SqlFilter';
 import updateDbLocalTransactionCount from './sql/operations/dql/utils/updateDbLocalTransactionCount';
 import cleanupLocalTransactionIfNeeded from './sql/operations/transaction/cleanupLocalTransactionIfNeeded';
 import tryStartLocalTransactionIfNeeded from './sql/operations/transaction/tryStartLocalTransactionIfNeeded';
@@ -145,9 +145,9 @@ export default class MongoDbDataStore extends AbstractDataStore {
   }
 
   getFilters<T>(
-    mongoDbFilters: Array<MongoDbQuery<T>> | FilterQuery<T> | Partial<T> | object
-  ): Array<MongoDbQuery<T> | SqlExpression> | Partial<T> | object {
-    return Array.isArray(mongoDbFilters) ? mongoDbFilters : [new MongoDbQuery(mongoDbFilters)];
+    mongoDbFilters: Array<MongoDbFilter<T>> | FilterQuery<T> | Partial<T> | object
+  ): Array<MongoDbFilter<T> | SqlFilter> | Partial<T> | object {
+    return Array.isArray(mongoDbFilters) ? mongoDbFilters : [new MongoDbFilter(mongoDbFilters)];
   }
 
   async tryExecute<T>(
@@ -398,7 +398,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
     subEntityPath: string,
     subEntity: Omit<U, 'id'> | { _id: string },
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
     options?: {
       ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
@@ -562,7 +562,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
     subEntityPath: string,
     subEntities: Array<Omit<U, 'id'> | { _id: string }>,
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
     options?: {
       ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
@@ -816,7 +816,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
   getEntitiesByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
     postQueryOperations: PostQueryOperations,
     allowFetchingOnlyPreviousOrNextPage: boolean,
     options?: {
@@ -837,7 +837,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
   async getEntityByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
     postQueryOperations: PostQueryOperations,
     allowFetchingOnlyPreviousOrNextPage: boolean,
     options?: {
@@ -863,10 +863,10 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
   async getEntityCount<T>(
     EntityClass: new () => T,
-    filters?: Array<MongoDbQuery<T> | UserDefinedFilter | SqlExpression> | Partial<T>
+    filters?: Array<MongoDbFilter<T> | UserDefinedFilter | SqlFilter> | Partial<T>
   ): PromiseErrorOr<number> {
     let matchExpression: object;
-    let finalFilters: Array<MongoDbQuery<T> | UserDefinedFilter | SqlExpression>;
+    let finalFilters: Array<MongoDbFilter<T> | UserDefinedFilter | SqlFilter>;
 
     if (typeof filters === 'object' && !Array.isArray(filters)) {
       finalFilters = convertFilterObjectToMongoDbQueries(filters);
@@ -876,12 +876,12 @@ export default class MongoDbDataStore extends AbstractDataStore {
       finalFilters = [];
     }
 
-    if (Array.isArray(finalFilters) && finalFilters?.find((filter) => filter instanceof SqlExpression)) {
-      throw new Error('SqlExpression is not supported for MongoDB');
+    if (Array.isArray(finalFilters) && finalFilters?.find((filter) => filter instanceof SqlFilter)) {
+      throw new Error('SqlFilter is not supported for MongoDB');
     } else {
       const rootFilters = getRootOperations(finalFilters, EntityClass, this.getTypes());
-      const rootUserDefinedFilters = rootFilters.filter((filter) => !(filter instanceof MongoDbQuery));
-      const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbQuery);
+      const rootUserDefinedFilters = rootFilters.filter((filter) => !(filter instanceof MongoDbFilter));
+      const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbFilter);
 
       const userDefinedFiltersMatchExpression = convertUserDefinedFiltersToMatchExpression(
         EntityClass,
@@ -890,7 +890,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       );
 
       const mongoDbQueriesMatchExpression = convertMongoDbQueriesToMatchExpression(
-        rootMongoDbQueries as Array<MongoDbQuery<T>>
+        rootMongoDbQueries as Array<MongoDbFilter<T>>
       );
 
       matchExpression = {
@@ -1350,7 +1350,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
   async updateEntityByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
     entityUpdate: Partial<T>,
     options?: {
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
@@ -1363,7 +1363,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
     EntityClass = this.getType(EntityClass);
 
     let matchExpression: any;
-    let finalFilters: Array<MongoDbQuery<T> | UserDefinedFilter | SqlExpression>;
+    let finalFilters: Array<MongoDbFilter<T> | UserDefinedFilter | SqlFilter>;
 
     if (typeof filters === 'object' && !Array.isArray(filters)) {
       finalFilters = convertFilterObjectToMongoDbQueries(filters);
@@ -1371,12 +1371,12 @@ export default class MongoDbDataStore extends AbstractDataStore {
       finalFilters = filters;
     }
 
-    if (Array.isArray(finalFilters) && finalFilters?.find((filter) => filter instanceof SqlExpression)) {
-      throw new Error('SqlExpression is not supported for MongoDB');
+    if (Array.isArray(finalFilters) && finalFilters?.find((filter) => filter instanceof SqlFilter)) {
+      throw new Error('SqlFilter is not supported for MongoDB');
     } else {
       const rootFilters = getRootOperations(finalFilters, EntityClass, this.getTypes());
-      const rootUserDefinedFilters = rootFilters.filter((filter) => !(filter instanceof MongoDbQuery));
-      const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbQuery);
+      const rootUserDefinedFilters = rootFilters.filter((filter) => !(filter instanceof MongoDbFilter));
+      const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbFilter);
 
       const userDefinedFiltersMatchExpression = convertUserDefinedFiltersToMatchExpression(
         EntityClass,
@@ -1385,7 +1385,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       );
 
       const mongoDbQueriesMatchExpression = convertMongoDbQueriesToMatchExpression(
-        rootMongoDbQueries as Array<MongoDbQuery<T>>
+        rootMongoDbQueries as Array<MongoDbFilter<T>>
       );
 
       matchExpression = {
@@ -1459,7 +1459,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
   async updateEntitiesByFilters<T extends object>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
     entityUpdate: Partial<T>
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'updateEntityByFilters');
@@ -1467,7 +1467,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
     EntityClass = this.getType(EntityClass);
 
     let matchExpression: any;
-    let finalFilters: Array<MongoDbQuery<T> | UserDefinedFilter | SqlExpression>;
+    let finalFilters: Array<MongoDbFilter<T> | UserDefinedFilter | SqlFilter>;
 
     if (typeof filters === 'object' && !Array.isArray(filters)) {
       finalFilters = convertFilterObjectToMongoDbQueries(filters);
@@ -1475,12 +1475,12 @@ export default class MongoDbDataStore extends AbstractDataStore {
       finalFilters = filters;
     }
 
-    if (Array.isArray(finalFilters) && finalFilters?.find((filter) => filter instanceof SqlExpression)) {
-      throw new Error('SqlExpression is not supported for MongoDB');
+    if (Array.isArray(finalFilters) && finalFilters?.find((filter) => filter instanceof SqlFilter)) {
+      throw new Error('SqlFilter is not supported for MongoDB');
     } else {
       const rootFilters = getRootOperations(finalFilters, EntityClass, this.getTypes());
-      const rootUserDefinedFilters = rootFilters.filter((filter) => !(filter instanceof MongoDbQuery));
-      const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbQuery);
+      const rootUserDefinedFilters = rootFilters.filter((filter) => !(filter instanceof MongoDbFilter));
+      const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbFilter);
 
       const userDefinedFiltersMatchExpression = convertUserDefinedFiltersToMatchExpression(
         EntityClass,
@@ -1489,7 +1489,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       );
 
       const mongoDbQueriesMatchExpression = convertMongoDbQueriesToMatchExpression(
-        rootMongoDbQueries as Array<MongoDbQuery<T>>
+        rootMongoDbQueries as Array<MongoDbFilter<T>>
       );
 
       matchExpression = {
@@ -1610,7 +1610,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
   async deleteEntityByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
     options?: {
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
       postQueryOperations?: PostQueryOperations;
@@ -1622,7 +1622,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
     EntityClass = this.getType(EntityClass);
     let shouldUseTransaction = false;
     let matchExpression: any;
-    let finalFilters: Array<MongoDbQuery<T> | UserDefinedFilter | SqlExpression>;
+    let finalFilters: Array<MongoDbFilter<T> | UserDefinedFilter | SqlFilter>;
 
     if (typeof filters === 'object' && !Array.isArray(filters)) {
       finalFilters = convertFilterObjectToMongoDbQueries(filters);
@@ -1630,12 +1630,12 @@ export default class MongoDbDataStore extends AbstractDataStore {
       finalFilters = filters;
     }
 
-    if (Array.isArray(finalFilters) && finalFilters?.find((filter) => filter instanceof SqlExpression)) {
-      throw new Error('SqlExpression is not supported for MongoDB');
+    if (Array.isArray(finalFilters) && finalFilters?.find((filter) => filter instanceof SqlFilter)) {
+      throw new Error('SqlFilter is not supported for MongoDB');
     } else {
       const rootFilters = getRootOperations(finalFilters, EntityClass, this.getTypes());
-      const rootUserDefinedFilters = rootFilters.filter((filter) => !(filter instanceof MongoDbQuery));
-      const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbQuery);
+      const rootUserDefinedFilters = rootFilters.filter((filter) => !(filter instanceof MongoDbFilter));
+      const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbFilter);
 
       const userDefinedFiltersMatchExpression = convertUserDefinedFiltersToMatchExpression(
         EntityClass,
@@ -1644,7 +1644,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       );
 
       const mongoDbQueriesMatchExpression = convertMongoDbQueriesToMatchExpression(
-        rootMongoDbQueries as Array<MongoDbQuery<T>>
+        rootMongoDbQueries as Array<MongoDbFilter<T>>
       );
 
       matchExpression = {
@@ -1704,14 +1704,14 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
   async deleteEntitiesByFilters<T extends object>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object
+    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'deleteEntitiesByFilters');
     // noinspection AssignmentToFunctionParameterJS
     EntityClass = this.getType(EntityClass);
     let shouldUseTransaction = false;
     let matchExpression: any;
-    let finalFilters: Array<MongoDbQuery<T> | UserDefinedFilter | SqlExpression>;
+    let finalFilters: Array<MongoDbFilter<T> | UserDefinedFilter | SqlFilter>;
 
     if (typeof filters === 'object' && !Array.isArray(filters)) {
       finalFilters = convertFilterObjectToMongoDbQueries(filters);
@@ -1719,12 +1719,12 @@ export default class MongoDbDataStore extends AbstractDataStore {
       finalFilters = filters;
     }
 
-    if (Array.isArray(finalFilters) && finalFilters?.find((filter) => filter instanceof SqlExpression)) {
-      throw new Error('SqlExpression is not supported for MongoDB');
+    if (Array.isArray(finalFilters) && finalFilters?.find((filter) => filter instanceof SqlFilter)) {
+      throw new Error('SqlFilter is not supported for MongoDB');
     } else {
       const rootFilters = getRootOperations(finalFilters, EntityClass, this.getTypes());
-      const rootUserDefinedFilters = rootFilters.filter((filter) => !(filter instanceof MongoDbQuery));
-      const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbQuery);
+      const rootUserDefinedFilters = rootFilters.filter((filter) => !(filter instanceof MongoDbFilter));
+      const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbFilter);
 
       const userDefinedFiltersMatchExpression = convertUserDefinedFiltersToMatchExpression(
         EntityClass,
@@ -1733,7 +1733,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
       );
 
       const mongoDbQueriesMatchExpression = convertMongoDbQueriesToMatchExpression(
-        rootMongoDbQueries as Array<MongoDbQuery<T>>
+        rootMongoDbQueries as Array<MongoDbFilter<T>>
       );
 
       matchExpression = {
@@ -1911,7 +1911,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
   async removeSubEntitiesFromEntityByFilters<T extends BackkEntity, U extends object>(
     subEntitiesJsonPath: string,
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
     options?: {
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
       postQueryOperations?: PostQueryOperations;
@@ -1967,7 +1967,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
     subEntitiesJsonPath: string,
     subEntityId: string,
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
     options?: {
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
       postQueryOperations?: PostQueryOperations;

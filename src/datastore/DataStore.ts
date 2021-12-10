@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import SqlExpression from "./sql/expressions/SqlExpression";
+import SqlFilter from "./sql/expressions/SqlFilter";
 import { RecursivePartial } from "../types/RecursivePartial";
 import { PreHook } from "./hooks/PreHook";
 import { BackkEntity } from "../types/entities/BackkEntity";
 import { PostQueryOperations } from "../types/postqueryoperations/PostQueryOperations";
 import UserDefinedFilter from "../types/userdefinedfilters/UserDefinedFilter";
 import { SubEntity } from "../types/entities/SubEntity";
-import MongoDbQuery from "./mongodb/MongoDbQuery";
+import MongoDbFilter from "./mongodb/MongoDbFilter";
 import { PostHook } from "./hooks/PostHook";
 import { PromiseErrorOr } from "../types/PromiseErrorOr";
 import { EntityPreHook } from "./hooks/EntityPreHook";
@@ -39,6 +39,9 @@ export type One<T> = {
 
 export type ArrayFieldValue = string | number | boolean;
 
+export type CommonEqFilters<T> = Partial<T> | object;
+export type QueryFilters<T> = CommonEqFilters<T> | Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter>;
+
 export interface DataStore {
   getDbName(): string | undefined;
   getSchema(): string;
@@ -56,9 +59,9 @@ export interface DataStore {
   getDbHost(): string;
   shouldConvertTinyIntegersToBooleans(): boolean;
   getFilters<T>(
-    mongoDbFilters: Array<MongoDbQuery<T>> | FilterQuery<T> | Partial<T> | object,
-    sqlFilters: SqlExpression[] | SqlExpression | Partial<T> | object
-  ): Array<MongoDbQuery<T> | SqlExpression> | Partial<T> | object;
+    mongoDbFilters: Array<MongoDbFilter<T>> | FilterQuery<T> | Partial<T> | object,
+    sqlFilters: SqlFilter[] | SqlFilter | Partial<T> | object
+  ): Array<MongoDbFilter<T> | SqlFilter> | Partial<T> | object;
 
   getModifyColumnStatement(
     schema: string | undefined,
@@ -112,7 +115,7 @@ export interface DataStore {
     subEntityPath: string,
     subEntities: Array<Omit<U, 'id'> | { _id: string }>,
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: QueryFilters<T>,
     options?: {
       ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
@@ -144,7 +147,7 @@ export interface DataStore {
 
   getEntitiesByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: QueryFilters<T>,
     postQueryOperations: PostQueryOperations,
     allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
     options?: {
@@ -156,7 +159,7 @@ export interface DataStore {
 
   getEntityByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: QueryFilters<T>,
     postQueryOperations: PostQueryOperations,
     allowFetchingOnlyCurrentOrPreviousOrNextPage: boolean,
     options?: {
@@ -169,7 +172,7 @@ export interface DataStore {
 
   getEntityCount<T extends BackkEntity>(
     EntityClass: new () => T,
-    filters?: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object
+    filters?: QueryFilters<T>
   ): PromiseErrorOr<number>;
 
   getEntityById<T extends BackkEntity>(
@@ -206,7 +209,7 @@ export interface DataStore {
 
   updateEntityByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: QueryFilters<T>,
     entityUpdate: RecursivePartial<T>,
     options?: {
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
@@ -217,7 +220,7 @@ export interface DataStore {
 
   updateEntitiesByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
     entityUpdate: RecursivePartial<T>
   ): PromiseErrorOr<null>;
 
@@ -238,7 +241,7 @@ export interface DataStore {
 
   deleteEntityByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: QueryFilters<T>,
     options?: {
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
       postQueryOperations?: PostQueryOperations;
@@ -248,7 +251,7 @@ export interface DataStore {
 
   deleteEntitiesByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object
+    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object
   ): PromiseErrorOr<null>;
 
   removeSubEntitiesFromEntityById<T extends BackkEntity>(
@@ -277,7 +280,7 @@ export interface DataStore {
   removeSubEntitiesFromEntityByFilters<T extends BackkEntity, U extends object>(
     subEntitiesJsonPath: string,
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: QueryFilters<T>,
     options?: {
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
       postQueryOperations?: PostQueryOperations;
@@ -289,7 +292,7 @@ export interface DataStore {
     subEntityPath: string,
     subEntityId: string,
     EntityClass: { new (): T },
-    filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+    filters: QueryFilters<T>,
     options?: {
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
       postQueryOperations?: PostQueryOperations;

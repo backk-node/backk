@@ -1,6 +1,6 @@
-import MongoDbQuery from "./MongoDbQuery";
+import MongoDbFilter from "./MongoDbFilter";
 
-export default function convertMongoDbQueriesToMatchExpression(filters: Array<MongoDbQuery<any>>) {
+export default function convertMongoDbQueriesToMatchExpression(filters: Array<MongoDbFilter<any>>) {
   return filters.reduce((matchExpression, mongoDbQuery) => {
     return {
       ...matchExpression,

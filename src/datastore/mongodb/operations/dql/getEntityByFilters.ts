@@ -1,6 +1,6 @@
-import MongoDbQuery from '../../MongoDbQuery';
+import MongoDbFilter from '../../MongoDbFilter';
 import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
-import SqlExpression from '../../../sql/expressions/SqlExpression';
+import SqlFilter from '../../../sql/expressions/SqlFilter';
 import { PostQueryOperations } from '../../../../types/postqueryoperations/PostQueryOperations';
 import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
 import startDbOperation from '../../../utils/startDbOperation';
@@ -41,7 +41,7 @@ import getUserAccountIdFieldNameAndRequiredValue
 
 export default async function getEntityByFilters<T extends BackkEntity>(
   dataStore: MongoDbDataStore,
-  filters: Array<MongoDbQuery<T> | UserDefinedFilter | SqlExpression> | Partial<T> | object,
+  filters: Array<MongoDbFilter<T> | UserDefinedFilter | SqlFilter> | Partial<T> | object,
   EntityClass: new () => T,
   postQueryOperations: PostQueryOperations,
   allowFetchingOnlyPreviousOrNextPage: boolean,
@@ -64,7 +64,7 @@ export default async function getEntityByFilters<T extends BackkEntity>(
   }
 
   let matchExpression: any;
-  let finalFilters: Array<MongoDbQuery<T> | UserDefinedFilter | SqlExpression>;
+  let finalFilters: Array<MongoDbFilter<T> | UserDefinedFilter | SqlFilter>;
 
   if (typeof filters === 'object' && !Array.isArray(filters)) {
     finalFilters = convertFilterObjectToMongoDbQueries(filters);
@@ -72,12 +72,12 @@ export default async function getEntityByFilters<T extends BackkEntity>(
     finalFilters = filters;
   }
 
-  if (Array.isArray(finalFilters) && finalFilters?.find((filter) => filter instanceof SqlExpression)) {
-    throw new Error('SqlExpression is not supported for MongoDB');
+  if (Array.isArray(finalFilters) && finalFilters?.find((filter) => filter instanceof SqlFilter)) {
+    throw new Error('SqlFilter is not supported for MongoDB');
   } else {
     const rootFilters = getRootOperations(finalFilters, EntityClass, dataStore.getTypes());
-    const rootUserDefinedFilters = rootFilters.filter((filter) => !(filter instanceof MongoDbQuery));
-    const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbQuery);
+    const rootUserDefinedFilters = rootFilters.filter((filter) => !(filter instanceof MongoDbFilter));
+    const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbFilter);
 
     const userDefinedFiltersMatchExpression = convertUserDefinedFiltersToMatchExpression(
       EntityClass,
@@ -86,7 +86,7 @@ export default async function getEntityByFilters<T extends BackkEntity>(
     );
 
     const mongoDbQueriesMatchExpression = convertMongoDbQueriesToMatchExpression(
-      rootMongoDbQueries as Array<MongoDbQuery<T>>
+      rootMongoDbQueries as Array<MongoDbFilter<T>>
     );
 
     matchExpression = {
@@ -167,7 +167,7 @@ export default async function getEntityByFilters<T extends BackkEntity>(
         rows,
         EntityClass,
         dataStore.getTypes(),
-        finalFilters as Array<MongoDbQuery<T>>,
+        finalFilters as Array<MongoDbFilter<T>>,
         postQueryOperations,
         options?.entityCountRequests,
         isInternalCall

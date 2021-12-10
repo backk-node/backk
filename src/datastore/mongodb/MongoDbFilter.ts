@@ -3,7 +3,7 @@ import shouldUseRandomInitializationVector from "../../crypt/shouldUseRandomInit
 import shouldEncryptValue from "../../crypt/shouldEncryptValue";
 import encrypt from "../../crypt/encrypt";
 
-export default class MongoDbQuery<T> {
+export default class MongoDbFilter<T> {
   subEntityPath: string;
   filterQuery: FilterQuery<T>;
 

@@ -1,8 +1,8 @@
 import { Field, Many, One } from "./DataStore";
 import { BackkEntity } from "../types/entities/BackkEntity";
 import { SubEntity } from "../types/entities/SubEntity";
-import MongoDbQuery from "./mongodb/MongoDbQuery";
-import SqlExpression from "./sql/expressions/SqlExpression";
+import MongoDbFilter from "./mongodb/MongoDbFilter";
+import SqlFilter from "./sql/expressions/SqlFilter";
 import { PromiseErrorOr } from "../types/PromiseErrorOr";
 import AbstractDataStore from "./AbstractDataStore";
 
@@ -155,7 +155,7 @@ export default class NullDataStore extends AbstractDataStore {
     throw new Error('Not implemented');
   }
 
-  getFilters<T>(): Array<MongoDbQuery<T> | SqlExpression> | Partial<T> | object {
+  getFilters<T>(): Array<MongoDbFilter<T> | SqlFilter> | Partial<T> | object {
     throw new Error('Not implemented');
   }
 

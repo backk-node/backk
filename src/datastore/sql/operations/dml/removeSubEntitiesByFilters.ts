@@ -24,8 +24,8 @@ import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
 import isBackkError from "../../../../errors/isBackkError";
 import { EntityPreHook } from "../../../hooks/EntityPreHook";
 import tryExecuteEntityPreHooks from "../../../hooks/tryExecuteEntityPreHooks";
-import MongoDbQuery from "../../../mongodb/MongoDbQuery";
-import SqlExpression from "../../expressions/SqlExpression";
+import MongoDbFilter from "../../../mongodb/MongoDbFilter";
+import SqlFilter from "../../expressions/SqlFilter";
 import UserDefinedFilter from "../../../../types/userdefinedfilters/UserDefinedFilter";
 import getEntityByFilters from "../dql/getEntityByFilters";
 import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
@@ -34,7 +34,7 @@ import { getNamespace } from "cls-hooked";
 
 export default async function removeSubEntitiesByFilters<T extends BackkEntity, U extends object>(
   dataStore: AbstractSqlDataStore,
-  filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+  filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
   subEntitiesJsonPath: string,
   EntityClass: new () => T,
   entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[],

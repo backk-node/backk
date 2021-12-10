@@ -1,6 +1,6 @@
 import AbstractSqlDataStore from '../../../../AbstractSqlDataStore';
 import { PostQueryOperations } from '../../../../../types/postqueryoperations/PostQueryOperations';
-import SqlExpression from '../../../expressions/SqlExpression';
+import SqlFilter from '../../../expressions/SqlFilter';
 import tryGetProjection from '../clauses/tryGetProjection';
 import getJoinClauses from '../clauses/getJoinClauses';
 import tryGetWhereClause from '../clauses/tryGetWhereClause';
@@ -17,7 +17,7 @@ export default function getSqlSelectStatementParts<T>(
   dataStore: AbstractSqlDataStore,
   { sortBys, paginations, ...projection }: PostQueryOperations,
   EntityClass: new () => T,
-  filters?: SqlExpression[] | UserDefinedFilter[],
+  filters?: SqlFilter[] | UserDefinedFilter[],
   entityCountRequests?: EntityCountRequest[],
   isInternalCall = false
 ) {

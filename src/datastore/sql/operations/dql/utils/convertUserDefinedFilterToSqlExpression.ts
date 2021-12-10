@@ -1,6 +1,6 @@
 import UserDefinedFilter from '../../../../../types/userdefinedfilters/UserDefinedFilter';
-import SqlInExpression from '../../../expressions/SqlInExpression';
-import SqlNotInExpression from '../../../expressions/SqlNotInExpression';
+import SqlInFilter from '../../../expressions/SqlInFilter';
+import SqlNotInFilter from '../../../expressions/SqlNotInFilter';
 
 export default function convertUserDefinedFilterToSqlExpression(
   { subEntityPath, fieldName, fieldFunction, operator, value, orFilters }: UserDefinedFilter,
@@ -27,9 +27,9 @@ export default function convertUserDefinedFilterToSqlExpression(
   }
 
   if (operator === 'IN' && fieldName) {
-    return new SqlInExpression(fieldName, value, subEntityPath ?? '', fieldExpression).toSqlString();
+    return new SqlInFilter(fieldName, value, subEntityPath ?? '', fieldExpression).toSqlString();
   } else if (operator === 'NOT IN' && fieldName) {
-    return new SqlNotInExpression(fieldName, value, subEntityPath ?? '', fieldExpression).toSqlString();
+    return new SqlNotInFilter(fieldName, value, subEntityPath ?? '', fieldExpression).toSqlString();
   } else if (operator === 'IS NULL' || operator === 'IS NOT NULL') {
     return `${fieldExpression} ${operator}`;
   } else if (!operator) {

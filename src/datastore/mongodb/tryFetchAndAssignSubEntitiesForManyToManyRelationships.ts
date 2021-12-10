@@ -7,7 +7,7 @@ import getTypeInfoForTypeName from '../../utils/type/getTypeInfoForTypeName';
 import { ObjectId } from 'mongodb';
 import isEntityTypeName from '../../utils/type/isEntityTypeName';
 import { JSONPath } from 'jsonpath-plus';
-import MongoDbQuery from './MongoDbQuery';
+import MongoDbFilter from './MongoDbFilter';
 import replaceSubEntityPaths from './replaceSubEntityPaths';
 import replaceFieldPathNames from './replaceFieldPathNames';
 import getProjection from './getProjection';
@@ -22,7 +22,7 @@ export default async function tryFetchAndAssignSubEntitiesForManyToManyRelations
   rows: T[],
   EntityClass: new () => T,
   Types: object,
-  filters?: Array<MongoDbQuery<T>>,
+  filters?: Array<MongoDbFilter<T>>,
   postQueryOperations?: PostQueryOperations,
   entityCountRequests?: EntityCountRequest[],
   isInternalCall = false,
@@ -66,7 +66,7 @@ export default async function tryFetchAndAssignSubEntitiesForManyToManyRelations
           let subEntityFilters = replaceSubEntityPaths(filters, wantedSubEntityPath);
           subEntityFilters = subEntityFilters.map((subEntityFilter) => {
             if ('filterQuery' in subEntityFilter) {
-              return new MongoDbQuery(subEntityFilter.filterQuery, subEntityFilter.subEntityPath);
+              return new MongoDbFilter(subEntityFilter.filterQuery, subEntityFilter.subEntityPath);
             }
             return subEntityFilter;
           });
@@ -98,7 +98,7 @@ export default async function tryFetchAndAssignSubEntitiesForManyToManyRelations
           const [subEntities, error] = await getEntitiesByFilters(
             dataStore,
             [
-              new MongoDbQuery({
+              new MongoDbFilter({
                 _id: { $in: (subEntityIds ?? []).map((subEntityId: any) => new ObjectId(subEntityId)) }
               }),
               ...(subEntityFilters ?? [])

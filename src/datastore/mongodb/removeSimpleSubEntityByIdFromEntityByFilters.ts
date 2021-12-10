@@ -14,14 +14,14 @@ import createBackkErrorFromError from "../../errors/createBackkErrorFromError";
 import cleanupLocalTransactionIfNeeded from "../sql/operations/transaction/cleanupLocalTransactionIfNeeded";
 import recordDbOperationDuration from "../utils/recordDbOperationDuration";
 import { ObjectId } from "mongodb";
-import MongoDbQuery from "./MongoDbQuery";
+import MongoDbFilter from "./MongoDbFilter";
 import getRootOperations from "./getRootOperations";
 import convertMongoDbQueriesToMatchExpression from "./convertMongoDbQueriesToMatchExpression";
 import typePropertyAnnotationContainer from "../../decorators/typeproperty/typePropertyAnnotationContainer";
 import replaceIdStringsWithObjectIds from "./replaceIdStringsWithObjectIds";
 import getClassPropertyNameToPropertyTypeNameMap
   from "../../metadata/getClassPropertyNameToPropertyTypeNameMap";
-import SqlExpression from "../sql/expressions/SqlExpression";
+import SqlFilter from "../sql/expressions/SqlFilter";
 import UserDefinedFilter from "../../types/userdefinedfilters/UserDefinedFilter";
 import convertFilterObjectToMongoDbQueries from "./convertFilterObjectToMongoDbQueries";
 import convertUserDefinedFiltersToMatchExpression from "./convertUserDefinedFiltersToMatchExpression";
@@ -29,7 +29,7 @@ import DefaultPostQueryOperations from "../../types/postqueryoperations/DefaultP
 
 export default async function removeSimpleSubEntityByIdFromEntityByFilters<T extends BackkEntity, U extends SubEntity>(
   dataStore: MongoDbDataStore,
-  filters: Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object,
+  filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
   subEntityPath: string,
   subEntityId: string,
   EntityClass: new () => T,
@@ -44,7 +44,7 @@ export default async function removeSimpleSubEntityByIdFromEntityByFilters<T ext
   EntityClass = dataStore.getType(EntityClass);
 
   let matchExpression: any;
-  let finalFilters: Array<MongoDbQuery<T> | UserDefinedFilter | SqlExpression>;
+  let finalFilters: Array<MongoDbFilter<T> | UserDefinedFilter | SqlFilter>;
 
   if (typeof filters === 'object' && !Array.isArray(filters)) {
     finalFilters = convertFilterObjectToMongoDbQueries(filters);
@@ -52,12 +52,12 @@ export default async function removeSimpleSubEntityByIdFromEntityByFilters<T ext
     finalFilters = filters;
   }
 
-  if (Array.isArray(finalFilters) && finalFilters?.find((filter) => filter instanceof SqlExpression)) {
-    throw new Error('SqlExpression is not supported for MongoDB');
+  if (Array.isArray(finalFilters) && finalFilters?.find((filter) => filter instanceof SqlFilter)) {
+    throw new Error('SqlFilter is not supported for MongoDB');
   } else {
     const rootFilters = getRootOperations(finalFilters, EntityClass, dataStore.getTypes());
-    const rootUserDefinedFilters = rootFilters.filter((filter) => !(filter instanceof MongoDbQuery));
-    const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbQuery);
+    const rootUserDefinedFilters = rootFilters.filter((filter) => !(filter instanceof MongoDbFilter));
+    const rootMongoDbQueries = rootFilters.filter((filter) => filter instanceof MongoDbFilter);
 
     const userDefinedFiltersMatchExpression = convertUserDefinedFiltersToMatchExpression(
       EntityClass,
@@ -66,7 +66,7 @@ export default async function removeSimpleSubEntityByIdFromEntityByFilters<T ext
     );
 
     const mongoDbQueriesMatchExpression = convertMongoDbQueriesToMatchExpression(
-      rootMongoDbQueries as Array<MongoDbQuery<T>>
+      rootMongoDbQueries as Array<MongoDbFilter<T>>
     );
 
     matchExpression = {

@@ -1,33 +1,38 @@
 ## Query Filters
 
-Some of the `AbstractDataStore` method require query filters.
-Query filters are defined using following type:
+Query filters are defined using following types:
 
 ```ts
-type QueryFilters = Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | Partial<T> | object
+type QueryFilters = Array<MongoDbQuery<T> | SqlExpression | UserDefinedFilter> | CommonFilters
+type CommonFilters = Partial<T> | object
 ```
 
-### Common Equality Filters
+[Common Equality Filters](#common-equality-filters)
+[MongoDB Specific Filters](#mongodb-specific-filters)
+[Sql Specific Filters](#sql-specific-filters)
+[User Defined Filters](#user-defined-filters)
+
+### <a name="common-equality-filters"></a> Common Equality Filters
 
 Common equality filters can be used with both MongoDB and SQL databases.
 These filters can use sub-entity paths to access fields in sub-entities.
-Example of such filter:
+Example of such filters:
 
 ```ts
-const filters = {
+const filters: CommonFilters = {
   _id: userAccountId,
   'followedUserAccounts.ownSalesItems.state': 'forSale'
 };
+
+type CommonFilters = Partial<T> | object
 ```
 
-### MongoDB Specific Filters
+### <a name="mongodb-specific-filters"></a> MongoDB Specific Filters
 
 ```ts
 import { FilterQuery } from 'mongodb';
 
 class MongoDbQuery<T> {
-  subEntityPath: string;
-  filterQuery: FilterQuery<T>;
   constructor(filterQuery: FilterQuery<T>, subEntityPath?: string);
 }
 ```
@@ -38,15 +43,19 @@ Sub-entity path is given with dot notation, for example: `orders.orderItems`
 
 For syntax of `filterQuery`, check [MongoDB documentation for query filter](https://docs.mongodb.com/manual/tutorial/query-documents/).
 
-Example of a filter query:
+Example of query filter with one instance of `MongoDbQuery`:
 
 ```ts
-{
-  $or: [{ title: new RegExp(textFilter) }, { description: new RegExp(textFilter) }];
-}
+const filters = [
+  new MongoDbQuery({ 
+    _id: { $in: salesItemIds },
+    state: currentStateFilter,
+    buyerUserAccountId: buyerUserAccountIdFilter,
+  })
+];
 ```
 
-### SQL Database Specific Filters
+### <a name="sql-specific-filters"></a> SQL Specific Filters
 
 ```ts
 class SqlExpression {

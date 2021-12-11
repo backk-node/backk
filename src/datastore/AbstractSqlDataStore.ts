@@ -1,5 +1,5 @@
 import SqlFilter from './sql/expressions/SqlFilter';
-import { DataStore, Field, Many, One } from './DataStore';
+import { DataStore, Field, Many, One, QueryFilters } from './DataStore';
 import createEntity from './sql/operations/dml/createEntity';
 import getEntitiesByFilters from './sql/operations/dql/getEntitiesByFilters';
 import getEntitiesCount from './sql/operations/dql/getEntitiesCount';
@@ -464,7 +464,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     subEntityPath: string,
     subEntity: Omit<U, 'id'> | { _id: string },
     EntityClass: { new (): T },
-    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
+    filters: QueryFilters<T>,
     options?: {
       ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
@@ -489,7 +489,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     subEntityPath: string,
     subEntities: Array<Omit<U, 'id'> | { _id: string }>,
     EntityClass: { new (): T },
-    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
+    filters: QueryFilters<T>,
     options?: {
       ifEntityNotFoundUse?: () => PromiseErrorOr<One<T>>;
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
@@ -549,7 +549,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
 
   async getEntitiesByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
+    filters: QueryFilters<T>,
     postQueryOperations: PostQueryOperations,
     allowFetchingOnlyPreviousOrNextPage: boolean,
     options?: {
@@ -573,7 +573,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
 
   async getEntityByFilters<T>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
+    filters: QueryFilters<T>,
     postQueryOperations: PostQueryOperations,
     allowFetchingOnlyPreviousOrNextPage: boolean,
     options?: {
@@ -598,7 +598,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
 
   async getEntityCount<T>(
     entityClass: new () => T,
-    filters?: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object
+    filters?: QueryFilters<T>
   ): PromiseErrorOr<number> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntityCount');
     const response = await getEntitiesCount(this, filters, entityClass);
@@ -677,8 +677,8 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
 
   async updateEntityByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
-    entityUpdate: Partial<T>,
+    filters: QueryFilters<T>,
+    entityUpdate: RecursivePartial<T>,
     options?: {
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
       postQueryOperations?: PostQueryOperations;
@@ -693,8 +693,8 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
 
   async updateEntitiesByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
-    entityUpdate: Partial<T>
+    filters: QueryFilters<T>,
+    entityUpdate: RecursivePartial<T>
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'updateEntitiesByFilters');
     const response = await updateEntitiesByFilters(this, filters, entityUpdate, EntityClass);
@@ -726,7 +726,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
 
   async deleteEntityByFilters<T extends BackkEntity>(
     EntityClass: { new (): T },
-    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
+    filters: QueryFilters<T>,
     options?: {
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
       postQueryOperations?: PostQueryOperations;
@@ -796,7 +796,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
   async removeSubEntitiesFromEntityByFilters<T extends BackkEntity>(
     subEntitiesJsonPath: string,
     EntityClass: { new (): T },
-    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
+    filters: QueryFilters<T>,
     options?: {
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
       postQueryOperations?: PostQueryOperations;
@@ -821,7 +821,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     subEntitiesJsonPath: string,
     subEntityId: string,
     EntityClass: { new (): T },
-    filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
+    filters: QueryFilters<T>,
     options?: {
       entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
       postQueryOperations?: PostQueryOperations;

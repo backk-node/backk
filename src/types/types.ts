@@ -10,7 +10,7 @@ import _IdAndVersionAndCreatedAtTimestampAndLastModifiedTimestamp
 import _IdAndVersionAndLastModifiedTimestamp from "./_id/_IdAndVersionAndLastModifiedTimestamp";
 import Id from "./id/Id";
 import _IdsAndDefaultPostQueryOperations from "./postqueryoperations/_IdsAndDefaultPostQueryOperations";
-import DefaultPostQueryOperations from "./postqueryoperations/DefaultPostQueryOperations";
+import DefaultPostQueryOperationsImpl from "./postqueryoperations/DefaultPostQueryOperationsImpl";
 import SortBy from "./postqueryoperations/SortBy";
 import Pagination from "./postqueryoperations/Pagination";
 import Captcha from "./Captcha";
@@ -70,7 +70,7 @@ const types = {
   _IdAndVersionAndLastModifiedTimestamp,
   Id,
   _IdsAndDefaultPostQueryOperations,
-  DefaultPostQueryOperations,
+  DefaultPostQueryOperations: DefaultPostQueryOperationsImpl,
   SortBy,
   Pagination,
   UserDefinedFilter,

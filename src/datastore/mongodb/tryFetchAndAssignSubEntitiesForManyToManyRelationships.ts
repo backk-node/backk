@@ -1,7 +1,7 @@
 import getClassPropertyNameToPropertyTypeNameMap from '../../metadata/getClassPropertyNameToPropertyTypeNameMap';
 import typePropertyAnnotationContainer from '../../decorators/typeproperty/typePropertyAnnotationContainer';
 import { PostQueryOperations } from '../../types/postqueryoperations/PostQueryOperations';
-import DefaultPostQueryOperations from '../../types/postqueryoperations/DefaultPostQueryOperations';
+import DefaultPostQueryOperationsImpl from '../../types/postqueryoperations/DefaultPostQueryOperationsImpl';
 import forEachAsyncParallel from '../../utils/forEachAsyncParallel';
 import getTypeInfoForTypeName from '../../utils/type/getTypeInfoForTypeName';
 import { ObjectId } from 'mongodb';
@@ -71,7 +71,7 @@ export default async function tryFetchAndAssignSubEntitiesForManyToManyRelations
             return subEntityFilter;
           });
 
-          const finalPostQueryOperations = postQueryOperations ?? new DefaultPostQueryOperations();
+          const finalPostQueryOperations = postQueryOperations ?? new DefaultPostQueryOperationsImpl();
 
           const subEntitySortBys = replaceSubEntityPaths(
             finalPostQueryOperations.sortBys,

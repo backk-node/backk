@@ -28,7 +28,7 @@ import MongoDbFilter from "../../../mongodb/MongoDbFilter";
 import SqlFilter from "../../expressions/SqlFilter";
 import UserDefinedFilter from "../../../../types/userdefinedfilters/UserDefinedFilter";
 import getEntityByFilters from "../dql/getEntityByFilters";
-import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
+import DefaultPostQueryOperationsImpl from "../../../../types/postqueryoperations/DefaultPostQueryOperationsImpl";
 import throwIf from "../../../../utils/exception/throwIf";
 import { getNamespace } from "cls-hooked";
 
@@ -52,7 +52,7 @@ export default async function removeSubEntitiesByFilters<T extends BackkEntity, 
       dataStore,
       filters,
       EntityClass,
-      postQueryOperations ?? new DefaultPostQueryOperations(),
+      postQueryOperations ?? new DefaultPostQueryOperationsImpl(),
     false,
     undefined,
       true,

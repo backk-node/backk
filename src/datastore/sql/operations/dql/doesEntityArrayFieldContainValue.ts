@@ -7,7 +7,7 @@ import createBackkErrorFromError from '../../../../errors/createBackkErrorFromEr
 import AbstractSqlDataStore from '../../../AbstractSqlDataStore';
 import getTableName from '../../../utils/getTableName';
 import getEntityById from './getEntityById';
-import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
+import DefaultPostQueryOperationsImpl from '../../../../types/postqueryoperations/DefaultPostQueryOperationsImpl';
 import getUserAccountIdFieldNameAndRequiredValue from '../../../utils/getUserAccountIdFieldNameAndRequiredValue';
 import throwIf from '../../../../utils/exception/throwIf';
 
@@ -32,7 +32,7 @@ export default async function doesEntityArrayFieldContainValue<T extends BackkEn
         dataStore,
         _id,
         EntityClass,
-        new DefaultPostQueryOperations(),
+        new DefaultPostQueryOperationsImpl(),
         false
       );
 

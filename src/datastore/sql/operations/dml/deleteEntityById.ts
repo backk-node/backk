@@ -17,7 +17,7 @@ import isBackkError from '../../../../errors/isBackkError';
 import { PostQueryOperations } from '../../../../types/postqueryoperations/PostQueryOperations';
 import { EntityPreHook } from '../../../hooks/EntityPreHook';
 import tryExecuteEntityPreHooks from '../../../hooks/tryExecuteEntityPreHooks';
-import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
+import DefaultPostQueryOperationsImpl from '../../../../types/postqueryoperations/DefaultPostQueryOperationsImpl';
 import getUserAccountIdFieldNameAndRequiredValue from '../../../utils/getUserAccountIdFieldNameAndRequiredValue';
 
 export default async function deleteEntityById<T extends BackkEntity>(
@@ -43,7 +43,7 @@ export default async function deleteEntityById<T extends BackkEntity>(
         dataStore,
         _id,
         EntityClass,
-        postQueryOperations ?? new DefaultPostQueryOperations(),
+        postQueryOperations ?? new DefaultPostQueryOperationsImpl(),
         false,
         undefined,
         true,

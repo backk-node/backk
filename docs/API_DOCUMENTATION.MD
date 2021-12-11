@@ -6,5 +6,5 @@
 - [Decorators](api/DECORATORS.MD)
 - [DataStore](api/ABSTRACT_DATA_STORE.MD)
 - [CSV, Text, JSON and XML File Reading](api/FILE_READING.MD)
-- [Observability](api-documentation-observability)
-- [Remote Service Access](api-documentation-remote-service-access)
+- [Observability](api/OBSERVABILITY.MD)
+- [Remote Service Access](api/REMOTE_SERVICE_ACCESS.MD)

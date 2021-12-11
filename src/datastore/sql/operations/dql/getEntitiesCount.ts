@@ -2,7 +2,7 @@ import SqlFilter from '../../expressions/SqlFilter';
 import AbstractSqlDataStore from '../../../AbstractSqlDataStore';
 import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
 import getSqlSelectStatementParts from './utils/getSqlSelectStatementParts';
-import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
+import DefaultPostQueryOperationsImpl from '../../../../types/postqueryoperations/DefaultPostQueryOperationsImpl';
 import updateDbLocalTransactionCount from './utils/updateDbLocalTransactionCount';
 import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
 import MongoDbFilter from '../../../mongodb/MongoDbFilter';
@@ -36,7 +36,7 @@ export default async function getEntitiesCount<T>(
 
     const { rootWhereClause, filterValues } = getSqlSelectStatementParts(
       dataStore,
-      new DefaultPostQueryOperations(),
+      new DefaultPostQueryOperationsImpl(),
       EntityClass,
       filters as SqlFilter[] | UserDefinedFilter[] | undefined
     );

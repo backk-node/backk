@@ -31,7 +31,7 @@ import SqlFilter from '../../expressions/SqlFilter';
 import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
 import getEntityByFilters from '../dql/getEntityByFilters';
 import { One } from '../../../DataStore';
-import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
+import DefaultPostQueryOperationsImpl from '../../../../types/postqueryoperations/DefaultPostQueryOperationsImpl';
 import throwIf from "../../../../utils/exception/throwIf";
 import { getNamespace } from "cls-hooked";
 
@@ -64,7 +64,7 @@ export default async function addSubEntitiesByFilters<T extends BackkEntity, U e
       dataStore,
       filters,
       EntityClass,
-      options?.postQueryOperations ?? new DefaultPostQueryOperations(),
+      options?.postQueryOperations ?? new DefaultPostQueryOperationsImpl(),
       false,
       undefined,
       true,
@@ -141,7 +141,7 @@ export default async function addSubEntitiesByFilters<T extends BackkEntity, U e
         const [subEntity, error] = await dataStore.getEntityById(
           SubEntityClass,
           newSubEntity._id ?? '',
-          new DefaultPostQueryOperations(),
+          new DefaultPostQueryOperationsImpl(),
           false
         );
 

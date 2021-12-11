@@ -7,7 +7,7 @@ import parser from "cron-parser";
 import forEachAsyncParallel from "../utils/forEachAsyncParallel";
 import { HttpStatusCodes } from "../constants/constants";
 import getClsNamespace from "../continuationlocalstorage/getClsNamespace";
-import DefaultPostQueryOperations from "../types/postqueryoperations/DefaultPostQueryOperations";
+import DefaultPostQueryOperationsImpl from "../types/postqueryoperations/DefaultPostQueryOperationsImpl";
 
 export default async function tryInitializeCronJobSchedulingTable(dataStore: DataStore) {
   const clsNamespace = getClsNamespace('serviceFunctionExecution');
@@ -22,7 +22,7 @@ export default async function tryInitializeCronJobSchedulingTable(dataStore: Dat
           const [entity, error] = await dataStore.getEntityByFilters(
             __Backk__CronJobScheduling,
             {serviceFunctionName },
-            new DefaultPostQueryOperations(1, Number.MAX_SAFE_INTEGER),
+            new DefaultPostQueryOperationsImpl(1, Number.MAX_SAFE_INTEGER),
             false
           );
 

@@ -10,7 +10,7 @@ import { BACKK_ERRORS } from '../../../../errors/BACKK_ERRORS';
 import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
 import { getNamespace } from 'cls-hooked';
 import getClassPropertyNameToPropertyTypeNameMap from '../../../../metadata/getClassPropertyNameToPropertyTypeNameMap';
-import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
+import DefaultPostQueryOperationsImpl from '../../../../types/postqueryoperations/DefaultPostQueryOperationsImpl';
 import { Many } from '../../../DataStore';
 import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from '../../../utils/tryEnsurePreviousOrNextPageIsRequested';
@@ -53,7 +53,7 @@ export default async function getEntitiesByIds<T>(
       outerSortClause
     } = getSqlSelectStatementParts(
       dataStore,
-      postQueryOperations ?? new DefaultPostQueryOperations(),
+      postQueryOperations ?? new DefaultPostQueryOperationsImpl(),
       EntityClass,
       undefined,
       entityCountRequests
@@ -124,7 +124,7 @@ export default async function getEntitiesByIds<T>(
     const entities = transformRowsToObjects(
       dataStore.getResultRows(result),
       EntityClass,
-      postQueryOperations ?? new DefaultPostQueryOperations(),
+      postQueryOperations ?? new DefaultPostQueryOperationsImpl(),
       dataStore,
       entityCountRequests
     );

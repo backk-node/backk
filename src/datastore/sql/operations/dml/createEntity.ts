@@ -25,7 +25,7 @@ import { PreHook } from '../../../hooks/PreHook';
 import tryExecutePreHooks from '../../../hooks/tryExecutePreHooks';
 import { plainToClass } from 'class-transformer';
 import { One } from '../../../DataStore';
-import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
+import DefaultPostQueryOperationsImpl from '../../../../types/postqueryoperations/DefaultPostQueryOperationsImpl';
 import getUserAccountIdFieldNameAndRequiredValue from '../../../utils/getUserAccountIdFieldNameAndRequiredValue';
 import throwIf from '../../../../utils/exception/throwIf';
 
@@ -237,7 +237,7 @@ export default async function createEntity<T extends BackkEntity>(
         : await dataStore.getEntityById(
             EntityClass,
             _id,
-            postQueryOperations ?? new DefaultPostQueryOperations(),
+            postQueryOperations ?? new DefaultPostQueryOperationsImpl(),
             false
           );
 

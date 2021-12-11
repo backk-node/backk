@@ -25,7 +25,7 @@ import SqlFilter from "../sql/expressions/SqlFilter";
 import UserDefinedFilter from "../../types/userdefinedfilters/UserDefinedFilter";
 import convertFilterObjectToMongoDbQueries from "./convertFilterObjectToMongoDbQueries";
 import convertUserDefinedFiltersToMatchExpression from "./convertUserDefinedFiltersToMatchExpression";
-import DefaultPostQueryOperations from "../../types/postqueryoperations/DefaultPostQueryOperations";
+import DefaultPostQueryOperationsImpl from "../../types/postqueryoperations/DefaultPostQueryOperationsImpl";
 
 export default async function removeSimpleSubEntityByIdFromEntityByFilters<T extends BackkEntity, U extends SubEntity>(
   dataStore: MongoDbDataStore,
@@ -86,7 +86,7 @@ export default async function removeSimpleSubEntityByIdFromEntityByFilters<T ext
         const [currentEntity, error] = await dataStore.getEntityByFilters(
           EntityClass,
           filters,
-          options?.postQueryOperations ?? new DefaultPostQueryOperations(),
+          options?.postQueryOperations ?? new DefaultPostQueryOperationsImpl(),
           false,
           undefined,
           true,

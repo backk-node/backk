@@ -16,7 +16,7 @@ import recordDbOperationDuration from '../utils/recordDbOperationDuration';
 import { ObjectId } from 'mongodb';
 import typePropertyAnnotationContainer from '../../decorators/typeproperty/typePropertyAnnotationContainer';
 import getClassPropertyNameToPropertyTypeNameMap from '../../metadata/getClassPropertyNameToPropertyTypeNameMap';
-import DefaultPostQueryOperations from '../../types/postqueryoperations/DefaultPostQueryOperations';
+import DefaultPostQueryOperationsImpl from '../../types/postqueryoperations/DefaultPostQueryOperationsImpl';
 
 export default async function removeSimpleSubEntityById<T extends BackkEntity, U extends SubEntity>(
   dataStore: MongoDbDataStore,
@@ -43,7 +43,7 @@ export default async function removeSimpleSubEntityById<T extends BackkEntity, U
         const [currentEntity, error] = await dataStore.getEntityById(
           EntityClass,
           _id,
-          options?.postQueryOperations ?? new DefaultPostQueryOperations(),
+          options?.postQueryOperations ?? new DefaultPostQueryOperationsImpl(),
           false,
           undefined,
           true,

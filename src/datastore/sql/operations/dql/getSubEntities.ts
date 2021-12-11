@@ -6,7 +6,7 @@ import { PostQueryOperations } from '../../../../types/postqueryoperations/PostQ
 import updateDbLocalTransactionCount from './utils/updateDbLocalTransactionCount';
 import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
-import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
+import DefaultPostQueryOperationsImpl from '../../../../types/postqueryoperations/DefaultPostQueryOperationsImpl';
 
 export default async function getSubEntities<T extends BackkEntity, U extends object>(
   dataStore: AbstractSqlDataStore,
@@ -25,7 +25,7 @@ export default async function getSubEntities<T extends BackkEntity, U extends ob
       dataStore,
       _id,
       EntityClass,
-      postQueryOperations ?? new DefaultPostQueryOperations(),
+      postQueryOperations ?? new DefaultPostQueryOperationsImpl(),
       false
     );
 

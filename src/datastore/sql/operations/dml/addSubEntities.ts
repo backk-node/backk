@@ -28,7 +28,7 @@ import tryExecuteEntityPreHooks from '../../../hooks/tryExecuteEntityPreHooks';
 import { HttpStatusCodes } from '../../../../constants/constants';
 import findSubEntityClass from '../../../../utils/type/findSubEntityClass';
 import { One } from '../../../DataStore';
-import DefaultPostQueryOperations from '../../../../types/postqueryoperations/DefaultPostQueryOperations';
+import DefaultPostQueryOperationsImpl from '../../../../types/postqueryoperations/DefaultPostQueryOperationsImpl';
 import throwIf from "../../../../utils/exception/throwIf";
 import { getNamespace } from "cls-hooked";
 
@@ -62,7 +62,7 @@ export default async function addSubEntities<T extends BackkEntity, U extends Su
       dataStore,
       _id,
       EntityClass,
-      options?.postQueryOperations ?? new DefaultPostQueryOperations(),
+      options?.postQueryOperations ?? new DefaultPostQueryOperationsImpl(),
       false,
       undefined,
       true,
@@ -139,7 +139,7 @@ export default async function addSubEntities<T extends BackkEntity, U extends Su
         const [subEntity, error] = await dataStore.getEntityById(
           SubEntityClass,
           newSubEntity._id ?? '',
-          new DefaultPostQueryOperations(),
+          new DefaultPostQueryOperationsImpl(),
           false
         );
 

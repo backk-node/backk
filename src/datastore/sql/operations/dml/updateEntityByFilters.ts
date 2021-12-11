@@ -21,13 +21,14 @@ import { PostHook } from "../../../hooks/PostHook";
 import tryExecuteEntityPreHooks from "../../../hooks/tryExecuteEntityPreHooks";
 import getEntityByFilters from "../dql/getEntityByFilters";
 import tryExecutePostHook from "../../../hooks/tryExecutePostHook";
-import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
+import DefaultPostQueryOperationsImpl from "../../../../types/postqueryoperations/DefaultPostQueryOperationsImpl";
+import { RecursivePartial } from "../../../../types/RecursivePartial";
 
 // noinspection DuplicatedCode
 export default async function updateEntityByFilters<T extends BackkEntity>(
   dataStore: AbstractSqlDataStore,
   filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
-  update: Partial<T>,
+  update: RecursivePartial<T>,
   EntityClass: new () => T,
   options?: {
     entityPreHooks?: EntityPreHook<T> | EntityPreHook<T>[];
@@ -61,7 +62,7 @@ export default async function updateEntityByFilters<T extends BackkEntity>(
       dataStore,
       filters,
       EntityClass,
-      options?.postQueryOperations ?? new DefaultPostQueryOperations(),
+      options?.postQueryOperations ?? new DefaultPostQueryOperationsImpl(),
       false,
       undefined,
       true,

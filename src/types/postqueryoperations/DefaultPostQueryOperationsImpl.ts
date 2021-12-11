@@ -16,7 +16,7 @@ import { Lengths, Values } from "../../constants/constants";
 import CurrentPageToken from "./CurrentPageToken";
 import { Type } from "class-transformer";
 
-export default class DefaultPostQueryOperations implements PostQueryOperations {
+export default class DefaultPostQueryOperationsImpl implements PostQueryOperations {
   constructor(pageNumber: number = 1, pageSize: number = Values._50) {
     this.paginations = [new Pagination('*', pageNumber, pageSize)]
   }

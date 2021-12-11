@@ -16,7 +16,7 @@ import { PostQueryOperations } from "../../../../types/postqueryoperations/PostQ
 import { PostHook } from "../../../hooks/PostHook";
 import tryExecuteEntityPreHooks from "../../../hooks/tryExecuteEntityPreHooks";
 import tryExecutePostHook from "../../../hooks/tryExecutePostHook";
-import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
+import DefaultPostQueryOperationsImpl from "../../../../types/postqueryoperations/DefaultPostQueryOperationsImpl";
 
 // noinspection FunctionTooLongJS
 export default async function removeFieldValues<T extends BackkEntity>(
@@ -44,7 +44,7 @@ export default async function removeFieldValues<T extends BackkEntity>(
       dataStore,
       _id,
       EntityClass,
-      options?.postQueryOperations ?? new DefaultPostQueryOperations(),
+      options?.postQueryOperations ?? new DefaultPostQueryOperationsImpl(),
       false,
       undefined,
       true,

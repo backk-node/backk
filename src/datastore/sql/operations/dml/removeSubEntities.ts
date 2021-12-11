@@ -25,7 +25,7 @@ import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
 import isBackkError from "../../../../errors/isBackkError";
 import { EntityPreHook } from "../../../hooks/EntityPreHook";
 import tryExecuteEntityPreHooks from "../../../hooks/tryExecuteEntityPreHooks";
-import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
+import DefaultPostQueryOperationsImpl from "../../../../types/postqueryoperations/DefaultPostQueryOperationsImpl";
 import throwIf from "../../../../utils/exception/throwIf";
 import { getNamespace } from "cls-hooked";
 
@@ -49,7 +49,7 @@ export default async function removeSubEntities<T extends BackkEntity, U extends
       dataStore,
       _id,
       EntityClass,
-      postQueryOperations ?? new DefaultPostQueryOperations(),
+      postQueryOperations ?? new DefaultPostQueryOperationsImpl(),
       false,
       undefined,
       true,

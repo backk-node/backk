@@ -32,7 +32,7 @@ import tryExecuteEntityPreHooks from '../../../hooks/tryExecuteEntityPreHooks';
 import { PreHook } from "../../../hooks/PreHook";
 import tryExecutePreHooks from "../../../hooks/tryExecutePreHooks";
 import { One } from "../../../DataStore";
-import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
+import DefaultPostQueryOperationsImpl from "../../../../types/postqueryoperations/DefaultPostQueryOperationsImpl";
 import throwIf from "../../../../utils/exception/throwIf";
 import { getNamespace } from "cls-hooked";
 
@@ -67,7 +67,7 @@ export default async function updateEntity<T extends BackkEntity>(
         dataStore,
         _id ?? id,
         EntityClass,
-        postQueryOperations ?? new DefaultPostQueryOperations(),
+        postQueryOperations ?? new DefaultPostQueryOperationsImpl(),
         false,
         undefined,
         true,

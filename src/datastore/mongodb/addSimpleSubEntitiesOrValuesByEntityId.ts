@@ -12,7 +12,7 @@ import getClassPropertyNameToPropertyTypeNameMap from '../../metadata/getClassPr
 import { HttpStatusCodes } from '../../constants/constants';
 import tryExecutePostHook from '../hooks/tryExecutePostHook';
 import { One } from '../DataStore';
-import DefaultPostQueryOperations from '../../types/postqueryoperations/DefaultPostQueryOperations';
+import DefaultPostQueryOperationsImpl from '../../types/postqueryoperations/DefaultPostQueryOperationsImpl';
 
 export default async function addSimpleSubEntitiesOrValuesByEntityId<
   T extends BackkEntity,
@@ -35,7 +35,7 @@ export default async function addSimpleSubEntitiesOrValuesByEntityId<
     let [currentEntity, error] = await dataStore.getEntityById(
       EntityClass,
       _id,
-      options?.postQueryOperations ?? new DefaultPostQueryOperations(),
+      options?.postQueryOperations ?? new DefaultPostQueryOperationsImpl(),
       false,
       undefined,
       true,

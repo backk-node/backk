@@ -12,7 +12,7 @@ import createBackkErrorFromError from '../../errors/createBackkErrorFromError';
 import cleanupLocalTransactionIfNeeded from '../sql/operations/transaction/cleanupLocalTransactionIfNeeded';
 import { MongoClient, ObjectId } from 'mongodb';
 import getClassPropertyNameToPropertyTypeNameMap from '../../metadata/getClassPropertyNameToPropertyTypeNameMap';
-import DefaultPostQueryOperations from '../../types/postqueryoperations/DefaultPostQueryOperations';
+import DefaultPostQueryOperationsImpl from '../../types/postqueryoperations/DefaultPostQueryOperationsImpl';
 
 export default async function removeFieldValues<T extends BackkEntity>(
   client: MongoClient,
@@ -39,7 +39,7 @@ export default async function removeFieldValues<T extends BackkEntity>(
         const [currentEntity, error] = await dataStore.getEntityById(
           EntityClass,
           _id,
-          options?.postQueryOperations ?? new DefaultPostQueryOperations(),
+          options?.postQueryOperations ?? new DefaultPostQueryOperationsImpl(),
           false,
           undefined
         );

@@ -143,14 +143,14 @@ export { EntityPreHook } from './datastore/hooks/EntityPreHook';
 export * from './datastore/hooks/PostHook';
 export * from './datastore/hooks/PreHook';
 export { default as SqlEquals } from './datastore/sql/expressions/SqlEquals';
-export { default as SqlExpression } from './datastore/sql/expressions/SqlFilter';
-export { default as SqlInExpression } from './datastore/sql/expressions/SqlInFilter';
-export { default as SqlNotInExpression } from './datastore/sql/expressions/SqlNotInFilter';
-export { default as MongoDbQuery } from './datastore/mongodb/MongoDbFilter';
+export { default as SqlFilter } from './datastore/sql/expressions/SqlFilter';
+export { default as SqlInFilter } from './datastore/sql/expressions/SqlInFilter';
+export { default as SqlNotInFilter } from './datastore/sql/expressions/SqlNotInFilter';
+export { default as MongoDbFilter } from './datastore/mongodb/MongoDbFilter';
 export { default as OrFilter } from './types/userdefinedfilters/OrFilter';
 export { default as UserDefinedFilter } from './types/userdefinedfilters/UserDefinedFilter';
 export { default as EntityCountRequest } from './types/EntityCountRequest';
-export { One, Many } from './datastore/DataStore';
+export { One, Many, QueryFilters, CommonEqFilters } from './datastore/DataStore';
 
 // CSV, text, JSON and XML file parsing
 export { default as Value } from './types/Value';
@@ -210,7 +210,7 @@ export { default as Id } from './types/id/Id';
 export { default as _IdAndDefaultPostQueryOperations } from './types/postqueryoperations/_IdAndDefaultPostQueryOperations';
 export { default as _IdsAndDefaultPostQueryOperations } from './types/postqueryoperations/_IdsAndDefaultPostQueryOperations';
 export { default as DefaultPagination } from './types/postqueryoperations/DefaultPagination';
-export { default as DefaultPostQueryOperations } from './types/postqueryoperations/DefaultPostQueryOperations';
+export { default as DefaultPostQueryOperationsImpl } from './types/postqueryoperations/DefaultPostQueryOperationsImpl';
 export { default as DefaultSorting } from './types/postqueryoperations/DefaultSorting';
 export { default as DefaultSortingAndPagination } from './types/postqueryoperations/DefaultSortingAndPagination';
 export { default as Pagination } from './types/postqueryoperations/Pagination';

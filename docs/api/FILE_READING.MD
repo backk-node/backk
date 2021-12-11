@@ -12,13 +12,13 @@ function tryGetObjectsFromCsvFile(
   filePathName: string,
   columnNames: string[] | 'readFromFirstRow' = 'readFromFirstRow',
   delimiter = ','
-): { [key: string]: string }[];
+): Array<Record<string, string>>;
 ```
 
-Reads a CSV file `filePathName` and parses each row to an object. `columnNames` will be the keys of the each object.
+Reads a CSV file `filePathName` and parses each row to an object. `columnNames` will be the keys of object.
 Column delimiter can be specified with `delimiter`.
 Empty lines in the file will be skipped.
-Each parsed value will be trimmed (ie. whitespace around value is removed)
+Each parsed value will be trimmed (i.e. whitespace around value is removed)
 
 Returns an array of objects.
 

@@ -20,7 +20,7 @@ import { PostHook } from "../../../hooks/PostHook";
 import tryExecuteEntityPreHooks from "../../../hooks/tryExecuteEntityPreHooks";
 import getEntityByFilters from "../dql/getEntityByFilters";
 import tryExecutePostHook from "../../../hooks/tryExecutePostHook";
-import DefaultPostQueryOperations from "../../../../types/postqueryoperations/DefaultPostQueryOperations";
+import DefaultPostQueryOperationsImpl from "../../../../types/postqueryoperations/DefaultPostQueryOperationsImpl";
 import getUserAccountIdFieldNameAndRequiredValue
   from "../../../utils/getUserAccountIdFieldNameAndRequiredValue";
 
@@ -64,7 +64,7 @@ export default async function deleteEntityByFilters<T extends object>(
         dataStore,
         filters,
         EntityClass,
-        options?.postQueryOperations ?? new DefaultPostQueryOperations(),
+        options?.postQueryOperations ?? new DefaultPostQueryOperationsImpl(),
         false,
         undefined,
         true,

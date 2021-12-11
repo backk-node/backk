@@ -19,7 +19,7 @@ import convertUserDefinedFiltersToMatchExpression from './convertUserDefinedFilt
 import convertMongoDbQueriesToMatchExpression from './convertMongoDbQueriesToMatchExpression';
 import replaceIdStringsWithObjectIds from './replaceIdStringsWithObjectIds';
 import { One } from "../DataStore";
-import DefaultPostQueryOperations from "../../types/postqueryoperations/DefaultPostQueryOperations";
+import DefaultPostQueryOperationsImpl from "../../types/postqueryoperations/DefaultPostQueryOperationsImpl";
 
 export default async function addSimpleSubEntitiesOrValuesByFilters<
   T extends BackkEntity,
@@ -76,7 +76,7 @@ export default async function addSimpleSubEntitiesOrValuesByFilters<
     let [currentEntity, error] = await dataStore.getEntityByFilters(
       EntityClass,
       filters,
-      options?.postQueryOperations ?? new DefaultPostQueryOperations(),
+      options?.postQueryOperations ?? new DefaultPostQueryOperationsImpl(),
       false,
       undefined,
       true,

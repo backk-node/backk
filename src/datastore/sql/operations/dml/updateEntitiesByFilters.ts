@@ -16,12 +16,13 @@ import getClassPropertyNameToPropertyTypeNameMap from '../../../../metadata/getC
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import getUserAccountIdFieldNameAndRequiredValue from '../../../utils/getUserAccountIdFieldNameAndRequiredValue';
 import SqlEquals from '../../expressions/SqlEquals';
+import { RecursivePartial } from "../../../../types/RecursivePartial";
 
 // noinspection DuplicatedCode
 export default async function updateEntitiesByFilters<T extends BackkEntity>(
   dataStore: AbstractSqlDataStore,
   filters: Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter> | Partial<T> | object,
-  update: Partial<T>,
+  update: RecursivePartial<T>,
   EntityClass: new () => T
 ): PromiseErrorOr<null> {
   if (typeof filters === 'object' && !Array.isArray(filters)) {

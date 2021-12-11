@@ -7,7 +7,7 @@ import { logError } from '../observability/logging/log';
 import forEachAsyncParallel from '../utils/forEachAsyncParallel';
 import { scheduleCronJob } from './scheduleCronJob';
 import getClsNamespace from '../continuationlocalstorage/getClsNamespace';
-import DefaultPostQueryOperations from '../types/postqueryoperations/DefaultPostQueryOperations';
+import DefaultPostQueryOperationsImpl from '../types/postqueryoperations/DefaultPostQueryOperationsImpl';
 
 export let scheduledJobs: Many<__Backk__JobScheduling> | null | undefined = null;
 
@@ -28,7 +28,7 @@ export default async function scheduleJobsForExecution(
         await dataStore.tryReserveDbConnectionFromPool();
         [scheduledJobs] = await dataStore.getAllEntities(
           __Backk__JobScheduling,
-          new DefaultPostQueryOperations(1, Number.MAX_SAFE_INTEGER),
+          new DefaultPostQueryOperationsImpl(1, Number.MAX_SAFE_INTEGER),
           false
         );
         dataStore.tryReleaseDbConnectionBackToPool();

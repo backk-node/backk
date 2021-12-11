@@ -54,7 +54,7 @@ interface HttpRequestOptions {
 Makes an HTTP or HTTPS request to URL `requestUrl` with given `requestBodyObject`. Request content type is `application/json`.
 Authorization header is automatically added to the made HTTP request.
 The request is made using HTTP GET method by default. The method can be changed by supplying `options.httpMethod`.
-The default HTTP version is 1. HTTP/2 request without TLS can be made using scheme `http2://`
+The default HTTP version is 1. HTTP/2 request without TLS can be made using scheme `http2://` in `requestUrl`.
 
 ### <a name="sentoremoteservice"></a> sendToRemoteService
 
@@ -68,11 +68,11 @@ async function sendToRemoteService(
   serviceFunctionArgument: object,
   microserviceNamespace = process.env.SERVICE_NAMESPACE,
   server?: string,
-  sendResponseTo?: ResponseSendToSpec,
-  options?: SendToOptions
+  responseDestionation?: ResponseDestination,
+  options?: SendOptions
 ): PromiseErrorOr<null>
 
-interface ResponseSendToSpec {
+interface ResponseDestination {
   communicationMethod: CommunicationMethod;
   microserviceName: string;
   microserviceNamespace: string | undefined;
@@ -82,8 +82,8 @@ interface ResponseSendToSpec {
 
 type CommunicationMethod = 'http' | 'kafka' | 'redis'
 
-interface SendToOptions {
-  compressionType?: CompressionTypes;
+interface SendOptions {
+  compressionType?: CompressionType;
   sendAcknowledgementType?: SendAcknowledgementType;
 }
 
@@ -101,32 +101,33 @@ enum SendAcknowledgementType {
   ALL_REPLICAS = -1 // Default
 }
 ```
+
 Sends a request to a remote Backk microservice `microserviceName`'s service function `serviceFunctionName` via a message queue as denoted by `communicationMethod` (Kafka or Redis).
 
 The remote Backk microservice Kubernetes namespace is defined using `microserviceNamespace` argument.
 `server` defines the Kafka/Redis server host and port in form of <hostname>:<port>. By default, the server
 defined with following environment variables: `KAFKA_HOST`, `KAFKA_PORT`, `REDIS_HOST` and `REDIS_PORT`.
-`sendResponseTo` defines the where remote service sends its response to the request.
+`responseDestination` defines the where remote service sends its response to the request.
 `options` apply only to sending a message to remote service via Kafka.
 
 Returns null or error.
 
 ### <a name="sentoremoteserviceinsidetransaction"></a> sendToRemoteServiceInsideTransaction
 ```ts
-async function sendToRemoteServiceInsideTransaction(sends: RemoteCallOrSendToSpec[]): PromiseErrorOr<null>
+async function sendToRemoteServiceInsideTransaction(transmissions: Transmission[]): PromiseErrorOr<null>
 
-interface RemoteCallOrSendToSpec {
+interface Transmission {
   communicationMethod: 'kafka';
   microserviceName: string;
   serviceFunctionName: string;
   serviceFunctionArgument: object;
   microserviceNamespace?: string;
   server?: string;
-  sendResponseTo?: ResponseSendToSpec;
-  options?: SendToOptions;
+  responseDestination?: ResponseDestination;
+  options?: SendOptions;
 }
 
-interface ResponseSendToSpec {
+interface ResponseDestination{
   communicationMethod: CommunicationMethod;
   microserviceName: string;
   microserviceNamespace: string | undefined;
@@ -136,7 +137,7 @@ interface ResponseSendToSpec {
 
 type CommunicationMethod = 'http' | 'kafka' | 'redis'
 
-interface SendToOptions {
+interface SendOptions {
   compressionType?: CompressionTypes;
   sendAcknowledgementType?: SendAcknowledgementType;
 }
@@ -156,11 +157,11 @@ enum SendAcknowledgementType {
 }
 ```
 
-Sends multiple requests to a remote services as specified in `sends` via a message queue (Kafka) inside a transaction.
+Sends multiple requests to a remote services as specified in `transmissions` via a message queue (Kafka) inside a transaction.
 
 `server` defines the Kafka server host and port in form of <hostname>:<port>. By default, the server
 defined with following environment variables: `KAFKA_HOST`, `KAFKA_PORT`.
-`sendResponseTo` defines the  where remote service sends its response to the request.
+`responseDestination` defines the  where remote service sends its response to the request.
 `options` defines compression and send acknowledgements type.
 
 Returns null or error.

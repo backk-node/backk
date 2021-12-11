@@ -1,6 +1,6 @@
 import { CompressionTypes } from "kafkajs";
 import { getNamespace } from "cls-hooked";
-import { RemoteCallOrSendToSpec, ResponseSendToSpec } from "./sendToRemoteServiceInsideTransaction";
+import { Transmission, ResponseDestination } from "./sendToRemoteServiceInsideTransaction";
 import sendOneOrMoreToKafka, { SendAcknowledgementType } from "./kafka/sendOneOrMoreToKafka";
 import sendOneOrMoreToRedis from "./redis/sendOneOrMoreToRedis";
 import { validateServiceFunctionArguments } from "../utils/validateServiceFunctionArguments";
@@ -8,7 +8,7 @@ import { PromiseErrorOr } from "../../types/PromiseErrorOr";
 import getKafkaServerFromEnv from "./kafka/getKafkaServerFromEnv";
 import getRedisServerFromEnv from "./redis/getRedisServerFromEnv";
 
-export interface SendToOptions {
+export interface SendOptions {
   compressionType?: CompressionTypes;
   sendAcknowledgementType?: SendAcknowledgementType;
 }
@@ -16,7 +16,7 @@ export interface SendToOptions {
 export type CommunicationMethod = 'http' | 'kafka' | 'redis';
 
 export async function sendOneOrMore(
-  sends: RemoteCallOrSendToSpec[],
+  sends: Transmission[],
   isTransactional: boolean
 ): PromiseErrorOr<null> {
   const clsNamespace = getNamespace('serviceFunctionExecution');
@@ -68,8 +68,8 @@ export default async function sendToRemoteService(
   serviceFunctionArgument: object,
   microserviceNamespace = process.env.MICROSERVICE_NAMESPACE,
   server?: string,
-  sendResponseTo?: ResponseSendToSpec,
-  options?: SendToOptions
+  responseDestination?: ResponseDestination,
+  options?: SendOptions
 ): PromiseErrorOr<null> {
   let finalServer = server;
 
@@ -89,7 +89,7 @@ export default async function sendToRemoteService(
         serviceFunctionName,
         serviceFunctionArgument,
         server: finalServer,
-        sendResponseTo,
+        sendResponseTo: responseDestination,
         options
       }
     ],

@@ -168,9 +168,9 @@ export { default as defaultPrometheusMeter } from './observability/metrics/defau
 // Access remote services
 export { HttpRequestOptions, default as callRemoteService } from './remote/http/callRemoteService';
 export { default as makeHttpRequest } from './remote/http/makeHttpRequest';
-export { SendToOptions, default as sendToRemoteService } from './remote/messagequeue/sendToRemoteService';
+export { SendOptions, default as sendToRemoteService } from './remote/messagequeue/sendToRemoteService';
 export {
-  RemoteCallOrSendToSpec,
+  Transmission,
   default as sendToRemoteServiceInsideTransaction
 } from './remote/messagequeue/sendToRemoteServiceInsideTransaction';
 

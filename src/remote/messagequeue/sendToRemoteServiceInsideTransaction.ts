@@ -1,20 +1,20 @@
 import _ from 'lodash';
-import { CommunicationMethod, sendOneOrMore, SendToOptions } from './sendToRemoteService';
+import { CommunicationMethod, sendOneOrMore, SendOptions } from './sendToRemoteService';
 import parseRemoteServiceFunctionCallUrlParts from '../utils/parseRemoteServiceFunctionCallUrlParts';
 import getKafkaServerFromEnv from './kafka/getKafkaServerFromEnv';
 
-export interface RemoteCallOrSendToSpec {
+export interface Transmission {
   communicationMethod: CommunicationMethod;
   microserviceName: string;
   serviceFunctionName: string;
   serviceFunctionArgument: object;
   microserviceNamespace?: string;
   server?: string;
-  sendResponseTo?: ResponseSendToSpec;
-  options?: SendToOptions;
+  responseDestination?: ResponseDestination;
+  options?: SendOptions;
 }
 
-export interface ResponseSendToSpec {
+export interface ResponseDestination {
   communicationMethod: CommunicationMethod;
   microserviceName: string;
   microserviceNamespace: string | undefined;
@@ -25,17 +25,17 @@ export interface ResponseSendToSpec {
 export interface CallOrSendToUrlSpec {
   serviceFunctionUrl: string;
   serviceFunctionArgument?: object;
-  sendResponseTo?: ResponseSendToSpec;
-  options?: SendToOptions;
+  sendResponseTo?: ResponseDestination;
+  options?: SendOptions;
 }
 
-export default async function sendToRemoteServiceInsideTransaction(sends: RemoteCallOrSendToSpec[]) {
-  const foundRedisMessageBroker = sends.find((send) => send.communicationMethod !== 'kafka');
+export default async function sendToRemoteServiceInsideTransaction(transmissions: Transmission[]) {
+  const foundRedisMessageBroker = transmissions.find((send) => send.communicationMethod !== 'kafka');
   if (foundRedisMessageBroker) {
     throw new Error('You can only use sendToRemoteServiceInsideTransaction with Kafka');
   }
 
-  const sendsWithUrl = sends.map(
+  const sendsWithUrl = transmissions.map(
     ({
       communicationMethod,
       server,
@@ -43,13 +43,13 @@ export default async function sendToRemoteServiceInsideTransaction(sends: Remote
       microserviceNamespace,
       serviceFunctionName,
       serviceFunctionArgument,
-      sendResponseTo,
+      responseDestination,
       options
     }) => ({
       remoteServiceFunctionUrl: `${communicationMethod}://${server ??
         getKafkaServerFromEnv()}/${microserviceName}.${microserviceNamespace}/${serviceFunctionName}`,
       serviceFunctionArgument: serviceFunctionArgument,
-      sendResponseTo,
+      responseDestination,
       options
     })
   );
@@ -63,5 +63,5 @@ export default async function sendToRemoteServiceInsideTransaction(sends: Remote
     throw new Error('All sendTos must be to same Kafka server');
   }
 
-  return sendOneOrMore(sends, true);
+  return sendOneOrMore(transmissions, true);
 }

@@ -123,11 +123,11 @@ async function sendToRemoteService(
   serviceFunctionArgument: object,
   microserviceNamespace = process.env.MICROSERVICE_NAMESPACE,
   server?: string,
-  sendResponseTo?: ResponseSendToSpec,
-  options?: SendToOptions
+  responseDestination?: ResponseDestination,
+  options?: SendOptions
 ): PromiseErrorOr<null>
 
-interface ResponseSendToSpec {
+interface ResponseDestination {
   communicationMethod: CommunicationMethod;
   microserviceName: string;
   microserviceNamespace: string | undefined;
@@ -135,7 +135,9 @@ interface ResponseSendToSpec {
   server: string;
 }
 
-interface SendToOptions {
+type CommunicationMethod = 'http' | 'kafka' | 'redis'
+
+interface SendOptions {
   compressionType?: CompressionTypes;
   sendAcknowledgementType?: SendAcknowledgementType;
 }
@@ -195,16 +197,16 @@ All the remote service function call requests must happen to the same Kafka serv
 Transactions are not supported by Redis.
 
 ```ts
-function sendToRemoteServiceInsideTransaction(sends: RemoteCallOrSendToSpec[]);
+function sendToRemoteServiceInsideTransaction(transmissions: Transmission[]);
 
-interface RemoteCallOrSendToSpec {
+interface Transmission {
   communicationMethod: 'kafka';
   microserviceName: string;
   serviceFunctionName: string;
   serviceFunctionArgument: object;
   microserviceNamespace?: string;
   server?: string;
-  sendResponseTo?: ResponseSendToSpec;
-  options?: SendToOptions;
+  responseDestination?: ResponseDestination;
+  options?: SendOptions;
 }
 ```

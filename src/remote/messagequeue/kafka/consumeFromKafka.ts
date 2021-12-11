@@ -11,7 +11,7 @@ import getNamespacedMicroserviceName from '../../../utils/getNamespacedMicroserv
 import wait from '../../../utils/wait';
 import callRemoteService from '../../http/callRemoteService';
 import sendToRemoteService from '../sendToRemoteService';
-import { ResponseSendToSpec } from '../sendToRemoteServiceInsideTransaction';
+import { ResponseDestination } from '../sendToRemoteServiceInsideTransaction';
 import logCreator from './logCreator';
 import minimumLoggingSeverityToKafkaLoggingLevelMap from './minimumLoggingSeverityToKafkaLoggingLevelMap';
 
@@ -238,7 +238,7 @@ export default async function consumeFromKafka(
               serviceFunctionName,
               microserviceNamespace,
               server,
-            } = headers?.sendResponseTo as unknown as ResponseSendToSpec;
+            } = headers?.sendResponseTo as unknown as ResponseDestination;
 
             if (communicationMethod === 'kafka' || communicationMethod === 'redis') {
               await sendToRemoteService(

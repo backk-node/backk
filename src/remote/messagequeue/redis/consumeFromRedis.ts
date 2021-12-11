@@ -8,7 +8,7 @@ import defaultServiceMetrics from '../../../observability/metrics/defaultService
 import getNamespacedMicroserviceName from '../../../utils/getNamespacedMicroserviceName';
 import BackkResponse from '../../../execution/BackkResponse';
 import wait from '../../../utils/wait';
-import { ResponseSendToSpec } from '../sendToRemoteServiceInsideTransaction';
+import { ResponseDestination } from '../sendToRemoteServiceInsideTransaction';
 import callRemoteService from '../../http/callRemoteService';
 
 export default async function consumeFromRedis(
@@ -92,7 +92,7 @@ export default async function consumeFromRedis(
           serviceFunctionName,
           microserviceNamespace,
           server
-        } = headers?.sendResponseTo as ResponseSendToSpec;
+        } = headers?.sendResponseTo as ResponseDestination;
 
         if (communicationMethod === 'kafka' || communicationMethod === 'redis') {
           await sendToRemoteService(

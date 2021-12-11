@@ -11,14 +11,14 @@ import { CanonicalCode } from "@opentelemetry/api";
 import createBackkErrorFromError from "../../errors/createBackkErrorFromError";
 import { kafkaServerToKafkaClientMap, SendAcknowledgementType } from "./kafka/sendOneOrMoreToKafka";
 import getKafkaServerFromEnv from "./kafka/getKafkaServerFromEnv";
-import { SendToOptions } from "./sendToRemoteService";
+import { SendOptions } from "./sendToRemoteService";
 
 export default async function sendToKafka(
   topic: string,
   messageKey: string | undefined,
   messageValue: any,
   server?: string,
-  options?: SendToOptions
+  options?: SendOptions
 ): PromiseErrorOr<null> {
   const finalServer = server ?? getKafkaServerFromEnv();
 

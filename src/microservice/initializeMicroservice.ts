@@ -388,13 +388,13 @@ export default async function initializeMicroservice(
       expectedServiceName = expectedServiceName.slice(0, -4);
     }
 
-    if (!expectedServiceName.includes(serviceName)) {
+    if (!expectedServiceName.toLowerCase().includes(serviceName.toLocaleLowerCase()) && !serviceName.endsWith('Service')) {
       throw new Error(
         "Microservice implementation class property '" +
           serviceName +
           "' should be: '" +
           expectedServiceName +
-          "'"
+          "' or substring of it ending with 'Service'"
       );
     }
 

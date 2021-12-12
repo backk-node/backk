@@ -325,7 +325,7 @@ export default async function initializeMicroservice(
   remoteServiceRootDir = ''
 ) {
   Object.entries(microservice).forEach(([serviceName, service]: [string, any]) => {
-    if (!(service instanceof BaseService)) {
+    if (serviceName.endsWith('Service') && !(service instanceof BaseService)) {
       throw new Error(
         "Class '" + service.constructor.name + "' must extend from 'BaseService' or 'CrudResourceService'"
       );

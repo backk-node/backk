@@ -1,8 +1,8 @@
-import { HttpStatusCodes } from '../constants/constants';
-import { ErrorDefinition } from '../types/ErrorDefinition';
+import { HttpStatusCodes } from "../constants/constants";
+import { BackkError } from "../types/BackkError";
 
 export default function createErrorFromErrorCodeMessageAndStatus(
-  errorCodeMessageAndStatus: ErrorDefinition
+  errorCodeMessageAndStatus: BackkError
 ): Error {
   return new Error(
     (errorCodeMessageAndStatus.statusCode ?? HttpStatusCodes.INTERNAL_SERVER_ERROR) +

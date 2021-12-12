@@ -14,7 +14,7 @@ export default class JwtAuthorizationServiceImpl extends AuthorizationService {
 
   constructor() {
     super();
-    
+
     this.rolesClaimPath =
       process.env.JWT_ROLES_CLAIM_PATH ??
       throwException('`JWT_ROLES_CLAIM_PATH` environment variable must be defined');

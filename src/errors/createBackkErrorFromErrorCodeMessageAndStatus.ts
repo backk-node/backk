@@ -1,9 +1,9 @@
 import createBackkErrorFromError from './createBackkErrorFromError';
 import { HttpStatusCodes } from '../constants/constants';
-import { ErrorDefinition } from "../types/ErrorDefinition";
+import { BackkError } from "../types/BackkError";
 
 export default function createBackkErrorFromErrorCodeMessageAndStatus(
-  errorCodeMessageAndStatus: ErrorDefinition
+  errorCodeMessageAndStatus: BackkError
 ) {
   return createBackkErrorFromError(
     new Error(

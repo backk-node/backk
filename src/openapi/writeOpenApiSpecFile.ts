@@ -1,7 +1,6 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import YAML from 'yaml';
 import { HttpStatusCodes } from '../constants/constants';
-import { ErrorDef } from '../datastore/hooks/EntityPreHook';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
 import { BACKK_ERRORS } from '../errors/BACKK_ERRORS';
 import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
@@ -13,15 +12,16 @@ import isReadFunction from '../services/crudentity/utils/isReadFunction';
 import isUpdateFunction from '../services/crudentity/utils/isUpdateFunction';
 import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
 import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
+import { BackkError } from "../types/BackkError";
 
-function getErrorContent(errorDef: ErrorDef) {
+function getErrorContent(error: BackkError) {
   return {
     content: {
       'application/json': {
         schema: {
           $ref: '#/components/schemas/BackkError',
         },
-        example: errorDef,
+        example: error,
       },
     },
   };
@@ -72,9 +72,9 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
         false
       );
 
-      const errorResponseMap = functionMetadata.errors.reduce((errorResponseMap: any, errorDef) => {
-        const statusCode = errorDef.statusCode ?? HttpStatusCodes.BAD_REQUEST;
-        const description = '- ' + errorDef.errorCode + ': ' + errorDef.message;
+      const errorResponseMap = functionMetadata.errors.reduce((errorResponseMap: any, error) => {
+        const statusCode = error.statusCode ?? HttpStatusCodes.BAD_REQUEST;
+        const description = '- ' + error.errorCode + ': ' + error.message;
         if (errorResponseMap[statusCode]) {
           errorResponseMap[statusCode] = {
             ...errorResponseMap[statusCode],
@@ -83,7 +83,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
         } else {
           errorResponseMap[statusCode] = {
             description,
-            ...getErrorContent(errorDef),
+            ...getErrorContent(error),
           };
         }
         return errorResponseMap;

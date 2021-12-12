@@ -10,10 +10,12 @@ export interface AuditLogEntry {
   subject: string;
   clientIp: string;
   authorizationHeader: string;
-  userOperation: string;
-  userOperationResult: UserOperationResult;
-  userOperationHttpStatusCode: number;
-  userOperationErrorMessage: string;
+  userOperation: {
+    name: string,
+    result: UserOperationResult,
+    statusCode: number,
+    errorMessage: string
+  }
   Resource: Resource;
   Attributes?: { [key: string]: string | number | boolean | undefined };
 }

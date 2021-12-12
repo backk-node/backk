@@ -6,7 +6,6 @@ import { HttpStatusCodes } from '../../constants/constants';
 import createBackkErrorFromError from '../../errors/createBackkErrorFromError';
 import log, { Severity } from '../../observability/logging/log';
 import defaultServiceMetrics from '../../observability/metrics/defaultServiceMetrics';
-import { backkErrorSymbol } from '../../types/BackkError';
 import { PromiseErrorOr } from '../../types/PromiseErrorOr';
 import parseRemoteServiceFunctionCallUrlParts from '../utils/parseRemoteServiceFunctionCallUrlParts';
 import {
@@ -118,7 +117,6 @@ export default async function callRemoteService(
           errorCode,
           message,
           stackTrace,
-          [backkErrorSymbol]: true,
           statusCode: response.status,
         },
       ];

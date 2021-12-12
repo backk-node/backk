@@ -1,7 +1,4 @@
 import _ from 'lodash';
-import AuthorizationService from '../authorization/AuthorizationService';
-import ResponseCacheConfigService from '../cache/ResponseCacheConfigService';
-import CaptchaVerificationService from '../captcha/CaptchaVerificationService';
 import generateClients from '../client/generateClients';
 import isClientGenerationNeeded from '../client/isClientGenerationNeeded';
 import { DataStore } from '../datastore/DataStore';
@@ -12,15 +9,11 @@ import generateTypesForServices from '../metadata/generateTypesForServices';
 import getNestedClasses from '../metadata/getNestedClasses';
 import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
 import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
-import AuditLoggingService from '../observability/logging/audit/AuditLoggingService';
 import log, { Severity } from '../observability/logging/log';
 import writeOpenApiSpecFile from '../openapi/writeOpenApiSpecFile';
 import writeTestsPostmanCollectionExportFile from '../postman/writeTestsPostmanCollectionExportFile';
 import { RequestProcessor } from '../requestprocessor/RequestProcessor';
 import BaseService from '../services/BaseService';
-import LivenessCheckService from '../services/LivenessCheckService';
-import ReadinessCheckService from '../services/ReadinessCheckService';
-import StartupCheckService from '../services/startup/StartupCheckService';
 import parseServiceFunctionNameToArgAndReturnTypeNameMaps from '../typescript/parser/parseServiceFunctionNameToArgAndReturnTypeNameMaps';
 import getSrcFilePathNameForTypeName from '../utils/file/getSrcFilePathNameForTypeName';
 import decapitalizeFirstLetter from '../utils/string/decapitalizeFirstLetter';
@@ -332,17 +325,7 @@ export default async function initializeMicroservice(
   remoteServiceRootDir = ''
 ) {
   Object.entries(microservice).forEach(([serviceName, service]: [string, any]) => {
-    if (
-      serviceName.endsWith('Service') &&
-      !(service instanceof BaseService) &&
-      !(service instanceof AuditLoggingService) &&
-      !(service instanceof CaptchaVerificationService) &&
-      !(service instanceof LivenessCheckService) &&
-      !(service instanceof ReadinessCheckService) &&
-      !(service instanceof StartupCheckService) &&
-      !(service instanceof ResponseCacheConfigService) &&
-      !(service instanceof AuthorizationService)
-    ) {
+    if (!(service instanceof BaseService)) {
       throw new Error(
         "Class '" + service.constructor.name + "' must extend from 'BaseService' or 'CrudResourceService'"
       );

@@ -38,12 +38,12 @@ export async function sendOneOrMore(
        microserviceNamespace,
        serviceFunctionName,
        serviceFunctionArgument,
-       sendResponseTo,
+       responseDestination,
        options
      }) => ({
       serviceFunctionUrl: `${communicationMethod}://${server}/${microserviceName}.${microserviceNamespace}/${serviceFunctionName}`,
       serviceFunctionArgument,
-      sendResponseTo,
+      responseDestination,
       options
     })
   );
@@ -89,7 +89,7 @@ export default async function sendToRemoteService(
         serviceFunctionName,
         serviceFunctionArgument,
         server: finalServer,
-        sendResponseTo: responseDestination,
+        responseDestination,
         options
       }
     ],

@@ -149,15 +149,22 @@ Authorizes client requests based on Authorization header. This is a generic serv
 should use `JwtAuthorizationServiceImpl` class for your authorization service (see next section).
 
 ```typescript
-export interface AuthorizationService {
-  hasUserRoleIn(roles: string[], authHeader: string | string[] | undefined): Promise<boolean>;
-  getSubject(authHeader: string | string[] | undefined): Promise<string | undefined>;
+export default abstract class AuthorizationService {
+  protected constructor(
+    errorNameToErrorDefinitionMap: ErrorNameToErrorDefinitionMap = {},
+    dataStore: DataStore = new NullDataStore()
+  ) {
+    super(errorNameToErrorDefinitionMap, dataStore);
+  }
+  
+  abstract hasUserRoleIn(roles: string[], authHeader: string | string[] | undefined): Promise<boolean>;
+  abstract getSubject(authHeader: string | string[] | undefined): Promise<string | undefined>;
 }
 ```
 
 `authHeader` argument contains the Authorization header content, e.g. `Bearer vF9dft4qmT...`.
 
-Create an `AuthorizationServiceImpl` class that implements the `AuthorizationService` interface and provide implementations for the functions:
+Create an `AuthorizationServiceImpl` class that extends the `AuthorizationService` class and provide implementations for the functions:
 - `hasUserRoleIn` should return true if user has at least one role in `roles`
 - `getSubject` should return the unique id of the user in the IAM system. For example, this info is available in OAuth 2.0 Access Token's `sub` claim.
 
@@ -205,9 +212,16 @@ For security reasons, each microservice should have its own Redis cache instance
 - Connection between microservice and Redis is secured (mTLS by a service mesh)
 
 ```typescript
-export interface ResponseCacheConfigService {
-  shouldCacheServiceFunctionCallResponse(serviceFunctionName: string, serviceFunctionArgument: object): boolean;
-  getCachingDurationInSecs(serviceFunctionName: string, serviceFunctionArgument: object): number;
+export default abstract class ResponseCacheConfigService {
+  protected constructor(
+    errorNameToErrorDefinitionMap: ErrorNameToErrorDefinitionMap = {},
+    dataStore: DataStore = new NullDataStore()
+  ) {
+    super(errorNameToErrorDefinitionMap, dataStore);
+  }
+  
+  abstract shouldCacheServiceFunctionCallResponse(serviceFunctionName: string, serviceFunctionArgument: object): boolean;
+  abstract getCachingDurationInSecs(serviceFunctionName: string, serviceFunctionArgument: object): number;
 }
 ```
 
@@ -216,7 +230,7 @@ This service requires following environment variables to be defined:
 - `REDIS_CACHE_PORT` which denotes the Redis cache server port
 - `REDIS_CACHE_PASSWORD` which denotes the Redis server password
 
-Create a `ResponseCacheConfigServiceImpl` class that implements the `ResponseCacheConfigService` interface and provide implementations for the needed functions:
+Create a `ResponseCacheConfigServiceImpl` class that extends the `ResponseCacheConfigService` class and provide implementations for the needed functions:
 - shouldCacheServiceFunctionCallResponse
 - getCachingDurationInSecs
 
@@ -239,12 +253,19 @@ Verifies captcha sent in service function call argument in `captchaToken` proper
 ```
 
 ```typescript
-export interface CaptchaVerificationService {
-  verifyCaptcha(captchaToken: string): Promise<boolean>;
+export default abstract class CaptchaVerificationService {
+  protected constructor(
+    errorNameToErrorDefinitionMap: ErrorNameToErrorDefinitionMap = {},
+    dataStore: DataStore = new NullDataStore()
+  ) {
+    super(errorNameToErrorDefinitionMap, dataStore);
+  }
+  
+  abstract verifyCaptcha(captchaToken: string): Promise<boolean>;
 }
 ```
 
-Create a `CaptchaVerificationServiceImpl` class that implements the `CaptchaVerificationService` interface and provide implementations for function:
+Create a `CaptchaVerificationServiceImpl` class that extends the `CaptchaVerificationService` class and provide implementations for function:
 - verifyCaptcha
 
 Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
@@ -395,11 +416,18 @@ export default class MicroserviceImpl extends Microservice {
 This service is called to log requests made to the microservice.
 
 ```typescript
-export interface AuditLoggingService {
-  log(auditLogEntry: AuditLogEntry): Promise<void>;
+export default abstract class AuditLoggingService {
+  protected constructor(
+    errorNameToErrorDefinitionMap: ErrorNameToErrorDefinitionMap = {},
+    dataStore: DataStore = new NullDataStore()
+  ) {
+    super(errorNameToErrorDefinitionMap, dataStore);
+  }
+  
+  abstract log(auditLogEntry: AuditLogEntry): Promise<void>;
 }
 
-export interface AuditLogEntry {
+interface AuditLogEntry {
   Timestamp: string;
   TraceId?: string;
   SpanId?: string;
@@ -407,18 +435,28 @@ export interface AuditLogEntry {
   subject: string;
   clientIp: string;
   authorizationHeader: string;
-  userOperation: string;
-  userOperationResult: UserOperationResult;
-  userOperationHttpStatusCode: number;
-  userOperationErrorMessage: string;
+  userOperation: {
+    name: string,
+    result: UserOperationResult,
+    statusCode: number,
+    errorMessage: string
+  }
   Resource: Resource;
   Attributes?: { [key: string]: string | number | boolean | undefined };
 }
 
 export type UserOperationResult = 'success' | 'failure';
+
+interface Resource {
+  'service.name': string;
+  'service.namespace': string;
+  'service.instance.id': string;
+  'service.version': string;
+  'node.name': string;
+}
 ```
 
-Create a class `AuditLoggingServiceImpl` that implements the `AuditLoggingService` interface and provides implementation for the `log` function.
+Create a class `AuditLoggingServiceImpl` that extends the `AuditLoggingService` class and provides implementation for the `log` function.
 You `log` function implementation should store the `auditLogEntry` information to a safe remote location. In the implementation, you can use for example `makeHttpRequest`.
 
 Instantiate your class and store it as a field in your `MicroserviceImpl` class:

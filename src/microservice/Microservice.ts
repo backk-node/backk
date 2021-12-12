@@ -1,18 +1,19 @@
-import { uniqBy } from 'lodash';
-import reloadLoggingConfigOnChange from '../configuration/reloadLoggingConfigOnChange';
-import initializeCls from '../continuationlocalstorage/initializeCls';
-import { DataStore } from '../datastore/DataStore';
-import initializeDatabase from '../datastore/sql/operations/ddl/initializeDatabase';
-import log, { Severity } from '../observability/logging/log';
-import logEnvironment from '../observability/logging/logEnvironment';
-import defaultSystemAndNodeJsMetrics from '../observability/metrics/defaultSystemAndNodeJsMetrics';
-import { RequestProcessor } from '../requestprocessor/RequestProcessor';
-import scheduleCronJobsForExecution from '../scheduling/scheduleCronJobsForExecution';
-import scheduleJobsForExecution from '../scheduling/scheduleJobsForExecution';
-import StartupCheckService from '../services/startup/StartupCheckService';
-import areTypeDefinitionsUsedInTypeFilesChanged from '../typescript/utils/areTypeDefinitionsUsedInTypeFilesChanged';
-import changePackageJsonNameProperty from '../utils/changePackageJsonNameProperty';
-import initializeMicroservice from './initializeMicroservice';
+import { uniqBy } from "lodash";
+import reloadLoggingConfigOnChange from "../configuration/reloadLoggingConfigOnChange";
+import initializeCls from "../continuationlocalstorage/initializeCls";
+import { DataStore } from "../datastore/DataStore";
+import initializeDatabase from "../datastore/sql/operations/ddl/initializeDatabase";
+import log, { Severity } from "../observability/logging/log";
+import logEnvironment from "../observability/logging/logEnvironment";
+import defaultSystemAndNodeJsMetrics from "../observability/metrics/defaultSystemAndNodeJsMetrics";
+import { RequestProcessor } from "../requestprocessor/RequestProcessor";
+import scheduleCronJobsForExecution from "../scheduling/scheduleCronJobsForExecution";
+import scheduleJobsForExecution from "../scheduling/scheduleJobsForExecution";
+import StartupCheckService from "../services/startup/StartupCheckService";
+import areTypeDefinitionsUsedInTypeFilesChanged
+  from "../typescript/utils/areTypeDefinitionsUsedInTypeFilesChanged";
+import changePackageJsonNameProperty from "../utils/changePackageJsonNameProperty";
+import initializeMicroservice from "./initializeMicroservice";
 
 type NonEmptyArray<T> = [T, ...T[]];
 

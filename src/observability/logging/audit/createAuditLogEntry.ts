@@ -27,10 +27,12 @@ export default function createAuditLogEntry(
     subject,
     clientIp,
     authorizationHeader,
-    userOperation,
-    userOperationResult,
-    userOperationHttpStatusCode,
-    userOperationErrorMessage,
+    userOperation: {
+      name: userOperation,
+      result: userOperationResult,
+      statusCode: userOperationHttpStatusCode,
+      errorMessage: userOperationErrorMessage
+    },
     Timestamp: now.valueOf() + '000000',
     TraceId: tracerProvider
       .getTracer('default')

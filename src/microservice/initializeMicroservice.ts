@@ -1,4 +1,7 @@
 import _ from 'lodash';
+import AuthorizationService from '../authorization/AuthorizationService';
+import ResponseCacheConfigService from '../cache/ResponseCacheConfigService';
+import CaptchaVerificationService from '../captcha/CaptchaVerificationService';
 import generateClients from '../client/generateClients';
 import isClientGenerationNeeded from '../client/isClientGenerationNeeded';
 import { DataStore } from '../datastore/DataStore';
@@ -9,24 +12,21 @@ import generateTypesForServices from '../metadata/generateTypesForServices';
 import getNestedClasses from '../metadata/getNestedClasses';
 import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
 import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
+import AuditLoggingService from '../observability/logging/audit/AuditLoggingService';
 import log, { Severity } from '../observability/logging/log';
 import writeOpenApiSpecFile from '../openapi/writeOpenApiSpecFile';
 import writeTestsPostmanCollectionExportFile from '../postman/writeTestsPostmanCollectionExportFile';
 import { RequestProcessor } from '../requestprocessor/RequestProcessor';
 import BaseService from '../services/BaseService';
+import LivenessCheckService from '../services/LivenessCheckService';
+import ReadinessCheckService from '../services/ReadinessCheckService';
+import StartupCheckService from '../services/startup/StartupCheckService';
 import parseServiceFunctionNameToArgAndReturnTypeNameMaps from '../typescript/parser/parseServiceFunctionNameToArgAndReturnTypeNameMaps';
 import getSrcFilePathNameForTypeName from '../utils/file/getSrcFilePathNameForTypeName';
 import decapitalizeFirstLetter from '../utils/string/decapitalizeFirstLetter';
 import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
 import setClassPropertyValidationDecorators from '../validation/setClassPropertyValidationDecorators';
 import setNestedTypeValidationDecorators from '../validation/setNestedTypeValidationDecorators';
-import AuditLoggingService from "../observability/logging/audit/AuditLoggingService";
-import LivenessCheckService from "../services/LivenessCheckService";
-import CaptchaVerificationService from "../captcha/CaptchaVerificationService";
-import StartupCheckService from "../services/startup/StartupCheckService";
-import ReadinessCheckService from "../services/ReadinessCheckService";
-import AuthorizationService from "../authorization/AuthorizationService";
-import ResponseCacheConfigService from "../cache/ResponseCacheConfigService";
 
 function addNestedTypes(privateTypeNames: Set<string>, typeName: string, types: { [p: string]: object }) {
   Object.values(types[typeName] ?? {}).forEach((typeName) => {
@@ -342,7 +342,7 @@ export default async function initializeMicroservice(
       !(service instanceof StartupCheckService) &&
       !(service instanceof ResponseCacheConfigService) &&
       !(service instanceof AuthorizationService)
-    )  {
+    ) {
       throw new Error(
         "Class '" + service.constructor.name + "' must extend from 'BaseService' or 'CrudResourceService'"
       );
@@ -383,28 +383,17 @@ export default async function initializeMicroservice(
       );
     }
 
-    const expectedServiceNames = [];
-    expectedServiceNames[0] = decapitalizeFirstLetter(service.constructor.name);
+    let expectedServiceName = decapitalizeFirstLetter(service.constructor.name);
     if (service.constructor.name.endsWith('Impl')) {
-      expectedServiceNames[0] = expectedServiceNames[0].slice(0, -4);
+      expectedServiceName = expectedServiceName.slice(0, -4);
     }
 
-    let proto = Object.getPrototypeOf(service);
-    while (proto !== Object.prototype && proto.constructor.name !== 'BaseService' && proto.constructor.name !== 'CrudEntityService') {
-      let expectedServiceName = proto.constructor.name;
-      if (service.constructor.name.endsWith('Impl')) {
-        expectedServiceName = expectedServiceName.slice(0, -4);
-      }
-      expectedServiceNames.push(expectedServiceName);
-      proto = Object.getPrototypeOf(proto);
-    }
-
-    if (!expectedServiceNames.includes(serviceName)) {
+    if (!expectedServiceName.includes(serviceName)) {
       throw new Error(
         "Microservice implementation class property '" +
           serviceName +
-          "' should be one of following: '" +
-          expectedServiceNames.join(',') +
+          "' should be: '" +
+          expectedServiceName +
           "'"
       );
     }

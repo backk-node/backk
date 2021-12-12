@@ -5,7 +5,8 @@ import { ErrorNameToErrorDefinitionMap } from '../../../types/ErrorDefinition';
 import { AuditLogEntry } from './AuditLogEntry';
 
 export default abstract class AuditLoggingService extends BaseService {
-  protected constructor(
+  // noinspection TypeScriptAbstractClassConstructorCanBeMadeProtected
+  constructor(
     errorNameToErrorDefinitionMap: ErrorNameToErrorDefinitionMap = {},
     dataStore: DataStore = new NullDataStore()
   ) {

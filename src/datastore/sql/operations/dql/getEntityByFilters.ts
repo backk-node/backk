@@ -1,4 +1,4 @@
-import SqlFilter from '../../expressions/SqlFilter';
+import SqlFilter from '../../filters/SqlFilter';
 import AbstractSqlDataStore from '../../../AbstractSqlDataStore';
 import transformRowsToObjects from './transformresults/transformRowsToObjects';
 import createBackkErrorFromError from '../../../../errors/createBackkErrorFromError';
@@ -26,7 +26,7 @@ import createCurrentPageTokens from '../../../utils/createCurrentPageTokens';
 import tryEnsurePreviousOrNextPageIsRequested from '../../../utils/tryEnsurePreviousOrNextPageIsRequested';
 import EntityCountRequest from '../../../../types/EntityCountRequest';
 import getUserAccountIdFieldNameAndRequiredValue from '../../../utils/getUserAccountIdFieldNameAndRequiredValue';
-import SqlEquals from '../../expressions/SqlEquals';
+import SqlEqFilter from '../../filters/SqlEqFilter';
 
 export default async function getEntityByFilters<T>(
   dataStore: AbstractSqlDataStore,
@@ -68,7 +68,7 @@ export default async function getEntityByFilters<T>(
 
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
     if (userAccountIdFieldName && userAccountId !== undefined) {
-      (filters as any).push(new SqlEquals({ [userAccountIdFieldName]: userAccountId }));
+      (filters as any).push(new SqlEqFilter({ [userAccountIdFieldName]: userAccountId }));
     }
 
     updateDbLocalTransactionCount(dataStore);

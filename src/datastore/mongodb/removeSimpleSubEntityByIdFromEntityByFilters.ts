@@ -21,7 +21,7 @@ import typePropertyAnnotationContainer from "../../decorators/typeproperty/typeP
 import replaceIdStringsWithObjectIds from "./replaceIdStringsWithObjectIds";
 import getClassPropertyNameToPropertyTypeNameMap
   from "../../metadata/getClassPropertyNameToPropertyTypeNameMap";
-import SqlFilter from "../sql/expressions/SqlFilter";
+import SqlFilter from "../sql/filters/SqlFilter";
 import UserDefinedFilter from "../../types/userdefinedfilters/UserDefinedFilter";
 import convertFilterObjectToMongoDbQueries from "./convertFilterObjectToMongoDbQueries";
 import convertUserDefinedFiltersToMatchExpression from "./convertUserDefinedFiltersToMatchExpression";

@@ -1,5 +1,5 @@
 import MongoDbFilter from "../../../mongodb/MongoDbFilter";
-import SqlFilter from "../../expressions/SqlFilter";
+import SqlFilter from "../../filters/SqlFilter";
 import UserDefinedFilter from "../../../../types/userdefinedfilters/UserDefinedFilter";
 import { PromiseErrorOr } from "../../../../types/PromiseErrorOr";
 import convertFilterObjectToSqlEquals from "../dql/utils/convertFilterObjectToSqlEquals";

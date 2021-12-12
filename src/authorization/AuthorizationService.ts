@@ -4,7 +4,8 @@ import { DataStore } from "../datastore/DataStore";
 import NullDataStore from "../datastore/NullDataStore";
 
 export default abstract class AuthorizationService extends BaseService {
-  protected constructor(
+  // noinspection TypeScriptAbstractClassConstructorCanBeMadeProtected
+  constructor(
     errorNameToErrorDefinitionMap: ErrorNameToErrorDefinitionMap = {},
     dataStore: DataStore = new NullDataStore()
   ) {

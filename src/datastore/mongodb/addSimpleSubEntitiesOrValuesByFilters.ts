@@ -11,7 +11,7 @@ import typePropertyAnnotationContainer from '../../decorators/typeproperty/typeP
 import getClassPropertyNameToPropertyTypeNameMap from '../../metadata/getClassPropertyNameToPropertyTypeNameMap';
 import { HttpStatusCodes } from '../../constants/constants';
 import MongoDbFilter from './MongoDbFilter';
-import SqlFilter from '../sql/expressions/SqlFilter';
+import SqlFilter from '../sql/filters/SqlFilter';
 import UserDefinedFilter from '../../types/userdefinedfilters/UserDefinedFilter';
 import convertFilterObjectToMongoDbQueries from './convertFilterObjectToMongoDbQueries';
 import getRootOperations from './getRootOperations';

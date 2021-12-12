@@ -1,4 +1,4 @@
-import SqlFilter from './sql/expressions/SqlFilter';
+import SqlFilter from './sql/filters/SqlFilter';
 import { DataStore, Field, Many, One, QueryFilters } from './DataStore';
 import createEntity from './sql/operations/dml/createEntity';
 import getEntitiesByFilters from './sql/operations/dql/getEntitiesByFilters';

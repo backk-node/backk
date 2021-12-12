@@ -25,7 +25,7 @@ import isBackkError from "../../../../errors/isBackkError";
 import { EntityPreHook } from "../../../hooks/EntityPreHook";
 import tryExecuteEntityPreHooks from "../../../hooks/tryExecuteEntityPreHooks";
 import MongoDbFilter from "../../../mongodb/MongoDbFilter";
-import SqlFilter from "../../expressions/SqlFilter";
+import SqlFilter from "../../filters/SqlFilter";
 import UserDefinedFilter from "../../../../types/userdefinedfilters/UserDefinedFilter";
 import getEntityByFilters from "../dql/getEntityByFilters";
 import DefaultPostQueryOperationsImpl from "../../../../types/postqueryoperations/DefaultPostQueryOperationsImpl";

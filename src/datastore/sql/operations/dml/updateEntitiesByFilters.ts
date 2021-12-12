@@ -1,5 +1,5 @@
 import MongoDbFilter from '../../../mongodb/MongoDbFilter';
-import SqlFilter from '../../expressions/SqlFilter';
+import SqlFilter from '../../filters/SqlFilter';
 import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
 import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
 import convertFilterObjectToSqlEquals from '../dql/utils/convertFilterObjectToSqlEquals';
@@ -15,7 +15,7 @@ import getFilterValues from '../dql/utils/getFilterValues';
 import getClassPropertyNameToPropertyTypeNameMap from '../../../../metadata/getClassPropertyNameToPropertyTypeNameMap';
 import { BackkEntity } from '../../../../types/entities/BackkEntity';
 import getUserAccountIdFieldNameAndRequiredValue from '../../../utils/getUserAccountIdFieldNameAndRequiredValue';
-import SqlEquals from '../../expressions/SqlEquals';
+import SqlEqFilter from '../../filters/SqlEqFilter';
 import { RecursivePartial } from "../../../../types/RecursivePartial";
 
 // noinspection DuplicatedCode
@@ -49,7 +49,7 @@ export default async function updateEntitiesByFilters<T extends BackkEntity>(
 
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
     if (userAccountIdFieldName && userAccountId !== undefined) {
-      (filters as any).push(new SqlEquals({ [userAccountIdFieldName]: userAccountId }));
+      (filters as any).push(new SqlEqFilter({ [userAccountIdFieldName]: userAccountId }));
     }
 
     const whereClause = tryGetWhereClause(EntityClass, dataStore, '', filters as any);

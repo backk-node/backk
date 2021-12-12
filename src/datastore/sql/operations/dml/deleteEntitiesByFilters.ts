@@ -6,7 +6,7 @@ import tryStartLocalTransactionIfNeeded from '../transaction/tryStartLocalTransa
 import tryCommitLocalTransactionIfNeeded from '../transaction/tryCommitLocalTransactionIfNeeded';
 import tryRollbackLocalTransactionIfNeeded from '../transaction/tryRollbackLocalTransactionIfNeeded';
 import cleanupLocalTransactionIfNeeded from '../transaction/cleanupLocalTransactionIfNeeded';
-import SqlFilter from '../../expressions/SqlFilter';
+import SqlFilter from '../../filters/SqlFilter';
 import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
 import tryGetWhereClause from '../dql/clauses/tryGetWhereClause';
 import getFilterValues from '../dql/utils/getFilterValues';
@@ -15,7 +15,7 @@ import convertFilterObjectToSqlEquals from '../dql/utils/convertFilterObjectToSq
 import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
 import isBackkError from '../../../../errors/isBackkError';
 import getUserAccountIdFieldNameAndRequiredValue from '../../../utils/getUserAccountIdFieldNameAndRequiredValue';
-import SqlEquals from '../../expressions/SqlEquals';
+import SqlEqFilter from '../../filters/SqlEqFilter';
 
 export default async function deleteEntitiesByFilters<T extends object>(
   dataStore: AbstractSqlDataStore,
@@ -46,7 +46,7 @@ export default async function deleteEntitiesByFilters<T extends object>(
 
     const [userAccountIdFieldName, userAccountId] = getUserAccountIdFieldNameAndRequiredValue(dataStore);
     if (userAccountIdFieldName && userAccountId !== undefined) {
-      (filters as any).push(new SqlEquals({ [userAccountIdFieldName]: userAccountId }));
+      (filters as any).push(new SqlEqFilter({ [userAccountIdFieldName]: userAccountId }));
     }
 
     const whereClause = tryGetWhereClause(EntityClass, dataStore, '', filters as any);

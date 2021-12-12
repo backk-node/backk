@@ -6,7 +6,7 @@ import tryStartLocalTransactionIfNeeded from "../transaction/tryStartLocalTransa
 import tryCommitLocalTransactionIfNeeded from "../transaction/tryCommitLocalTransactionIfNeeded";
 import tryRollbackLocalTransactionIfNeeded from "../transaction/tryRollbackLocalTransactionIfNeeded";
 import cleanupLocalTransactionIfNeeded from "../transaction/cleanupLocalTransactionIfNeeded";
-import SqlFilter from "../../expressions/SqlFilter";
+import SqlFilter from "../../filters/SqlFilter";
 import UserDefinedFilter from "../../../../types/userdefinedfilters/UserDefinedFilter";
 import tryGetWhereClause from "../dql/clauses/tryGetWhereClause";
 import getFilterValues from "../dql/utils/getFilterValues";

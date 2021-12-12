@@ -1,4 +1,4 @@
-import SqlFilter from '../../../expressions/SqlFilter';
+import SqlFilter from '../../../filters/SqlFilter';
 import UserDefinedFilter from '../../../../../types/userdefinedfilters/UserDefinedFilter';
 import convertUserDefinedFilterToSqlExpression from '../utils/convertUserDefinedFilterToSqlExpression';
 import AbstractSqlDataStore from '../../../../AbstractSqlDataStore';

@@ -13,7 +13,7 @@ import { PromiseErrorOr } from '../types/PromiseErrorOr';
 import { DataStore, ArrayFieldValue, Field, Many, One, QueryFilters } from './DataStore';
 import MongoDbFilter from './mongodb/MongoDbFilter';
 import { FilterQuery } from 'mongodb';
-import SqlFilter from './sql/expressions/SqlFilter';
+import SqlFilter from './sql/filters/SqlFilter';
 import { SubEntity } from '../types/entities/SubEntity';
 import UserDefinedFilter from '../types/userdefinedfilters/UserDefinedFilter';
 import { EntityPreHook } from './hooks/EntityPreHook';

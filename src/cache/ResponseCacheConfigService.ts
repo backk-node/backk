@@ -4,7 +4,8 @@ import NullDataStore from "../datastore/NullDataStore";
 import BaseService from "../services/BaseService";
 
 export default abstract class ResponseCacheConfigService extends BaseService{
-  protected constructor(
+  // noinspection TypeScriptAbstractClassConstructorCanBeMadeProtected
+  constructor(
     errorNameToErrorDefinitionMap: ErrorNameToErrorDefinitionMap = {},
     dataStore: DataStore = new NullDataStore()
   ) {

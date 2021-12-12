@@ -1,6 +1,6 @@
 import MongoDbFilter from '../../MongoDbFilter';
 import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
-import SqlFilter from '../../../sql/expressions/SqlFilter';
+import SqlFilter from '../../../sql/filters/SqlFilter';
 import { PostQueryOperations } from '../../../../types/postqueryoperations/PostQueryOperations';
 import { PromiseErrorOr } from '../../../../types/PromiseErrorOr';
 import startDbOperation from '../../../utils/startDbOperation';

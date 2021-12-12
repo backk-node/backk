@@ -3,7 +3,7 @@ import shouldUseRandomInitializationVector from "../../../crypt/shouldUseRandomI
 import shouldEncryptValue from "../../../crypt/shouldEncryptValue";
 import encrypt from "../../../crypt/encrypt";
 
-export default class SqlEquals<T> extends SqlFilter {
+export default class SqlEqFilter<T> extends SqlFilter {
   constructor(private readonly filters: Partial<T>, subEntityPath: string = '') {
     super('', {}, subEntityPath);
   }

@@ -62,7 +62,7 @@ import removeSimpleSubEntityByIdFromEntityByFilters from './mongodb/removeSimple
 import removeSubEntities from './mongodb/removeSubEntities';
 import replaceIdStringsWithObjectIds from './mongodb/replaceIdStringsWithObjectIds';
 import tryFetchAndAssignSubEntitiesForManyToManyRelationships from './mongodb/tryFetchAndAssignSubEntitiesForManyToManyRelationships';
-import SqlFilter from './sql/expressions/SqlFilter';
+import SqlFilter from './sql/filters/SqlFilter';
 import updateDbLocalTransactionCount from './sql/operations/dql/utils/updateDbLocalTransactionCount';
 import cleanupLocalTransactionIfNeeded from './sql/operations/transaction/cleanupLocalTransactionIfNeeded';
 import tryStartLocalTransactionIfNeeded from './sql/operations/transaction/tryStartLocalTransactionIfNeeded';

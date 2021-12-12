@@ -8,7 +8,7 @@ import isEntityTypeName from "../../../../../utils/type/isEntityTypeName";
 import tryGetWhereClause from "./tryGetWhereClause";
 import tryGetSortClause from "./tryGetOrderByClause";
 import getPaginationClause from "./getPaginationClause";
-import SqlFilter from "../../../expressions/SqlFilter";
+import SqlFilter from "../../../filters/SqlFilter";
 import UserDefinedFilter from "../../../../../types/userdefinedfilters/UserDefinedFilter";
 import AbstractSqlDataStore from "../../../../AbstractSqlDataStore";
 import SortBy from "../../../../../types/postqueryoperations/SortBy";

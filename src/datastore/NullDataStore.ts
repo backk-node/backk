@@ -2,7 +2,7 @@ import { Field, Many, One } from "./DataStore";
 import { BackkEntity } from "../types/entities/BackkEntity";
 import { SubEntity } from "../types/entities/SubEntity";
 import MongoDbFilter from "./mongodb/MongoDbFilter";
-import SqlFilter from "./sql/expressions/SqlFilter";
+import SqlFilter from "./sql/filters/SqlFilter";
 import { PromiseErrorOr } from "../types/PromiseErrorOr";
 import AbstractDataStore from "./AbstractDataStore";
 

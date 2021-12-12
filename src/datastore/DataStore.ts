@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import SqlFilter from "./sql/expressions/SqlFilter";
+import SqlFilter from "./sql/filters/SqlFilter";
 import { RecursivePartial } from "../types/RecursivePartial";
 import { PreHook } from "./hooks/PreHook";
 import { BackkEntity } from "../types/entities/BackkEntity";

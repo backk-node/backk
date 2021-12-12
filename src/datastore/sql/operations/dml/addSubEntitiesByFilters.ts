@@ -27,7 +27,7 @@ import tryExecuteEntityPreHooks from '../../../hooks/tryExecuteEntityPreHooks';
 import { HttpStatusCodes } from '../../../../constants/constants';
 import findSubEntityClass from '../../../../utils/type/findSubEntityClass';
 import MongoDbFilter from '../../../mongodb/MongoDbFilter';
-import SqlFilter from '../../expressions/SqlFilter';
+import SqlFilter from '../../filters/SqlFilter';
 import UserDefinedFilter from '../../../../types/userdefinedfilters/UserDefinedFilter';
 import getEntityByFilters from '../dql/getEntityByFilters';
 import { One } from '../../../DataStore';

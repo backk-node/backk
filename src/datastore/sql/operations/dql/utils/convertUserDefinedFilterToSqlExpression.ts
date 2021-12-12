@@ -1,6 +1,6 @@
 import UserDefinedFilter from '../../../../../types/userdefinedfilters/UserDefinedFilter';
-import SqlInFilter from '../../../expressions/SqlInFilter';
-import SqlNotInFilter from '../../../expressions/SqlNotInFilter';
+import SqlInFilter from '../../../filters/SqlInFilter';
+import SqlNotInFilter from '../../../filters/SqlNotInFilter';
 
 export default function convertUserDefinedFilterToSqlExpression(
   { subEntityPath, fieldName, fieldFunction, operator, value, orFilters }: UserDefinedFilter,

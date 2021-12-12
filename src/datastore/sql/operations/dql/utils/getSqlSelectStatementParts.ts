@@ -1,6 +1,6 @@
 import AbstractSqlDataStore from '../../../../AbstractSqlDataStore';
 import { PostQueryOperations } from '../../../../../types/postqueryoperations/PostQueryOperations';
-import SqlFilter from '../../../expressions/SqlFilter';
+import SqlFilter from '../../../filters/SqlFilter';
 import tryGetProjection from '../clauses/tryGetProjection';
 import getJoinClauses from '../clauses/getJoinClauses';
 import tryGetWhereClause from '../clauses/tryGetWhereClause';

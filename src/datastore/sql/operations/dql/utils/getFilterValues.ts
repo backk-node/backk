@@ -1,7 +1,7 @@
-import SqlFilter from '../../../expressions/SqlFilter';
+import SqlFilter from '../../../filters/SqlFilter';
 import UserDefinedFilter from '../../../../../types/userdefinedfilters/UserDefinedFilter';
-import SqlInFilter from '../../../expressions/SqlInFilter';
-import SqlNotInFilter from '../../../expressions/SqlNotInFilter';
+import SqlInFilter from '../../../filters/SqlInFilter';
+import SqlNotInFilter from '../../../filters/SqlNotInFilter';
 
 function getUserDefinedFilterValues(
   filters: (SqlFilter | UserDefinedFilter)[],

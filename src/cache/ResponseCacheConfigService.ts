@@ -1,17 +1,4 @@
-import { ErrorNameToErrorDefinitionMap } from "../types/ErrorDefinition";
-import { DataStore } from "../datastore/DataStore";
-import NullDataStore from "../datastore/NullDataStore";
-import BaseService from "../services/BaseService";
-
-export default abstract class ResponseCacheConfigService extends BaseService{
-  // noinspection TypeScriptAbstractClassConstructorCanBeMadeProtected
-  constructor(
-    errorNameToErrorDefinitionMap: ErrorNameToErrorDefinitionMap = {},
-    dataStore: DataStore = new NullDataStore()
-  ) {
-    super(errorNameToErrorDefinitionMap, dataStore);
-  }
-
+export default abstract class ResponseCacheConfigService {
   abstract shouldCacheServiceFunctionCallResponse(
     serviceFunctionName: string,
     serviceFunctionArgument: object

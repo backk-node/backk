@@ -1,17 +1,5 @@
-import { DataStore } from '../../../datastore/DataStore';
-import NullDataStore from '../../../datastore/NullDataStore';
-import BaseService from '../../../services/BaseService';
-import { ErrorNameToErrorDefinitionMap } from '../../../types/ErrorDefinition';
-import { AuditLogEntry } from './AuditLogEntry';
+import { AuditLogEntry } from "./AuditLogEntry";
 
-export default abstract class AuditLoggingService extends BaseService {
-  // noinspection TypeScriptAbstractClassConstructorCanBeMadeProtected
-  constructor(
-    errorNameToErrorDefinitionMap: ErrorNameToErrorDefinitionMap = {},
-    dataStore: DataStore = new NullDataStore()
-  ) {
-    super(errorNameToErrorDefinitionMap, dataStore);
-  }
-
+export default abstract class AuditLoggingService{
   abstract log(auditLogEntry: AuditLogEntry): Promise<void>;
 }

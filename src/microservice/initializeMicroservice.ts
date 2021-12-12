@@ -20,6 +20,13 @@ import decapitalizeFirstLetter from '../utils/string/decapitalizeFirstLetter';
 import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
 import setClassPropertyValidationDecorators from '../validation/setClassPropertyValidationDecorators';
 import setNestedTypeValidationDecorators from '../validation/setNestedTypeValidationDecorators';
+import AuditLoggingService from "../observability/logging/audit/AuditLoggingService";
+import LivenessCheckService from "../services/LivenessCheckService";
+import CaptchaVerificationService from "../captcha/CaptchaVerificationService";
+import StartupCheckService from "../services/startup/StartupCheckService";
+import ReadinessCheckService from "../services/ReadinessCheckService";
+import AuthorizationService from "../authorization/AuthorizationService";
+import ResponseCacheConfigService from "../cache/ResponseCacheConfigService";
 
 function addNestedTypes(privateTypeNames: Set<string>, typeName: string, types: { [p: string]: object }) {
   Object.values(types[typeName] ?? {}).forEach((typeName) => {
@@ -325,7 +332,17 @@ export default async function initializeMicroservice(
   remoteServiceRootDir = ''
 ) {
   Object.entries(microservice).forEach(([serviceName, service]: [string, any]) => {
-    if (serviceName.endsWith('Service') && !(service instanceof BaseService)) {
+    if (
+      serviceName.endsWith('Service') &&
+      !(service instanceof BaseService) &&
+      !(service instanceof AuditLoggingService) &&
+      !(service instanceof CaptchaVerificationService) &&
+      !(service instanceof LivenessCheckService) &&
+      !(service instanceof ReadinessCheckService) &&
+      !(service instanceof StartupCheckService) &&
+      !(service instanceof ResponseCacheConfigService) &&
+      !(service instanceof AuthorizationService)
+    )  {
       throw new Error(
         "Class '" + service.constructor.name + "' must extend from 'BaseService' or 'CrudResourceService'"
       );

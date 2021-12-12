@@ -664,14 +664,10 @@ P
  src/microservice/Microservice.ts,b/2/b203b2517f9ead474bfd9ed8b4aa05bb628a6597
 X
 (src/execution/tryExecuteServiceMethod.ts,a/3/a3a819ae1b09ff11116e6c75731dfd3ccfee00ec
-f
-6src/observability/logging/audit/createAuditLogEntry.ts,9/3/93ee41cdce181e9e3b24f2cec0e1636fca8d4985
 U
 %src/observability/logging/LogEntry.ts,a/9/a93b3af0cb6589aa5394a488f147fc1ef3d4c75f
 `
 0src/observability/logging/audit/AuditLogEntry.ts,5/6/56543d47b33540c49f8646fc49d968b70cba4a86
-I
-docs/api/BASE_SERVICES.MD,3/3/33d3d9570e36ce5015d1d2f15ee752b88474a3f3
 L
 src/types/ErrorDefinition.ts,b/d/bdddc5a4ea19c1d1a503ef76b0bc3261f648deba
 V

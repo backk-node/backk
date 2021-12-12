@@ -99,14 +99,14 @@ import { HttpStatusCodes } from 'backk';
 
 export const orderServiceErrors = {
   cannotRemoveDeliveredOrderItem: {
-    statusCode: HttpStatusCodes.BAD_REQUEST,
     errorCode: 1,
     message: 'Cannot remove delivered order item',
+    statusCode: HttpStatusCodes.BAD_REQUEST
   },
   invalidOrderItemCurrentState: {
-    statusCode: HttpStatusCodes.BAD_REQUEST,
     errorCode: 2,
     message: 'Cannot update order item state due to invalid current state',
+    statusCode: HttpStatusCodes.BAD_REQUEST
   }
 }
 ```
@@ -150,13 +150,6 @@ should use `JwtAuthorizationServiceImpl` class for your authorization service (s
 
 ```typescript
 export default abstract class AuthorizationService {
-  protected constructor(
-    errorNameToErrorDefinitionMap: ErrorNameToErrorDefinitionMap = {},
-    dataStore: DataStore = new NullDataStore()
-  ) {
-    super(errorNameToErrorDefinitionMap, dataStore);
-  }
-  
   abstract hasUserRoleIn(roles: string[], authHeader: string | string[] | undefined): Promise<boolean>;
   abstract getSubject(authHeader: string | string[] | undefined): Promise<string | undefined>;
 }
@@ -213,13 +206,6 @@ For security reasons, each microservice should have its own Redis cache instance
 
 ```typescript
 export default abstract class ResponseCacheConfigService {
-  protected constructor(
-    errorNameToErrorDefinitionMap: ErrorNameToErrorDefinitionMap = {},
-    dataStore: DataStore = new NullDataStore()
-  ) {
-    super(errorNameToErrorDefinitionMap, dataStore);
-  }
-  
   abstract shouldCacheServiceFunctionCallResponse(serviceFunctionName: string, serviceFunctionArgument: object): boolean;
   abstract getCachingDurationInSecs(serviceFunctionName: string, serviceFunctionArgument: object): number;
 }
@@ -254,13 +240,6 @@ Verifies captcha sent in service function call argument in `captchaToken` proper
 
 ```typescript
 export default abstract class CaptchaVerificationService {
-  protected constructor(
-    errorNameToErrorDefinitionMap: ErrorNameToErrorDefinitionMap = {},
-    dataStore: DataStore = new NullDataStore()
-  ) {
-    super(errorNameToErrorDefinitionMap, dataStore);
-  }
-  
   abstract verifyCaptcha(captchaToken: string): Promise<boolean>;
 }
 ```
@@ -417,13 +396,6 @@ This service is called to log requests made to the microservice.
 
 ```typescript
 export default abstract class AuditLoggingService {
-  protected constructor(
-    errorNameToErrorDefinitionMap: ErrorNameToErrorDefinitionMap = {},
-    dataStore: DataStore = new NullDataStore()
-  ) {
-    super(errorNameToErrorDefinitionMap, dataStore);
-  }
-  
   abstract log(auditLogEntry: AuditLogEntry): Promise<void>;
 }
 

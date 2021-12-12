@@ -266,8 +266,6 @@ a
 .src/scheduling/scheduleCronJobsForExecution.ts,0/7/07d0700ee09268cdb174c1505e3f60caf50c2b30
 R
 "src/client/generateClients.spec.ts,a/6/a6fecbc0f79bc3f56abb07935443fc7a2856df5c
-n
->src/decorators/typeproperty/typePropertyAnnotationContainer.ts,c/8/c810282510d9ae8ef1f187c69f3bc3db0d6976fb
 Z
 *src/scheduling/scheduleJobsForExecution.ts,2/f/2f68d5f99daa43c58dc30d5ddcb2f3bb7858f8da
 ê
@@ -544,8 +542,6 @@ Q
 !src/authorization/tryAuthorize.ts,a/c/acee2d5666d8396aede63fb00bbb02229cbebd33
 T
 $src/captcha/tryVerifyCaptchaToken.ts,0/1/01924b9e13752dcff18aa377120566e01d3e2959
-[
-+src/services/startup/StartupCheckService.ts,5/6/5654861c9a9b9770edae3756116107b2d82a678b
 T
 $src/services/LivenessCheckService.ts,7/1/71ba80695e96c2ea83c502bbb99d37751d7135bf
 J
@@ -558,8 +554,6 @@ k
 ;src/errors/createBackkErrorFromErrorMessageAndStatusCode.ts,3/f/3f91cbf61f981da36b338ef6e33082fa2bd42f99
 J
 src/errors/BACKK_ERRORS.ts,6/4/64e3477056196aae3c3a3b96d1c524968ad619fd
-f
-6src/services/startup/DefaultStartupCheckServiceImpl.ts,a/b/abdb7f22fa7b7aa4de48bcbd4195a326d91ce82e
 U
 %src/services/ReadinessCheckService.ts,a/c/aca76d51d139ac7a3a39bedf668ebb966286244a
 Y

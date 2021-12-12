@@ -383,17 +383,28 @@ export default async function initializeMicroservice(
       );
     }
 
-    let expectedServiceName = decapitalizeFirstLetter(service.constructor.name);
+    const expectedServiceNames = [];
+    expectedServiceNames[0] = decapitalizeFirstLetter(service.constructor.name);
     if (service.constructor.name.endsWith('Impl')) {
-      expectedServiceName = expectedServiceName.slice(0, -4);
+      expectedServiceNames[0] = expectedServiceNames[0].slice(0, -4);
     }
 
-    if (serviceName !== expectedServiceName) {
+    let proto = Object.getPrototypeOf(service);
+    while (proto !== Object.prototype && proto.constructor.name !== 'BaseService' && proto.constructor.name !== 'CrudEntityService') {
+      let expectedServiceName = proto.constructor.name;
+      if (service.constructor.name.endsWith('Impl')) {
+        expectedServiceName = expectedServiceName.slice(0, -4);
+      }
+      expectedServiceNames.push(expectedServiceName);
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    if (!expectedServiceNames.includes(serviceName)) {
       throw new Error(
         "Microservice implementation class property '" +
           serviceName +
-          "' should be '" +
-          expectedServiceName +
+          "' should be one of following: '" +
+          expectedServiceNames.join(',') +
           "'"
       );
     }

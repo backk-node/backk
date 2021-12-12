@@ -1,15 +1,15 @@
 import { HttpStatusCodes } from '../constants/constants';
-import { BackkError, backkErrorSymbol } from '../types/BackkError';
+import { BackkError } from '../types/BackkError';
 
 export default class BackkResponse {
   private statusCode: number = HttpStatusCodes.INTERNAL_SERVER_ERROR;
   private response: object | null | undefined = {};
 
   setHeader() {
-
+    // No operation
   }
 
-  writeHead(statusCode: number, headers?: any) {
+  writeHead(statusCode: number) {
     this.statusCode = statusCode;
   }
 
@@ -28,7 +28,6 @@ export default class BackkResponse {
   getErrorResponse(): BackkError | null {
     if (this.statusCode >= HttpStatusCodes.ERRORS_START) {
       return {
-        [backkErrorSymbol]: true,
         statusCode: this.statusCode,
         errorCode: (this.response as any).errorCode,
         stackTrace: (this.response as any).stackTrace,

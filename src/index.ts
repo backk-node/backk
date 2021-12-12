@@ -9,9 +9,9 @@ export { default as KafkaConsumer } from './requestprocessor/KafkaConsumer';
 export { default as RedisConsumer } from './requestprocessor/RedisConsumer';
 
 // Base services
-export { AuthorizationService } from './authorization/AuthorizationService';
-export { ResponseCacheConfigService } from './cache/ResponseCacheConfigService';
-export { CaptchaVerificationService } from './captcha/CaptchaVerificationService';
+export { default as AuthorizationService } from './authorization/AuthorizationService';
+export { default as ResponseCacheConfigService } from './cache/ResponseCacheConfigService';
+export { default as CaptchaVerificationService } from './captcha/CaptchaVerificationService';
 export { default as CrudEntityService } from './services/crudentity/CrudEntityService';
 export { default as StartupCheckService } from './services/startup/StartupCheckService';
 export { Service } from './services/Service';
@@ -20,7 +20,7 @@ export { default as UserBaseService } from './services/useraccount/UserBaseServi
 export { default as BaseService } from './services/BaseService';
 export { default as LivenessCheckService } from './services/LivenessCheckService';
 export { default as ReadinessCheckService } from './services/ReadinessCheckService';
-export { AuditLoggingService } from './observability/logging/audit/AuditLoggingService';
+export { default as AuditLoggingService } from './observability/logging/audit/AuditLoggingService';
 export { default as StartupCheckServiceImpl } from './services/startup/DefaultStartupCheckServiceImpl';
 export { default as JwtAuthorizationServiceImpl } from './authorization/JwtAuthorizationServiceImpl';
 export {

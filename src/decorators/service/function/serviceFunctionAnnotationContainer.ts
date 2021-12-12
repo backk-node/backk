@@ -1,8 +1,8 @@
-import { ErrorDef } from '../../../datastore/hooks/PreHook';
 import { HttpHeaders } from './ResponseHeaders';
 import { UpdateType } from './Update';
 import { PostTestSpec } from './PostTests';
 import { TestSetupSpec } from './TestSetup';
+import { ErrorDefinition } from "../../../types/ErrorDefinition";
 
 type AuditLog = {
   shouldLog: (argument: any, returnValue: any) => boolean;
@@ -18,7 +18,7 @@ class ServiceFunctionAnnotationContainer {
   private readonly serviceFunctionNameToAllowedUserRolesMap: { [key: string]: string[] } = {};
   private readonly serviceFunctionNameToDocStringMap: { [key: string]: string } = {};
   private readonly serviceFunctionNameToAllowedForTestsMap: { [key: string]: boolean } = {};
-  private readonly serviceFunctionNameToErrorsMap: { [key: string]: ErrorDef[] } = {};
+  private readonly serviceFunctionNameToErrorsMap: { [key: string]: ErrorDefinition[] } = {};
   private readonly serviceFunctionNameToIsNotTransactionalMap: { [key: string]: boolean } = {};
   private readonly serviceFunctionNameToIsNotDistributedTransactionalMap: { [key: string]: boolean } = {};
   private readonly serviceFunctionNameToCronScheduleMap: { [key: string]: string } = {};
@@ -96,7 +96,7 @@ class ServiceFunctionAnnotationContainer {
     this.serviceFunctionNameToAllowedForTestsMap[`${serviceClass.name}${functionName}`] = true;
   }
 
-  addErrorsForServiceFunction(serviceClass: Function, functionName: string, errors: ErrorDef[]) {
+  addErrorsForServiceFunction(serviceClass: Function, functionName: string, errors: ErrorDefinition[]) {
     this.serviceFunctionNameToErrorsMap[`${serviceClass.name}${functionName}`] = errors;
   }
 

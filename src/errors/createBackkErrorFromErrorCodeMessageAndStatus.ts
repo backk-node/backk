@@ -1,9 +1,9 @@
-import { ErrorDef } from '../datastore/hooks/PreHook';
 import createBackkErrorFromError from './createBackkErrorFromError';
 import { HttpStatusCodes } from '../constants/constants';
+import { ErrorDefinition } from "../types/ErrorDefinition";
 
 export default function createBackkErrorFromErrorCodeMessageAndStatus(
-  errorCodeMessageAndStatus: ErrorDef
+  errorCodeMessageAndStatus: ErrorDefinition
 ) {
   return createBackkErrorFromError(
     new Error(

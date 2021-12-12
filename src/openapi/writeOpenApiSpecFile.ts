@@ -1,20 +1,22 @@
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import YAML from 'yaml';
-import { HttpStatusCodes } from '../constants/constants';
-import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
-import { BACKK_ERRORS } from '../errors/BACKK_ERRORS';
-import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
-import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
-import getServiceFunctionExampleReturnValue from '../postman/getServiceFunctionExampleReturnValue';
-import getServiceFunctionTestArgument from '../postman/getServiceFunctionTestArgument';
-import isCreateFunction from '../services/crudentity/utils/isCreateFunction';
-import isReadFunction from '../services/crudentity/utils/isReadFunction';
-import isUpdateFunction from '../services/crudentity/utils/isUpdateFunction';
-import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
-import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
+import { existsSync, mkdirSync, writeFileSync } from "fs";
+import YAML from "yaml";
+import { HttpStatusCodes } from "../constants/constants";
+import serviceFunctionAnnotationContainer
+  from "../decorators/service/function/serviceFunctionAnnotationContainer";
+import { BACKK_ERRORS } from "../errors/BACKK_ERRORS";
+import { FunctionMetadata } from "../metadata/types/FunctionMetadata";
+import { ServiceMetadata } from "../metadata/types/ServiceMetadata";
+import getServiceFunctionExampleReturnValue from "../postman/getServiceFunctionExampleReturnValue";
+import getServiceFunctionTestArgument from "../postman/getServiceFunctionTestArgument";
+import isCreateFunction from "../services/crudentity/utils/isCreateFunction";
+import isReadFunction from "../services/crudentity/utils/isReadFunction";
+import isUpdateFunction from "../services/crudentity/utils/isUpdateFunction";
+import getNamespacedMicroserviceName from "../utils/getNamespacedMicroserviceName";
+import getTypeInfoForTypeName from "../utils/type/getTypeInfoForTypeName";
+import { ErrorDefinition } from "../types/ErrorDefinition";
 import { BackkError } from "../types/BackkError";
 
-function getErrorContent(error: BackkError) {
+function getErrorContent(error: ErrorDefinition | BackkError) {
   return {
     content: {
       'application/json': {

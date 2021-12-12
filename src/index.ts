@@ -142,7 +142,7 @@ export * from './datastore/hooks/EntitiesPostHook';
 export { EntityPreHook } from './datastore/hooks/EntityPreHook';
 export * from './datastore/hooks/PostHook';
 export * from './datastore/hooks/PreHook';
-export { default as SqlEquals } from './datastore/sql/filters/SqlEqFilter';
+export { default as SqlEqFilter } from './datastore/sql/filters/SqlEqFilter';
 export { default as SqlFilter } from './datastore/sql/filters/SqlFilter';
 export { default as SqlInFilter } from './datastore/sql/filters/SqlInFilter';
 export { default as SqlNotInFilter } from './datastore/sql/filters/SqlNotInFilter';

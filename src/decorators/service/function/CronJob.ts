@@ -1,6 +1,6 @@
 import serviceFunctionAnnotationContainer from './serviceFunctionAnnotationContainer';
 import defaultRetryIntervals from '../../../scheduling/defaultRetryIntervals';
-import { DayOfWeek } from 'src/decorators/typeproperty/datetime/IsDayOfWeekBetween';
+import { DayOfWeek } from "../../typeproperty/datetime/IsDayOfWeekBetween";
 
 export type Range = {
   start: number;

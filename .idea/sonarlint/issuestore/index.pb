@@ -566,8 +566,6 @@ Y
 )src/decorators/service/function/Update.ts,f/b/fbac1f5f3bfe8376906475aafd65211d321c7ed8
 j
 :src/decorators/typeproperty/datetime/IsDayOfWeekBetween.ts,7/7/7703957bb8211b62db97cf17dbcb65ac75150b06
-Z
-*src/decorators/service/function/CronJob.ts,a/8/a88bb6510ffce012c9290828e536a4fcac1de31e
 d
 4src/decorators/typeproperty/ShouldBeTrueForObject.ts,9/5/95d4ec8d2c61210883e6c6323ff8501debdfbfa6
 Q

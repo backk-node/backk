@@ -201,11 +201,11 @@ SalesItemServiceImpl.spec.ts
 
 ```ts
 import { NullDataStore } from 'backk';
-import SalesItemService from './SalesItemService';
+import SalesItemServiceImpl from './SalesItemServiceImpl';
 import SalesItem from './types/entities/SalesItem';
 
 const dataStore = new NullDataStore();
-const salesItemService = new SalesItemService(dataStore);
+const salesItemService = new SalesItemServiceImpl(dataStore);
 
 describe('SalesItemService', () => {
   describe('deleteAllEntities', () => {
@@ -225,6 +225,9 @@ describe('SalesItemService', () => {
   });
 });
 ```
+
+`NullDataStore` should be used in unit tests, because we don't want to make real database operations.
+In `dataStore` object, we mock the `deleteAllEntities<T>(EntityClass: new () => T): PromiseErrorOr<null>` method to return promise of `[null, null]` (successful operation)
 
 Let's test our unit test by executing:
 

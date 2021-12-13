@@ -3,6 +3,18 @@
 Here we are going to build a Backk microservice for handling sales items to showcase main Backk features.
 For getting your Backk development environment set up, please complete the [Prerequisites](../PREREQUISITES.MD) and then follow instructions in [Get Started](../GET_STARTED.MD) section to complete the development environment setup.
 
+### Glossary
+
+| Term                          | Definition                                                                                                                                                                                                                              |
+|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+ | Entity                        | A Class that defines a table structure in database for storing entities. Entity instances can be given as service function arguments and returned from service functions                                                                |   
+| Microservice                  | Node.js Backk application running in pods in Kubernetes                                                                                                                                                                                 |
+| Microservice namespace        | Kubernetes namespace where microservice is running                                                                                                                                                                                      |
+| Service                       | A constituent of Backk microservice. Backk microservice consists of one or more services. Service consist of an interface and at least one implementation class. For example: SalesItemService interface and SalesItemServiceImpl class |
+| Service function              | A method in a service class. Service functions can be called by Backk clients. Service function is called by its name: <service-name>.<function-name>. For example: salesItemService.createSalesItem                                    |
+ | Service function argument     | An instance of JavaScript class that is given as argument to a service function. When client calls a service function over HTTP, argument is given in HTTP request body in JSON                                                         |    
+ | Service function return value | Should be of type `PromiseErrorOr<T>`, where T can be `null` or Javascript object. When clients calls a service function over HTTP, return values (if not `null`) is returned in HTTP response body in JSON                             |
+
 ### Create Your First Service
 
 Backk microservice consist of one or more services. You should place your services under `src/services` directory in the Backk microservice project.
@@ -13,7 +25,7 @@ Let's create a `SalesItemService` service for handling sales items. The service 
 `src/services/salesitem` directory in Backk microservice project. First, you create a service inteface extending `Service` interface.
 Second, you create a class to implement the interface. Your class should extend from [BaseService](../api/BASE_SERVICES.MD#baseservice)
 or [CrudEntityService](../api/BASE_SERVICES.MD#crudentityservice). In this case, when we are performing CRUD operations on a resource (or entity) it is natural
-to use `CrudEntityService` as base service implementation. 
+to use `CrudEntityService` as base service implementation.
 
 In the `SalesItemService` interface, we write the service functions that we want to later implement.
 Each service function can have either zero or exactly one argument, and the argument must be of JavaScript class type.
@@ -35,7 +47,7 @@ type BackkError = {
   message: string;
   errorCode?: string;
   stackTrace?: string;
-}
+};
 
 type Many<T> = {
   metadata: {
@@ -57,12 +69,13 @@ type One<T> = {
 If you want, your service function can return custom metadata by adding custom properties to `metadata` object of `One<T>` and `Many<T>`.
 
 Backk generates automatically integration tests for your service. If you want to benefit from them, it is important in which order, you
-define the service functions. They should be defined in order in which they should be tested. 
+define the service functions. They should be defined in order in which they should be tested.
 
 In `src/services/salesitem` directory,
 create an `SalesItemService` interface for your service by extending the `Service` interface:
 
 SalesItemService.ts
+
 ```ts
 import { _Id, Many, One, PromiseErrorOr, Service } from 'backk';
 import GetSalesItemsArg from './types/args/GetSalesItemsArg';
@@ -83,12 +96,12 @@ class in `src/services/salesitem` directory. Our implementation class should ext
 it should also implement the interface you just created.
 
 SalesItemServiceImpl.ts
+
 ```ts
 import { CrudEntityService } from 'backk';
 import SalesItemService from './SalesItemService';
 
-export default class SalesItemServiceImpl extends CrudEntityService implements SalesItemService {
-}
+export default class SalesItemServiceImpl extends CrudEntityService implements SalesItemService {}
 ```
 
 Add your service to `microservice.ts`:
@@ -102,7 +115,9 @@ class MicroserviceImpl extends Microservice {
 ```
 
 ### Create service constructor
+
 SalesItemServiceImpl.ts
+
 ```ts
 import { CrudEntityService, DataStore } from 'backk';
 import SalesItemService from './SalesItemService';
@@ -122,14 +137,17 @@ If you service requires multiple data store, your service is not probably a micr
 your service into smaller pieces, so that each microservice requires only one data store to operate on.
 
 For the `CrudEntityService` class constructor, you need to give two parameters:
+
 - map of error definitions (or an empty object if the service does not raise any errors specific to business logic in your service functions)
 - dataStore
 
 ### Create Sales Item entity
+
 We need to create the Sales item entity class so that we can use it in our sales item service implementation.
 Let's create `SalesItem` class in directory `src/services/salesitem/types/entities`:
 
 SalesItem.ts
+
 ```ts
 import { _Id, Entity, IsAscii, IsFloat, ReadWrite } from 'backk';
 
@@ -139,7 +157,7 @@ export default class SalesItem extends _Id {
   @Length(1, 128)
   @ReadWrite()
   name!: string;
-  
+
   @IsFloat()
   @MinMax(0, Number.MAX_VALUE)
   @ReadWrite()
@@ -154,20 +172,21 @@ the table in the database.
 For each property in the entity class, you need define a validator or validators. For `string` type properties,
 you need to define a string validator, for example `@IsAcii()`. If you accept any string value, you should annotate
 the string property with `@IsAnyString()` decorator. Additionally, you need to define what is the maximum length of
-accepted string. You can use `@MaxLength()` or `@Length()` decorator. The latter of which also defines the minimum length of 
+accepted string. You can use `@MaxLength()` or `@Length()` decorator. The latter of which also defines the minimum length of
 the string. Limiting the maximum length of the string is crucial to prevent possible DoS (Denial of Service) attacks.
 
 For number type properties, you must define one of following:
 `@IsInt()`, `@IsFloat` or `@IsBigInt()`. In addition to that, you need to define the allowed range of values with
 `@MinMax()` decorator. If some needed validators is missing, Backk will throw an exception.
 
-For each property you must define the access mode of the property. The access mode defines the visibility of the 
+For each property you must define the access mode of the property. The access mode defines the visibility of the
 property to the clients of the microservice. The following access mode decorators are available:
-- `@Private()`    
-- `@ReadWrite()`  
-- `@ReadOnly()`   
+
+- `@Private()`
+- `@ReadWrite()`
+- `@ReadOnly()`
 - `@ReadUpdate()`
-- `@WriteOnly()`  
+- `@WriteOnly()`
 - `@CreateOnly()`
 - `@UpdateOnly()`
 
@@ -182,6 +201,7 @@ configured for unit testing with Jest.
 First we will write our spec file to specify the functionality of the `deleteAllEntities` method:
 
 SalesItemServiceImpl.spec.ts
+
 ```ts
 import { NullDataStore } from 'backk';
 import SalesItemService from './SalesItemService';
@@ -195,21 +215,22 @@ describe('SalesItemService', () => {
     it('should call the data store´s deleteAllEntities method once with SalesItem entity class as parameter and return null as result without an error', async () => {
       // GIVEN
       dataStore.deleteAllEntities = jest.fn().mockReturnValue(Promise.resolve([null, null]));
-      
+
       // WHEN
       const [result, error] = await salesItemService.deleteAllEntities();
-      
+
       // THEN
       expect(dataStore.deleteAllEntities).toHaveBeenCalledTimes(1);
       expect(dataStore.deleteAllEntities).toHaveBeenCalledWith(SalesItem);
       expect(result).toBeNull();
       expect(error).toBeNull();
-    })
-  })
-})
+    });
+  });
+});
 ```
 
 Let's test our unit test by executing:
+
 ```bash
 npm test
 ```
@@ -218,6 +239,7 @@ Test will fail because we haven't implemented the `deleteAllEntities` function i
 Let´s implement the function:
 
 SalesItemServiceImpl.ts
+
 ```ts
 import { AllowForTests, CrudEntityService, PromiseErrorOr } from 'backk';
 import SalesItemService from './SalesItemService';
@@ -239,6 +261,7 @@ For the above service function, we use `@AllowForTests` decorator to indicate th
 can only be accessed when executing tests, it cannot be accessed by any clients at all.
 
 There are following possible authorization decorators available for use:
+
 - `@AllowForEveryUser()`
 - `@AllowForEveryUserForOwnResources()`
 - `@AllowForUserRoles(roles: string[])`
@@ -249,6 +272,7 @@ There are following possible authorization decorators available for use:
 ### Implement createSalesItem
 
 SalesItemService.spec.ts
+
 ```ts
 describe('SalesItemService', () => {
   describe('createSalesItem', () => {
@@ -256,25 +280,26 @@ describe('SalesItemService', () => {
       // GIVEN
       const salesItem = {
         name: 'Sales item 1',
-        price: 50
+        price: 50,
       };
-      
+
       dataStore.createEntity = jest.fn().mockReturnValue(Promise.resolve([salesItem, null]));
-      
+
       // WHEN
       const [createdSalesItem, error] = await salesItemService.createSalesItem(salesItem);
-      
+
       // THEN
       expect(dataStore.createEntity).toHaveBeenCalledTimes(1);
       expect(dataStore.createEntity).toHaveBeenCalledWith(SalesItem, salesItem);
       expect(createdSalesItem).toBe(salesItem);
       expect(error).toBeNull();
-    })
-  })
-})
+    });
+  });
+});
 ```
 
 SalesItemServiceImpl.ts
+
 ```ts
 import { AllowForUserRoles, CrudEntityService, PromiseErrorOr } from 'backk';
 import SalesItemService from './SalesItemService';
@@ -303,7 +328,7 @@ export default class SalesItemServiceImpl extends CrudEntityService implements S
   @AllowForEveryUser()
   getSalesItems({ nameSubString }: GetSalesItemsArg): PromiseErrorOr<Many<SalesItem>> {
     const filter = new SqlExpression('name LIKE :nameSubString', {
-      nameSubString: nameSubString ? `%${nameSubString}%` : undefined
+      nameSubString: nameSubString ? `%${nameSubString}%` : undefined,
     });
     const postQueryOperations = new DefaultPostQueryOperations();
     return this.dataStore.getEntitiesByFilters(SalesItem, [filter], postQueryOperations, false);
@@ -337,14 +362,14 @@ or your own class (which can extend from `DefaultPostQueryOperations`, for examp
 ```ts
 class DefaultPostQueryOperations implements PostQueryOperations {
   constructor(pageNumber: number = 1, pageSize: number = 50) {
-    this.paginations = [new Pagination('*', 1, pageSize)]
+    this.paginations = [new Pagination('*', 1, pageSize)];
   }
-  
+
   includeResponseFields?: string[] = [];
   excludeResponseFields?: string[] = [];
   sortBys: SortBy[] = [new SortBy('*', '_id', 'ASC'), new SortBy('*', 'id', 'ASC')];
   paginations: Pagination[];
-  currentPageTokens: CurrentPageToken[] = []
+  currentPageTokens: CurrentPageToken[] = [];
 }
 ```
 
@@ -363,11 +388,11 @@ export default class SalesItemServiceImpl extends CrudEntityService implements S
   getSalesItem({ _id }: _Id): PromiseErrorOr<One<SalesItem>> {
     return this.dataStore.getEntityById(SalesItem, _id);
   }
-  
+
   updateSalesItem(salesItem: SalesItem): PromiseErrorOr<null> {
-    return this.dataStore.updateEntity(SalesItem, salesItem);  
+    return this.dataStore.updateEntity(SalesItem, salesItem);
   }
-  
+
   deleteSalesItem({ _id }: _Id): PromiseErrorOr<null> {
     return this.dataStore.deleteEntityById(SalesItem, _id);
   }
@@ -377,6 +402,7 @@ export default class SalesItemServiceImpl extends CrudEntityService implements S
 ### Run Integration Tests with Postman
 
 Start your created Backk microservice:
+
 ```bash
 npm run start:dev
 ```
@@ -385,6 +411,7 @@ Wait your microservice to start. Launch Postman and in Postman import following 
 file to Postman. Now you can run the tests in the Postman collection in Postman.
 
 You can also run integrations test from the command line:
+
 ```bash
 npm run integrationtest:dev
 ```

@@ -1,4 +1,4 @@
-## Accessing Remote Services
+## Accessing Remote Microservices
 
 - [Accessing Remote Services Synchronously](#synchronous)
   - [Declarative Fetch of Sub-Entities From Backk Remote Services](#fetchfromremoteservice)

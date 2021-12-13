@@ -352,13 +352,13 @@ export default class GetSalesItemsArg {
 For data store's `getEntitiesByFilters` you need to supply `postQueryOperations`.
 They are needed and used to define what response fields are wanted, how returned entities are sorted and paginated.
 
-In this example, we are using the default post query operations provided by the class `DefaultPostQueryOperations`.
+In this example, we are using the default post query operations provided by the class `DefaultPostQueryOperationsImpl`.
 You can provide an instance of your own class matching the `PostQueryOperations` interface, or you can get this
-information from client. In the example above, one way to get that information from client is to extend the `GetSalesItemsArg` class from `DefaultPostQueryOperations`
-or your own class (which can extend from `DefaultPostQueryOperations`, for example).
+information from the client. In the example above, one way to get that information from client is that `GetSalesItemsArg` class extends from `DefaultPostQueryOperationsImpl`
+or your own class (which can extend from `DefaultPostQueryOperationsImpl`, for example).
 
 ```ts
-class DefaultPostQueryOperations implements PostQueryOperations {
+class DefaultPostQueryOperationsImpl implements PostQueryOperations {
   constructor(pageNumber: number = 1, pageSize: number = 50) {
     this.paginations = [new Pagination('*', 1, pageSize)];
   }
@@ -371,9 +371,9 @@ class DefaultPostQueryOperations implements PostQueryOperations {
 }
 ```
 
-Using an instance of `DefaultPostQueryOperations` will return all entity fields (this is because empty array for `includeResponseFields` means that all fields are returned)
+Using an instance of `DefaultPostQueryOperationsImpl` will return all entity fields (this is because empty array for `includeResponseFields` means that all fields are returned)
 No fields are excluded from the response and entities and their sub-entities are sorted by `_id` or `id` fields.
-The response will contain the `pageNumber` page of results with page size `pageSize` as given in arguments of the `DefaultPostQueryOperations` class constructor.
+The response will contain the `pageNumber` page (default is first page) of entities and their sub-entities with page size of `pageSize` (default is 50)
 
 ### Implement rest of the SalesItemService
 

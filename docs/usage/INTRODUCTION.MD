@@ -5,15 +5,15 @@ For getting your Backk development environment set up, please complete the [Prer
 
 ### Glossary
 
-| Term                          | Definition                                                                                                                                                                                                                              |
-|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
- | Entity                        | A Class that defines a table structure in database for storing entities. Entity instances can be given as service function arguments and returned from service functions                                                                |   
-| Microservice                  | Node.js Backk application running in pods in Kubernetes                                                                                                                                                                                 |
-| Microservice namespace        | Kubernetes namespace where microservice is running                                                                                                                                                                                      |
+| Term                          | Definition                                                                                                                                                                                                                            |
+|-------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+ | Entity                        | A Class that defines a table structure in database for storing entities. Entity instances can be given as service function arguments and returned from service functions                                                              |   
+| Microservice                  | Node.js Backk application running in pods in Kubernetes                                                                                                                                                                               |
+| Microservice namespace        | Kubernetes namespace where microservice is running                                                                                                                                                                                    |
 | Service                       | A constituent of Backk microservice. Backk microservice consists of one or more services. Service consist of an interface and at least one implementation class. For example: SalesItemService interface and SalesItemServiceImpl class |
-| Service function              | A method in a service class. Service functions can be called by Backk clients. Service function is called by its name: <service-name>.<function-name>. For example: salesItemService.createSalesItem                                    |
- | Service function argument     | An instance of JavaScript class that is given as argument to a service function. When client calls a service function over HTTP, argument is given in HTTP request body in JSON                                                         |    
- | Service function return value | Should be of type `PromiseErrorOr<T>`, where T can be `null` or Javascript object. When clients calls a service function over HTTP, return values (if not `null`) is returned in HTTP response body in JSON                             |
+| Service function              | A method in a service class. Service functions can be called by Backk clients. Service function is called by its name: `service-name.function-name`. For example: salesItemService.createSalesItem                                    |
+ | Service function argument     | An instance of JavaScript class that is given as argument to a service function. When client calls a service function over HTTP, argument is given in HTTP request body in JSON                                                       |    
+ | Service function return value | Should be of type `PromiseErrorOr<T>`, where T can be `null` or Javascript object. When clients calls a service function over HTTP, return values (if not `null`) is returned in HTTP response body in JSON                           |
 
 ### Create Your First Service
 
@@ -22,7 +22,7 @@ It is recommended to have a dedicated directory for each service. If multiple se
 should be placed in a separate shared directory, for example `src/services/common` or `src/services/shared`.
 
 Let's create a `SalesItemService` service for handling sales items. The service files should be placed in
-`src/services/salesitem` directory in Backk microservice project. First, you create a service inteface extending `Service` interface.
+`src/services/salesitem` directory in Backk microservice project. First, you create a service interface extending `Service` interface.
 Second, you create a class to implement the interface. Your class should extend from [BaseService](../api/BASE_SERVICES.MD#baseservice)
 or [CrudEntityService](../api/BASE_SERVICES.MD#crudentityservice). In this case, when we are performing CRUD operations on a resource (or entity) it is natural
 to use `CrudEntityService` as base service implementation.

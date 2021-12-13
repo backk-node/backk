@@ -34,7 +34,7 @@ Each service function should return a value of type `PromiseErrorOr<T>`. If your
 its return value should be `PromiseErrorOr<null>`. If your service function returns one entity, its return type should
 `PromiseErrorOr<One<T>>`, where `T` is type of the entity. If you service function returns multiple entities, its return
 type should `PromiseErrorOr<Many<T>>`, where `T` is type of the entity. Any service function can always return an error.
-`PromiseErrorOr<T>` is 2-tuple type where the first value of the tuple is the service function return value `T`, or in case of error, it is
+`PromiseErrorOr<T>` is a promise of 2-tuple type where the first value of the tuple is the service function return value `T`, or in case of error, it is
 null or undefined. The second value of the tuple is `BackkError` in case of service function execution failure or null or undefined on success.
 
 Here are the type definitions for `PromiseErrorOr<T>`, `BackkError`, `Many` and `One`:

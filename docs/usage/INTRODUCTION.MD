@@ -66,7 +66,7 @@ type One<T> = {
 };
 ```
 
-If you want, your service function can return custom metadata by adding custom properties to `metadata` object of `One<T>` and `Many<T>`.
+Your service function can return custom metadata by adding custom properties to `metadata` object of `One<T>` and `Many<T>`.
 
 Backk generates automatically integration tests for your service. If you want to benefit from them, it is important in which order, you
 define the service functions. They should be defined in order in which they should be tested.

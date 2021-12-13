@@ -1,7 +1,7 @@
 ## Introduction
 
 Here we are going to build a Backk microservice for handling sales items to showcase main Backk features.
-For getting your Backk development environment setup, please complete the [Prerequisites](../PREREQUISITES.MD) and then follow instructions in [Get Started](../GET_STARTED.MD) section to complete the development environment setup.
+For getting your Backk development environment set up, please complete the [Prerequisites](../PREREQUISITES.MD) and then follow instructions in [Get Started](../GET_STARTED.MD) section to complete the development environment setup.
 
 ### Create Your First Service
 

@@ -25,9 +25,9 @@ Let's create a `SalesItemService` service for handling sales items. The service 
 `src/services/salesitem` directory in Backk microservice project. First, you create a service interface extending `Service` interface.
 Second, you create a class to implement the interface. Your class should extend from [BaseService](../api/BASE_SERVICES.MD#baseservice)
 or [CrudEntityService](../api/BASE_SERVICES.MD#crudentityservice). In this case, when we are performing CRUD operations on a resource (or entity) it is natural
-to use `CrudEntityService` as base service implementation.
+to use `CrudEntityService` as base service implementation. You should name interfaces so that they end with `Service` and name classes so that they end with `ServiceImpl``
 
-In the `SalesItemService` interface, we write the service functions that we want to later implement.
+In the `SalesItemService` interface, we declare the service functions that we want to later implement.
 Each service function can have either zero or exactly one argument, and the argument must be of JavaScript class type.
 
 Each service function should return a value of type `PromiseErrorOr<T>`. If your service function does not return a value,

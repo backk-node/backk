@@ -5,15 +5,16 @@ For getting your Backk development environment set up, please complete the [Prer
 
 ### Glossary
 
-| Term                           | Definition                                                                                                                                                                                                                                                                                                                                                                                                                  |
-|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
- | Entity                         | A class that defines a database table structure for storing entities. Entity instances can be given as service function arguments and returned from service functions                                                                                                                                                                                                                                             |   
-| Microservice                   | Node.js Backk application running in pods in Kubernetes                                                                                                                                                                                                                                                                                                                                                                     |
-| Microservice namespace         | Kubernetes namespace where microservice is running                                                                                                                                                                                                                                                                                                                                                                          |
-| Service                        | A constituent of Backk microservice. Backk microservice consists of one or more services. Service consist of an interface and at least one implementation class. For example: `SalesItemService` interface and `SalesItemServiceImpl` class. Service interface should declare service functions that service class(es) implement.                                                                                           |
-| Service function               | A method in a service interface/class. Service functions can be called by Backk clients. Service function is called by its name: `service-name.function-name`. Service name is the same as service interface name with lower case first letter. If there is `SalesItemService` interface, service name should be `salesItemService`. Function name is the name of the method. For example: `salesItemService.createSalesItem` |
- | Service function argument      | An instance of JavaScript class that is given as argument to a service function. When client calls a service function over HTTP, argument is given in HTTP request body in JSON                                                                                                                                                                                                                                             |    
- | Service function return value  | Should be of type `PromiseErrorOr<T>`, where T can be `null` or Javascript object. When clients calls a service function over HTTP, return value (if not `null`) is returned in HTTP response body in JSON                                                                                                                                                                                                                  |
+| Term                          | Definition                                                                                                                                                                                                                                                                                                                                                                                                                 |
+|-------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+ | Client                        | Application using the microservice. Client can be e.g. web app or another microservice                                                                                                                                                                                                                                                                                                                                     | 
+| Entity                        | A class that defines a database table structure for storing entities. Entity instances can be given as service function arguments and returned from service functions                                                                                                                                                                                                                                                      |   
+| Microservice                  | Node.js Backk application running in pods in Kubernetes                                                                                                                                                                                                                                                                                                                                                                    |
+| Microservice namespace        | Kubernetes namespace where microservice is running                                                                                                                                                                                                                                                                                                                                                                         |
+| Service                       | A constituent of Backk microservice. Backk microservice consists of one or more services. Service consist of an interface and at least one implementation class. For example: `SalesItemService` interface and `SalesItemServiceImpl` class. Service interface should declare service functions that service class(es) implement.                                                                                          |
+| Service function              | A method in a service interface/class. Service functions can be called by Backk clients. Service function is called by its name: `service-name.function-name`. Service name is the same as service interface name with lower case first letter. If there is `SalesItemService` interface, service name should be `salesItemService`. Function name is the name of the method. For example: `salesItemService.createSalesItem` |
+ | Service function argument     | An instance of JavaScript class that is given as argument to a service function. When client calls a service function over HTTP, argument is given in HTTP request body in JSON                                                                                                                                                                                                                                            |    
+ | Service function return value | Should be of type `PromiseErrorOr<T>`, where T can be `null` or Javascript object. When clients calls a service function over HTTP, return value (if not `null`) is returned in HTTP response body in JSON                                                                                                                                                                                                                 |
 
 ### Create Your First Service
 
@@ -91,30 +92,10 @@ export interface SalesItemService extends Service {
 }
 ```
 
-Next you should provide implementation of you service in a class. Let's create a `SalesItemServiceImpl`
-class in `src/services/salesitem` directory. Our implementation class should extend from `CrudResourceService`and
-it should also implement the interface you just created.
-
-SalesItemServiceImpl.ts
-
-```ts
-import { CrudEntityService } from 'backk';
-import SalesItemService from './SalesItemService';
-
-export default class SalesItemServiceImpl extends CrudEntityService implements SalesItemService {}
-```
-
-Add your service to `microservice.ts`:
-
-```ts
-import SalesItemServiceImpl from './services/salesitem/SalesItemServiceImpl';
-
-class MicroserviceImpl extends Microservice {
-  private readonly salesItemService = new SalesItemServiceImpl();
-}
-```
-
-### Create service constructor
+### Create Service Implementation Class
+Next you should provide the implementation for the service interface. Let's create a `SalesItemServiceImpl`
+class in `src/services/salesitem` directory. Our implementation class should extend from `CrudResourceService` and
+it should also implement the interface just created.
 
 SalesItemServiceImpl.ts
 
@@ -137,11 +118,27 @@ If you service requires multiple data store, your service is not probably a micr
 your service into smaller pieces, so that each microservice requires only one data store to operate on.
 
 For the `CrudEntityService` class constructor, you need to give two parameters:
-
 - map of error definitions (or an empty object if the service does not raise any errors specific to business logic in your service functions)
 - dataStore
 
-### Create Sales Item entity
+### Add Service to Microservice
+
+Services of the microservice should be instantiated in `MicroserviceImpl` class that extends `Microservice` class.
+Service instances should be stored as private read-only fields in the `MicroserviceImpl` class. You should name the fields according
+to the service interface name, for example: `SalesItemService` interface => `salesItemService` field.
+
+Add your service to `microservice.ts`:
+
+```ts
+import { Microservice  } from 'backk';
+import SalesItemServiceImpl from './services/salesitem/SalesItemServiceImpl';
+
+class MicroserviceImpl extends Microservice {
+  private readonly salesItemService = new SalesItemServiceImpl();
+}
+```
+
+### Create Sales Item Entity
 
 We need to create the Sales item entity class so that we can use it in our sales item service implementation.
 Let's create `SalesItem` class in directory `src/services/salesitem/types/entities`:
@@ -176,12 +173,13 @@ accepted string. You can use `@MaxLength()` or `@Length()` decorator. The latter
 the string. Limiting the maximum length of the string is crucial to prevent possible DoS (Denial of Service) attacks.
 
 For number type properties, you must define one of following:
-`@IsInt()`, `@IsFloat` or `@IsBigInt()`. In addition to that, you need to define the allowed range of values with
+`@IsInt()`, `@IsFloat` or `@IsBigInt()`.
+
+In addition to that, you need to define the allowed range of values with
 `@MinMax()` decorator. If some needed validators is missing, Backk will throw an exception.
 
 For each property you must define the access mode of the property. The access mode defines the visibility of the
-property to the clients of the microservice. The following access mode decorators are available:
-
+property to the clients of the microservice. The following [access mode decorators](../api/DECORATORS.MD#entity-property-decorators) are available:
 - `@Private()`
 - `@ReadWrite()`
 - `@ReadOnly()`

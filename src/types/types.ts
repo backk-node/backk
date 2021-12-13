@@ -70,7 +70,7 @@ const types = {
   _IdAndVersionAndLastModifiedTimestamp,
   Id,
   _IdsAndDefaultPostQueryOperations,
-  DefaultPostQueryOperations: DefaultPostQueryOperationsImpl,
+  DefaultPostQueryOperationsImpl,
   SortBy,
   Pagination,
   UserDefinedFilter,

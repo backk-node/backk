@@ -192,7 +192,6 @@ The exclamation mark (!) after property names is needed because properties are n
 If the exclamation mark is missing, you will get a TypeScript compiler warnings.
 
 ### Implement deleteAllSalesItems
-
 Let´s practice Test driven development (TDD) for our first service function to showcase that Backk is ready
 configured for unit testing with Jest.
 

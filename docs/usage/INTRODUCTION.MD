@@ -260,8 +260,7 @@ requiring an authorization annotation, it makes impossible to forget such an ann
 For the above service function, we use `@AllowForTests` decorator to indicate that this service function
 can only be accessed when executing tests, it cannot be accessed by any clients at all.
 
-There are following possible authorization decorators available for use:
-
+There are following possible [authorization decorators](../api/DECORATORS.MD#service-function-decorators) available for use:
 - `@AllowForEveryUser()`
 - `@AllowForEveryUserForOwnResources()`
 - `@AllowForUserRoles(roles: string[])`
@@ -283,10 +282,10 @@ describe('SalesItemService', () => {
         price: 50,
       };
 
-      dataStore.createEntity = jest.fn().mockReturnValue(Promise.resolve([salesItem, null]));
+      dataStore.createEntity = jest.fn().mockReturnValue(Promise.resolve([ { metadata: {}, data: salesItem }, null]));
 
       // WHEN
-      const [createdSalesItem, error] = await salesItemService.createSalesItem(salesItem);
+      const [ { data: createdSalesItem }, error] = await salesItemService.createSalesItem(salesItem);
 
       // THEN
       expect(dataStore.createEntity).toHaveBeenCalledTimes(1);
@@ -301,13 +300,13 @@ describe('SalesItemService', () => {
 SalesItemServiceImpl.ts
 
 ```ts
-import { AllowForUserRoles, CrudEntityService, PromiseErrorOr } from 'backk';
+import { AllowForUserRoles, CrudEntityService, One, PromiseErrorOr } from 'backk';
 import SalesItemService from './SalesItemService';
 import SalesItem from './types/entities/SalesItem';
 
 export default class SalesItemServiceImpl extends CrudEntityService implements SalesItemService {
   @AllowForUserRoles(['admin', 'salesAdmin'])
-  createSalesItem(salesItem: SalesItem): PromiseErrorOr<null> {
+  createSalesItem(salesItem: SalesItem): PromiseErrorOr<One<SalesItem>> {
     return this.dataStore.createEntity(SalesItem, salesItem);
   }
 }
@@ -320,34 +319,33 @@ Creating a new sales item is only allowed for logged-in users with either `admin
 We skip the unit test writing for the rest of the SalesItemService implementation.
 
 ```ts
-import { AllowForEveryUser, CrudEntityService, PromiseErrorOr, SqlExpression } from 'backk';
+import { AllowForEveryUser, CrudEntityService, DefaultPostQueryOperationsImpl, PromiseErrorOr, SqlFilter } from 'backk';
 import SalesItemService from './SalesItemService';
 import SalesItem from './types/entities/SalesItem';
 
 export default class SalesItemServiceImpl extends CrudEntityService implements SalesItemService {
   @AllowForEveryUser()
-  getSalesItems({ nameSubString }: GetSalesItemsArg): PromiseErrorOr<Many<SalesItem>> {
-    const filter = new SqlExpression('name LIKE :nameSubString', {
-      nameSubString: nameSubString ? `%${nameSubString}%` : undefined,
+  getSalesItems({ nameFilter }: GetSalesItemsArg): PromiseErrorOr<Many<SalesItem>> {
+    const filter = new SqlFilter('name LIKE :nameFilter', {
+      nameFilter: `%${nameFilter}%`
     });
-    const postQueryOperations = new DefaultPostQueryOperations();
+    const postQueryOperations = new DefaultPostQueryOperationsImpl();
     return this.dataStore.getEntitiesByFilters(SalesItem, [filter], postQueryOperations, false);
   }
 }
 ```
 
-Here is the implementation for the service function argument class. Service function arguments must be Javascript
-classes and their properties need same kind of validation as entity class properties need. This is needed to ensure
-that only valid values are supplied to service function.
+Service function arguments must be Javascript classes and their properties need same kind of validation as entity class properties need. This is needed to ensure
+that only valid values are supplied to service function. Here is the implementation for the `GetSalesItemsArg` service function argument class: 
 
 GetSalesItemsArg.ts
+```ts
 import { IsAscii, MaxLength } from 'backk';
 
-```ts
 export default class GetSalesItemsArg {
   @IsAscii()
   @MaxLength(128)
-  nameSubString: string;
+  nameFilter!: string;
 }
 ```
 

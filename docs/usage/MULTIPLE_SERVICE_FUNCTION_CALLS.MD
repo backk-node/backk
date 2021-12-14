@@ -99,3 +99,7 @@ POST /executeMultipleServiceFunctionsInParallelWithoutTransaction
   }
 }
 ```
+
+NOTE! If you are using calls to remote service functions, you cannot use these transactional endpoints:
+- `executeMultipleServiceFunctionsInParallelInsideTransaction`
+- `executeMultipleServiceFunctionsInSequenceInsideTransaction`

@@ -57,6 +57,21 @@ POST /executeMultipleServiceFunctionsInParallelWithoutTransaction
 }
 ```
 
+The response will be:
+
+```json
+{
+  "shirtSalesItems": {
+    "metadata": {},
+    "data": [/* sales items*/]
+  },
+  "allTags": {
+    "metadata": {},
+    "data": [/* tags */]
+  }
+}
+```
+
 You can also execute remote microservice requests.
 If the service function exists in a remote Backk microservice, you need to specify the remote Backk
 microservice name (and namespace, if it is not same). For example:

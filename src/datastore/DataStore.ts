@@ -40,7 +40,7 @@ export type One<T> = {
 export type ArrayFieldValue = string | number | boolean;
 
 export type CommonEqFilters<T> = Partial<T> | object;
-export type QueryFilters<T> = CommonEqFilters<T> | Array<MongoDbFilter<T>>| SqlFilter[] | UserDefinedFilter[];
+export type QueryFilters<T> = CommonEqFilters<T> | Array<MongoDbFilter<T>> | SqlFilter[] | UserDefinedFilter[];
 
 export interface DataStore {
   getDbName(): string | undefined;

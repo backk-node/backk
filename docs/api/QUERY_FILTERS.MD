@@ -13,7 +13,6 @@ type CommonEqFilters<T> = Partial<T> | object
 [User Defined Filters](#user-defined-filters)
 
 ### <a name="common-equality-filters"></a> Common Equality Filters
-
 Common equality filters can be used with both MongoDB and SQL databases.
 These filters can use sub-entity paths to access fields in sub-entities.
 Example of such filters:
@@ -87,7 +86,7 @@ Sub-entity path is given with dot notation, for example: `orders.orderItems`
 Following subclasses of `SqlFilter` are also available:
 
 ```ts
-class SqlEquals<T> extends SqlFilter {
+class SqlEqFilter<T> extends SqlFilter {
   constructor(filters: Partial<T>, subEntityPath: string = '');
 }
 
@@ -100,10 +99,10 @@ class SqlNotInFilter extends SqlFilter {
 }
 ```
 
-Below example of `SqlEquals` will check that root entity's `transactionId` field is NULL:
+Below example of `SqlEqFilter` will check that root entity's `transactionId` field is NULL:
 
 ```ts
-new SqlEquals({ transactionId: null });
+new SqlEqFilter({ transactionId: null });
 ```
 
 Below example of `SqlInFilter` will check that root entity's `_id` field has one of the values given in `salesItemIds`

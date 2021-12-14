@@ -538,8 +538,6 @@ _
 /src/datastore/sql/expressions/SqlNotInFilter.ts,7/d/7d9b3992b470f4ff78d11b8b3faab36ee76d011e
 I
 docs/api/QUERY_FILTERS.MD,7/8/783feae41c35f7357778cbeed16c1f7346c940fe
-K
-docs/api/DELETE_ENTITIES.MD,b/c/bcf9f4e7dbdebd2c36adc04dd6ca37027cbcefcc
 I
 docs/api/ENTITY_ARRAYS.MD,2/8/28abfc2838503496d05d28a32e8b4d5e10f4f398
 N

@@ -29,7 +29,7 @@ export type ErrorNameToErrorDefinitionMap = { [errorName: string]: ErrorDefiniti
 export type ErrorDefinition = {
   readonly errorCode: number | string;
   readonly message: string;
-  readonly statusCode?: number;
+  readonly statusCode: number;
 };
 ```
 
@@ -42,13 +42,13 @@ When calling base class constructor, you must provide:
 Example of error definitions:
 
 ```ts
-import { HttpStatusCodes } from 'backk';
+import { ErrorDefinition, HttpStatusCodes } from 'backk';
 
 export const orderServiceErrors = {
   cannotRemoveDeliveredOrderItem: {
-    statusCode: HttpStatusCodes.BAD_REQUEST,
     errorCode: 1,
     message: 'Cannot remove delivered order item',
+    statusCode: HttpStatusCodes.BAD_REQUEST,
   },
   invalidOrderItemCurrentState: {
     statusCode: HttpStatusCodes.BAD_REQUEST,
@@ -62,14 +62,6 @@ When error is reported to a client, Backk will add the service name to the begin
 This ensures that all error codes reported by the services of the microservice have unique error codes towards clients.
 Backk will also check your `errorNameToErrorDefinitionMap` for potential duplicates in error codes and error messages.
 If duplicates are found, an exception will be thrown. This ensures that you don't accidentally use same error code or message twice.
-
-Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
-
-```typescript
-export default class MicroserviceImpl extends Microservice {
-  private readonly myService = new MyServiceImpl();
-}
-```
 
 ### <a name="crudentityservice"></a> CrudEntityService
 
@@ -116,14 +108,6 @@ This ensures that all error codes reported by the services of the microservice h
 Backk will also check your `errorNameToErrorDefinitionMap` for potential duplicates in error codes and error messages.
 If duplicates are found, an exception will be thrown. This ensures that you don't accidentally use same error code or message twice.
 
-Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
-
-```typescript
-export default class MicroserviceImpl extends Microservice {
-  private readonly myService = new MyServiceImpl();
-}
-```
-
 ### <a name="userbaseservice"></a> UserBaseService
 
 Each microservice which has one or more service functions that have annotation `@AllowForEveryUserForOwnResources()`
@@ -144,7 +128,6 @@ export default class MicroserviceImpl extends Microservice {
 ```
 
 ### <a name="authorizationservice"></a>AuthorizationService
-
 Authorizes client requests based on Authorization header. This is a generic service, and if you are using OAuth 2.0 and JWT, you
 should use `JwtAuthorizationServiceImpl` class for your authorization service (see next section).
 
@@ -170,7 +153,6 @@ export default class MicroserviceImpl extends Microservice {
 ```
 
 ### <a name="jwtauthorizationserviceimpl"></a> JwtAuthorizationServiceImpl
-
 JWT authorization service which checks if user is authorized based JWT bearer token supplied in Authorization header.
 This service requires following environment variables to be defined:
 

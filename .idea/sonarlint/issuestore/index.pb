@@ -592,16 +592,12 @@ Q
 .src/remote/messagequeue/sendToRemoteService.ts,2/8/2898217950f733fa6c67c737e453b9d25969b79f
 R
 "src/remote/http/makeHttpRequest.ts,6/3/638d167128ba5c5cb0465430a3e6af7d84b27653
-K
-src/services/BaseService.ts,9/4/9434f185c4f597d67e2b58164a20c94dfc0e257c
 P
  src/microservice/Microservice.ts,b/2/b203b2517f9ead474bfd9ed8b4aa05bb628a6597
 U
 %src/observability/logging/LogEntry.ts,a/9/a93b3af0cb6589aa5394a488f147fc1ef3d4c75f
 `
 0src/observability/logging/audit/AuditLogEntry.ts,5/6/56543d47b33540c49f8646fc49d968b70cba4a86
-L
-src/types/ErrorDefinition.ts,b/d/bdddc5a4ea19c1d1a503ef76b0bc3261f648deba
 V
 &src/metadata/types/FunctionMetadata.ts,c/a/cad17c9664394030a28f9c0e279c413895c12149
 X
@@ -624,8 +620,6 @@ f
 6src/errors/createErrorFromErrorCodeMessageAndStatus.ts,d/2/d2b82ee725f26f4b071be7c10a8d7056faae40be
 Y
 )src/scheduling/tryScheduleJobExecution.ts,2/3/23fcc302ed066feb49193824bdbb201ea215a4c6
-G
-src/types/BackkError.ts,0/f/0ff54873c02da10e848e21977cfe0d78b02e4abe
 T
 $src/datastore/hooks/EntityPreHook.ts,d/3/d319140efd71c42c6cfa25104fdcc432f38db21e
 J

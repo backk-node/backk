@@ -6,11 +6,11 @@ Entity class name will be the name of the table in database where entities are s
 Root entity class should extend from one of the base classes available [here.](https://github.com/backk-node/backk/tree/main/src/types/_id)
 Each root entity class must at least extend from `_Id` base class, because each root entity must have an `_id` property to identify each entity.
 Each sub-entity class (i.e. non-root entity class) must extend from `Id` class, because each sub-entity must have an `id` property.
+I.e. root entities have an `_id` property and sub-entities have an `id` property.
 
 Entity class can contain one or more properties.
 Entity class property names will be the names of the columns in entity database table.
 Possible entity property types:
-
 - `number`
 - `boolean`
 - `string`
@@ -18,10 +18,20 @@ Possible entity property types:
 - number or string union type, for example: `1 | 5 | 10` or `'forSale' | 'sold'`
 - another entity type
 - Arrays of above types
-- Following nullable types
+- Following nullable types:
   - `number | null`
   - `boolean | null`
   - `string | null`
+
+If your entity class does not have a constructor, you need to define properties with
+exclamation mark (!), because otherwise a TypeScript error is generated:
+
+```ts
+@Entity()
+class MyEntity {
+  someValue!: string;
+}
+```
 
 Entity class can be a _logical entity_ class when a reference to another (physical) entity is given:
 
@@ -122,7 +132,6 @@ class MyEntity extends _Id {
 ```
 
 ### Defining Entity Class Using Property Composition
-
 You can make an entity class by composing its properties of one or more properties of another entity class.
 To take advantage of this feature, you need to declare the entity class in special `.type` file.
 

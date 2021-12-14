@@ -2,7 +2,6 @@
 
 Service function argument or response class can contain one or more properties.
 Possible property types are:
-
 - `number`
 - `boolean`
 - `string`
@@ -11,10 +10,20 @@ Possible property types are:
 - another entity type
 - Arrays of above types
 
+If your Service function argument or response class does not have a constructor, you need to define properties with
+exclamation mark (!), because otherwise a TypeScript error is generated:
+
+```ts
+class MyServiceFunctionArg {
+  someValue!: string;
+}
+```
+
+
 Any property can be optional:
 ```ts
 class MyServiceFunctionArg {
-    someOptionalValue?: string;
+  someOptionalValue?: string;
 }
 ```
 

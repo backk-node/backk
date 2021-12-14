@@ -61,6 +61,31 @@ type Range = {
  end: number;
 };
 
+enum Month {
+ Jan,
+ Feb,
+ Mar,
+ Apr,
+ May,
+ Jun,
+ Jul,
+ Aug,
+ Sep,
+ Oct,
+ Nov,
+ Dec
+}
+
+enum DayOfWeek {
+ Sunday,
+ Monday,
+ Tuesday,
+ Wednesday,
+ Thursday,
+ Friday,
+ Saturday,
+}
+
 type HttpHeaders<ArgType extends object, RetValType extends any> = {
   [key: string]: string | HeaderValueGenerator<ArgType, RetValType> | undefined;
 };
@@ -95,7 +120,7 @@ You can use following decorators for the properties of your entity classes:
 | `@Hashed()`                                                                                                                                                                    | Entity property value is hashed in database                                                                                                                        |
 | `@NotHashed(reason: string)`                                                                                                                                                   | Entity property value is not needed to be hashed in database because of given reason                                                                               |
 | `@TestValue(testValue: any)`                                                                                                                                                   | Entity property should have this value in automatic integration tests                                                                                              |
-| `@Index(sortOrder?: SortOrder, usingOption?: string, additionalSqlCreateIndexStatementOptions?: string)`                                                                       | Entity property is indexed in database according to given sort order ('ASC' or 'DESC')                                                                             |
+| `@Index(sortOrder: SortOrder = 'ASC', usingOption?: string, additionalSqlCreateIndexStatementOptions?: string)`                                                                 | Entity property is indexed in database according to given sort order ('ASC' or 'DESC')                                                                             |
 | `@FetchFromRemoteService(remoteServiceFunctionUrl: string, buildRemoteServiceFunctionArgument: (arg: T, response: U) => { [key: string]: any }, options?: HttpRequestOptions)` | Entity property value is fetched from the given remote URL with given argument                                                                                     |
 | `@OneToMany(isReferenceToExternalEntity = false)`                                                                                                                              | Entity property is a one-to-many mapping to another entity                                                                                                         |
 | `@ManyToMany()`                                                                                                                                                                | Entity property is a many-to-many mapping to another entity                                                                                                        |
@@ -110,6 +135,16 @@ You can use following decorators for the properties of your entity classes:
 | `@UpdateOnly()`                                                                                                                                                                | Entity property can only be given in resource update requests by clients                                                                                           |
 
 ```ts
+interface HttpRequestOptions {
+ httpMethod?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+ httpVersion?: 1 | 2;
+ tls?: {
+  ca?: string | Buffer | Array<string | Buffer>;
+  cert?: string | Buffer | Array<string | Buffer>;
+  key?: string | Buffer | Array<Buffer | KeyObject>;
+ };
+}
+
 type UiProps = {
   shouldDisplay: boolean;
   booleanValueInputType: 'switch' | 'checkbox';
@@ -239,5 +274,5 @@ You can use following decorators for the properties of your classes to validate 
 | `@ArrayUnique(identifier?: (o) => any)`                                                                                                                                | Checks if all array's values are unique. Comparison for objects is reference-based. Optional function can be speciefied which return value will be used for the comparsion.                           |
 | `@ArrayNotUnique()`                                                                                                                                                    | Array's values don't need to be unique                                                                                                                                                                |
 
-Some of the validators are from [class-validator](https://github.com/typestack/class-validator).
+Many validators are from [class-validator](https://github.com/typestack/class-validator).
 You can check for further info there.

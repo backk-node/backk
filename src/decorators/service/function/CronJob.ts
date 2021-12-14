@@ -26,18 +26,15 @@ export type CronSchedule = {
   minutes?: number | number[] | Range | 'any';
   minuteInterval?: number;
 
-  // 0-23
   hours?: number | number[] | Range | 'any';
   hourInterval?: number;
 
   daysOfMonth?: number | number[] | Range | 'any';
   dayInterval?: number;
 
-  // 0 - 11
   months?: Month | Month[] | Range | 'any';
   monthInterval?: number;
 
-  // 0-6 (Sun-Sat)
   daysOfWeek?: DayOfWeek | DayOfWeek[] | Range;
   weekDayInterval?: number;
 };

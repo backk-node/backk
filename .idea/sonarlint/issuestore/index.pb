@@ -127,8 +127,6 @@ W
 +src/decorators/typeproperty/NotEncrypted.ts,0/e/0e4e2b52f5b05567299fb1247717c1e796167548
 `
 0src/decorators/typeproperty/testing/TestValue.ts,c/7/c76ac586212674a91e9dfa262fd046969b5703bc
-T
-$src/decorators/typeproperty/Index.ts,f/2/f26e51e60716e64d15f8d47940df31e32f143de4
 Y
 )src/decorators/typeproperty/ManyToMany.ts,e/4/e4e77eb1b64da98eede4b175e8368365748bc5dc
 Y

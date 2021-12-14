@@ -500,8 +500,6 @@ C
 docs/GET_STARTED.MD,c/8/c841c6a68c176a73f38f5dc87c8a0631e97748fb
 Y
 )src/execution/isExecuteMultipleRequest.ts,d/2/d2482742299ac42fc87a8f2123cf69f65806b61b
-]
--docs/usage/MULTIPLE_SERVICE_FUNCTION_CALLS.MD,0/d/0dcf4f2c1aaf839293469ddd2d16d9d734c85417
 U
 %src/requestprocessor/KafkaConsumer.ts,5/4/54978fb9386e91d4df80e1e6e7893e36b797a7a4
 `

@@ -1,7 +1,7 @@
 ## Executing Multiple Service Functions within One Request
 
 It is possible to execute multiple service function calls from one HTTP request. By default, this feature is not enabled, 
-but when instantiating an `HttpServer`, `options` can be provided to allow multiple service function execution:
+but when instantiating an `HttpServer`, constructor parameter `options` can be provided to allow multiple service function execution:
 
 ```ts
 class HttpServer implements RequestProcessor {
@@ -19,9 +19,11 @@ interface ServiceFunctionExecutionOptions {
 }
 ```
 
-`multipleServiceFunctionExecution.maxServiceFunctionCount` specifies how many service functions can be called in one request.
-`multipleServiceFunctionExecution.regExpForAllowedRemoteServiceFunctionCalls` is a regular expression that specifies which remote service functions can be called when executing multiple service function calls. If you want that your microservice enables execution of remote service functions you need to supply this parameter.
-For example: `/.+/`
+You typically instantiate the `HttpServer` in `main.ts` when you start the microservice.
+
+`multipleServiceFunctionExecution.maxServiceFunctionCount` specifies how many service functions at maximum can be called in one request.
+`multipleServiceFunctionExecution.regExpForAllowedRemoteServiceFunctionCalls` is a regular expression that specifies which remote service functions can be called when executing multiple service function calls. If you want that your microservice enables execution of remote service functions you need to supply this parameter. If this parameter is not provided, no remote service function calls are allowed.
+For example: `/.+/` will allow execution of any remote service function calls.
 
 When you want to execute multiple service functions, you should send the HTTP request to one of the following endpoints:
 - `executeMultipleServiceFunctionsInParallelInsideTransaction`

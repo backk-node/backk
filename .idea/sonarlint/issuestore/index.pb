@@ -476,8 +476,6 @@ e
 5src/remote/messagequeue/kafka/sendOneOrMoreToKafka.ts,c/8/c85e63005baa112768508fc435ef3f685516a669
 R
 "src/requestprocessor/HttpServer.ts,8/6/869e973a694b88bc90d4f845180c81727430030e
-S
-#docs/usage/MICROSERVICE_METADATA.MD,d/8/d871bca4101499475e31f84c6e6f47975caa7357
 V
 &docs/usage/DOCUMENTING_MICROSERVICE.MD,0/c/0cd3f27a354e7b58f9ae4538ce2869f575cb67e4
 Q

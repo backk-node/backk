@@ -110,7 +110,7 @@ export default async function tryExecuteServiceMethod(
         throw new Error("Missing 'multipleServiceFunctionExecution.maxServiceFunctionCount' option in HttpServer");
       }
 
-      if (serviceFunctionName === 'executeMultipleServiceFunctionsInParallelWithoutTransaction') {
+      if (serviceFunctionName === 'multipleServiceFunctionExecutionService.executeInParallelWithoutTransaction') {
         return await executeMultipleServiceFunctions(
           true,
           false,
@@ -121,7 +121,7 @@ export default async function tryExecuteServiceMethod(
           isClusterInternalCall,
           options
         );
-      } else if (serviceFunctionName === 'executeMultipleServiceFunctionsInSequenceWithoutTransaction') {
+      } else if (serviceFunctionName === 'multipleServiceFunctionExecutionService.executeInSequenceWithoutTransaction') {
         return await executeMultipleServiceFunctions(
           false,
           false,
@@ -132,7 +132,7 @@ export default async function tryExecuteServiceMethod(
           isClusterInternalCall,
           options
         );
-      } else if (serviceFunctionName === 'executeMultipleServiceFunctionsInParallelInsideTransaction') {
+      } else if (serviceFunctionName === 'multipleServiceFunctionExecutionService.executeInParallelInsideTransaction') {
         return await executeMultipleServiceFunctions(
           true,
           true,
@@ -143,7 +143,7 @@ export default async function tryExecuteServiceMethod(
           isClusterInternalCall,
           options
         );
-      } else if (serviceFunctionName === 'executeMultipleServiceFunctionsInSequenceInsideTransaction') {
+      } else if (serviceFunctionName === 'multipleServiceFunctionExecutionService.executeInSequenceInsideTransaction') {
         return executeMultipleServiceFunctions(
           false,
           true,
@@ -162,7 +162,7 @@ export default async function tryExecuteServiceMethod(
 
     const serviceFunctionCallStartTimeInMillis = Date.now();
 
-    if (serviceFunctionName === 'scheduleServiceFunctionExecution') {
+    if (serviceFunctionName === 'serviceFunctionSchedulingService.scheduleServiceFunctionExecution') {
       return await tryScheduleJobExecution(microservice, serviceFunctionArgument, headers, resp);
     }
 

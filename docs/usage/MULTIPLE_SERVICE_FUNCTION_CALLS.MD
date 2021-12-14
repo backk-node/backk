@@ -26,10 +26,10 @@ You typically instantiate the `HttpServer` in `main.ts` when you start the micro
 For example: `/.+/` will allow execution of any remote service function calls.
 
 When you want to execute multiple service functions, you should send the HTTP request to one of the following endpoints:
-- `executeMultipleServiceFunctionsInParallelInsideTransaction`
-- `executeMultipleServiceFunctionsInParallelWithoutTransaction`
-- `executeMultipleServiceFunctionsInSequenceInsideTransaction`
-- `executeMultipleServiceFunctionsInSequenceWithoutTransaction`
+- `multipleServiceFunctionExecutionService.executeInParallelInsideTransaction`
+- `multipleServiceFunctionExecutionService.executeInParallelWithoutTransaction`
+- `multipleServiceFunctionExecutionService.executeInSequenceInsideTransaction`
+- `multipleServiceFunctionExecutionService.executeInSequenceWithoutTransaction`
 
 If you are executing service functions that modify data in the database, you should use the transactional endpoints, but
 if you are just querying database data, you might want to use the non-transactional endpoints.
@@ -37,7 +37,7 @@ if you are just querying database data, you might want to use the non-transactio
 For the HTTP request body, you should specify the to be executed service functions and their arguments as JSON object:
 
 ```
-POST /executeMultipleServiceFunctionsInParallelWithoutTransaction
+POST /multipleServiceFunctionExecutionService.executeInParallelWithoutTransaction
 ```
 
 ```json
@@ -77,7 +77,7 @@ If the service function exists in a remote Backk microservice, you need to speci
 microservice name (and namespace, if it is not same). For example:
 
 ```
-POST /executeMultipleServiceFunctionsInParallelWithoutTransaction
+POST /multipleServiceFunctionExecutionService.executeInParallelWithoutTransaction
 ```
 
 ```json
@@ -101,5 +101,5 @@ POST /executeMultipleServiceFunctionsInParallelWithoutTransaction
 ```
 
 NOTE! If you are using calls to remote service functions, you cannot use these transactional endpoints:
-- `executeMultipleServiceFunctionsInParallelInsideTransaction`
-- `executeMultipleServiceFunctionsInSequenceInsideTransaction`
+- `multipleServiceFunctionExecutionService.executeInParallelInsideTransaction`
+- `multipleServiceFunctionExecutionService.executeInSequenceInsideTransaction`

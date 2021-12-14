@@ -4,7 +4,7 @@ It is possible to schedule a service function call to be executed at later stage
 The request to schedule a service function execution should be done to following HTTP endpoint:
 
 ```
-POST /scheduleServiceFunctionExecution
+POST /serviceFunctionSchedulingService.scheduleServiceFunctionExecution
 ```
 
 For the request body, you specify the service function name, argument and scheduled execution timestamp:

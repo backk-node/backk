@@ -542,8 +542,6 @@ I
 docs/api/ENTITY_ARRAYS.MD,2/8/28abfc2838503496d05d28a32e8b4d5e10f4f398
 N
 docs/api/REMOVE_SUBENTITIES.MD,a/9/a97e8bd46ede34b7aef2159f348dab0f9798cfa7
-K
-docs/api/ADD_SUBENTITIES.MD,3/c/3cbfee68d6c74570915a3137e96692deaf9da3c8
 R
 "src/datastore/AbstractDataStore.ts,f/4/f4558eca7b6689c835badee5ef621c5595dedca7
 i

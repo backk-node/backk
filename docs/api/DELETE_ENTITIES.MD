@@ -34,12 +34,12 @@ interface DataStore {
 }
 ```
 
-Deletes the entities of class `EntityClass` identified by id `_id` from the data store.
+Deletes the entity of class `EntityClass` identified by id `_id` from the data store.
 
 `options.entityPreHooks` are executed before the delete operation, and they get the current entity as argument.
 if any of the pre-hooks fails, the whole delete operation fails. See [Hooks](HOOKS.MD) for details.
 
-`options.postQueryOperations` is used to define post query operations for querying the entity before delete. (E.g. for use in `entityPreHooks`). See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+`options.postQueryOperations` is used to define post query operations for querying the entity before delete. (E.g. for use in `entityPreHooks`). See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.  If not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
 
 `options.postHook` is executed after the delete operation. If post-hook fails, the whole delete operation fails. A post-hook can be used
 for example to notify other microservices about the operation. See [Hooks](HOOKS.MD) for details.
@@ -84,7 +84,7 @@ Deletes the entity of class `EntityClass` matching filters `filters` from the da
 `options.entityPreHooks` are executed before the delete operation, and they get the current entity as argument.
 if any of the pre-hooks fails, the whole delete operation fails. See [Hooks](HOOKS.MD) for details.
 
-`options.postQueryOperations` is used to define post query operations for querying the entity before delete. (E.g. for use in `entityPreHooks`). See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+`options.postQueryOperations` is used to define post query operations for querying the entity before delete. (E.g. for use in `entityPreHooks`). See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.  If not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
 
 `options.postHook` is executed after the delete operation. If post-hook fails, the whole delete operation fails. A post-hook can be used
 for example to notify other microservices about the operation. See [Hooks](HOOKS.MD) for details.

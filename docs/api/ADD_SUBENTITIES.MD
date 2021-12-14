@@ -35,7 +35,7 @@ If entity by id `_id` is not found, then entity provided by `options.ifEntityNot
 `options.entityPreHooks` are executed before the add operation and if any of the pre-hooks fails, the whole add operation fails.
 A pre-hook gets the entity as argument, and it can be used to validate the proper state of entity before the add operation. See [Hooks](HOOKS.MD) for details.
 
-`options.postQueryOperations` is used to define post query operations for querying the entity before adding sub-entities. (E.g. for use in `entityPreHooks`). See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+`options.postQueryOperations` is used to define post query operations for querying the entity before adding sub-entities. (E.g. for use in `entityPreHooks`). See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details. If not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
 
 `options.postHook` is executed after add operation. If post-hook fails, the whole add operation fails. A post-hook can be used
 for example to notify other microservices about the operation. See [Hooks](HOOKS.MD) for details.
@@ -76,7 +76,7 @@ If entity by filters `filters` is not found, then entity provided by `options.if
 `options.entityPreHooks` are executed before the add operation and if any of the pre-hooks fails, the whole add operation fails.
 A pre-hook gets the entity as argument, and it can be used to validate the proper state of entity before the add operation. See [Hooks](HOOKS.MD) for details.
 
-`options.postQueryOperations` is used to define post query operations for querying the entity before adding sub-entities. (E.g. for use in `entityPreHooks`). See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+`options.postQueryOperations` is used to define post query operations for querying the entity before adding sub-entities. (E.g. for use in `entityPreHooks`). See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details. If not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
 
 `options.postHook` is executed after add operation. If post-hook fails, the whole add operation fails. A post-hook can be used
 for example to notify other microservices about the operation. See [Hooks](HOOKS.MD) for details.

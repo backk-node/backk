@@ -58,12 +58,12 @@ Only fields present in `entityUpdate` are updated.
 
 `filters` defines filter(s). See [Query Filters](QUERY_FILTERS.MD) for details.
 
-`entityPreHooks` are executed before the update operation, and they get the current entity as argument.
+`options.entityPreHooks` are executed before the update operation, and they get the current entity as argument.
 if any of the pre-hooks fails, the whole update operation fails. See [Hooks](HOOKS.MD) for details.
 
-`postQueryOperations` is used to define post query operations for querying the entity before update. (E.g. for use in `entityPreHooks`). See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+`options.postQueryOperations` is used to define post query operations for querying the entity before update. (E.g. for use in `entityPreHooks`). See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.  If not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
 
-`postHook` is executed after the update operation. If post-hook fails, the whole update operation fails. A post-hook can be used
+`options.postHook` is executed after the update operation. If post-hook fails, the whole update operation fails. A post-hook can be used
 for example to notify other microservices about the operation. See [Hooks](HOOKS.MD) for details.
 
 Returns nothing or error.

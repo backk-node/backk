@@ -1,30 +1,30 @@
 ## Accessing Remote Microservices
 
-- [Accessing Remote Services Synchronously](#synchronous)
-  - [Declarative Fetch of Sub-Entities From Backk Remote Services](#fetchfromremoteservice)
-  - [Call Backk Remote Service](#callremoteservice)
+- [Accessing Remote Microservices Synchronously](#synchronous)
+  - [Declarative Fetch of Sub-Entities From Remote Backk Microservices](#fetchfromremoteservice)
+  - [Call Remote Backk Microservice](#callremoteservice)
   - [Make HTTP Requests](#makehttprequest)
-- [Accessing Remote Services Asynchronously](#asynchronous)
-  - [Send to Remote Backk Service via Kafka](#sendtokafka)
-  - [Send to Remote Backk Service via Redis](#sendtoredis)
-  - [Send Multiple Request to Remote Backk Services via Kafka inside Transaction](#sendtokafkainsidetransaction)
+- [Accessing Remote Backk Microservices Asynchronously](#asynchronous)
+  - [Send to Remote Backk Microservice via Kafka](#sendtokafka)
+  - [Send to Remote Backk Microservice via Redis](#sendtoredis)
+  - [Send Multiple Request to Remote Backk Microservices via Kafka inside Transaction](#sendtokafkainsidetransaction)
 
-### <a name="synchronous"></a> Accessing Remote Services Synchronously
-There are three different ways to synchronously access remote services from your current Backk microservice.
-First way is to a declarative fetch of sub-entities from another Backk microservice.
-The second way is to call another Backk microservice to synchronously fetch data.
-Third way is to make a generic HTTP request to any HTTP based service.
+### <a name="synchronous"></a> Accessing Remote Microservices Synchronously
+There are three different ways to synchronously access remote microservices from your current Backk microservice:
+1. Declarative fetch of sub-entities from another remote Backk microservice
+2. Call another Backk microservice to synchronously fetch data
+3. Make a generic HTTP request to any HTTP based (non-Backk) microservice
 
-#### <a name="fetchfromremoteservice"></a> Declarative Fetch of Sub-Entities From Backk Remote Services
+#### <a name="fetchfromremoteservice"></a> Declarative Fetch of Sub-Entities From Remote Backk Microservice
 In the below example, Backk microservice `user-account-service` has an entity named `UserAccount`.
 When a `UserAccount` entity is fetched from data store at the same time also user's own sales items are fetched
 automatically from a remote Backk microservice named `sales-item-service`, where service function named
 `salesItemService.getUsersSalesItem` is called with argument containing `userAccountId`.
 
 The first argument of `@FetchFromRemoteService` decorator is the name of the remote Backk microservice.
-The second argument is the name of the service function to be called.
+The second argument is the name of the remote service function to be called.
 The third argument is service function argument builder that is a function which receives current service
-function call argument and response as arguments and then returns the argument to be sent to remote service function.
+function call argument and response as arguments and then returns the argument to be sent to a remote service function.
 
 Entity properties annotated with `@FetchFromRemoteService` are always implicitly read-only properties.
 
@@ -42,6 +42,8 @@ class UserAccount extends BaseUserAccount {
   ownSalesItems: any[];
 }
 ```
+
+Properties annotated with `@FetchFromRemoteService` decorator can have type `any[]`
 
 `@FetchFromRemoteService` accepts fourth argument which is the Kubernetes namespace of the remote microservice.
 By default, it is the same as microservice calling the remote microservice. 

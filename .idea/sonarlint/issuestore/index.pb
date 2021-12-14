@@ -476,8 +476,6 @@ e
 5src/remote/messagequeue/kafka/sendOneOrMoreToKafka.ts,c/8/c85e63005baa112768508fc435ef3f685516a669
 R
 "src/requestprocessor/HttpServer.ts,8/6/869e973a694b88bc90d4f845180c81727430030e
-c
-3docs/usage/SCHEDULING_SERVICE_FUNCTION_EXECUTION.MD,a/f/af442472e187623548a4ccd4e6a5973604e6bf60
 E
 docs/usage/CACHING.MD,3/2/3272dfdf9f4d59c30b43503355a7927f89aa9224
 S

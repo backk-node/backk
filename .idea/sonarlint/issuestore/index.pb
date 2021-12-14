@@ -504,8 +504,6 @@ W
 .src/errors/createErrorMessageWithStatusCode.ts,1/6/16c55c9d4f5a17047b3ddfabaa5458b5464aaa1d
 k
 ;src/errors/createBackkErrorFromErrorMessageAndStatusCode.ts,3/f/3f91cbf61f981da36b338ef6e33082fa2bd42f99
-J
-src/errors/BACKK_ERRORS.ts,6/4/64e3477056196aae3c3a3b96d1c524968ad619fd
 U
 %src/services/ReadinessCheckService.ts,a/c/aca76d51d139ac7a3a39bedf668ebb966286244a
 Y
@@ -518,16 +516,6 @@ O
 src/types/EntityCountRequest.ts,c/7/c7e12834bee00d189396dd279054d2ffe7ea0681
 _
 /src/datastore/hooks/tryExecuteEntityPreHooks.ts,1/8/187092fdb4bb7c3f6dba885d31e06b182724637b
-N
-src/datastore/hooks/PreHook.ts,2/9/29c10715c3cb41f8c1d6374438c15ecb4585a428
-O
-src/datastore/hooks/PostHook.ts,5/b/5b3637908f89509b2d93c0cccb4faf9813c90f12
-W
-'src/datastore/hooks/EntitiesPostHook.ts,4/d/4d3980890d2f9b90c77a82e519a031a14955d694
-A
-docs/api/HOOKS.MD,3/9/3923cc31a9d8f11ed5c9463b21f9ae46df2018b8
-`
-0src/datastore/sql/operations/dml/updateEntity.ts,0/5/05f62d510684151a2f5e7ae4730cc044e9d5de10
 V
 &src/datastore/mongodb/MongoDbFilter.ts,5/8/5801919f9a864fc48860f042d26a0989c5edfc9f
 Z
@@ -604,7 +592,5 @@ f
 6src/errors/createErrorFromErrorCodeMessageAndStatus.ts,d/2/d2b82ee725f26f4b071be7c10a8d7056faae40be
 Y
 )src/scheduling/tryScheduleJobExecution.ts,2/3/23fcc302ed066feb49193824bdbb201ea215a4c6
-T
-$src/datastore/hooks/EntityPreHook.ts,d/3/d319140efd71c42c6cfa25104fdcc432f38db21e
 J
 src/constants/constants.ts,4/2/42fd5820762b08c55fd142e832060c0b0c75e155

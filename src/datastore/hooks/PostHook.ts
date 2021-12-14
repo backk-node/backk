@@ -1,8 +1,8 @@
-import { BackkEntity } from '../../types/entities/BackkEntity';
-import { PromiseErrorOr } from '../../types/PromiseErrorOr';
-import { SubEntity } from '../../types/entities/SubEntity';
+import { BackkEntity } from "../../types/entities/BackkEntity";
+import { PromiseErrorOr } from "../../types/PromiseErrorOr";
+import { SubEntity } from "../../types/entities/SubEntity";
 import { One } from "../DataStore";
-import { BackkError } from "../../types/BackkError";
+import { ErrorDefinition } from "../../types/ErrorDefinition";
 
 export type PostHook<T extends BackkEntity | SubEntity> =
   | {
@@ -10,6 +10,6 @@ export type PostHook<T extends BackkEntity | SubEntity> =
       shouldSucceedOrBeTrue: (
         entity: T | null
       ) => PromiseErrorOr<One<BackkEntity> | null> | Promise<boolean> | boolean;
-      error?: BackkError;
+      error?: ErrorDefinition;
     }
   | ((entity: T | null) => PromiseErrorOr<One<BackkEntity> | null> | Promise<boolean> | boolean);

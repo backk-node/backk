@@ -1,7 +1,7 @@
 import { HttpStatusCodes } from "../constants/constants";
 import { BackkError } from "../types/BackkError";
 
-export const BACKK_ERRORS: Readonly<{[errorName: string]: BackkError}> = {
+export const BACKK_ERRORS = {
   ENTITY_VERSION_MISMATCH: {
     errorCode: 'error.1',
     message:

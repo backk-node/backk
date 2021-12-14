@@ -2,6 +2,7 @@ import { BackkEntity } from '../../types/entities/BackkEntity';
 import { PromiseErrorOr } from '../../types/PromiseErrorOr';
 import { BackkError } from '../../types/BackkError';
 import { Many, One } from "../DataStore";
+import { ErrorDefinition } from "../../types/ErrorDefinition";
 
 export type PreHook<> =
   | {
@@ -10,7 +11,7 @@ export type PreHook<> =
         | PromiseErrorOr<Many<BackkEntity> | One<BackkEntity> | null>
         | Promise<boolean | BackkError | null | undefined | void>
         | boolean;
-      error?: BackkError;
+      error?: ErrorDefinition;
     }
   | (() =>
       | PromiseErrorOr<boolean | Many<BackkEntity> | One<BackkEntity> | null>

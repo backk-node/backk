@@ -542,8 +542,6 @@ K
 docs/api/DELETE_ENTITIES.MD,b/c/bcf9f4e7dbdebd2c36adc04dd6ca37027cbcefcc
 I
 docs/api/ENTITY_ARRAYS.MD,2/8/28abfc2838503496d05d28a32e8b4d5e10f4f398
-H
-docs/api/GET_ENTITIES.MD,9/5/9549abbb19e5ed8f30ad9d7347dcd2b15ec18b24
 N
 docs/api/REMOVE_SUBENTITIES.MD,a/9/a97e8bd46ede34b7aef2159f348dab0f9798cfa7
 K

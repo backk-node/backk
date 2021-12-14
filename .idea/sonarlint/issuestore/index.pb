@@ -476,8 +476,6 @@ e
 5src/remote/messagequeue/kafka/sendOneOrMoreToKafka.ts,c/8/c85e63005baa112768508fc435ef3f685516a669
 R
 "src/requestprocessor/HttpServer.ts,8/6/869e973a694b88bc90d4f845180c81727430030e
-V
-&docs/usage/DOCUMENTING_MICROSERVICE.MD,0/c/0cd3f27a354e7b58f9ae4538ce2869f575cb67e4
 Q
 !docs/usage/INTEGRATION_TESTING.MD,2/7/27bbf692ce0e66e11df118e86dc8d7a8238529bd
 O
@@ -592,8 +590,6 @@ H
 docs/api/FILE_READING.MD,1/3/1342c3a860c9cdd9cd8b250114dad6c43f12a43e
 I
 docs/API_DOCUMENTATION.MD,2/9/29b9cb5c22223e12290d94047cf343cfa7cb9196
-K
-docs/usage/OBSERVABILITY.MD,4/d/4d9b1b6d3f0a0e8206402fca26b682aefa7844e6
 I
 docs/api/OBSERVABILITY.MD,d/e/de26c745d47694e67ee89b5bac1664b649d90a96
 a

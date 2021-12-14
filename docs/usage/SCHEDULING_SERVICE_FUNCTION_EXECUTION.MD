@@ -20,7 +20,7 @@ For the request body, you specify the service function name, argument and schedu
 }
 ```
 
-As a response you will get the `jobId`:
+As a response you will get a `jobId`:
 
 ```
 HTTP/1.1 200 OK
@@ -34,7 +34,7 @@ The implementation of `reportingService.generateSalesReport` will generate the r
 store the generated report to data store with the job id. The job id is given to the service function `reportingService.generateSalesReport`
 in the service function argument in field `_jobId`. 
 
-So the complete service function argument for `reportingService.generateSalesReport` will in this example be:
+So, the complete service function argument for `reportingService.generateSalesReport` will in this example be:
 
 ```json
 {

@@ -3,7 +3,7 @@
 Query filters are defined as follows:
 
 ```ts
-type QueryFilters<T> = CommonEqFilters<T> | Array<MongoDbFilter<T> | SqlFilter | UserDefinedFilter>
+type QueryFilters<T> = CommonEqFilters<T> | Array<MongoDbFilter<T>> | SqlFilter[] | UserDefinedFilter[]
 type CommonEqFilters<T> = Partial<T> | object
 ```
 

@@ -474,8 +474,6 @@ U
 %src/requestprocessor/RedisConsumer.ts,5/0/50dc18ff4d5a87dc5cd75379cf4421cfe9553f4e
 E
 docs/PREREQUISITES.MD,7/1/71b175673ee1e11b95221df3ed611687ff16551b
-L
-docs/usage/INITIALIZATION.MD,a/6/a62c3ffd197112147d4150ed91dffaa363ed9b7b
 W
 'docs/usage/ARGUMENT_RESPONSE_CLASSES.MD,e/c/ecea065309b787617fb62934b6eaffcd93243907
 U
@@ -510,16 +508,12 @@ L
 docs/usage/CD.MD,f/4/f4bb3bc87af66f827524294c4550c0cf5e8fb23e
 C
 docs/GET_STARTED.MD,c/8/c841c6a68c176a73f38f5dc87c8a0631e97748fb
-N
-docs/api/MICROSERVICE_CLASS.MD,1/e/1ee74b159ced5b554357ec42e7bb2c2079388415
 Y
 )src/execution/isExecuteMultipleRequest.ts,d/2/d2482742299ac42fc87a8f2123cf69f65806b61b
 ]
 -docs/usage/MULTIPLE_SERVICE_FUNCTION_CALLS.MD,0/d/0dcf4f2c1aaf839293469ddd2d16d9d734c85417
 U
 %src/requestprocessor/KafkaConsumer.ts,5/4/54978fb9386e91d4df80e1e6e7893e36b797a7a4
-W
-'docs/api/MICROSERVICE_INITIALIZATION.MD,7/3/731ce54e9b15c990f2d2a4166230eb6b1ee8fa72
 `
 0src/execution/executeMultipleServiceFunctions.ts,d/4/d4d12c723aacc7da131331d4a853a2b0f225a2db
 Y

@@ -10,11 +10,10 @@ import { HttpServer, initializeDefaultJaegerTracing } from 'backk';
 import microservice from './microservice';
 
 initializeDefaultJaegerTracing();
-microservice.start(process.argv, [new HttpServer()]);
+microservice.start([new HttpServer()]);
 ```
 
-The first argument of `start` method is the command line arguments.
-The second argument is the list of request processor instances to be started.
+The argument is the list of request processor instances to be started.
 Following request processor classes are available:
 - `HttpServer`
 - `KafkaConsumer`
@@ -44,3 +43,5 @@ microservice.start(process.argv, [new HttpServer(2), new KafkaConsumer(), new Re
 | KAFKA_PORT           | Port for Kafka server          |
 | REDIS_HOST           | Hostname for Redis server      |
 | REDIS_PORT           | Port for Redis server          | 
+
+More information about Request Processors is available [here](../api/MICROSERVICE_INITIALIZATION.MD)

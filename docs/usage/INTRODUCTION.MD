@@ -350,12 +350,14 @@ export default class GetSalesItemsArg {
 ```
 
 For data store's `getEntitiesByFilters` you need to supply `postQueryOperations`.
-They are needed and used to define what response fields are wanted, how returned entities are sorted and paginated.
+They are needed and used to define what fields are included in the response, how returned entities are sorted and paginated.
 
 In this example, we are using the default post query operations provided by the class `DefaultPostQueryOperationsImpl`.
 You can provide an instance of your own class matching the `PostQueryOperations` interface, or you can get this
 information from the client. In the example above, one way to get that information from client is that `GetSalesItemsArg` class extends from `DefaultPostQueryOperationsImpl`
 or your own class (which can extend from `DefaultPostQueryOperationsImpl`, for example).
+
+`DefaultPostQueryOperationsImpl` is defined as follows:
 
 ```ts
 class DefaultPostQueryOperationsImpl implements PostQueryOperations {
@@ -375,22 +377,27 @@ Using an instance of `DefaultPostQueryOperationsImpl` will return all entity fie
 No fields are excluded from the response and entities and their sub-entities are sorted by `_id` or `id` fields.
 The response will contain the `pageNumber` page (default is first page) of entities and their sub-entities with page size of `pageSize` (default is 50)
 
+More information about post query operations is provided [here](../api/POST_QUERY_OPERATIONS.MD)
+
 ### Implement rest of the SalesItemService
 
 ```ts
-import { AllowForEveryUser, CrudEntityService, PromiseErrorOr } from 'backk';
+import { AllowForEveryUser, AllowForUserRoles, CrudEntityService, PromiseErrorOr } from 'backk';
 import SalesItemService from './SalesItemService';
 import SalesItem from './types/entities/SalesItem';
 
 export default class SalesItemServiceImpl extends CrudEntityService implements SalesItemService {
+  @AllowForEveryUser()
   getSalesItem({ _id }: _Id): PromiseErrorOr<One<SalesItem>> {
     return this.dataStore.getEntityById(SalesItem, _id);
   }
 
+  @AllowForUserRoles(['admin', 'salesAdmin'])
   updateSalesItem(salesItem: SalesItem): PromiseErrorOr<null> {
     return this.dataStore.updateEntity(SalesItem, salesItem);
   }
 
+  @AllowForUserRoles(['admin', 'salesAdmin'])
   deleteSalesItem({ _id }: _Id): PromiseErrorOr<null> {
     return this.dataStore.deleteEntityById(SalesItem, _id);
   }
@@ -405,8 +412,8 @@ Start your created Backk microservice:
 npm run start:dev
 ```
 
-Wait your microservice to start. Launch Postman and in Postman import following `generated/integrationtests/integrationTestsPostmanCollection.json`
-file to Postman. Now you can run the tests in the Postman collection in Postman.
+Wait your microservice to start. Launch Postman and import following `generated/integrationtests/integrationTestsPostmanCollection.json`
+file to Postman. Now you can run the integration tests by choosing the imported collection and pressing Run button.
 
 You can also run integrations test from the command line:
 

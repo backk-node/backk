@@ -138,6 +138,7 @@ Let's create the implementation class of the service:
 SalesItemServiceImpl.ts
 ```ts
 import { DataStore, CrudEntityService, Many, One, PromiseErrorOr } from 'backk';
+import { SalesItemService } from './SalesItemService';
 import SalesItem from './types/entities/SalesItem';
 
 export default class SalesItemServiceImpl extends CrudEntityService implements SalesItemService {

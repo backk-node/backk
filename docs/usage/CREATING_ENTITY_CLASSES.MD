@@ -3,7 +3,7 @@
 Entity classes must be annotated with the `@Entity()` decorator.
 Entity class name will be the name of the table in database where entities are stored.
 
-Root entity class should extend from one of the base classes available [here](https://github.com/backk-node/backk/tree/main/src/types/_id):
+Root entity class should extend from one of the base classes available [here.](https://github.com/backk-node/backk/tree/main/src/types/_id)
 Each root entity class must at least extend from `_Id` base class, because each root entity must have an `_id` property to identify each entity.
 Each sub-entity class (i.e. non-root entity class) must extend from `Id` class, because each sub-entity must have an `id` property.
 

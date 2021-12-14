@@ -22,7 +22,9 @@ interface DataStore {
 Creates a new entity `entity` of class `EntityClass` in the data store.
 
 `preHooks` are executed before the create operation and if any of the pre-hooks fails, the whole create operation fails.
+
 `postHook` is executed after successful create operation. If post-hook fails, the whole create operation fails.
+
 `postQueryOperations` are applied to query that returns the just created entity. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
 
 Returns the created entity or error.

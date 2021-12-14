@@ -526,8 +526,6 @@ W
 'src/datastore/hooks/EntitiesPostHook.ts,4/d/4d3980890d2f9b90c77a82e519a031a14955d694
 A
 docs/api/HOOKS.MD,3/9/3923cc31a9d8f11ed5c9463b21f9ae46df2018b8
-O
-docs/api/ABSTRACT_DATA_STORE.MD,9/f/9f9a3f8c3e178256b2e64e8fd9b35a9e4d2c1bd4
 `
 0src/datastore/sql/operations/dml/updateEntity.ts,0/5/05f62d510684151a2f5e7ae4730cc044e9d5de10
 V
@@ -540,8 +538,6 @@ _
 /src/datastore/sql/expressions/SqlNotInFilter.ts,7/d/7d9b3992b470f4ff78d11b8b3faab36ee76d011e
 I
 docs/api/QUERY_FILTERS.MD,7/8/783feae41c35f7357778cbeed16c1f7346c940fe
-K
-docs/api/CREATE_ENTITIES.MD,e/b/eba12059b107c540aabb8cb371cbb91f4196646c
 K
 docs/api/DELETE_ENTITIES.MD,b/c/bcf9f4e7dbdebd2c36adc04dd6ca37027cbcefcc
 I

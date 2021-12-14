@@ -20,24 +20,19 @@ To mark a service function as startup task, annotate it with `@CronJob(cronSched
 
 ```ts
 type CronSchedule = {
-  // 0-59
   minutes?: number | number[] | Range | 'any';
   minuteInterval?: number;
   
-  // 0-23
   hours?: number | number[] | Range | 'any';
   hourInterval?: number;
   
-  // 1-31
   daysOfMonth?: number | number[] | Range | 'any';
   dayInterval?: number;
-
-  // 0 - 11 (Jan=0, Dec=11)
-  months?: number | number[] | Range | 'any';
+  
+  months?: Month | Month[] | Range | 'any';
   monthInterval?: number;
-
-  // 0-6 (Sun=0, Sat=6)
-  daysOfWeek?: number | number[] | Range;
+  
+  daysOfWeek?: DayOfWeek | DayOfWeek[] | Range;
   weekDayInterval?: number;
 };
 
@@ -45,6 +40,31 @@ type Range = {
   start: number;
   end: number;
 };
+
+enum Month {
+  Jan,
+  Feb,
+  Mar,
+  Apr,
+  May,
+  Jun,
+  Jul,
+  Aug,
+  Sep,
+  Oct,
+  Nov,
+  Dec
+}
+
+enum DayOfWeek {
+  Sunday,
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+}
 
 const defaultRetryIntervals = [1, 2, 5, 10, 30, 60, 120, 500];
 ```

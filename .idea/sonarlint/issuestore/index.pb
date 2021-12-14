@@ -474,8 +474,6 @@ E
 docs/PREREQUISITES.MD,7/1/71b175673ee1e11b95221df3ed611687ff16551b
 e
 5src/remote/messagequeue/kafka/sendOneOrMoreToKafka.ts,c/8/c85e63005baa112768508fc435ef3f685516a669
-\
-,docs/usage/SPECIAL_SERVICE_FUNCTION_TYPES.MD,c/3/c382d7df5090b56087c9ac25a73d6bb5ca410105
 R
 "src/requestprocessor/HttpServer.ts,8/6/869e973a694b88bc90d4f845180c81727430030e
 c
@@ -536,8 +534,6 @@ U
 %src/services/ReadinessCheckService.ts,a/c/aca76d51d139ac7a3a39bedf668ebb966286244a
 Y
 )src/decorators/service/function/Update.ts,f/b/fbac1f5f3bfe8376906475aafd65211d321c7ed8
-j
-:src/decorators/typeproperty/datetime/IsDayOfWeekBetween.ts,7/7/7703957bb8211b62db97cf17dbcb65ac75150b06
 d
 4src/decorators/typeproperty/ShouldBeTrueForObject.ts,9/5/95d4ec8d2c61210883e6c6323ff8501debdfbfa6
 Q

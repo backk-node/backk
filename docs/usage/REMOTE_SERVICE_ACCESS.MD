@@ -191,6 +191,48 @@ response from the async remote service function call.
 #### <a name="sendtoredis"></a> Send to Remote Backk Microservice via Redis
 Sending service function call request to a remote Backk microservice can be achieved with a call to `sendToRemoteService` function.
 
+```ts
+async function sendToRemoteService(
+  communicationMethod: 'kafka' | 'redis',
+  microserviceName: string,
+  serviceFunctionName: string,
+  serviceFunctionArgument: object,
+  microserviceNamespace = process.env.MICROSERVICE_NAMESPACE,
+  server?: string,
+  responseDestination?: ResponseDestination,
+  options?: SendOptions
+): PromiseErrorOr<null>
+
+interface ResponseDestination {
+  communicationMethod: CommunicationMethod;
+  microserviceName: string;
+  microserviceNamespace: string | undefined;
+  serviceFunctionName: string;
+  server: string;
+}
+
+type CommunicationMethod = 'http' | 'kafka' | 'redis'
+
+interface SendOptions {
+  compressionType?: CompressionTypes;
+  sendAcknowledgementType?: SendAcknowledgementType;
+}
+
+enum CompressionTypes {
+  None = 0, // Default
+  GZIP = 1,
+  Snappy = 2,
+  LZ4 = 3,
+  ZSTD = 4,
+}
+
+enum SendAcknowledgementType {
+  NONE,
+  LEADER_ONLY,
+  ALL_REPLICAS = -1 // Default
+}
+```
+
 In the below example a service function call request for service function `refundService.refundOrder` in
 Backk microservice named `refund-service` is sent to Redis with service function argument containing the `orderId`:
 

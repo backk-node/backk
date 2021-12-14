@@ -23,10 +23,10 @@ class MicroserviceImpl extends Microservice {
 }
 ```
 
-In the example above, if the `userAccountService` has function `createUser`, it can be accessed over HTTP like this:
+In the example above, if the `userAccountService` has function `createUser`, it can be accessed over HTTP from external public clients like this:
 
 ```
-POST https://<user-account-microservice-host>:<port>/userAccountService.createUser
+POST /userAccountService.createUser
 ```
 
 The argument for the service function call `userAccountService.createUser` is sent in the HTTP POST request body encoded in JSON

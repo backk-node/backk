@@ -14,14 +14,14 @@ microservice.start([new HttpServer()]);
 ```
 
 The argument is the list of request processor instances to be started.
+For `HttpServer` constructor you can specify the HTTP version `1` or `2`, where `1` is the default.
+
+### Request Processors
 Following request processor classes are available:
 - `HttpServer`
 - `KafkaConsumer`
 - `RedisConsumer`
-
-For `HttpServer` constructor you can specify the HTTP version `1` or `2`, where `1` is the default.
-
-### Request Processors
+- 
 The below example will start HTTP/2 server and both Kafka and Redis consumers:
 
 ```ts
@@ -44,4 +44,4 @@ microservice.start(process.argv, [new HttpServer(2), new KafkaConsumer(), new Re
 | REDIS_HOST           | Hostname for Redis server      |
 | REDIS_PORT           | Port for Redis server          | 
 
-More information about Request Processors is available [here](../api/MICROSERVICE_INITIALIZATION.MD)
+More information about Request Processors is available [here.](../api/MICROSERVICE_INITIALIZATION.MD)

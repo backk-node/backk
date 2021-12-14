@@ -4,7 +4,7 @@
 
 <h1 align="center">Backk<br/></h1>
 <h2 align="center">Backends for Kubernetes</h2>
-<h2 align="center">A Node.js framework for creating secure cloud-native microservices for Kubernetes in Typescript</h2>
+<h2 align="center">A Node.js framework for creating security-first cloud-native microservices for Kubernetes in Typescript</h2>
 <h3 align="center">A task-oriented replacement for REST, GraphQL and RPC</h3>
 <h4 align="center"><i>:construction_worker: :building_construction: Backk is currently in alpha phase</i></h4>
 

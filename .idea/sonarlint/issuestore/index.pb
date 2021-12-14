@@ -542,10 +542,6 @@ Q
 !src/datastore/MongoDbDataStore.ts,7/f/7f6815388428de13693ae11762a77f1789593f07
 o
 ?src/types/postqueryoperations/DefaultPostQueryOperationsImpl.ts,c/7/c70df172dd5067a07cc6fa572bd4e0971875812f
-Q
-!docs/api/POST_QUERY_OPERATIONS.MD,0/f/0fbbee26ad9d56244cfc139151b14ef4d8ca012c
-H
-docs/api/FILE_READING.MD,1/3/1342c3a860c9cdd9cd8b250114dad6c43f12a43e
 I
 docs/API_DOCUMENTATION.MD,2/9/29b9cb5c22223e12290d94047cf343cfa7cb9196
 I

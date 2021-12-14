@@ -1,5 +1,4 @@
 ## Post Query Operations
-
 Data store operations involving queries need post query operations to define what response fields are returned,
 how returned entities are sorted and paginated.
 

@@ -618,8 +618,6 @@ a
 ,src/remote/messagequeue/kafka/sendToKafka.ts,d/b/dbc342d1558a8147774c6129db7744957422c5ed
 o
 ?src/remote/messagequeue/sendToRemoteServiceInsideTransaction.ts,8/5/85b6b92b6f40a0f38a1f3277c423ff3749ff443d
-H
-docs/usage/DATA_STORE.MD,e/f/efe328cd8f66b54116f6fee130ddf0cb8169d9c3
 Q
 !docs/api/REMOTE_SERVICE_ACCESS.MD,b/0/b0685b4ca6fc0ba042874203e366ff0320bb9359
 ^

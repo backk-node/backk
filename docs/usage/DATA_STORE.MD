@@ -83,7 +83,8 @@ With query filters you can filter both root entities and their sub-entities.
 
 ### <a name="post-query-operations"></a> Post Query Operations
 Every data store operation involving querying entities requires [Post Query Operations](../api/POST_QUERY_OPERATIONS.MD) to be provided.
+Post query operations defines which properties are returned and the sorting and pagination of the data.
 
 #### <a name="graphql-json-support></a> GraphQL/JSON support
-Backk offers also [GraphQL/JSON query style support](../api/POST_QUERY_OPERATIONS.MD#graphql-json-support) for specifying what fields should be included in the query response.
+Backk offers also [GraphQL/JSON query style support](../api/POST_QUERY_OPERATIONS.MD#graphql-json-support) for specifying what fields should be included in the response.
 

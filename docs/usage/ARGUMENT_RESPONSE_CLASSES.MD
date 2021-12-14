@@ -75,7 +75,6 @@ class PayOrderArg {
 ```
 
 In the above example, `PayOrderArg` class is composed by picking following properties from `Order` class and making then non-nullable:
-
 - `_id`
 - `paymentGateway`
 - `transactionId`

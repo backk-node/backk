@@ -29,7 +29,7 @@ Finds an entity of class `EntityClass` by id `_id`, then adds values `arrayField
 `options.entityPreHooks` are executed before the add operation, and they get the current entity as argument.
 if any of the pre-hooks fails, the whole add operation fails. See [Hooks](HOOKS.MD) for details.
 
-`options.postQueryOperations` is used to define post query operations for querying the entity before adding field values (E.g. for use in `entityPreHooks`). See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+`options.postQueryOperations` is used to define post query operations for querying the entity before adding field values (E.g. for use in `entityPreHooks`). See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details. If not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
 
 `options.postHook` is executed after the add operation. If post-hook fails, the whole add operation fails. A post-hook can be used
 for example to notify other microservices about the operation. See [Hooks](HOOKS.MD) for details.
@@ -80,7 +80,7 @@ Finds an entity of class `EntityClass` by id `_id`, then removes values `arrayFi
 `options.entityPreHooks` are executed before the remove operation, and they get the current entity as argument.
 if any of the pre-hooks fails, the whole remove operation fails.  See [Hooks](HOOKS.MD) for details.
 
-`options.postQueryOperations` is used to define post query operations for querying the entity before removing field values (E.g. for use in `entityPreHooks`). See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+`options.postQueryOperations` is used to define post query operations for querying the entity before removing field values (E.g. for use in `entityPreHooks`). See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details. If not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
 
 `options.postHook` is executed after the remvoe operation. If post-hook fails, the whole remove operation fails. A post-hook can be used
 for example to notify other microservices about the operation. See [Hooks](HOOKS.MD) for details.

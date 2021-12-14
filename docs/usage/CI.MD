@@ -27,7 +27,7 @@ You should have the following steps in your CI pipeline:
     - In main branch: microservice version and `latest`
     - In feature branch: <Build number>-<Git commit hash>
   - Push docker image to Docker registry
-  - Docker image vulnerability scan with Anchore or another similar tool
+  - Docker image vulnerability scan with Anchore, JFrog Xray or another similar tool
   - Install helm
   - Update app and chart version in Helm Chart.yaml file:
     - `sed -i "/version: .*/version: ${{ microserviceVersion }}/g helm/backk-example-microservice/Chart.yaml"`

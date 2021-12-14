@@ -476,12 +476,6 @@ e
 5src/remote/messagequeue/kafka/sendOneOrMoreToKafka.ts,c/8/c85e63005baa112768508fc435ef3f685516a669
 R
 "src/requestprocessor/HttpServer.ts,8/6/869e973a694b88bc90d4f845180c81727430030e
-S
-#docs/usage/KUBERNETES_DEPLOYMENT.MD,f/5/f541f7ef81691bf26b9b26ed336d831a49be62a5
-L
-docs/usage/INFRA_PLATFORM.MD,5/d/5d8b1efeed212d40be9fbc407e5fb5890039d5be
-@
-docs/usage/CI.MD,a/4/a41b72ec0b8155bbcda6528a68bab9b6520cc770
 @
 docs/usage/CD.MD,f/4/f4bb3bc87af66f827524294c4550c0cf5e8fb23e
 C

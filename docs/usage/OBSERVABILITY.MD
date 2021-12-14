@@ -9,7 +9,6 @@
   - [Collecting Custom Metrics](#custommetrics)
 
 ### <a name="probes"></a> Implement Liveness, Readiness and Startup Checks for Kubernetes Probes
-
 Backk microservice Kubernetes deployment defines liveness, readiness and startup probes.
 
 The default implementation of liveness and readiness checks in a Backk microservice is to return HTTP status

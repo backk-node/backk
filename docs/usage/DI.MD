@@ -102,19 +102,23 @@ export default class AzureModule extends Module {
 }
 ```
 
-diModules.ts
+getDiModules.ts
 ```ts
 import { Container } from 'noicejs';
 import AwsModule from './modules/AwsModule';
 import AzureModule from './modules/AzureModule';
 import DataStoreModule from '.modules/DataStoreModule'
 
-const diModules = {
-  AWS: [new AwsModule(), new DataStoreModule()],
-  Azure: [new AzureModule(), new DataStoreModule()]
+export default function getDiModules(cloudType: string) {
+  if (cloudType === 'AWS') {
+    return [new AwsModule(), new DataStoreModule()];
+  } else if(cloudType === 'Azure') {
+    return [new AzureModule(), new DataStoreModule()];
+  }
+  
+  throw new Error('Invalid cloud type: ' + cloudType);
 }
 
-export default diModules;
 ```
 
 ### Implement Microservice Class
@@ -147,14 +151,14 @@ main.ts
 import 'reflect-metadata';
 import { Container } from 'noicejs';
 import { HttpServer, initializeDefaultJaegerTracing, throwException } from 'backk';
-import diModules from './modules/diModules';
+import getDiModules from './modules/getDiModules';
 import MicroserviceImpl from './MicroserviceImpl';
 
 initializeDefaultJaegerTracing();
 
 async function startMicroservice() {
   const cloudType = process.env.CLOUD_TYPE ?? throwException('Environment variable CLOUD_TYPE is not defined.');
-  const diContainer = Container.from(diModules[cloudType] ?? throwException('Unknown CLOUD_TYPE'));
+  const diContainer = Container.from(getDiModules(cloudType));
   await diContainer.configure();
   const microservice = await diContainer.create(MicroserviceImpl);
   microservice.start([new HttpServer()]);

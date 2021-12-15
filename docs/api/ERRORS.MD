@@ -1,5 +1,8 @@
-import { HttpStatusCodes } from "../constants/constants";
+## Errors
 
+List of Backk error definitions:
+
+```ts
 export const BACKK_ERRORS = {
   ENTITY_VERSION_MISMATCH: {
     errorCode: 'error.1',
@@ -104,3 +107,4 @@ export const BACKK_ERRORS = {
     statusCode: HttpStatusCodes.SERVICE_UNAVAILABLE
   }
 };
+```

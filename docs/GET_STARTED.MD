@@ -82,23 +82,15 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
       "@opentelemetry/plugin-ioredis": "0.11.0",
       "ioredis": "^4.19.2",
       ```
-5. Run
-
-   ```bash
-   npm install
-   npm run start:dev
-
-   # to run unit tests
-   npm test
-   ```
-
-   There is one example service in `src/services/example` directory that you can use as a basis for your own service(s).
-   If/When you don't need that example service anymore, just delete the `src/services/example` directory and remove the example service instantiation also from the `MicroserviceImpl` class in `src/microservice.ts` file.
+5. Run `npm install`
 6. Generate the [OpenAPI 3](https://swagger.io/specification/) API specs for your API implementation with following command:
    ```bash
    npm run generateApiSpecs
    ```
-8. You can use and test your microservice API using [Postman](https://www.postman.com/downloads/) or [SwaggerHub](https://app.swaggerhub.com/home)  
+7. Run `npm run start:dev`
+   There is one example service in `src/services/example` directory that you can use as a basis for your own service(s).
+   If/When you don't need that example service anymore, just delete the `src/services/example` directory and remove the example service instantiation also from the `MicroserviceImpl` class in `src/microservice.ts` file.
+8. You can use your microservice API using [Postman](https://www.postman.com/downloads/) or [SwaggerHub](https://app.swaggerhub.com/home)  
    For Postman:
     1. Launch Postman
     2. Choose `Import` and then choose file `generated/openapi/openApiPublicSpec.yaml`
@@ -106,11 +98,11 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
    For SwaggerHub:
     1. Navigate to [SwaggerHub](https://app.swaggerhub.com/home)
     2. Choose `Create New` and then `Import and Document API` and then choose file `generated/openapi/openApiPublicSpec.yaml`
-9. Backk automatically generates some integration tests and they can be run with following command:
+9. Backk automatically generates some integration tests, and they can be run with following command:
    ```bash
    # NOTE! You need to have the microservice running before executing the integration tests,
    # so ensure you have run npm run start:dev before running the below command
    
    npm run integrationtest:dev
    ```
-   You can also import the integration test to Postman from file `generated/integrationtests/integrationTestsPostmanCollection.json`
+   You can also import the integration tests to Postman from file `generated/integrationtests/integrationTestsPostmanCollection.json`

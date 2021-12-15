@@ -118,6 +118,9 @@ implement the following function:
 - `getIdBySubject(subject: Subject): PromiseErrorOr<One<_Id>>`
 
 This function should return user's `_id` given `subject` as argument. Subject is the unique id of the user from the IAM system.
+When you implement a user account/profile microservice, you would typically save `subject` with `_id` in database table.
+In your other microservice need to implement user service with `getIdBySubject` method. This method should call the remote user account/profile microservice to get `_id` for the `subject`.
+Backk implements caching inside the microservice, so network requests are not necessarily made always, but only initially.
 
 Then, instantiate your class and store it as a field in your `MicroserviceImpl` class:
 

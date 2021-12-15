@@ -480,8 +480,6 @@ U
 0src/execution/executeMultipleServiceFunctions.ts,d/4/d4d12c723aacc7da131331d4a853a2b0f225a2db
 Y
 )src/datastore/hooks/tryExecutePreHooks.ts,8/5/85bdb79e3a2c00fbe98964b2d7d44f8ef1daa63d
-W
-'src/services/useraccount/UserService.ts,c/a/cab5fec30174d37cf42c16a4b357ae7650e56002
 [
 +src/services/useraccount/UserBaseService.ts,4/f/4fa4d3374a0a8c0d4308a7c4e451ee861dc443a2
 P
@@ -646,8 +644,6 @@ K
 src/services/BaseService.ts,9/4/9434f185c4f597d67e2b58164a20c94dfc0e257c
 <
 src/index.ts,c/5/c5fb850250c7443c48a6c12b5cf6916773da31f1
-I
-docs/api/BASE_SERVICES.MD,3/3/33d3d9570e36ce5015d1d2f15ee752b88474a3f3
 Z
 *src/decorators/service/function/CronJob.ts,a/8/a88bb6510ffce012c9290828e536a4fcac1de31e
 j
@@ -696,3 +692,21 @@ H
 docs/api/FILE_READING.MD,1/3/1342c3a860c9cdd9cd8b250114dad6c43f12a43e
 M
 docs/usage/VERSION_CONTROL.MD,7/d/7d9e557b9a9d3033ce21a4cd8417ba2018a799cd
+K
+docs/api/ADD_SUBENTITIES.MD,3/c/3cbfee68d6c74570915a3137e96692deaf9da3c8
+X
+(src/execution/tryExecuteServiceMethod.ts,a/3/a3a819ae1b09ff11116e6c75731dfd3ccfee00ec
+c
+3docs/usage/SCHEDULING_SERVICE_FUNCTION_EXECUTION.MD,a/f/af442472e187623548a4ccd4e6a5973604e6bf60
+K
+docs/USAGE_DOCUMENTATION.MD,c/6/c6809f519eb9a39ee442e446434f68505863d1ef
+@
+docs/usage/DI.MD,9/2/920958ed455e7da50d0021c00ee2de7810bfba8d
+Q
+!docs/usage/DIRECTORY_STRUCTURE.MD,f/0/f0f78465fae11084e56f0f222f55c84f58b07657
+9
+	README.MD,9/6/968e80af9562e09cebe594968b130076952eafe1
+J
+docs/usage/INTRODUCTION.MD,2/8/2888e4fef5d7ab7f15923757594f0f1a8ba04a34
+C
+docs/GET_STARTED.MD,c/8/c841c6a68c176a73f38f5dc87c8a0631e97748fb

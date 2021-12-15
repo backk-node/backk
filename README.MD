@@ -38,6 +38,7 @@
 - Write your microservices using Typescript and plain functions that are called by remote clients
   - No need for learning any technology like REST, GraphQL or gRPC
   - Can be used both for resource and RPC style microservices
+  - Backk does not really care if your microservice is really a microservice or more like a mini-service, macro-service or monolith.
 - Supports subscription endpoints using Server Sent Events (SSE) in HTTP/1.1 and HTTP/2
 - Supports multiple databases
   - [PostgreSQL](https://www.postgresql.org/)

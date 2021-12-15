@@ -11,7 +11,7 @@ npm run generateClients
 Clients are generated in directory `generated/clients/frontend` and `generated/clients/internal`.
 
 Internal client is meant to be used inside Kubernetes cluster for other microservices to connect to your microservice.
-Frontend client is meant to be used in apps running in web browser and it requires `backk-frontend-utils` to be installed in client project. (See below section)
+Frontend client is meant to be used in apps running in web browser, and it requires `backk-frontend-utils` to be installed in client project. (See below section)
 
 There are several ways that you can use the clients:
 - You manually copy generated client to your client project. This is how it is done in [backk-example-frontend](https://github.com/backk-node/backk-example-frontend)

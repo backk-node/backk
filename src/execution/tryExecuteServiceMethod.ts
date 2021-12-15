@@ -162,7 +162,7 @@ export default async function tryExecuteServiceMethod(
 
     const serviceFunctionCallStartTimeInMillis = Date.now();
 
-    if (serviceFunctionName === 'serviceFunctionSchedulingService.scheduleServiceFunctionExecution') {
+    if (serviceFunctionName === 'serviceFunctionSchedulingService.scheduleExecution') {
       return await tryScheduleJobExecution(microservice, serviceFunctionArgument, headers, resp);
     }
 

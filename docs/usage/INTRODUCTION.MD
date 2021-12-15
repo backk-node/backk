@@ -121,7 +121,6 @@ If you service requires multiple data store, your service is not probably a micr
 your service into smaller pieces, so that each microservice requires only one data store to operate on.
 
 For the `CrudEntityService` class constructor, you need to give two parameters:
-
 - map of error definitions (or an empty object if the service does not raise any errors specific to business logic in your service functions)
 - dataStore
 
@@ -131,7 +130,7 @@ Services of the microservice should be instantiated in `MicroserviceImpl` class 
 Service instances should be stored as private read-only fields in the `MicroserviceImpl` class. You should name the fields according
 to the service interface name, for example: `SalesItemService` interface => `salesItemService` field.
 
-Add your service to `microservice.ts`:
+Add your service to `src/microservice.ts`:
 
 ```ts
 import { Microservice } from 'backk';
@@ -150,7 +149,7 @@ Let's create `SalesItem` class in directory `src/services/salesitem/types/entiti
 SalesItem.ts
 
 ```ts
-import { _Id, Entity, IsAscii, IsFloat, ReadWrite } from 'backk';
+import { _Id, Entity, IsAscii, IsFloat, Length, MinMax, ReadWrite } from 'backk';
 
 @Entity()
 export default class SalesItem extends _Id {
@@ -184,7 +183,6 @@ In addition to that, you need to define the allowed range of values with
 
 For each property you must define the access mode of the property. The access mode defines the visibility of the
 property to the clients of the microservice. The following [access mode decorators](../api/DECORATORS.MD#entity-property-decorators) are available:
-
 - `@Private()`
 - `@ReadWrite()`
 - `@ReadOnly()`
@@ -267,7 +265,6 @@ For the above service function, we use `@AllowForTests` decorator to indicate th
 can only be accessed when executing tests, it cannot be accessed by any clients at all.
 
 There are following possible [authorization decorators](../api/DECORATORS.MD#service-function-decorators) available for use:
-
 - `@AllowForEveryUser()`
 - `@AllowForEveryUserForOwnResources()`
 - `@AllowForUserRoles(roles: string[])`
@@ -337,6 +334,7 @@ import {
 } from 'backk';
 import SalesItemService from './SalesItemService';
 import SalesItem from './types/entities/SalesItem';
+import GetSalesItemArg from './types/args/GetSalesItemArg';
 
 export default class SalesItemServiceImpl extends CrudEntityService implements SalesItemService {
   @AllowForEveryUser()

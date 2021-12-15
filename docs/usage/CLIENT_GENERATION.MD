@@ -24,7 +24,7 @@ If you want to use generated frontend clients in your frontend project, you need
 your frontend project:
 
 ```bash
-npm install --save backk-frontend-utils
+npm install --save --save-exact backk-frontend-utils
 ```
 
 ### Example Backk React Frontend

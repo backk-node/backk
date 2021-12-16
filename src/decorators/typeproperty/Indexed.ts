@@ -2,7 +2,7 @@ import entityAnnotationContainer from '../entity/entityAnnotationContainer';
 
 export type SortOrder = 'ASC' | 'DESC'
 
-export default function Index(
+export default function Indexed(
   sortOrder: SortOrder = 'ASC',
   usingOption?: string,
   additionalSqlCreateIndexStatementOptions?: string

@@ -114,7 +114,7 @@ export { default as Encrypted } from './decorators/typeproperty/Encrypted';
 export { default as TestValue } from './decorators/typeproperty/testing/TestValue';
 export { default as FetchFromRemoteService } from './decorators/typeproperty/FetchFromRemoteService';
 export { default as Hashed } from './decorators/typeproperty/Hashed';
-export { SortOrder, default as Index } from './decorators/typeproperty/Index';
+export { SortOrder, default as Indexed } from './decorators/typeproperty/Indexed';
 export { default as ManyToMany } from './decorators/typeproperty/ManyToMany';
 export { default as NotEncrypted } from './decorators/typeproperty/NotEncrypted';
 export { default as NotHashed } from './decorators/typeproperty/NotHashed';

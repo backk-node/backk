@@ -1,4 +1,4 @@
-import { SortOrder } from "../typeproperty";
+import { SortOrder } from "../typeproperty/Indexed";
 
 export interface ManyToManyRelationTableSpec {
   entityName: string;

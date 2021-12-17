@@ -54,7 +54,7 @@
   - Drastically simplifies the definition of DTOs or totally removes the need for DTOs
 - Automatic database schema generation
 - Security
-  - Builds distro-less non-root Docker images 
+  - Builds distro-less non-root Docker images for the microservice
   - OAuth 2.0 Authorization support
   - Captcha verification support
   - Automatic password hashing using Argon2 algorithm

@@ -54,12 +54,13 @@
   - Drastically simplifies the definition of DTOs or totally removes the need for DTOs
 - Automatic database schema generation
 - Security
+  - Builds distro-less non-root Docker images 
   - OAuth 2.0 Authorization support
   - Captcha verification support
   - Automatic password hashing using Argon2 algorithm
   - Automatic PII encryption/decryption
-  - Mandatory validation required by Entity field type
-    - e.g. string fields must have a maximum length validation
+  - Mandatory validation using decorators is required for entity properties
+    - e.g. string fields must have a maximum length validation and numbers must have minimum and maximum value validation
 - Supports a response cache using Redis
 - Automatic microservice documentation generation
   - [TypeDoc](https://typedoc.org/)

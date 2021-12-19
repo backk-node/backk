@@ -259,8 +259,6 @@ if (process.env.NODE_ENV === 'production') {
   }
 }
 
-
-
 let lastLoggedErrorName = '';
 let lastLoggedTimeInMillis = Date.now();
 let lastSpanId: string | undefined = '';

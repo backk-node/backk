@@ -400,8 +400,6 @@ i
 9src/metadata/getClassPropertyNameToPropertyTypeNameMap.ts,2/c/2c99dfa7222fffc105b2ccf51868d172e945c789
 ;
 .prettierrc,2/0/20137a9e94744624390b6748bc96df5ca1579b71
-<
-package.json,7/0/7030d0b2f71b999ff89a343de08c414af32fc93a
 V
 &src/utils/type/isPropertyReadDenied.ts,3/e/3e09e44904a571a9e8462ddcfed67cf2fb00f70a
 a

@@ -76,6 +76,7 @@
     "re2": "1.15.9",
     "reflect-metadata": "0.1.13",
     "typedoc-pksilen": "0.17.4",
+    "typescript": "3.9.9",
     "xmldom": "0.6.0",
     "xpath": "0.0.32",
     "yaml": "1.10.2",
@@ -116,8 +117,7 @@
     "ts-jest": "25.2.0",
     "ts-loader": "6.2.2",
     "ts-node": "8.10.2",
-    "tsconfig-paths": "3.9.0",
-    "typescript": "3.9.9"
+    "tsconfig-paths": "3.9.0"
   },
   "jest": {
     "moduleFileExtensions": [

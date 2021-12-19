@@ -14,6 +14,7 @@ import areTypeDefinitionsUsedInTypeFilesChanged
   from "../typescript/utils/areTypeDefinitionsUsedInTypeFilesChanged";
 import changePackageJsonNameProperty from "../utils/changePackageJsonNameProperty";
 import initializeMicroservice from "./initializeMicroservice";
+import wait from "../utils/wait";
 
 type NonEmptyArray<T> = [T, ...T[]];
 
@@ -93,7 +94,13 @@ export default class Microservice {
     StartupCheckService.microservice = this;
     logEnvironment();
     defaultSystemAndNodeJsMetrics.startCollectingMetrics();
-    await initializeDatabase(this, this.dataStore);
+
+    let isDbInitialized = false;
+    while(!isDbInitialized) {
+      isDbInitialized = await initializeDatabase(this, this.dataStore);
+      await wait(5000);
+    }
+
     scheduleCronJobsForExecution(this, this.dataStore);
     await scheduleJobsForExecution(this, this.dataStore);
     reloadLoggingConfigOnChange();

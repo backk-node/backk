@@ -27,8 +27,6 @@ W
 'src/decorators/service/function/Test.ts,2/1/217ac35468764bd26bba784919c834f5d22ab0ee
 X
 (src/decorators/typeproperty/Encrypted.ts,6/5/652217070279d2fa87aa773f9660789ccc0750b3
-A
-src/utils/wait.ts,5/a/5a05f1bec552359d90cfe29a11102eeda1a2197f
 >
 lib/index.d.ts,c/e/cecf50ad545002db5f8b54f63378dbfce02ad1d2
 L
@@ -237,8 +235,6 @@ j
 :src/datastore/sql/operations/dql/clauses/getJoinClauses.ts,c/0/c0395ef130033b9a9fbcec0e456a7c3c6bf7d18e
 l
 <src/datastore/sql/operations/dql/clauses/tryGetProjection.ts,b/1/b12bbe05b366083f128662a09caa8d23cca09699
-f
-6src/datastore/sql/operations/ddl/initializeDatabase.ts,0/e/0ea45dd67226acec248fa09323994e71c3fb19b3
 d
 4src/typescript/generator/generateClassFromSrcFile.ts,e/d/edbef0467980c046ac9523e4666f2b29c01d50b0
 B
@@ -434,8 +430,6 @@ O
 docs/OWASP_TOP_TEN_CHECKLIST.MD,f/7/f7e07f41d07950c8ed08e26bb67993ed4f0f54b1
 I
 docs/SECURITY_FEATURES.MD,4/f/4fd40ad1cc01a1cc8b5572b74a7e398e7e58980f
-O
-src/datastore/MySqlDataStore.ts,8/f/8f134bc4a4f1e8125d58c46d089a814d427d922b
 T
 $src/datastore/PostgreSqlDataStore.ts,1/9/19c7770c2a7dd99299bd1c49a5bffaf057af287d
 e
@@ -522,8 +516,6 @@ U
 +src/types/postqueryoperations/Pagination.ts,9/f/9f8d60eefcc6adf96d6425826857a862cce56841
 d
 4src/types/postqueryoperations/PostQueryOperations.ts,7/c/7c051fb0c5b1f68f12d7170c30d0742218ec30a7
-Q
-!src/datastore/MongoDbDataStore.ts,7/f/7f6815388428de13693ae11762a77f1789593f07
 o
 ?src/types/postqueryoperations/DefaultPostQueryOperationsImpl.ts,c/7/c70df172dd5067a07cc6fa572bd4e0971875812f
 I
@@ -540,8 +532,6 @@ Q
 .src/remote/messagequeue/sendToRemoteService.ts,2/8/2898217950f733fa6c67c737e453b9d25969b79f
 R
 "src/remote/http/makeHttpRequest.ts,6/3/638d167128ba5c5cb0465430a3e6af7d84b27653
-P
- src/microservice/Microservice.ts,b/2/b203b2517f9ead474bfd9ed8b4aa05bb628a6597
 U
 %src/observability/logging/LogEntry.ts,a/9/a93b3af0cb6589aa5394a488f147fc1ef3d4c75f
 `
@@ -586,8 +576,6 @@ n
 >src/decorators/typeproperty/typePropertyAnnotationContainer.ts,c/8/c810282510d9ae8ef1f187c69f3bc3db0d6976fb
 [
 +src/services/startup/StartupCheckService.ts,5/6/5654861c9a9b9770edae3756116107b2d82a678b
-Z
-*src/microservice/initializeMicroservice.ts,1/1/1162f5fb3b946952726e351e5b6fcea12aed21a8
 f
 6src/services/startup/DefaultStartupCheckServiceImpl.ts,a/b/abdb7f22fa7b7aa4de48bcbd4195a326d91ce82e
 B
@@ -668,8 +656,6 @@ W
 0src/datastore/sql/operations/dml/updateEntity.ts,0/5/05f62d510684151a2f5e7ae4730cc044e9d5de10
 A
 docs/api/HOOKS.MD,3/9/3923cc31a9d8f11ed5c9463b21f9ae46df2018b8
-J
-src/datastore/DataStore.ts,1/c/1cbed95c242fef9e81752f76d6aa081d8a65f281
 I
 docs/api/QUERY_FILTERS.MD,7/8/783feae41c35f7357778cbeed16c1f7346c940fe
 Q

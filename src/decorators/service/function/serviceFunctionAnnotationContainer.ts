@@ -1,8 +1,8 @@
-import { HttpHeaders } from './ResponseHeaders';
-import { UpdateType } from './Update';
+import { ErrorDefinition } from '../../../types/ErrorDefinition';
 import { PostTestSpec } from './PostTests';
+import { HttpHeaders } from './ResponseHeaders';
 import { TestSetupSpec } from './TestSetup';
-import { ErrorDefinition } from "../../../types/ErrorDefinition";
+import { UpdateType } from './Update';
 
 type AuditLog = {
   shouldLog: (argument: any, returnValue: any) => boolean;
@@ -57,13 +57,12 @@ class ServiceFunctionAnnotationContainer {
     functionName: string,
     allowDespiteUserIdInArg: boolean
   ) {
-    this.serviceFunctionNameToIsAllowedForEveryUserMap[
-      `${serviceClass.name}${functionName}`
-    ] = allowDespiteUserIdInArg;
+    this.serviceFunctionNameToIsAllowedForEveryUserMap[`${serviceClass.name}${functionName}`] =
+      allowDespiteUserIdInArg;
   }
 
-  addServiceFunctionAllowedForClusterInternalUse(serviceClass: Function, functionName: string) {
-    this.serviceFunctionNameToIsAllowedForClusterInternalUseMap[`${serviceClass.name}${functionName}`] = true;
+  addServiceFunctionAllowedForClusterInternalUse(ServiceClass: Function, functionName: string) {
+    this.serviceFunctionNameToIsAllowedForClusterInternalUseMap[`${ServiceClass.name}${functionName}`] = true;
   }
 
   addServiceFunctionAllowHttpGetMethod(serviceClass: Function, functionName: string) {
@@ -75,9 +74,8 @@ class ServiceFunctionAnnotationContainer {
     functionName: string,
     userAccountIdFieldName: string
   ) {
-    this.serviceFunctionNameToUserAccountIdFieldName[
-      `${serviceClass.name}${functionName}`
-    ] = userAccountIdFieldName;
+    this.serviceFunctionNameToUserAccountIdFieldName[`${serviceClass.name}${functionName}`] =
+      userAccountIdFieldName;
   }
 
   addServiceFunctionAllowedForServiceInternalUse(serviceClass: Function, functionName: string) {
@@ -108,20 +106,16 @@ class ServiceFunctionAnnotationContainer {
     this.serviceFunctionNameToIsNotDistributedTransactionalMap[`${serviceClass.name}${functionName}`] = true;
   }
 
-  addCronScheduleForServiceFunction(serviceClass: Function, functionName: string, cronSchedule: string) {
-    this.serviceFunctionNameToCronScheduleMap[
-      `${serviceClass.name.charAt(0).toLowerCase() + serviceClass.name.slice(1)}.${functionName}`
-    ] = cronSchedule;
+  addCronScheduleForServiceFunction(ServiceClass: Function, functionName: string, cronSchedule: string) {
+    this.serviceFunctionNameToCronScheduleMap[`${ServiceClass.name}.${functionName}`] = cronSchedule;
   }
 
   addRetryIntervalsInSecsForServiceFunction(
-    serviceClass: Function,
+    ServiceClass: Function,
     functionName: string,
     retryIntervalsInSecs: number[]
   ) {
-    this.serviceFunctionNameToRetryIntervalsInSecsMap[
-      `${serviceClass.name.charAt(0).toLowerCase() + serviceClass.name.slice(1)}.${functionName}`
-    ] = retryIntervalsInSecs;
+    this.serviceFunctionNameToRetryIntervalsInSecsMap[`${ServiceClass.name}.${functionName}`] = retryIntervalsInSecs;
   }
 
   addUpdateAnnotation(serviceClass: Function, functionName: string, updateType: UpdateType) {
@@ -157,9 +151,8 @@ class ServiceFunctionAnnotationContainer {
     functionName: string,
     serviceFunctionsOrSpecsToExecute: (string | TestSetupSpec)[]
   ) {
-    this.serviceFunctionNameToTestSetupMap[
-      `${serviceClass.name}${functionName}`
-    ] = serviceFunctionsOrSpecsToExecute;
+    this.serviceFunctionNameToTestSetupMap[`${serviceClass.name}${functionName}`] =
+      serviceFunctionsOrSpecsToExecute;
   }
 
   addServiceFunctionAuditLog(
@@ -170,7 +163,7 @@ class ServiceFunctionAnnotationContainer {
   ) {
     this.serviceFunctionNameToAuditLogMap[`${serviceClass.name}${functionName}`] = {
       shouldLog,
-      attributesToLog
+      attributesToLog,
     };
   }
 
@@ -229,7 +222,10 @@ class ServiceFunctionAnnotationContainer {
   isServiceFunctionAllowedForEveryUserDespiteOfUserIdInArg(serviceClass: Function, functionName: string) {
     let proto = Object.getPrototypeOf(new (serviceClass as new () => any)());
     while (proto !== Object.prototype) {
-      if (this.serviceFunctionNameToIsAllowedForEveryUserMap[`${proto.constructor.name}${functionName}`] !== undefined) {
+      if (
+        this.serviceFunctionNameToIsAllowedForEveryUserMap[`${proto.constructor.name}${functionName}`] !==
+        undefined
+      ) {
         return this.serviceFunctionNameToIsAllowedForEveryUserMap[`${proto.constructor.name}${functionName}`];
       }
       proto = Object.getPrototypeOf(proto);
@@ -554,7 +550,9 @@ class ServiceFunctionAnnotationContainer {
   isSubscription(serviceClass: Function, functionName: string) {
     let proto = Object.getPrototypeOf(new (serviceClass as new () => any)());
     while (proto !== Object.prototype) {
-      if (this.serviceFunctionNameToSubscriptionMap[`${proto.constructor.name}${functionName}`] !== undefined) {
+      if (
+        this.serviceFunctionNameToSubscriptionMap[`${proto.constructor.name}${functionName}`] !== undefined
+      ) {
         return true;
       }
       proto = Object.getPrototypeOf(proto);

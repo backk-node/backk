@@ -1,6 +1,6 @@
-import serviceFunctionAnnotationContainer from './serviceFunctionAnnotationContainer';
 import defaultRetryIntervals from '../../../scheduling/defaultRetryIntervals';
-import { DayOfWeek } from "../../typeproperty/datetime/IsDayOfWeekBetween";
+import { DayOfWeek } from '../../typeproperty/datetime/IsDayOfWeekBetween';
+import serviceFunctionAnnotationContainer from './serviceFunctionAnnotationContainer';
 
 export type Range = {
   start: number;
@@ -19,7 +19,7 @@ export enum Month {
   Sep,
   Oct,
   Nov,
-  Dec
+  Dec,
 }
 
 export type CronSchedule = {
@@ -63,7 +63,10 @@ function getCronIntervalStr(interval: number | undefined): string {
   return '/' + interval;
 }
 
-export default function CronJob(cronSchedule: CronSchedule, retryIntervalsInSecs: number[] = defaultRetryIntervals) {
+export default function CronJob(
+  cronSchedule: CronSchedule,
+  retryIntervalsInSecs: number[] = defaultRetryIntervals
+) {
   const cronScheduleStr = Array(6)
     .fill('')
     .map((defaultCronParameter, index) => {
@@ -113,26 +116,22 @@ export default function CronJob(cronSchedule: CronSchedule, retryIntervalsInSecs
     .join(' ');
 
   // eslint-disable-next-line @typescript-eslint/ban-types
-  return function(object: Object, functionName: string) {
-    const superClassPrototype = Object.getPrototypeOf(object);
-
-    const cronSchedule = serviceFunctionAnnotationContainer.getServiceFunctionNameToCronScheduleMap()[
-      `${superClassPrototype.constructor.name.charAt(0).toLowerCase() +
-        superClassPrototype.constructor.name.slice(1)}.${functionName}`
-    ];
+  return function (object: Object, functionName: string) {
+    const cronSchedule =
+      serviceFunctionAnnotationContainer.getServiceFunctionNameToCronScheduleMap()[`${object.constructor.name}.${functionName}`];
 
     if (cronSchedule) {
       throw new Error('Only one cron job allowed per service function');
     }
 
     serviceFunctionAnnotationContainer.addCronScheduleForServiceFunction(
-      superClassPrototype.constructor,
+      object.constructor,
       functionName,
       cronScheduleStr
     );
 
     serviceFunctionAnnotationContainer.addRetryIntervalsInSecsForServiceFunction(
-      superClassPrototype.constructor,
+      object.constructor,
       functionName,
       retryIntervalsInSecs
     );

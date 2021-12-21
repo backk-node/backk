@@ -246,8 +246,6 @@ S
 #src/utils/file/getSourceFileName.ts,2/b/2b65dec05283a22149e7996cb36aa32c437d6efd
 a
 1src/services/startup/types/entity/SampleEntity.ts,1/c/1c27cd9cd77add2229000bdc2581f5f7ad4424ee
-^
-.src/scheduling/scheduleCronJobsForExecution.ts,0/7/07d0700ee09268cdb174c1505e3f60caf50c2b30
 R
 "src/client/generateClients.spec.ts,a/6/a6fecbc0f79bc3f56abb07935443fc7a2856df5c
 Z
@@ -536,8 +534,6 @@ N
 src/execution/BackkResponse.ts,0/d/0d970f6b89700cd16c71c4ffb4557d25a2565e2c
 H
 src/errors/emptyError.ts,9/7/971b290192b520be8ddd3c6548780aa05a706741
-u
-Esrc/decorators/service/function/serviceFunctionAnnotationContainer.ts,6/f/6f969f85640cfffcf6ed8d82aff088220b97d615
 `
 0src/authorization/JwtAuthorizationServiceImpl.ts,b/8/b82cefea0a7f99d8d7473b1072daa5b71ffb5527
 W
@@ -610,10 +606,6 @@ W
 'docs/api/MICROSERVICE_INITIALIZATION.MD,7/3/731ce54e9b15c990f2d2a4166230eb6b1ee8fa72
 G
 src/types/BackkError.ts,0/f/0ff54873c02da10e848e21977cfe0d78b02e4abe
-K
-src/services/BaseService.ts,9/4/9434f185c4f597d67e2b58164a20c94dfc0e257c
-Z
-*src/decorators/service/function/CronJob.ts,a/8/a88bb6510ffce012c9290828e536a4fcac1de31e
 j
 :src/decorators/typeproperty/datetime/IsDayOfWeekBetween.ts,7/7/7703957bb8211b62db97cf17dbcb65ac75150b06
 e

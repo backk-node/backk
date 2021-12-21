@@ -15,16 +15,19 @@ import getClsNamespace from '../continuationlocalstorage/getClsNamespace';
 
 const cronJobs: { [key: string]: CronJob } = {};
 
-export default function scheduleCronJobsForExecution(controller: any, dataStore: DataStore) {
+export default function scheduleCronJobsForExecution(microservice: any, dataStore: DataStore) {
   if (process.env.NODE_ENV === 'development') {
     return;
   }
 
   Object.entries(serviceFunctionAnnotationContainer.getServiceFunctionNameToCronScheduleMap()).forEach(
-    ([serviceFunctionName, cronSchedule]) => {
+    ([serviceClassNameAndFunctionName, cronSchedule]) => {
+      const [serviceName] = Object.entries(microservice).find(([, service]: [string, any]) =>
+        service.constructor.name === serviceClassNameAndFunctionName.split('.')[0]) ?? ['', null];
+      const serviceFunctionName = serviceName + '.' + serviceClassNameAndFunctionName.split('.').pop();
       const job = new CronJob(cronSchedule, async () => {
         const retryIntervalsInSecs = serviceFunctionAnnotationContainer.getServiceFunctionNameToRetryIntervalsInSecsMap()[
-          serviceFunctionName
+          serviceClassNameAndFunctionName
         ];
         const interval = parser.parseExpression(cronSchedule);
 
@@ -63,7 +66,7 @@ export default function scheduleCronJobsForExecution(controller: any, dataStore:
                   }
 
                   const ServiceFunctionArgType = findServiceFunctionArgumentType(
-                    controller,
+                    microservice,
                     serviceFunctionName
                   );
 
@@ -71,7 +74,7 @@ export default function scheduleCronJobsForExecution(controller: any, dataStore:
                   const response = new BackkResponse();
 
                   await tryExecuteServiceMethod(
-                    controller,
+                    microservice,
                     serviceFunctionName,
                     serviceFunctionArgument,
                     {},

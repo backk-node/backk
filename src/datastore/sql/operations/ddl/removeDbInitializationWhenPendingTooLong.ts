@@ -5,11 +5,10 @@ export default async function removeDbInitializationWhenPendingTooLong(dataStore
     return;
   }
 
-  const removeAppVersionSql = `DELETE FROM ${dataStore.getSchema().toLowerCase()}.__backk_db_initialization WHERE appversion =
-    ${process.env.npm_package_version} AND isinitialized = 0 AND createdattimestamp <= current_timestamp - INTERVAL '5' minute`;
+  const removeAppVersionSql = `DELETE FROM ${dataStore.getSchema().toLowerCase()}.__backk_db_initialization WHERE microserviceversion = ? AND isinitialized = 0 AND createdattimestamp <= current_timestamp - INTERVAL '5' minute`;
 
   try {
-    await dataStore.tryExecuteSqlWithoutCls(removeAppVersionSql);
+    await dataStore.tryExecuteSqlWithoutCls(removeAppVersionSql, [process.env.MICROSERVICE_VERSION]);
   } catch (error) {
     // No operation
   }

@@ -508,7 +508,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
     info: {
       title: appName + ' API',
       description: process.env.MICROSERVICE_DESCRIPTION ?? '',
-      version: process.env.npm_package_version,
+      version: process.env.MICROSERVICE_VERSION ?? process.env.npm_package_version,
       ...(process.env.API_TERMS_OF_SERVICE_URL
         ? { termsOfService: process.env.API_TERMS_OF_SERVICE_URL }
         : {}),

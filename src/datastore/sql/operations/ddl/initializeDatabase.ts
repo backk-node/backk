@@ -1,22 +1,22 @@
-import { DataStore } from '../../../DataStore';
-import forEachAsyncSequential from '../../../../utils/forEachAsyncSequential';
+import getClsNamespace from '../../../../continuationlocalstorage/getClsNamespace';
 import entityAnnotationContainer from '../../../../decorators/entity/entityAnnotationContainer';
+import tryExecuteOnStartUpTasks from '../../../../initialization/tryExecuteOnStartupTasks';
+import log, { logError, Severity } from '../../../../observability/logging/log';
+import tryInitializeCronJobSchedulingTable from '../../../../scheduling/tryInitializeCronJobSchedulingTable';
+import forEachAsyncSequential from '../../../../utils/forEachAsyncSequential';
+import AbstractSqlDataStore from '../../../AbstractSqlDataStore';
+import { DataStore } from '../../../DataStore';
+import setJoinSpecs from '../../../mongodb/setJoinSpecs';
+import tryCreateMongoDbIndex from '../../../mongodb/tryCreateMongoDbIndex';
+import tryCreateMongoDbIndexesForUniqueFields from '../../../mongodb/tryCreateMongoDbIndexesForUniqueFields';
+import MongoDbDataStore from '../../../MongoDbDataStore';
+import removeDbInitialization from './removeDbInitialization';
+import removeDbInitializationWhenPendingTooLong from './removeDbInitializationWhenPendingTooLong';
+import setDbInitialized from './setDbInitialized';
+import shouldInitializeDb from './shouldInitializeDb';
 import tryAlterOrCreateTable from './tryAlterOrCreateTable';
 import tryCreateIndex from './tryCreateIndex';
 import tryCreateUniqueIndex from './tryCreateUniqueIndex';
-import log, { logError, Severity } from '../../../../observability/logging/log';
-import tryInitializeCronJobSchedulingTable from '../../../../scheduling/tryInitializeCronJobSchedulingTable';
-import AbstractSqlDataStore from '../../../AbstractSqlDataStore';
-import MongoDbDataStore from '../../../MongoDbDataStore';
-import tryCreateMongoDbIndex from '../../../mongodb/tryCreateMongoDbIndex';
-import setJoinSpecs from '../../../mongodb/setJoinSpecs';
-import tryExecuteOnStartUpTasks from '../../../../initialization/tryExecuteOnStartupTasks';
-import tryCreateMongoDbIndexesForUniqueFields from '../../../mongodb/tryCreateMongoDbIndexesForUniqueFields';
-import shouldInitializeDb from './shouldInitializeDb';
-import removeDbInitialization from './removeDbInitialization';
-import setDbInitialized from './setDbInitialized';
-import removeDbInitializationWhenPendingTooLong from './removeDbInitializationWhenPendingTooLong';
-import getClsNamespace from '../../../../continuationlocalstorage/getClsNamespace';
 
 let isMongoDBInitialized = false;
 
@@ -32,15 +32,17 @@ export async function isDbInitialized(dataStore: DataStore) {
   if (dataStore instanceof AbstractSqlDataStore) {
     await removeDbInitializationWhenPendingTooLong(dataStore);
 
-    const getAppVersionInitializationStatusSql = `SELECT * ${dataStore.getSchema().toLowerCase()}.__backk_db_initialization WHERE isinitialized = 1 AND appversion = ${
-      process.env.npm_package_version
-    }`;
+    const getAppVersionInitializationStatusSql = `SELECT * ${dataStore
+      .getSchema()
+      .toLowerCase()}.__backk_db_initialization WHERE isinitialized = 1 AND microserviceversion = ?`;
 
     try {
       const clsNamespace = getClsNamespace('serviceFunctionExecution');
       return await clsNamespace.runAndReturn(async () => {
         await dataStore.tryReserveDbConnectionFromPool();
-        const result = await dataStore.tryExecuteQuery(getAppVersionInitializationStatusSql);
+        const result = await dataStore.tryExecuteQuery(getAppVersionInitializationStatusSql, [
+          process.env.MICROSERVICE_VERSION,
+        ]);
         const rows = dataStore.getResultRows(result);
         return rows.length === 1;
       });
@@ -104,7 +106,9 @@ export default async function initializeDatabase(
 
             await forEachAsyncSequential(foreignIdFieldNames, async (foreignIdFieldName: any) => {
               if (!fields.find((field) => field.name.toLowerCase() === foreignIdFieldName.toLowerCase())) {
-                const alterTableStatementPrefix = `ALTER TABLE ${dataStore.getSchema().toLowerCase()}.${tableName} ADD `;
+                const alterTableStatementPrefix = `ALTER TABLE ${dataStore
+                  .getSchema()
+                  .toLowerCase()}.${tableName} ADD `;
 
                 const addForeignIdColumnStatement =
                   alterTableStatementPrefix + foreignIdFieldName.toLowerCase() + ' BIGINT';
@@ -112,10 +116,10 @@ export default async function initializeDatabase(
                 await dataStore.tryExecuteSqlWithoutCls(addForeignIdColumnStatement);
 
                 const addUniqueIndexStatement =
-                  `CREATE UNIQUE INDEX ${foreignIdFieldName.toLowerCase() +
-                    (entityAnnotationContainer.entityNameToIsArrayMap[entityName]
-                      ? '_id'
-                      : '')} ON ${dataStore.getSchema().toLowerCase()}.${tableName} (` +
+                  `CREATE UNIQUE INDEX ${
+                    foreignIdFieldName.toLowerCase() +
+                    (entityAnnotationContainer.entityNameToIsArrayMap[entityName] ? '_id' : '')
+                  } ON ${dataStore.getSchema().toLowerCase()}.${tableName} (` +
                   foreignIdFieldName.toLowerCase() +
                   (entityAnnotationContainer.entityNameToIsArrayMap[entityName] ? ', id)' : ')');
 
@@ -143,7 +147,7 @@ export default async function initializeDatabase(
             entityName,
             associationTableName,
             entityForeignIdFieldName,
-            subEntityForeignIdFieldName
+            subEntityForeignIdFieldName,
           }) => {
             if (entityAnnotationContainer.entityNameToTableNameMap[entityName]) {
               return;
@@ -151,7 +155,9 @@ export default async function initializeDatabase(
 
             try {
               await dataStore.tryExecuteSqlWithoutCls(
-                `SELECT * FROM ${dataStore.getSchema().toLowerCase()}.${associationTableName.toLowerCase()} LIMIT 1`,
+                `SELECT * FROM ${dataStore
+                  .getSchema()
+                  .toLowerCase()}.${associationTableName.toLowerCase()} LIMIT 1`,
                 undefined,
                 false
               );
@@ -161,9 +167,8 @@ export default async function initializeDatabase(
               let subEntityTableName = subEntityName.toLowerCase();
 
               if (entityAnnotationContainer.entityNameToTableNameMap[subEntityName]) {
-                subEntityTableName = entityAnnotationContainer.entityNameToTableNameMap[
-                  subEntityName
-                ].toLowerCase();
+                subEntityTableName =
+                  entityAnnotationContainer.entityNameToTableNameMap[subEntityName].toLowerCase();
               }
 
               const createTableStatement = `
@@ -177,7 +182,9 @@ export default async function initializeDatabase(
                 .toLowerCase()
                 .slice(0, -2)}(_id) ON DELETE CASCADE,
             FOREIGN KEY(${subEntityForeignIdFieldName.toLowerCase()}) 
-               REFERENCES ${dataStore.getSchema().toLowerCase()}.${subEntityTableName}(_id) ON DELETE CASCADE)`;
+               REFERENCES ${dataStore
+                 .getSchema()
+                 .toLowerCase()}.${subEntityTableName}(_id) ON DELETE CASCADE)`;
 
               await dataStore.tryExecuteSqlWithoutCls(createTableStatement);
             }

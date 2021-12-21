@@ -67,8 +67,6 @@ f
 6src/remote/messagequeue/kafka/getKafkaServerFromEnv.ts,2/a/2a2a8b9f328c46b4ec2a8a79689ba395568530f3
 f
 6src/remote/messagequeue/redis/getRedisServerFromEnv.ts,1/e/1edb681c7538be6211718331c4bc401f58059d12
-f
-6src/datastore/sql/operations/ddl/shouldInitializeDb.ts,d/3/d379e42349ec71560cd4733df4a1c3a22b8c9a0a
 o
 ?src/datastore/mongodb/addSimpleSubEntitiesOrValuesByEntityId.ts,8/8/88e920a687a284c67420a0fbabc686f839492011
 

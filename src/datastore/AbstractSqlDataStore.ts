@@ -104,7 +104,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
       return true;
     } catch {
       try {
-        const createTableStatement = `CREATE TABLE IF NOT EXISTS ${this.getSchema().toLowerCase()}.__backk_db_initialization (appversion VARCHAR(64) PRIMARY KEY NOT NULL UNIQUE, isinitialized ${this.getBooleanType()}, createdattimestamp ${this.getTimestampType()})`;
+        const createTableStatement = `CREATE TABLE IF NOT EXISTS ${this.getSchema().toLowerCase()}.__backk_db_initialization (microserviceversion VARCHAR(64) PRIMARY KEY NOT NULL UNIQUE, isinitialized ${this.getBooleanType()}, createdattimestamp ${this.getTimestampType()})`;
         await this.tryExecuteSqlWithoutCls(createTableStatement);
         return true;
       } catch {

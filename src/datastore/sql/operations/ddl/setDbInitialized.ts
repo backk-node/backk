@@ -5,9 +5,7 @@ export default async function setDbInitialized(dataStore: AbstractSqlDataStore) 
     return;
   }
 
-  const modifyAppVersionInitializationSql = `UPDATE ${dataStore.getSchema().toLowerCase()}.__backk_db_initialization SET isinitialized = 1 WHERE appversion = "${
-    process.env.npm_package_version
-  }"`;
+  const modifyAppVersionInitializationSql = `UPDATE ${dataStore.getSchema().toLowerCase()}.__backk_db_initialization SET isinitialized = 1 WHERE microserviceversion = ?`;
 
-  await dataStore.tryExecuteSqlWithoutCls(modifyAppVersionInitializationSql);
+  await dataStore.tryExecuteSqlWithoutCls(modifyAppVersionInitializationSql, [process.env.MICROSERVICE_VERSION]);
 }

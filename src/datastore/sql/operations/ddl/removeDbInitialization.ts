@@ -10,11 +10,10 @@ export default async function removeDbInitialization(dataStore: DataStore) {
   }
 
   if (!(dataStore instanceof AbstractSqlDataStore)) {
-    const removeAppVersionSql = `DELETE FROM ${dataStore.getSchema().toLowerCase()}.__backk_db_initialization WHERE appversion =
-    ${process.env.npm_package_version}`;
+    const removeAppVersionSql = `DELETE FROM ${dataStore.getSchema().toLowerCase()}.__backk_db_initialization WHERE microserviceversion = ?`;
 
     try {
-      await dataStore.tryExecuteSqlWithoutCls(removeAppVersionSql);
+      await dataStore.tryExecuteSqlWithoutCls(removeAppVersionSql, [process.env.MICROSERVICE_VERSION]);
     } catch (error) {
       if (intervalId !== undefined) {
         clearInterval(intervalId);

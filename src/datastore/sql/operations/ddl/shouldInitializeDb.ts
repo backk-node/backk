@@ -5,12 +5,10 @@ export default async function shouldInitializeDb(dataStore: AbstractSqlDataStore
     return true;
   }
 
-  const addAppVersionSql = `INSERT INTO ${dataStore.getSchema().toLowerCase()}.__backk_db_initialization (appVersion, isInitialized, createdattimestamp) VALUES ("${
-    process.env.npm_package_version
-  }", 0, current_timestamp)`;
+  const addAppVersionSql = `INSERT INTO ${dataStore.getSchema().toLowerCase()}.__backk_db_initialization (microserviceversion, isInitialized, createdattimestamp) VALUES (?, 0, current_timestamp)`;
 
   try {
-    await dataStore.tryExecuteSqlWithoutCls(addAppVersionSql);
+    await dataStore.tryExecuteSqlWithoutCls(addAppVersionSql, [process.env.MICROSERVICE_VERSION]);
     return true;
   } catch (error) {
     if (dataStore.isDuplicateEntityError(error)) {

@@ -44,11 +44,11 @@ export default class MySqlDataStore extends AbstractSqlDataStore {
 
   async isDbReady(): Promise<boolean> {
     try {
-      await this.tryExecuteSqlWithoutCls(`SET GLOBAL SQL_MODE=ANSI_QUOTES`, undefined, true);
+      await this.tryExecuteSqlWithoutCls(`SET GLOBAL SQL_MODE=ANSI_QUOTES`, undefined, false);
       await this.tryExecuteSqlWithoutCls(
         `SELECT * FROM ${this.getSchema().toLowerCase()}.__backk_db_initialization`,
         undefined,
-        true
+        false
       );
       return super.isDbReady();
     } catch {
@@ -56,7 +56,7 @@ export default class MySqlDataStore extends AbstractSqlDataStore {
         await this.tryExecuteSqlWithoutCls(
           `CREATE DATABASE IF NOT EXISTS ${this.getSchema().toLowerCase()}`,
           undefined,
-          true
+          false
         );
         return super.isDbReady();
       } catch {

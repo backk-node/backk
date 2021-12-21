@@ -91,6 +91,10 @@ export default class NullDataStore extends AbstractDataStore {
     return '';
   }
 
+  getLastInitError(): Error | undefined {
+    return undefined;
+  }
+
   isDbReady(): Promise<boolean> {
     return Promise.resolve(false);
   }

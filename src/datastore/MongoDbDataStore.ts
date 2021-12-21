@@ -76,6 +76,7 @@ import tryEnsurePreviousOrNextPageIsRequested from './utils/tryEnsurePreviousOrN
 export default class MongoDbDataStore extends AbstractDataStore {
   private readonly uri: string;
   private mongoClient: MongoClient;
+  private lastInitError: Error | undefined = undefined;
 
   constructor() {
     super('', getDbNameFromServiceName());
@@ -192,6 +193,10 @@ export default class MongoDbDataStore extends AbstractDataStore {
     return this.uri;
   }
 
+  getLastInitError(): Error | undefined {
+    return this.lastInitError;
+  }
+
   async isDbReady(): Promise<boolean> {
     try {
       await this.tryReserveDbConnectionFromPool();
@@ -202,6 +207,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
 
       return true;
     } catch (error) {
+      this.lastInitError = error;
       return false;
     }
   }

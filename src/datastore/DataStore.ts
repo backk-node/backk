@@ -85,6 +85,7 @@ export interface DataStore {
   ): Promise<Field[]>;
 
   isDbReady(): Promise<boolean>;
+  getLastInitError(): Error | undefined;
   tryReserveDbConnectionFromPool(): Promise<void>;
   tryReleaseDbConnectionBackToPool(): void;
   tryBeginTransaction(): Promise<void>;

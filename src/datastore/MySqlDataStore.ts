@@ -59,7 +59,8 @@ export default class MySqlDataStore extends AbstractSqlDataStore {
           false
         );
         return super.isDbReady();
-      } catch {
+      } catch(error) {
+        this.lastInitError = error;
         return false;
       }
     }

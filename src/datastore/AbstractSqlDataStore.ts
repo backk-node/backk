@@ -42,12 +42,18 @@ import EntityCountRequest from '../types/EntityCountRequest';
 import AbstractDataStore from './AbstractDataStore';
 
 export default abstract class AbstractSqlDataStore extends AbstractDataStore {
+  protected lastInitError: Error | undefined = undefined;
+
   getClient(): any {
     return undefined;
   }
 
   cleanupTransaction() {
     // No operation
+  }
+
+  getLastInitError(): Error | undefined {
+    return this.lastInitError;
   }
 
   abstract getDbHost(): string;
@@ -107,7 +113,8 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
         const createTableStatement = `CREATE TABLE IF NOT EXISTS ${this.getSchema().toLowerCase()}.__backk_db_initialization (microserviceversion VARCHAR(64) PRIMARY KEY NOT NULL UNIQUE, isinitialized ${this.getBooleanType()}, createdattimestamp ${this.getTimestampType()})`;
         await this.tryExecuteSqlWithoutCls(createTableStatement);
         return true;
-      } catch {
+      } catch(error) {
+        this.lastInitError = error;
         return false;
       }
     }

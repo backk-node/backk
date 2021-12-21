@@ -16,7 +16,7 @@ import getClsNamespace from '../continuationlocalstorage/getClsNamespace';
 const cronJobs: { [key: string]: CronJob } = {};
 
 export default function scheduleCronJobsForExecution(microservice: any, dataStore: DataStore) {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV !== 'production') {
     return;
   }
 
@@ -93,8 +93,8 @@ export default function scheduleCronJobsForExecution(microservice: any, dataStor
                 logError(error);
                 return false;
               } finally {
-                dataStore.tryReleaseDbConnectionBackToPool();
                 getClsNamespace('multipleServiceFunctionExecutions').set('connection', false);
+                dataStore.tryReleaseDbConnectionBackToPool();
               }
             });
           });

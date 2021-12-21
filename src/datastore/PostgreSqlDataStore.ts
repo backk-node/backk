@@ -59,7 +59,8 @@ export default class PostgreSqlDataStore extends AbstractSqlDataStore {
           false
         );
         return super.isDbReady();
-      } catch {
+      } catch(error) {
+        this.lastInitError = error;
         return false;
       }
     }

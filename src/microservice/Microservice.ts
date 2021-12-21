@@ -1,20 +1,20 @@
-import { uniqBy } from "lodash";
-import reloadLoggingConfigOnChange from "../configuration/reloadLoggingConfigOnChange";
-import initializeCls from "../continuationlocalstorage/initializeCls";
-import { DataStore } from "../datastore/DataStore";
-import initializeDatabase from "../datastore/sql/operations/ddl/initializeDatabase";
-import log, { Severity } from "../observability/logging/log";
-import logEnvironment from "../observability/logging/logEnvironment";
-import defaultSystemAndNodeJsMetrics from "../observability/metrics/defaultSystemAndNodeJsMetrics";
-import { RequestProcessor } from "../requestprocessor/RequestProcessor";
-import scheduleCronJobsForExecution from "../scheduling/scheduleCronJobsForExecution";
-import scheduleJobsForExecution from "../scheduling/scheduleJobsForExecution";
-import StartupCheckService from "../services/startup/StartupCheckService";
-import areTypeDefinitionsUsedInTypeFilesChanged
-  from "../typescript/utils/areTypeDefinitionsUsedInTypeFilesChanged";
-import changePackageJsonNameProperty from "../utils/changePackageJsonNameProperty";
-import initializeMicroservice from "./initializeMicroservice";
-import wait from "../utils/wait";
+import { uniqBy } from 'lodash';
+import reloadLoggingConfigOnChange from '../configuration/reloadLoggingConfigOnChange';
+import initializeCls from '../continuationlocalstorage/initializeCls';
+import { DataStore } from '../datastore/DataStore';
+import NullDataStore from '../datastore/NullDataStore';
+import initializeDatabase from '../datastore/sql/operations/ddl/initializeDatabase';
+import log, { Severity } from '../observability/logging/log';
+import logEnvironment from '../observability/logging/logEnvironment';
+import defaultSystemAndNodeJsMetrics from '../observability/metrics/defaultSystemAndNodeJsMetrics';
+import { RequestProcessor } from '../requestprocessor/RequestProcessor';
+import scheduleCronJobsForExecution from '../scheduling/scheduleCronJobsForExecution';
+import scheduleJobsForExecution from '../scheduling/scheduleJobsForExecution';
+import StartupCheckService from '../services/startup/StartupCheckService';
+import areTypeDefinitionsUsedInTypeFilesChanged from '../typescript/utils/areTypeDefinitionsUsedInTypeFilesChanged';
+import changePackageJsonNameProperty from '../utils/changePackageJsonNameProperty';
+import wait from '../utils/wait';
+import initializeMicroservice from './initializeMicroservice';
 
 type NonEmptyArray<T> = [T, ...T[]];
 
@@ -95,17 +95,29 @@ export default class Microservice {
     logEnvironment();
     defaultSystemAndNodeJsMetrics.startCollectingMetrics();
 
-    let isDbInitialized = false;
-    while(!isDbInitialized) {
-      isDbInitialized = await initializeDatabase(this, this.dataStore);
-      await wait(5000);
+    if (!(this.dataStore instanceof NullDataStore)) {
+      log(Severity.INFO, 'Database initialization started', '');
+      let isDbInitialized = false;
+      let loopCount = 0;
+      while (!isDbInitialized) {
+        if (loopCount > 0 && loopCount % 12 === 0) {
+          log(
+            Severity.ERROR,
+            'Database initialization error: ' + this.dataStore.getLastInitError()?.message ?? '',
+            this.dataStore.getLastInitError()?.stack ?? ''
+          );
+        }
+        isDbInitialized = await initializeDatabase(this, this.dataStore);
+        await wait(5000);
+        loopCount++;
+      }
     }
+    log(Severity.INFO, 'Database initialization completed', '');
 
     scheduleCronJobsForExecution(this, this.dataStore);
     await scheduleJobsForExecution(this, this.dataStore);
     reloadLoggingConfigOnChange();
-    log(Severity.INFO, 'Microservice initialized', '');
-
     requestProcessors.forEach((requestProcessor) => requestProcessor.startProcessingRequests(this));
+    log(Severity.INFO, 'Microservice started', '');
   }
 }

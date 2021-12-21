@@ -155,6 +155,7 @@ export default abstract class AbstractDataStore implements DataStore {
   ): Promise<Field[]>;
 
   abstract isDbReady(): Promise<boolean>;
+  abstract getLastInitError(): Error | undefined;
   abstract tryReserveDbConnectionFromPool(): Promise<void>;
   abstract tryReleaseDbConnectionBackToPool(): void;
   abstract tryBeginTransaction(): Promise<void>;

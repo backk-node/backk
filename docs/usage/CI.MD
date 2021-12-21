@@ -17,10 +17,10 @@ You should have the following steps in your CI pipeline:
 - Perform static code analysis with SonarQube or SonarCloud or another similar tool
 - Implement legal and compliance check with Fossa scan and test or another similar tool
 - Execute in container containing Docker:
-  - Setup integration testing environment by running command `docker-compose --env-file env.ci up`
+  - Setup integration testing environment by running command `docker-compose --build --env-file env.ci up`
   - Run integration tests with command `./runIntegrationTestsInCi.sh`
   - Perform OWASP ZAP API scan against file `generated/openapi/openApiPublicSpec.yaml`
-  - Tear down integration testing environment with command `docker-compose down`
+  - Tear down integration testing environment with command `docker-compose --env-file env.ci down`
   - Log in to your Docker registry
   - Build docker image
   - Tag docker image with 

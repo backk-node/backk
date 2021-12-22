@@ -217,7 +217,6 @@ export default async function initializeDatabase(
       );
 
       isMongoDBInitialized = true;
-      log(Severity.INFO, 'Database initialized', '');
     }
 
     await tryExecuteOnStartUpTasks(microservice, dataStore);

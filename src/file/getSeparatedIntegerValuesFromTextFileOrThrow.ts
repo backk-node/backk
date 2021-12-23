@@ -4,7 +4,8 @@ export default function getSeparatedIntegerValuesFromTextFileOrThrow(
   filePathNameRelativeToResourcesDir: string,
   separator = '\n'
 ): number[] {
-  return readFileSync(filePathNameRelativeToResourcesDir, { encoding: 'UTF-8' })
+  const fullPathName = process.cwd() + "/build/resources/" + filePathNameRelativeToResourcesDir;
+  return readFileSync(fullPathName, { encoding: 'UTF-8' })
     .split(separator)
     .filter((value) => value)
     .map((value) => value.trim())

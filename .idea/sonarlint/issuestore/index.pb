@@ -131,16 +131,6 @@ e
 5src/scheduling/entities/__Backk__CronJobScheduling.ts,1/5/1587a30d7ac309ada12826f83b3beb5f0642294f
 a
 1src/scheduling/entities/__Backk__JobScheduling.ts,b/0/b027cc1a1a1472de7a799a37c2edfe8445de6800
-]
--src/file/tryGetSeparatedValuesFromTextFile.ts,7/0/70bb4fe2116361e19bbdd37d7dd6e4a1da06bb52
-d
-4src/file/tryGetSeparatedIntegerValuesFromTextFile.ts,6/6/66a7bf2d3d892884a8cb304b1e97f458fe72db3f
-T
-$src/file/tryGetObjectsFromCsvFile.ts,3/0/3007bb4c0b5546f8f7a00bd879d413c37581eb05
-^
-.src/file/tryGetValuesByJsonPathFromJsonFile.ts,4/7/478eafdeda05ad8301b5f4a5fbc78bdd007a277b
-Z
-*src/file/tryGetValuesByXPathFromXmlFile.ts,9/9/995739107b82bef2036cc07e8f7f0e7d9ee11312
 U
 %.github/workflows/codeql-analysis.yml,c/3/c3aa8b7f1c613e43d3bb9d5ac52ac6603d945e89
 P
@@ -624,8 +614,6 @@ I
 docs/api/QUERY_FILTERS.MD,7/8/783feae41c35f7357778cbeed16c1f7346c940fe
 Q
 !docs/api/POST_QUERY_OPERATIONS.MD,0/f/0fbbee26ad9d56244cfc139151b14ef4d8ca012c
-H
-docs/api/FILE_READING.MD,1/3/1342c3a860c9cdd9cd8b250114dad6c43f12a43e
 M
 docs/usage/VERSION_CONTROL.MD,7/d/7d9e557b9a9d3033ce21a4cd8417ba2018a799cd
 K

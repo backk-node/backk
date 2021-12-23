@@ -154,11 +154,11 @@ export { One, Many, QueryFilters, CommonEqFilters } from './datastore/DataStore'
 
 // CSV, text, JSON and XML file parsing
 export { default as Value } from './types/Value';
-export { default as tryGetObjectsFromCsvFile } from './file/tryGetObjectsFromCsvFile';
-export { default as tryGetSeparatedValuesFromTextFile } from './file/tryGetSeparatedValuesFromTextFile';
-export { default as tryGetSeparatedIntegerValuesFromTextFile } from './file/tryGetSeparatedIntegerValuesFromTextFile';
-export { default as tryGetValuesByJsonPathFromJsonFile } from './file/tryGetValuesByJsonPathFromJsonFile';
-export { default as tryGetValuesByXPathFromXmlFile } from './file/tryGetValuesByXPathFromXmlFile';
+export { default as getObjectsFromCsvFileOrThrow } from './file/getObjectsFromCsvFileOrThrow';
+export { default as getSeparatedValuesFromTextFileOrThrow } from './file/getSeparatedValuesFromTextFileOrThrow';
+export { default as getGetSeparatedIntegerValuesFromTextFileOrThrow } from './file/getSeparatedIntegerValuesFromTextFileOrThrow';
+export { default as getValuesByJsonPathFromJsonFileOrThrow } from './file/getValuesByJsonPathFromJsonFileOrThrow';
+export { default as getGetValuesByXPathFromXmlFileOrThrow } from './file/getValuesByXPathFromXmlFileOrThrow';
 
 // Observability
 export { default as initializeDefaultJaegerTracing } from './observability/distributedtracinig/initializeDefaultJaegerTracing';

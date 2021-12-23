@@ -1,26 +1,26 @@
 ## CSV, Text, JSON and XML File Reading
 
-- [tryGetObjectsFromCsvFile](#trygetobjectsfromcsvfile)
-- [tryGetSeparatedValuesFromTextFile](#trygetseparatedvaluesfromtextfile)
-- [tryGetSeparatedIntegerValuesFromTextFile](#trygetseparatedintegervaluesfromtextfile)
-- [tryGetValuesByJsonPathFromJsonFile](#trygetvaluesbyjsonpathfromjsonfile)
-- [tryGetValuesByXPathFromXmlFile](#trygetvaluesbyxpathfromxmlfile)
+- [getObjectsFromCsvFileOrThrow](#trygetobjectsfromcsvfile)
+- [getSeparatedValuesFromTextFileOrThrow](#trygetseparatedvaluesfromtextfile)
+- [getSeparatedIntegerValuesFromTextFileOrThrow](#trygetseparatedintegervaluesfromtextfile)
+- [getValuesByJsonPathFromJsonFileOrThrow](#trygetvaluesbyjsonpathfromjsonfile)
+- [getValuesByXPathFromXmlFileOrThrow](#trygetvaluesbyxpathfromxmlfile)
 
-### <a name="trygetobjectsfromcsvfile"></a> tryGetObjectsFromCsvFile
+### <a name="trygetobjectsfromcsvfile"></a> getObjectsFromCsvFileOrThrow
 ```ts
 function tryGetObjectsFromCsvFile(
-  filePathName: string,
+  filePathNameRelativeToResourcesDir: string,
   columnNames: string[] | 'readFromFirstRow' = 'readFromFirstRow',
   delimiter = ','
 ): Array<Record<string, string>>;
 ```
 
-Reads a CSV file `filePathName` and parses each row to an object. `columnNames` will be the keys of object.
+Reads a CSV file `filePathNameRelativeToResourcesDir` and parses each row to an object. `columnNames` will be the keys of object.
 Column delimiter can be specified with `delimiter`.
 Empty lines in the file will be skipped.
 Each parsed value will be trimmed (i.e. whitespace around value is removed)
 
-Returns an array of objects.
+Returns an array of objects or throws an error on file reading or parsing failure.
 
 For example, following CSV file contents:
 
@@ -45,19 +45,19 @@ will be parsed to following:
 ];
 ```
 
-### <a name="trygetseparatedvaluesfromtextfile"></a> tryGetSeparatedValuesFromTextFile
+### <a name="trygetseparatedvaluesfromtextfile"></a> getSeparatedValuesFromTextFileOrThrow
 ```ts
 function tryGetSeparatedValuesFromTextFile(
-  filePathName: string,
+  filePathNameRelativeToResourcesDir: string,
   separator = '\n'
 ): string[]
 ```
 
-Reads a text file `filePathName` and parses values separated by the given `separator`.
+Reads a text file `filePathNameRelativeToResourcesDir` and parses values separated by the given `separator`.
 Empty lines in the file will be skipped.
-Each parsed value will be trimmed (ie. whitespace around value is removed)
+Each parsed value will be trimmed (i.e. whitespace around the value is removed)
 
-Returns an array of strings.
+Returns an array of strings or throws an error on file reading failure.
 
 For example, following text file contents:
 
@@ -72,19 +72,19 @@ will be parsed to following:
 ['Tag 1', 'Tag 2'];
 ```
 
-### <a name="trygetseparatedintegervaluesfromtextfile"></a> tryGetSeparatedIntegerValuesFromTextFile
+### <a name="trygetseparatedintegervaluesfromtextfile"></a> getSeparatedIntegerValuesFromTextFileOrThrow
 ```ts
 function tryGetSeparatedIntegerValuesFromTextFile(
-  filePathName: string,
+  filePathNameRelativeToResourcesDir: string,
   separator = '\n'
 ): number[]
 ```
 
-Reads a text file `filePathName` and parses integer values separated by the given `separator`.
+Reads a text file `filePathNameRelativeToResourcesDir` and parses integer values separated by the given `separator`.
 Empty lines in the file will be skipped.
-Each parsed value will be trimmed (ie. whitespace around value is removed) before converted to an integer.
+Each parsed value will be trimmed (i.e. whitespace around value is removed) before converted to an integer.
 
-Returns an array of numbers.
+Returns an array of numbers or throws an error on file reading failure.
 
 For example, following text file contents:
 
@@ -100,20 +100,20 @@ will be parsed to following:
 [1000, 2000, NaN];
 ```
 
-### <a name="trygetvaluesbyjsonpathfromjsonfile"></a> tryGetValuesByJsonPathFromJsonFile
+### <a name="trygetvaluesbyjsonpathfromjsonfile"></a> getValuesByJsonPathFromJsonFileOrThrow
 ```ts
-function tryGetValuesByJsonPathFromJsonFile(filePathName: string, jsonPath: string): any[]
+function tryGetValuesByJsonPathFromJsonFile(filePathNameRelativeToResourcesDir: string, jsonPath: string): any[]
 ```
 
-Reads a text file `filePathName` and parses returns values matching the `jsonPath`.
+Reads a text file `filePathNameRelativeToResourcesDir` and parses returns values matching the `jsonPath`.
 
-Returns an array of values.
+Returns an array of values or throws an error on file reading or parsing failure.
 
-### <a name="trygetvaluesbyxpathfromxmlfile"></a> tryGetValuesByXPathFromXmlFile
+### <a name="trygetvaluesbyxpathfromxmlfile"></a> getValuesByXPathFromXmlFileOrThrow
 ```ts
-function tryGetValuesByXPathFromXmlFile(filePathName: string, xPath: string): any[]
+function tryGetValuesByXPathFromXmlFile(filePathNameRelativeToResourcesDir: string, xPath: string): any[]
 ```
 
-Reads a text file `filePathName` and parses returns values matching the `xPath`.
+Reads a text file `filePathNameRelativeToResourcesDir` and parses returns values matching the `xPath`.
 
-Returns an array of values.
+Returns an array of values or throws an error on file reading or parsing failure.

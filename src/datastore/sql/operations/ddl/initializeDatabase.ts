@@ -192,7 +192,6 @@ export default async function initializeDatabase(
         );
 
         await setDbInitialized(dataStore);
-        log(Severity.INFO, 'Database initialized', '');
       }
     } else if (dataStore instanceof MongoDbDataStore) {
       await forEachAsyncSequential(

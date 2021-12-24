@@ -32,7 +32,7 @@ export async function isDbInitialized(dataStore: DataStore) {
   if (dataStore instanceof AbstractSqlDataStore) {
     await removeDbInitializationWhenPendingTooLong(dataStore);
 
-    const getAppVersionInitializationStatusSql = `SELECT * ${dataStore
+    const getAppVersionInitializationStatusSql = `SELECT * FROM ${dataStore
       .getSchema()
       .toLowerCase()}.__backk_db_initialization WHERE isinitialized = 1 AND microserviceversion = ?`;
 

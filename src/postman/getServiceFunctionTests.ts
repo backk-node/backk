@@ -12,7 +12,7 @@ export default function getServiceFunctionTests(
   serviceMetadata: ServiceMetadata,
   functionMetadata: FunctionMetadata,
   isUpdate: boolean,
-  expectedResponseStatusCode = HttpStatusCodes.SUCCESS,
+  expectedResponseStatusCode = HttpStatusCodes.OK,
   expectedResponseFieldPathNameToFieldValueMapInTests: { [key: string]: any } | undefined = undefined,
   sampleArg: object | undefined = undefined
 ): object | undefined {
@@ -23,13 +23,13 @@ export default function getServiceFunctionTests(
     process.env.NODE_ENV === 'development' &&
     expectedResponseStatusCode >= 300 &&
     expectedResponseStatusCode < 400
-      ? HttpStatusCodes.SUCCESS
+      ? HttpStatusCodes.OK
       : expectedResponseStatusCode
   }", function () {
   pm.response.to.have.status(${
     process.env.NODE_ENV === 'development' &&
     expectedResponseStatusCode >= 300 &&
-    expectedResponseStatusCode < 400 ? HttpStatusCodes.SUCCESS : expectedResponseStatusCode
+    expectedResponseStatusCode < 400 ? HttpStatusCodes.OK : expectedResponseStatusCode
   });
 });`;
 
@@ -84,7 +84,7 @@ export default function getServiceFunctionTests(
     script: {
       id: serviceMetadata.serviceName + '.' + functionMetadata.functionName,
       exec:
-        baseTypeName === 'null' || expectedResponseStatusCode !== HttpStatusCodes.SUCCESS
+        baseTypeName === 'null' || expectedResponseStatusCode !== HttpStatusCodes.OK
           ? [checkResponseCode]
           : [checkResponseCode, ...serviceFunctionReturnValueTests]
     }

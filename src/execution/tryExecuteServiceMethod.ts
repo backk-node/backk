@@ -99,7 +99,7 @@ export default async function tryExecuteServiceMethod(
       if (options?.multipleServiceFunctionExecution?.maxServiceFunctionCount) {
         if (
           Object.keys(serviceFunctionArgument).length >
-          (options?.multipleServiceFunctionExecution?.maxServiceFunctionCount)
+          options?.multipleServiceFunctionExecution?.maxServiceFunctionCount
         ) {
           throw createBackkErrorFromErrorCodeMessageAndStatus({
             ...BACKK_ERRORS.INVALID_ARGUMENT,
@@ -107,10 +107,14 @@ export default async function tryExecuteServiceMethod(
           });
         }
       } else {
-        throw new Error("Missing 'multipleServiceFunctionExecution.maxServiceFunctionCount' option in HttpServer");
+        throw new Error(
+          "Missing 'multipleServiceFunctionExecution.maxServiceFunctionCount' option in HttpServer"
+        );
       }
 
-      if (serviceFunctionName === 'multipleServiceFunctionExecutionService.executeInParallelWithoutTransaction') {
+      if (
+        serviceFunctionName === 'multipleServiceFunctionExecutionService.executeInParallelWithoutTransaction'
+      ) {
         return await executeMultipleServiceFunctions(
           true,
           false,
@@ -121,7 +125,9 @@ export default async function tryExecuteServiceMethod(
           isClusterInternalCall,
           options
         );
-      } else if (serviceFunctionName === 'multipleServiceFunctionExecutionService.executeInSequenceWithoutTransaction') {
+      } else if (
+        serviceFunctionName === 'multipleServiceFunctionExecutionService.executeInSequenceWithoutTransaction'
+      ) {
         return await executeMultipleServiceFunctions(
           false,
           false,
@@ -132,7 +138,9 @@ export default async function tryExecuteServiceMethod(
           isClusterInternalCall,
           options
         );
-      } else if (serviceFunctionName === 'multipleServiceFunctionExecutionService.executeInParallelInsideTransaction') {
+      } else if (
+        serviceFunctionName === 'multipleServiceFunctionExecutionService.executeInParallelInsideTransaction'
+      ) {
         return await executeMultipleServiceFunctions(
           true,
           true,
@@ -143,7 +151,9 @@ export default async function tryExecuteServiceMethod(
           isClusterInternalCall,
           options
         );
-      } else if (serviceFunctionName === 'multipleServiceFunctionExecutionService.executeInSequenceInsideTransaction') {
+      } else if (
+        serviceFunctionName === 'multipleServiceFunctionExecutionService.executeInSequenceInsideTransaction'
+      ) {
         return executeMultipleServiceFunctions(
           false,
           true,
@@ -195,7 +205,7 @@ export default async function tryExecuteServiceMethod(
 
     if (serviceFunctionName === 'metadataService.getOpenApiSpec') {
       if (!options || options.isMetadataServiceEnabled === undefined || options.isMetadataServiceEnabled) {
-        resp.writeHead(HttpStatusCodes.SUCCESS, { 'Content-Type': 'application/json' });
+        resp.writeHead(HttpStatusCodes.OK, { 'Content-Type': 'application/json' });
         resp.end(
           JSON.stringify(
             getOpenApiSpec(
@@ -216,7 +226,7 @@ export default async function tryExecuteServiceMethod(
       }
     } else if (serviceFunctionName === 'metadataService.getServicesMetadata') {
       if (!options || options.isMetadataServiceEnabled === undefined || options.isMetadataServiceEnabled) {
-        resp.writeHead(HttpStatusCodes.SUCCESS, { 'Content-Type': 'application/json' });
+        resp.writeHead(HttpStatusCodes.OK, { 'Content-Type': 'application/json' });
         resp.end(
           JSON.stringify({
             services: isClusterInternalCall
@@ -238,7 +248,7 @@ export default async function tryExecuteServiceMethod(
         // noinspection AssignmentToFunctionParameterJS
         serviceFunctionName = serviceName + '.' + 'isMicroserviceAlive';
       } else {
-        resp.writeHead(HttpStatusCodes.SUCCESS);
+        resp.writeHead(HttpStatusCodes.OK);
         resp.end();
         return;
       }
@@ -248,7 +258,7 @@ export default async function tryExecuteServiceMethod(
         // noinspection AssignmentToFunctionParameterJS
         serviceFunctionName = serviceName + '.' + 'isMicroserviceReady';
       } else {
-        resp.writeHead(HttpStatusCodes.SUCCESS);
+        resp.writeHead(HttpStatusCodes.OK);
         resp.end();
         return;
       }
@@ -258,7 +268,7 @@ export default async function tryExecuteServiceMethod(
         // noinspection AssignmentToFunctionParameterJS
         serviceFunctionName = serviceName + '.' + 'isMicroserviceStarted';
       } else {
-        resp.writeHead(HttpStatusCodes.SUCCESS);
+        resp.writeHead(HttpStatusCodes.OK);
         resp.end();
         return;
       }
@@ -781,24 +791,22 @@ export default async function tryExecuteServiceMethod(
       functionName
     );
 
-    resp.writeHead(
-      responseStatusCode && process.env.NODE_ENV !== 'development'
-        ? responseStatusCode
-        : HttpStatusCodes.SUCCESS,
-      {
-        'Content-Type':
-          typeof ServiceClass === 'function' &&
-          serviceFunctionAnnotationContainer.isSubscription(ServiceClass, functionName)
-            ? 'text/event-stream'
-            : 'application/json',
-      }
-    );
+    resp.writeHead(responseStatusCode ?? HttpStatusCodes.OK, {
+      'Content-Type':
+        typeof ServiceClass === 'function' &&
+        serviceFunctionAnnotationContainer.isSubscription(ServiceClass, functionName)
+          ? 'text/event-stream'
+          : 'application/json',
+    });
 
     resp.end(JSON.stringify(response));
   } catch (errorOrBackkError) {
     storedError = errorOrBackkError;
     if (isBackkError(errorOrBackkError)) {
-      if (Number.isInteger(errorOrBackkError.errorCode) || !isNaN(parseInt(errorOrBackkError.errorCode, 10))) {
+      if (
+        Number.isInteger(errorOrBackkError.errorCode) ||
+        !isNaN(parseInt(errorOrBackkError.errorCode, 10))
+      ) {
         errorOrBackkError.errorCode = serviceName + '.' + errorOrBackkError.errorCode;
       }
       resp.writeHead((errorOrBackkError as BackkError).statusCode, { 'Content-Type': 'application/json' });

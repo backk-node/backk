@@ -85,7 +85,7 @@ export default class HttpServer implements RequestProcessor {
 
       try {
         if (request.method === 'OPTIONS') {
-          response.writeHead(HttpStatusCodes.SUCCESS);
+          response.writeHead(HttpStatusCodes.OK);
           response.end();
           return;
         }
@@ -215,7 +215,7 @@ export default class HttpServer implements RequestProcessor {
 
       try {
         if (headers[':method'] === 'OPTIONS') {
-          stream.respond({ ':status': HttpStatusCodes.SUCCESS, ...responseHeaders });
+          stream.respond({ ':status': HttpStatusCodes.OK, ...responseHeaders });
           stream.end();
           return;
         }

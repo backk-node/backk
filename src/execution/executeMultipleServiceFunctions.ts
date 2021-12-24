@@ -90,7 +90,7 @@ async function executeMultiple<T>(
           );
 
           response.end(remoteResponse);
-          response.writeHead(error ? error.statusCode : HttpStatusCodes.SUCCESS);
+          response.writeHead(error ? error.statusCode : HttpStatusCodes.OK);
         }
       } else {
         await tryExecuteServiceMethod(

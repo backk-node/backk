@@ -75,7 +75,7 @@ export default function tryValidateIntegrationTests(
 
     if (integrationTest.testTemplate) {
       if (!integrationTest.testTemplate.responseStatusCode) {
-        integrationTest.testTemplate.responseStatusCode = HttpStatusCodes.SUCCESS;
+        integrationTest.testTemplate.responseStatusCode = HttpStatusCodes.OK;
       }
     }
 

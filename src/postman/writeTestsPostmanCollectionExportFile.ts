@@ -496,7 +496,7 @@ export default function writeTestsPostmanCollectionExportFile<T>(
             serviceMetadata,
             lastReadFunctionMetadata,
             isUpdate,
-            isUpdate ? HttpStatusCodes.SUCCESS : HttpStatusCodes.NOT_FOUND,
+            isUpdate ? HttpStatusCodes.OK : HttpStatusCodes.NOT_FOUND,
             expectedResponseFieldPathNameToFieldValueMapInTests,
             isUpdate ? sampleArg : undefined
           );

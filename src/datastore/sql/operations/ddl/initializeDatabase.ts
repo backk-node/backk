@@ -34,7 +34,7 @@ export async function isDbInitialized(dataStore: DataStore) {
 
     const getAppVersionInitializationStatusSql = `SELECT * FROM ${dataStore
       .getSchema()
-      .toLowerCase()}.__backk_db_initialization WHERE isinitialized = 1 AND microserviceversion = ?`;
+      .toLowerCase()}.__backk_db_initialization WHERE isinitialized = 1 AND microserviceversion = ${dataStore.getValuePlaceholder(1)}`;
 
     try {
       const clsNamespace = getClsNamespace('serviceFunctionExecution');

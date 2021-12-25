@@ -580,8 +580,6 @@ j
 :src/decorators/typeproperty/datetime/IsDayOfWeekBetween.ts,7/7/7703957bb8211b62db97cf17dbcb65ac75150b06
 e
 5src/decorators/typeproperty/FetchFromRemoteService.ts,7/4/748f74847fd0f98e5bfef277f1921ce711d5ee3f
-T
-$src/remote/http/callRemoteService.ts,4/e/4e5f54640166ccdf6297f9fee279284c902e04de
 O
 docs/api/ABSTRACT_DATA_STORE.MD,9/f/9f9a3f8c3e178256b2e64e8fd9b35a9e4d2c1bd4
 K

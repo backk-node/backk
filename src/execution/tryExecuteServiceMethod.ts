@@ -178,11 +178,10 @@ export default async function tryExecuteServiceMethod(
 
     if (httpMethod === 'GET') {
       if (
-        (!serviceFunctionName.match(
-          options?.httpGetRequests?.regExpForAllowedServiceFunctionNames ?? /^[a-z][A-Za-z0-9]*\.get/
-        ) ||
+        (!options?.httpGetRequests?.regExpForAllowedServiceFunctionNames || !serviceFunctionName.match(
+          options?.httpGetRequests?.regExpForAllowedServiceFunctionNames) ||
           options?.httpGetRequests?.deniedServiceFunctionNames?.includes(serviceFunctionName)) &&
-        !serviceFunctionAnnotationContainer.doesServiceFunctionAllowHttpGetMethod(ServiceClass, functionName)
+        (typeof ServiceClass !== 'function' || !serviceFunctionAnnotationContainer.doesServiceFunctionAllowHttpGetMethod(ServiceClass, functionName))
       ) {
         throw createErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.HTTP_METHOD_MUST_BE_POST);
       }

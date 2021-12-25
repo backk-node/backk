@@ -13,17 +13,23 @@ TODO:
 - In @Tests to give remoteServiceUrl and test if that url was called with expected result, 
   remote services will keep hashmap of calls by url and argument
 - MongoDb optimize removePrivateProperties to use projection
-- Create serviceClientImplGenerator that generates client service implementation that use backk-client library
-  to fetch data
 - Create backk-client library
-  - call Backk.setBearerToken() to set globally for Authorization header
   - sets If-none-match header for GET requests
-  - Removes readonly properties
-  - performs validation
 
 
 - remove hanging dbInitialization table entries that are not initialized and are 5 minutes ago or older
+
+---
+Nested keyof
 https://stackoverflow.com/questions/58434389/typescript-deep-keyof-of-a-nested-object
+
+type NestedKeyOf<ObjectType extends object> =
+{[Key in keyof ObjectType & (string | number)]: ObjectType[Key] extends object
+? `${Key}` | `${Key}.${NestedKeyOf<ObjectType[Key]>}`
+: `${Key}`
+}[keyof ObjectType & (string | number)];
+---
+
 Split services to different microservices
 - Create notification-service
     - Sales item cron job: send email at 16:00 if sales item is going to be removed

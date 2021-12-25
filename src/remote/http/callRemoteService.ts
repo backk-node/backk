@@ -35,7 +35,7 @@ export default async function callRemoteService(
   const server =
     process.env.NODE_ENV === 'production'
       ? `${microserviceName}.${microserviceNamespace}.svc.cluster.local:8080`
-      : `${microserviceName}.${microserviceNamespace}:8080`;
+      : `${microserviceName}-${microserviceNamespace}:8080`;
   const scheme = options?.tls ? 'https' : options?.httpVersion === 2 ? 'http2' : 'http';
   const remoteServiceFunctionUrl = `${scheme}://${server}/${serviceFunctionName}`;
   const clsNamespace = getNamespace('serviceFunctionExecution');

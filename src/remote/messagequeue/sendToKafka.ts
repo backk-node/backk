@@ -9,7 +9,7 @@ import tracerProvider from "../../observability/distributedtracinig/tracerProvid
 import log, { Severity } from "../../observability/logging/log";
 import { CanonicalCode } from "@opentelemetry/api";
 import createBackkErrorFromError from "../../errors/createBackkErrorFromError";
-import { kafkaServerToKafkaClientMap, SendAcknowledgementType } from "./kafka/sendOneOrMoreToKafka";
+import { SendAcknowledgementType, kafkaServerToKafkaClientMap } from "./kafka/sendOneOrMoreToKafka";
 import getKafkaServerFromEnv from "./kafka/getKafkaServerFromEnv";
 import { SendOptions } from "./sendToRemoteService";
 

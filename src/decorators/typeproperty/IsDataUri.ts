@@ -1,4 +1,4 @@
-import { registerDecorator, ValidationOptions } from 'class-validator';
+import { ValidationOptions, registerDecorator } from 'class-validator';
 import isDataUri from 'validator/lib/isDataURI';
 
 export default function IsDataUri(validationOptions?: ValidationOptions) {

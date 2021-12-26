@@ -4,13 +4,13 @@ import __Backk__CronJobScheduling from '../scheduling/entities/__Backk__CronJobS
 // eslint-disable-next-line @typescript-eslint/camelcase
 import __Backk__JobScheduling from '../scheduling/entities/__Backk__JobScheduling';
 import DbTableVersion from '../types/DbTableVersion';
-import { getNamespace, Namespace } from 'cls-hooked';
+import { Namespace, getNamespace } from 'cls-hooked';
 import { BackkEntity } from '../types/entities/BackkEntity';
 import { PreHook } from './hooks/PreHook';
 import { PostQueryOperations } from '../types/postqueryoperations/PostQueryOperations';
 import { PostHook } from './hooks/PostHook';
 import { PromiseErrorOr } from '../types/PromiseErrorOr';
-import { DataStore, ArrayFieldValue, Field, Many, One, QueryFilters } from './DataStore';
+import { ArrayFieldValue, DataStore, Field, Many, One, QueryFilters } from './DataStore';
 import MongoDbFilter from './mongodb/MongoDbFilter';
 import { FilterQuery } from 'mongodb';
 import SqlFilter from './sql/filters/SqlFilter';

@@ -79,10 +79,10 @@ export default function createPostmanCollectionItemFromCustomTest({
               }
             },
       url: {
-        raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${getNamespacedMicroserviceName()}/` + serviceFunctionName,
+        raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3001}/${getNamespacedMicroserviceName()}/` + serviceFunctionName,
         protocol: 'http',
         host: ['localhost'],
-        port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,
+        port: `${process.env.HTTP_SERVER_PORT ?? 3001}`,
         path: [serviceFunctionName]
       }
     },

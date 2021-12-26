@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { CommunicationMethod, sendOneOrMore, SendOptions } from './sendToRemoteService';
+import { CommunicationMethod, SendOptions, sendOneOrMore } from './sendToRemoteService';
 import parseRemoteServiceFunctionCallUrlParts from '../utils/parseRemoteServiceFunctionCallUrlParts';
 import getKafkaServerFromEnv from './kafka/getKafkaServerFromEnv';
 

@@ -1,5 +1,5 @@
 import { parseSync } from '@babel/core';
-import { existsSync, readFileSync, Stats, statSync } from 'fs';
+import { Stats, existsSync, readFileSync, statSync } from 'fs';
 import types from '../../types/types';
 import getSrcFilePathNameForTypeName, {
   getFileNamesRecursively,

@@ -1,4 +1,4 @@
-import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
+import { ValidationArguments, ValidationOptions, registerDecorator } from 'class-validator';
 import isPostalCode from 'validator/lib/isPostalCode';
 
 export default function IsPostalCode(

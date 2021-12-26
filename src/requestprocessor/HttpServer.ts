@@ -155,7 +155,7 @@ export default class HttpServer implements RequestProcessor {
       server.close();
     });
 
-    const port = process.env.HTTP_SERVER_PORT ?? 3000;
+    const port = process.env.HTTP_SERVER_PORT ?? 3001;
 
     server.on('error', (error) => {
       log(Severity.ERROR, 'HTTP server error', error.message);
@@ -287,7 +287,7 @@ export default class HttpServer implements RequestProcessor {
       server.close();
     });
 
-    const port = process.env.HTTP_SERVER_PORT ?? 3000;
+    const port = process.env.HTTP_SERVER_PORT ?? 3001;
 
     server.on('error', (error) => {
       log(Severity.ERROR, 'HTTP server error', error.message);

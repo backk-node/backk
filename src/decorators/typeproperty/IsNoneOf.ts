@@ -1,4 +1,4 @@
-import { registerDecorator, ValidationOptions } from "class-validator";
+import { ValidationOptions, registerDecorator } from "class-validator";
 import Value from "../../types/Value";
 import { PromiseErrorOr } from "../../types/PromiseErrorOr";
 import { Many } from "../../datastore/DataStore";

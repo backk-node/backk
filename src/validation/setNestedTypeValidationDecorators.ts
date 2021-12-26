@@ -1,4 +1,4 @@
-import { getFromContainer, MetadataStorage, ValidationTypes } from 'class-validator';
+import { MetadataStorage, ValidationTypes, getFromContainer } from 'class-validator';
 import { ValidationMetadata } from 'class-validator/metadata/ValidationMetadata';
 import { ValidationMetadataArgs } from 'class-validator/metadata/ValidationMetadataArgs';
 import { Type } from 'class-transformer';

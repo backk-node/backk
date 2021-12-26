@@ -1,4 +1,4 @@
-import { registerDecorator, ValidationOptions } from "class-validator";
+import { ValidationOptions, registerDecorator } from "class-validator";
 import isAscii from "validator/lib/isAscii";
 import { Lengths } from "../../constants/constants";
 

@@ -53,7 +53,7 @@ Example log entry:
   "TraceFlags": "undefined",
   "SeverityText": "INFO",
   "SeverityNumber": 9,
-  "Name": "HTTP server started, listening to port 3000",
+  "Name": "HTTP server started, listening to port 3001",
   "Body": "",
   "Resource": {
     "service.name": "backk-example-microservice",

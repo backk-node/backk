@@ -124,10 +124,10 @@ export default function writeApiPostmanCollectionExportFile<T>(
           method: 'POST',
           url: {
             raw: `http://localhost:${process.env.HTTP_SERVER_PORT ??
-              3000}/${getNamespacedMicroserviceName()}/metadataService.getServicesMetadata`,
+              3001}/${getNamespacedMicroserviceName()}/metadataService.getServicesMetadata`,
             protocol: 'http',
             host: ['localhost'],
-            port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,
+            port: `${process.env.HTTP_SERVER_PORT ?? 3001}`,
             path: [getNamespacedMicroserviceName(), 'metadataService.getServicesMetadata']
           }
         }

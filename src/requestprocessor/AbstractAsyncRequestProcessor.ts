@@ -1,6 +1,6 @@
 import Microservice from '../microservice/Microservice';
+import { CommunicationMethod } from '../remote/messagequeue/sendToRemoteService';
 import { RequestProcessor } from './RequestProcessor';
-import { CommunicationMethod } from "../remote/messagequeue/sendToRemoteService";
 
 export default abstract class AbstractAsyncRequestProcessor implements RequestProcessor {
   isAsyncProcessor(): boolean {

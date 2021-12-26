@@ -543,7 +543,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
         ? [
             {
               url: `http://localhost:${
-                process.env.HTTP_SERVER_PORT ?? 3000
+                process.env.HTTP_SERVER_PORT ?? 3001
               }/${getNamespacedMicroserviceName()}`,
               description: 'Local development server',
             },

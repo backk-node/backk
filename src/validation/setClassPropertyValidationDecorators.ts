@@ -1,5 +1,5 @@
 import { parseSync } from '@babel/core';
-import { getFromContainer, MetadataStorage, ValidationTypes, Validator } from 'class-validator';
+import { MetadataStorage, ValidationTypes, Validator, getFromContainer } from 'class-validator';
 import { ValidationMetadata } from 'class-validator/metadata/ValidationMetadata';
 import { ValidationMetadataArgs } from 'class-validator/metadata/ValidationMetadataArgs';
 import { readFileSync } from 'fs';

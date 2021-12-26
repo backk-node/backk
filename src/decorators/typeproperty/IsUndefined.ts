@@ -1,4 +1,4 @@
-import { registerDecorator, ValidationOptions } from "class-validator";
+import { ValidationOptions, registerDecorator } from "class-validator";
 
 export default function IsUndefined(validationOptions?: ValidationOptions) {
   return function (object: Record<string, any>, propertyName: string) {

@@ -1,4 +1,4 @@
-import { registerDecorator, ValidationDecoratorOptions } from 'class-validator';
+import { ValidationDecoratorOptions, registerDecorator } from 'class-validator';
 
 export const customDecoratorNameToTestValueMap: { [key: string]: any } = {};
 

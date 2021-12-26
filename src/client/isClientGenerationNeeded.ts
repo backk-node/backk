@@ -1,5 +1,5 @@
 import { parseSync } from '@babel/core';
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, statSync } from 'fs';
 import { dirname, resolve } from 'path';
 import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
 import Microservice from '../microservice/Microservice';

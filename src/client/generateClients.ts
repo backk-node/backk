@@ -1,7 +1,7 @@
 import { parseSync } from "@babel/core";
 import generate from "@babel/generator";
 import { exec } from "child_process";
-import { Dirent, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
+import { Dirent, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "fs";
 import { dirname, resolve } from "path";
 import rimraf from "rimraf";
 import util from "util";

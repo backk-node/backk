@@ -1,7 +1,7 @@
 import getClsNamespace from '../../../../continuationlocalstorage/getClsNamespace';
 import entityAnnotationContainer from '../../../../decorators/entity/entityAnnotationContainer';
 import tryExecuteOnStartUpTasks from '../../../../initialization/tryExecuteOnStartupTasks';
-import log, { logError, Severity } from '../../../../observability/logging/log';
+import log, { Severity, logError } from '../../../../observability/logging/log';
 import tryInitializeCronJobSchedulingTable from '../../../../scheduling/tryInitializeCronJobSchedulingTable';
 import forEachAsyncSequential from '../../../../utils/forEachAsyncSequential';
 import AbstractSqlDataStore from '../../../AbstractSqlDataStore';

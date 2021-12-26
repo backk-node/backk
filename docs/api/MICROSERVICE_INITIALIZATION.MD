@@ -31,7 +31,7 @@ interface ServiceFunctionExecutionOptions {
 ```
 
 Represents an HTTP server for the microservice.
-Uses port defined in HTTP_SERVER_PORT environment variable or port 3000.
+Uses port defined in HTTP_SERVER_PORT environment variable or port 3001.
 
 `isMetadataServiceEnabled` specifies if metadata data can be requested from the metadata service endpoints: 
 - `metadataService.getServicesMetadata`

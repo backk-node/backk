@@ -1,6 +1,6 @@
 import { CompressionTypes } from "kafkajs";
 import { getNamespace } from "cls-hooked";
-import { Transmission, ResponseDestination } from "./sendToRemoteServiceInsideTransaction";
+import { ResponseDestination, Transmission } from "./sendToRemoteServiceInsideTransaction";
 import sendOneOrMoreToKafka, { SendAcknowledgementType } from "./kafka/sendOneOrMoreToKafka";
 import sendOneOrMoreToRedis from "./redis/sendOneOrMoreToRedis";
 import { validateServiceFunctionArguments } from "../utils/validateServiceFunctionArguments";

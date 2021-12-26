@@ -620,10 +620,10 @@ export default function writeTestsPostmanCollectionExportFile<T>(
         request: {
           method: 'POST',
           url: {
-            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${getNamespacedMicroserviceName()}/metadataService.getServicesMetadata`,
+            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3001}/${getNamespacedMicroserviceName()}/metadataService.getServicesMetadata`,
             protocol: 'http',
             host: ['localhost'],
-            port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,
+            port: `${process.env.HTTP_SERVER_PORT ?? 3001}`,
             path: [getNamespacedMicroserviceName(), 'metadataService.getServicesMetadata']
           }
         }
@@ -633,10 +633,10 @@ export default function writeTestsPostmanCollectionExportFile<T>(
         request: {
           method: 'POST',
           url: {
-            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3000}/${getNamespacedMicroserviceName()}/metadataService.getOpenApiSpec`,
+            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3001}/${getNamespacedMicroserviceName()}/metadataService.getOpenApiSpec`,
             protocol: 'http',
             host: ['localhost'],
-            port: `${process.env.HTTP_SERVER_PORT ?? 3000}`,
+            port: `${process.env.HTTP_SERVER_PORT ?? 3001}`,
             path: [getNamespacedMicroserviceName(), 'metadataService.getOpenApiSpec']
           }
         }

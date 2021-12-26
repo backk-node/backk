@@ -1,4 +1,4 @@
-import { registerDecorator, ValidationOptions } from 'class-validator';
+import { ValidationOptions, registerDecorator } from 'class-validator';
 import dayjs from 'dayjs';
 
 export default function IsDayOfMonthIn(values: number[], validationOptions?: ValidationOptions) {

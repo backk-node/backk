@@ -1,4 +1,4 @@
-import { getFromContainer, MetadataStorage } from 'class-validator';
+import { MetadataStorage, getFromContainer } from 'class-validator';
 import { ValidationMetadata } from 'class-validator/metadata/ValidationMetadata';
 import { getNamespace } from 'cls-hooked';
 import { JSONPath } from 'jsonpath-plus';

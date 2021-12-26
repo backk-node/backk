@@ -1,4 +1,4 @@
-import { validateOrReject, ValidationError } from 'class-validator';
+import { ValidationError, validateOrReject } from 'class-validator';
 import createErrorFromErrorMessageAndThrowError from '../errors/createErrorFromErrorMessageAndThrowError';
 import createErrorMessageWithStatusCode from '../errors/createErrorMessageWithStatusCode';
 import getValidationErrors from './getValidationErrors';

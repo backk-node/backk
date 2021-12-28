@@ -1,26 +1,25 @@
-import BaseService from '../services/BaseService';
+import BaseService from "../services/BaseService";
 // eslint-disable-next-line @typescript-eslint/camelcase
-import __Backk__CronJobScheduling from '../scheduling/entities/__Backk__CronJobScheduling';
+import __Backk__CronJobScheduling from "../scheduling/entities/__Backk__CronJobScheduling";
 // eslint-disable-next-line @typescript-eslint/camelcase
-import __Backk__JobScheduling from '../scheduling/entities/__Backk__JobScheduling';
-import DbTableVersion from '../types/DbTableVersion';
-import { Namespace, getNamespace } from 'cls-hooked';
-import { BackkEntity } from '../types/entities/BackkEntity';
-import { PreHook } from './hooks/PreHook';
-import { PostQueryOperations } from '../types/postqueryoperations/PostQueryOperations';
-import { PostHook } from './hooks/PostHook';
-import { PromiseErrorOr } from '../types/PromiseErrorOr';
-import { ArrayFieldValue, DataStore, Field, Many, One, QueryFilters } from './DataStore';
-import MongoDbFilter from './mongodb/MongoDbFilter';
-import { FilterQuery } from 'mongodb';
-import SqlFilter from './sql/filters/SqlFilter';
-import { SubEntity } from '../types/entities/SubEntity';
-import UserDefinedFilter from '../types/userdefinedfilters/UserDefinedFilter';
-import { EntityPreHook } from './hooks/EntityPreHook';
-import EntityCountRequest from '../types/EntityCountRequest';
-import { EntitiesPostHook } from './hooks/EntitiesPostHook';
-import { RecursivePartial } from '../types/RecursivePartial';
-import forEachAsyncParallel from '../utils/forEachAsyncParallel';
+import __Backk__JobScheduling from "../scheduling/entities/__Backk__JobScheduling";
+import DbTableVersion from "../types/DbTableVersion";
+import { getNamespace, Namespace } from "cls-hooked";
+import { BackkEntity } from "../types/entities/BackkEntity";
+import { PreHook } from "./hooks/PreHook";
+import { PostQueryOperations } from "../types/postqueryoperations/PostQueryOperations";
+import { PostHook } from "./hooks/PostHook";
+import { PromiseErrorOr } from "../types/PromiseErrorOr";
+import { ArrayFieldValue, DataStore, Field, Many, One, QueryFilters } from "./DataStore";
+import MongoDbFilter from "./mongodb/MongoDbFilter";
+import { FilterQuery } from "mongodb";
+import SqlFilter from "./sql/filters/SqlFilter";
+import { SubEntity } from "../types/entities/SubEntity";
+import { EntityPreHook } from "./hooks/EntityPreHook";
+import EntityCountRequest from "../types/EntityCountRequest";
+import { EntitiesPostHook } from "./hooks/EntitiesPostHook";
+import { RecursivePartial } from "../types/RecursivePartial";
+import forEachAsyncParallel from "../utils/forEachAsyncParallel";
 
 export default abstract class AbstractDataStore implements DataStore {
   private readonly services: BaseService[] = [];

@@ -3,6 +3,7 @@ import mysql, { Pool } from 'mysql2/promise';
 import throwException from '../utils/exception/throwException';
 import getDbNameFromServiceName from '../utils/getDbNameFromServiceName';
 import AbstractSqlDataStore from './AbstractSqlDataStore';
+import validateDbPassword from './utils/validateDbPassword';
 
 export default class MySqlDataStore extends AbstractSqlDataStore {
   private static readonly MAX_CHAR_TYPE_LENGTH = 16383;
@@ -20,6 +21,8 @@ export default class MySqlDataStore extends AbstractSqlDataStore {
     this.password =
       process.env.MYSQL_PASSWORD || throwException('MYSQL_PASSWORD environment variable must be defined');
 
+    validateDbPassword(this.password);
+
     this.pool = mysql.createPool({
       host: this.host,
       port: parseInt(this.port, 10),
@@ -28,9 +31,11 @@ export default class MySqlDataStore extends AbstractSqlDataStore {
       waitForConnections: true,
       connectionLimit: 100,
       queueLimit: 0,
-      ssl: process.env.MYSQL_TLS_CA_FILE_PATH_NAME
+      ssl: process.env.MYSQL_TLS_CA_FILE_PATH_NAME || process.env.MYSQL_TLS_CERT_FILE_PATH_NAME || process.env.MYSQL_TLS_KEY_FILE_PATH_NAME
         ? {
-            ca: readFileSync(process.env.MYSQL_TLS_CA_FILE_PATH_NAME, { encoding: 'UTF-8' }),
+            ca: process.env.MYSQL_TLS_CA_FILE_PATH_NAME
+              ? readFileSync(process.env.MYSQL_TLS_CA_FILE_PATH_NAME, { encoding: 'UTF-8' })
+              : undefined,
             cert: process.env.MYSQL_TLS_CERT_FILE_PATH_NAME
               ? readFileSync(process.env.MYSQL_TLS_CERT_FILE_PATH_NAME, { encoding: 'UTF-8' })
               : undefined,
@@ -59,7 +64,7 @@ export default class MySqlDataStore extends AbstractSqlDataStore {
           false
         );
         return super.isDbReady();
-      } catch(error) {
+      } catch (error) {
         this.lastInitError = error;
         return false;
       }
@@ -103,9 +108,9 @@ export default class MySqlDataStore extends AbstractSqlDataStore {
     if (maxLength < MySqlDataStore.MAX_CHAR_TYPE_LENGTH) {
       return `VARCHAR(${maxLength})`;
     } else if (maxLength < 65535) {
-      return 'TEXT'
+      return 'TEXT';
     } else if (maxLength < 16777215) {
-      return 'MEDIUMTEXT'
+      return 'MEDIUMTEXT';
     }
     return 'LONGTEXT';
   }

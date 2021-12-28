@@ -129,8 +129,6 @@ a
 1src/scheduling/entities/__Backk__JobScheduling.ts,b/0/b027cc1a1a1472de7a799a37c2edfe8445de6800
 U
 %.github/workflows/codeql-analysis.yml,c/3/c3aa8b7f1c613e43d3bb9d5ac52ac6603d945e89
-P
- src/utils/getMicroserviceName.ts,8/5/858e4c569eb323ab07d080c32caf8ce0ac4e9a53
 j
 :src/remote/utils/parseRemoteServiceFunctionCallUrlParts.ts,a/5/a561c9580c6e13f3634b5ea01a48c933b81f6652
 a
@@ -177,8 +175,6 @@ w
 Gsrc/observability/distributedtracinig/initializeDefaultJaegerTracing.ts,5/f/5f3199e9c932d37e47604ff31aa6d843c94be7f3
 c
 3src/observability/metrics/defaultPrometheusMeter.ts,f/4/f48cea031a89acea4159adb25350f76868696671
-D
-src/crypt/encrypt.ts,c/9/c98ecef47c9a70590c3bdafe95d104c5c01df85f
 Z
 *src/datastore/mongodb/getRootOperations.ts,d/f/df7898ea7d725eb8ac0c6883e577946b810445e8
 s
@@ -219,8 +215,6 @@ B
 src/types/id/Id.ts,b/9/b949c16f90a7fcc28028abebb079862076bd3791
 T
 $src/typescript/utils/mergeImports.ts,e/6/e62992d4cb9410bf503e1ffa8a63852639d1d6a9
-Z
-*src/utils/getNamespacedMicroserviceName.ts,8/2/8220ef18c4557bd142c660a02e8b7967733f45fb
 :
 
 .gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302
@@ -312,8 +306,6 @@ W
 +src/decorators/typeproperty/IsPostalCode.ts,4/c/4c82f6a832e3d724bfd3cc34530ecb3c2ed2a3be
 a
 1src/decorators/typeproperty/IsStringOrObjectId.ts,3/d/3dcbdab0b32d613001d9e23af1a82e227482dadd
-_
-/src/decorators/typeproperty/IsStrongPassword.ts,9/e/9e2c5afe51c90941e9820615a014fb8d1fac2bdf
 U
 %src/decorators/typeproperty/MinMax.ts,7/3/736111abbe2364fd795e26cd15b3aa27ce8462cb
 X
@@ -422,8 +414,6 @@ E
 docs/PREREQUISITES.MD,7/1/71b175673ee1e11b95221df3ed611687ff16551b
 e
 5src/remote/messagequeue/kafka/sendOneOrMoreToKafka.ts,c/8/c85e63005baa112768508fc435ef3f685516a669
-Y
-)src/execution/isExecuteMultipleRequest.ts,d/2/d2482742299ac42fc87a8f2123cf69f65806b61b
 `
 0src/execution/executeMultipleServiceFunctions.ts,d/4/d4d12c723aacc7da131331d4a853a2b0f225a2db
 Y
@@ -498,8 +488,6 @@ N
 src/execution/BackkResponse.ts,0/d/0d970f6b89700cd16c71c4ffb4557d25a2565e2c
 H
 src/errors/emptyError.ts,9/7/971b290192b520be8ddd3c6548780aa05a706741
-`
-0src/authorization/JwtAuthorizationServiceImpl.ts,b/8/b82cefea0a7f99d8d7473b1072daa5b71ffb5527
 W
 'src/errors/createInternalServerError.ts,3/0/30d70f98cface18d8395ba00ab12d441d981240a
 k

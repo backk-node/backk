@@ -4,6 +4,7 @@ import { pg } from 'yesql';
 import throwException from '../utils/exception/throwException';
 import getDbNameFromServiceName from '../utils/getDbNameFromServiceName';
 import AbstractSqlDataStore from './AbstractSqlDataStore';
+import validateDbPassword from "./utils/validateDbPassword";
 
 export default class PostgreSqlDataStore extends AbstractSqlDataStore {
   private readonly pool: Pool;
@@ -17,6 +18,9 @@ export default class PostgreSqlDataStore extends AbstractSqlDataStore {
     this.host =
       process.env.POSTGRESQL_HOST || throwException('POSTGRESQL_HOST environment variable must be defined');
 
+    validateDbPassword(process.env.POSTGRESQL_PASSWORD ||
+      throwException('POSTGRESQL_PASSWORD environment variable must be defined'));
+
     this.pool = new Pool({
       user:
         process.env.POSTGRESQL_USER || throwException('POSTGRESQL_USER environment variable must be defined'),
@@ -29,9 +33,9 @@ export default class PostgreSqlDataStore extends AbstractSqlDataStore {
         process.env.POSTGRESQL_PORT || throwException('POSTGRESQL_PORT environment variable must be defined'),
         10
       ),
-      ssl: process.env.POSTGRES_TLS_CA_FILE_PATH_NAME
+      ssl: process.env.POSTGRES_TLS_CA_FILE_PATH_NAME || process.env.POSTGRES_TLS_CERT_FILE_PATH_NAME || process.env.POSTGRES_TLS_KEY_FILE_PATH_NAME
         ? {
-            ca: readFileSync(process.env.POSTGRES_TLS_CA_FILE_PATH_NAME, { encoding: 'UTF-8' }),
+            ca: process.env.POSTGRES_TLS_CA_FILE_PATH_NAME ? readFileSync(process.env.POSTGRES_TLS_CA_FILE_PATH_NAME, { encoding: 'UTF-8' }) : undefined,
             cert: process.env.POSTGRES_TLS_CERT_FILE_PATH_NAME
               ? readFileSync(process.env.POSTGRES_TLS_CERT_FILE_PATH_NAME, { encoding: 'UTF-8' })
               : undefined,

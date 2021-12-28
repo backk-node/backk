@@ -250,12 +250,16 @@ if (process.env.NODE_ENV === 'production') {
     throw new Error('MICROSERVICE_NAMESPACE environment variable must be defined');
   }
 
-  if (!process.env.SERVICE_INSTANCE_ID) {
-    throw new Error('SERVICE_INSTANCE_ID environment variable must be defined');
+  if (!process.env.MICROSERVICE_INSTANCE_ID) {
+    throw new Error('MICROSERVICE_INSTANCE_ID environment variable must be defined');
   }
 
   if (!process.env.NODE_NAME) {
     throw new Error('NODE_NAME environment variable must be defined');
+  }
+
+  if (!process.env.MICROSERVICE_VERSION) {
+    throw new Error('MICROSERVICE_VERSION environment variable must be defined');
   }
 }
 
@@ -286,8 +290,8 @@ export default function log(
       Resource: {
         'service.name': serviceName,
         'service.namespace': process.env.MICROSERVICE_NAMESPACE ?? '',
-        'service.instance.id': process.env.SERVICE_INSTANCE_ID ?? getMicroserviceName() + '-87ffab3-xx567',
-        'service.version': packageObj.version,
+        'service.instance.id': process.env.MICROSERVICE_INSTANCE_ID ?? serviceName,
+        'service.version': process.env.MICROSERVICE_VERSION ?? packageObj.version,
         'node.name': process.env.NODE_NAME ?? '',
       },
       Attributes: {

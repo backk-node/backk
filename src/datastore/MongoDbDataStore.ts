@@ -72,6 +72,7 @@ import getUserAccountIdFieldNameAndRequiredValue from './utils/getUserAccountIdF
 import recordDbOperationDuration from './utils/recordDbOperationDuration';
 import startDbOperation from './utils/startDbOperation';
 import tryEnsurePreviousOrNextPageIsRequested from './utils/tryEnsurePreviousOrNextPageIsRequested';
+import validateDbPassword from './utils/validateDbPassword';
 
 export default class MongoDbDataStore extends AbstractDataStore {
   private readonly uri: string;
@@ -100,6 +101,7 @@ export default class MongoDbDataStore extends AbstractDataStore {
         : '');
 
     if (MONGODB_USER && MONGODB_PASSWORD) {
+      validateDbPassword(MONGODB_PASSWORD)
       this.uri = `mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}`;
     } else {
       this.uri = `mongodb://${MONGODB_HOST}:${MONGODB_PORT}`;

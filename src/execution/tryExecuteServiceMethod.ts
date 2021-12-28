@@ -96,6 +96,10 @@ export default async function tryExecuteServiceMethod(
     }
 
     if (isExecuteMultipleRequest(serviceFunctionName)) {
+      if (httpMethod !== 'POST') {
+        throw createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.HTTP_METHOD_MUST_BE_POST);
+      }
+
       if (options?.multipleServiceFunctionExecution?.maxServiceFunctionCount) {
         if (
           Object.keys(serviceFunctionArgument).length >
@@ -173,33 +177,11 @@ export default async function tryExecuteServiceMethod(
     const serviceFunctionCallStartTimeInMillis = Date.now();
 
     if (serviceFunctionName === 'serviceFunctionSchedulingService.scheduleExecution') {
+      if (httpMethod !== 'POST') {
+        throw createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.HTTP_METHOD_MUST_BE_POST);
+      }
+
       return await tryScheduleJobExecution(microservice, serviceFunctionArgument, headers, resp);
-    }
-
-    if (httpMethod === 'GET') {
-      if (
-        (!options?.httpGetRequests?.regExpForAllowedServiceFunctionNames || !serviceFunctionName.match(
-          options?.httpGetRequests?.regExpForAllowedServiceFunctionNames) ||
-          options?.httpGetRequests?.deniedServiceFunctionNames?.includes(serviceFunctionName)) &&
-        (typeof ServiceClass !== 'function' || !serviceFunctionAnnotationContainer.doesServiceFunctionAllowHttpGetMethod(ServiceClass, functionName))
-      ) {
-        throw createErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.HTTP_METHOD_MUST_BE_POST);
-      }
-
-      // noinspection AssignmentToFunctionParameterJS
-      serviceFunctionArgument = decodeURIComponent(serviceFunctionArgument);
-
-      try {
-        // noinspection AssignmentToFunctionParameterJS
-        serviceFunctionArgument = JSON.parse(serviceFunctionArgument);
-      } catch (error) {
-        throw createBackkErrorFromErrorCodeMessageAndStatus({
-          ...BACKK_ERRORS.INVALID_ARGUMENT,
-          message:
-            BACKK_ERRORS.INVALID_ARGUMENT.message +
-            'argument not valid or too long. Argument must be a URI encoded JSON string',
-        });
-      }
     }
 
     if (serviceFunctionName === 'metadataService.getOpenApiSpec') {
@@ -270,6 +252,34 @@ export default async function tryExecuteServiceMethod(
         resp.writeHead(HttpStatusCodes.OK);
         resp.end();
         return;
+      }
+    } else if (httpMethod === 'GET') {
+      if (
+        (!options?.httpGetRequests?.regExpForAllowedServiceFunctionNames ||
+          !serviceFunctionName.match(options?.httpGetRequests?.regExpForAllowedServiceFunctionNames) ||
+          options?.httpGetRequests?.deniedServiceFunctionNames?.includes(serviceFunctionName)) &&
+        (typeof ServiceClass !== 'function' ||
+          !serviceFunctionAnnotationContainer.doesServiceFunctionAllowHttpGetMethod(
+            ServiceClass,
+            functionName
+          ))
+      ) {
+        throw createErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.HTTP_METHOD_MUST_BE_POST);
+      }
+
+      // noinspection AssignmentToFunctionParameterJS
+      serviceFunctionArgument = decodeURIComponent(serviceFunctionArgument);
+
+      try {
+        // noinspection AssignmentToFunctionParameterJS
+        serviceFunctionArgument = JSON.parse(serviceFunctionArgument);
+      } catch (error) {
+        throw createBackkErrorFromErrorCodeMessageAndStatus({
+          ...BACKK_ERRORS.INVALID_ARGUMENT,
+          message:
+            BACKK_ERRORS.INVALID_ARGUMENT.message +
+            'argument not valid or too long in HTTP GET. Argument must be URI encoded JSON given in query string parameter named "arg"',
+        });
       }
     }
 

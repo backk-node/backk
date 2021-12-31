@@ -184,6 +184,8 @@ export default async function tryExecuteServiceMethod(
       return await tryScheduleJobExecution(microservice, serviceFunctionArgument, headers, resp);
     }
 
+    const shouldAuthorize = true;
+
     if (serviceFunctionName === 'metadataService.getOpenApiSpec') {
       if (!options || options.isMetadataServiceEnabled === undefined || options.isMetadataServiceEnabled) {
         resp.writeHead(HttpStatusCodes.OK, { 'Content-Type': 'application/json' });
@@ -228,6 +230,7 @@ export default async function tryExecuteServiceMethod(
         serviceName = getMicroserviceServiceNameByServiceClass(microservice, LivenessCheckService);
         // noinspection AssignmentToFunctionParameterJS
         serviceFunctionName = serviceName + '.' + 'isMicroserviceAlive';
+        shouldAuthorize = false;
       } else {
         resp.writeHead(HttpStatusCodes.OK);
         resp.end();
@@ -238,6 +241,7 @@ export default async function tryExecuteServiceMethod(
         serviceName = getMicroserviceServiceNameByServiceClass(microservice, ReadinessCheckService);
         // noinspection AssignmentToFunctionParameterJS
         serviceFunctionName = serviceName + '.' + 'isMicroserviceReady';
+        shouldAuthorize = false;
       } else {
         resp.writeHead(HttpStatusCodes.OK);
         resp.end();
@@ -248,6 +252,7 @@ export default async function tryExecuteServiceMethod(
         serviceName = getMicroserviceServiceNameByServiceClass(microservice, StartupCheckService);
         // noinspection AssignmentToFunctionParameterJS
         serviceFunctionName = serviceName + '.' + 'isMicroserviceStarted';
+        shouldAuthorize = false;
       } else {
         resp.writeHead(HttpStatusCodes.OK);
         resp.end();
@@ -322,15 +327,17 @@ export default async function tryExecuteServiceMethod(
     const authorizationService = getMicroserviceServiceByServiceClass(microservice, AuthorizationService);
     const authHeader = headers.authorization;
 
-    [subject, issuer] = await tryAuthorize(
-      microservice[serviceName],
-      functionName,
-      serviceFunctionArgument,
-      authHeader,
-      authorizationService,
-      userService,
-      isClusterInternalCall
-    );
+    if (shouldAuthorize) {
+      [subject, issuer] = await tryAuthorize(
+        microservice[serviceName],
+        functionName,
+        serviceFunctionArgument,
+        authHeader,
+        authorizationService,
+        userService,
+        isClusterInternalCall
+      );
+    }
 
     const dataStore = (microservice[serviceName] as BaseService).getDataStore();
 

@@ -21,7 +21,7 @@ export { default as BaseService } from './services/BaseService';
 export { default as LivenessCheckService } from './services/LivenessCheckService';
 export { default as ReadinessCheckService } from './services/ReadinessCheckService';
 export { default as AuditLoggingService } from './observability/logging/audit/AuditLoggingService';
-export { default as StartupCheckServiceImpl } from './services/startup/DefaultStartupCheckServiceImpl';
+export { default as DefaultStartupCheckServiceImpl } from './services/startup/DefaultStartupCheckServiceImpl';
 export { default as JwtAuthorizationServiceImpl } from './authorization/JwtAuthorizationServiceImpl';
 export {
   UserOperationResult,

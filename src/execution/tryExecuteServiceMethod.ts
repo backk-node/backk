@@ -184,7 +184,7 @@ export default async function tryExecuteServiceMethod(
       return await tryScheduleJobExecution(microservice, serviceFunctionArgument, headers, resp);
     }
 
-    const shouldAuthorize = true;
+    let shouldAuthorize = true;
 
     if (serviceFunctionName === 'metadataService.getOpenApiSpec') {
       if (!options || options.isMetadataServiceEnabled === undefined || options.isMetadataServiceEnabled) {

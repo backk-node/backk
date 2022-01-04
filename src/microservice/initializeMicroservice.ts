@@ -466,10 +466,6 @@ export default async function initializeMicroservice(
   if (!remoteServiceRootDir) {
     microservice.servicesMetadata = servicesMetadata;
 
-    if (process.env.NODE_ENV === 'development' && shouldGeneratePostmanIntegrationTestsOnRestartInDevEnv) {
-      writeTestsPostmanCollectionExportFile(microservice, servicesMetadata);
-    }
-
     if (command === '--generateClientsOnly' || command === '--generateClientsOnlyIfNeeded') {
       if (process.env.NODE_ENV !== 'development') {
         throw new Error('Client generation allowed in dev environment only');
@@ -517,6 +513,10 @@ export default async function initializeMicroservice(
       );
 
       console.log('Successfully generated API specs.');
+    }
+
+    if (!command && process.env.NODE_ENV === 'development' && shouldGeneratePostmanIntegrationTestsOnRestartInDevEnv) {
+      writeTestsPostmanCollectionExportFile(microservice, servicesMetadata);
     }
 
     const serviceNames = Object.entries(microservice)

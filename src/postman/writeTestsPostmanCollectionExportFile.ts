@@ -1,27 +1,27 @@
-import { getFileNamesRecursively } from '../utils/file/getSrcFilePathNameForTypeName';
-import _ from 'lodash';
-import YAML from 'yaml';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
-import serviceAnnotationContainer from '../decorators/service/serviceAnnotationContainer';
-import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
-import { sign } from 'jsonwebtoken';
 import { Base64 } from 'js-base64';
-import getServiceFunctionTests from './getServiceFunctionTests';
-import getServiceFunctionTestArgument from './getServiceFunctionTestArgument';
-import createPostmanCollectionItem from './createPostmanCollectionItem';
-import addCustomTest from './addCustomTest';
-import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
+import { sign } from 'jsonwebtoken';
+import _ from 'lodash';
+import path from 'path';
+import YAML from 'yaml';
+import { HttpStatusCodes } from '../constants/constants';
+import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
+import serviceAnnotationContainer from '../decorators/service/serviceAnnotationContainer';
 import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
+import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
+import CrudEntityService from '../services/crudentity/CrudEntityService';
+import isCreateFunction from '../services/crudentity/utils/isCreateFunction';
+import isDeleteFunction from '../services/crudentity/utils/isDeleteFunction';
 import isReadFunction from '../services/crudentity/utils/isReadFunction';
 import isUpdateFunction from '../services/crudentity/utils/isUpdateFunction';
-import isDeleteFunction from '../services/crudentity/utils/isDeleteFunction';
+import throwException from '../utils/exception/throwException';
+import { getFileNamesRecursively } from '../utils/file/getSrcFilePathNameForTypeName';
+import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
+import addCustomTest from './addCustomTest';
+import createPostmanCollectionItem from './createPostmanCollectionItem';
+import getServiceFunctionTestArgument from './getServiceFunctionTestArgument';
+import getServiceFunctionTests from './getServiceFunctionTests';
 import tryValidateIntegrationTests from './tryValidateIntegrationTests';
-import { HttpStatusCodes } from '../constants/constants';
-import isCreateFunction from '../services/crudentity/utils/isCreateFunction';
-import CrudEntityService from '../services/crudentity/CrudEntityService';
-import path from 'path';
-import throwException from "../utils/exception/throwException";
-import getNamespacedMicroserviceName from "../utils/getNamespacedMicroserviceName";
 
 export default function writeTestsPostmanCollectionExportFile<T>(
   controller: T,
@@ -39,14 +39,14 @@ export default function writeTestsPostmanCollectionExportFile<T>(
       try {
         writtenTestsInFile =
           fileType === 'json' ? JSON.parse(testFileContents) : YAML.parse(testFileContents);
-      } catch(error) {
+      } catch (error) {
         throw new Error('Failed to parse file: ' + testFilePathName);
       }
       return Array.isArray(writtenTestsInFile)
         ? writtenTestsInFile.map((writtenTest: any) => ({
             ...writtenTest,
             serviceName: path.basename(path.dirname(testFilePathName)),
-            testFileName: path.basename(testFilePathName).split('.')[0]
+            testFileName: path.basename(testFilePathName).split('.')[0],
           }))
         : [];
     })
@@ -98,7 +98,7 @@ export default function writeTestsPostmanCollectionExportFile<T>(
 
   itemGroups.push({
     name: 'Cleanup (0)',
-    item: items.map((item, index) => ({ ...item, name: item.name + ` (0.${index + 1})` }))
+    item: items.map((item, index) => ({ ...item, name: item.name + ` (0.${index + 1})` })),
   });
 
   servicesMetadata.forEach((serviceMetadata: ServiceMetadata, serviceIndex) => {
@@ -141,7 +141,8 @@ export default function writeTestsPostmanCollectionExportFile<T>(
         serviceFunctionAnnotationContainer.hasOnStartUp(
           (controller as any)[serviceMetadata.serviceName].constructor,
           functionMetadata.functionName
-        ) || serviceFunctionAnnotationContainer.isSubscription(
+        ) ||
+        serviceFunctionAnnotationContainer.isSubscription(
           (controller as any)[serviceMetadata.serviceName].constructor,
           functionMetadata.functionName
         )
@@ -177,15 +178,17 @@ export default function writeTestsPostmanCollectionExportFile<T>(
           );
         }
 
-        const expectedResponseStatusCode = serviceFunctionAnnotationContainer.getResponseStatusCodeForServiceFunction(
-          (controller as any)[foundServiceMetadata.serviceName].constructor,
-          foundFunctionMetadata.functionName
-        );
+        const expectedResponseStatusCode =
+          serviceFunctionAnnotationContainer.getResponseStatusCodeForServiceFunction(
+            (controller as any)[foundServiceMetadata.serviceName].constructor,
+            foundFunctionMetadata.functionName
+          );
 
-        const expectedResponseFieldPathNameToFieldValueMapInTests = serviceFunctionAnnotationContainer.getExpectedResponseValueFieldPathNameToFieldValueMapForTests(
-          (controller as any)[foundServiceMetadata.serviceName].constructor,
-          foundFunctionMetadata.functionName
-        );
+        const expectedResponseFieldPathNameToFieldValueMapInTests =
+          serviceFunctionAnnotationContainer.getExpectedResponseValueFieldPathNameToFieldValueMapForTests(
+            (controller as any)[foundServiceMetadata.serviceName].constructor,
+            foundFunctionMetadata.functionName
+          );
 
         let tests;
 
@@ -215,9 +218,9 @@ export default function writeTestsPostmanCollectionExportFile<T>(
                     `pm.test("test", function () {
   ${test} 
 })`
-                )
-              ]
-            }
+                ),
+              ],
+            },
           };
         }
 
@@ -262,15 +265,17 @@ export default function writeTestsPostmanCollectionExportFile<T>(
         lastReadFunctionMetadata = functionMetadata;
       }
 
-      const expectedResponseStatusCode = serviceFunctionAnnotationContainer.getResponseStatusCodeForServiceFunction(
-        (controller as any)[serviceMetadata.serviceName].constructor,
-        functionMetadata.functionName
-      );
+      const expectedResponseStatusCode =
+        serviceFunctionAnnotationContainer.getResponseStatusCodeForServiceFunction(
+          (controller as any)[serviceMetadata.serviceName].constructor,
+          functionMetadata.functionName
+        );
 
-      const expectedResponseFieldPathNameToFieldValueMapInTests = serviceFunctionAnnotationContainer.getExpectedResponseValueFieldPathNameToFieldValueMapForTests(
-        (controller as any)[serviceMetadata.serviceName].constructor,
-        functionMetadata.functionName
-      );
+      const expectedResponseFieldPathNameToFieldValueMapInTests =
+        serviceFunctionAnnotationContainer.getExpectedResponseValueFieldPathNameToFieldValueMapForTests(
+          (controller as any)[serviceMetadata.serviceName].constructor,
+          functionMetadata.functionName
+        );
 
       if (
         isUpdateFunction(
@@ -391,7 +396,7 @@ export default function writeTestsPostmanCollectionExportFile<T>(
       postTestSpecs?.forEach((postTestSpec, testSpecIndex) => {
         const finalExpectedFieldPathNameToFieldValueMapInTests = {
           ...(expectedResponseFieldPathNameToFieldValueMapInTests ?? {}),
-          ...(postTestSpec?.expectedResult ?? {})
+          ...(postTestSpec?.expectedResult ?? {}),
         };
 
         if (postTestSpec?.serviceFunctionName) {
@@ -414,10 +419,11 @@ export default function writeTestsPostmanCollectionExportFile<T>(
             );
           }
 
-          const expectedResponseStatusCode = serviceFunctionAnnotationContainer.getResponseStatusCodeForServiceFunction(
-            (controller as any)[foundServiceMetadata.serviceName].constructor,
-            foundFunctionMetadata.functionName
-          );
+          const expectedResponseStatusCode =
+            serviceFunctionAnnotationContainer.getResponseStatusCodeForServiceFunction(
+              (controller as any)[foundServiceMetadata.serviceName].constructor,
+              foundFunctionMetadata.functionName
+            );
 
           const postTests = getServiceFunctionTests(
             (controller as any)[foundServiceMetadata.serviceName].constructor,
@@ -542,8 +548,8 @@ export default function writeTestsPostmanCollectionExportFile<T>(
         name: functionMetadata.functionName + ` (${serviceIndex + 1}.${functionIndex + 1})`,
         item: items.map((item, index) => ({
           ...item,
-          name: item.name + ` (${serviceIndex + 1}.${functionIndex + 1}.${index + 1})`
-        }))
+          name: item.name + ` (${serviceIndex + 1}.${functionIndex + 1}.${index + 1})`,
+        })),
       });
     });
 
@@ -564,13 +570,13 @@ export default function writeTestsPostmanCollectionExportFile<T>(
 
       functionItemGroups.push({
         name: testFileName,
-        item: customTestItems
+        item: customTestItems,
       });
     });
 
     itemGroups.push({
       name: serviceMetadata.serviceName + ` (${serviceIndex + 1})`,
-      item: functionItemGroups
+      item: functionItemGroups,
     });
   });
 
@@ -578,31 +584,26 @@ export default function writeTestsPostmanCollectionExportFile<T>(
   const appName = cwd.split('/').reverse()[0];
   const payload = {};
 
-  _.set(
-    payload,
-    'sub',
-    'fbdb4e4a-6e93-4b08-a1e7-0b7bd08520a6'
-  );
+  _.set(payload, 'sub', 'fbdb4e4a-6e93-4b08-a1e7-0b7bd08520a6');
 
-  _.set(
-    payload,
-    'iss',
-    'http://localhost:8080/auth/realms/test'
-  );
+  _.set(payload, 'iss', 'http://localhost:8080/auth/realms/test');
 
   _.set(
     payload,
     process.env.JWT_ROLES_CLAIM_PATH ??
-    throwException('JWT_ROLES_CLAIM_PATH environment variable must be defined'),
+      throwException('JWT_ROLES_CLAIM_PATH environment variable must be defined'),
     [process.env.TEST_USER_ROLE]
   );
 
-  const jwt = sign(payload, process.env.JWT_SIGN_SECRET || 'abcdef');
+  const jwt = sign(
+    payload,
+    process.env.JWT_SIGN_SECRET || throwException('JWT_SIGN_SECRET environment variable is not defined.')
+  );
 
   const postmanMetadata = {
     info: {
       name: appName + ' tests',
-      schema: 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json'
+      schema: 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json',
     },
     auth: {
       type: 'bearer',
@@ -610,9 +611,9 @@ export default function writeTestsPostmanCollectionExportFile<T>(
         {
           key: 'token',
           value: Base64.encode(jwt),
-          type: 'string'
-        }
-      ]
+          type: 'string',
+        },
+      ],
     },
     item: [
       {
@@ -620,29 +621,33 @@ export default function writeTestsPostmanCollectionExportFile<T>(
         request: {
           method: 'POST',
           url: {
-            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3001}/${getNamespacedMicroserviceName()}/metadataService.getServicesMetadata`,
+            raw: `http://localhost:${
+              process.env.HTTP_SERVER_PORT ?? 3001
+            }/${getNamespacedMicroserviceName()}/metadataService.getServicesMetadata`,
             protocol: 'http',
             host: ['localhost'],
             port: `${process.env.HTTP_SERVER_PORT ?? 3001}`,
-            path: [getNamespacedMicroserviceName(), 'metadataService.getServicesMetadata']
-          }
-        }
+            path: [getNamespacedMicroserviceName(), 'metadataService.getServicesMetadata'],
+          },
+        },
       },
       {
         name: 'metadataService.getOpenApiSpec',
         request: {
           method: 'POST',
           url: {
-            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3001}/${getNamespacedMicroserviceName()}/metadataService.getOpenApiSpec`,
+            raw: `http://localhost:${
+              process.env.HTTP_SERVER_PORT ?? 3001
+            }/${getNamespacedMicroserviceName()}/metadataService.getOpenApiSpec`,
             protocol: 'http',
             host: ['localhost'],
             port: `${process.env.HTTP_SERVER_PORT ?? 3001}`,
-            path: [getNamespacedMicroserviceName(), 'metadataService.getOpenApiSpec']
-          }
-        }
+            path: [getNamespacedMicroserviceName(), 'metadataService.getOpenApiSpec'],
+          },
+        },
       },
-      ...itemGroups
-    ]
+      ...itemGroups,
+    ],
   };
 
   if (!existsSync(cwd + '/generated')) {

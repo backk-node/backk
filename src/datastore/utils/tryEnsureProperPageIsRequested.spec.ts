@@ -1,7 +1,6 @@
 import tryEnsurePreviousOrNextPageIsRequested from './tryEnsurePreviousOrNextPageIsRequested';
 import CurrentPageToken from '../../types/postqueryoperations/CurrentPageToken';
 import { createHmac } from 'crypto';
-import { getDefaultOrThrowExceptionInProduction } from '../../utils/exception/getDefaultOrThrowExceptionInProduction';
 import Pagination from '../../types/postqueryoperations/Pagination';
 
 describe('tryEnsurePreviousOrNextPageIsRequested', () => {
@@ -19,7 +18,7 @@ describe('tryEnsurePreviousOrNextPageIsRequested', () => {
     // GIVEN
     const token = createHmac(
       'sha256',
-      process.env.ENCRYPTION_KEY ?? getDefaultOrThrowExceptionInProduction('')
+      process.env.ENCRYPTION_KEY ?? ''
     )
       .update('1')
       .digest('base64');
@@ -32,7 +31,7 @@ describe('tryEnsurePreviousOrNextPageIsRequested', () => {
     // GIVEN
     const token = createHmac(
       'sha256',
-      process.env.ENCRYPTION_KEY ?? getDefaultOrThrowExceptionInProduction('')
+      process.env.ENCRYPTION_KEY ?? ''
     )
       .update('2')
       .digest('base64');
@@ -45,7 +44,7 @@ describe('tryEnsurePreviousOrNextPageIsRequested', () => {
     // GIVEN
     const token = createHmac(
       'sha256',
-      process.env.ENCRYPTION_KEY ?? getDefaultOrThrowExceptionInProduction('')
+      process.env.ENCRYPTION_KEY ?? ''
     )
       .update('2')
       .digest('base64');
@@ -58,7 +57,7 @@ describe('tryEnsurePreviousOrNextPageIsRequested', () => {
     // GIVEN
     const token = createHmac(
       'sha256',
-      process.env.ENCRYPTION_KEY ?? getDefaultOrThrowExceptionInProduction('')
+      process.env.ENCRYPTION_KEY ?? ''
     )
       .update('3')
       .digest('base64');
@@ -73,7 +72,7 @@ describe('tryEnsurePreviousOrNextPageIsRequested', () => {
     // GIVEN
     const token = createHmac(
       'sha256',
-      process.env.ENCRYPTION_KEY ?? getDefaultOrThrowExceptionInProduction('')
+      process.env.ENCRYPTION_KEY ?? ''
     )
       .update('1')
       .digest('base64');
@@ -88,7 +87,7 @@ describe('tryEnsurePreviousOrNextPageIsRequested', () => {
     // GIVEN
     const token = createHmac(
       'sha256',
-      process.env.ENCRYPTION_KEY ?? getDefaultOrThrowExceptionInProduction('')
+      process.env.ENCRYPTION_KEY ?? ''
     )
       .update('3')
       .digest('base64');

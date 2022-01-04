@@ -33,7 +33,6 @@ import StartupCheckService from '../services/startup/StartupCheckService';
 import TenantBaseService from '../services/tenant/TenantBaseService';
 import UserBaseService from '../services/useraccount/UserBaseService';
 import { BackkError } from '../types/BackkError';
-import { getDefaultOrThrowExceptionInProduction } from '../utils/exception/getDefaultOrThrowExceptionInProduction';
 import throwException from '../utils/exception/throwException';
 import throwIf from '../utils/exception/throwIf';
 import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
@@ -404,9 +403,12 @@ export default async function tryExecuteServiceMethod(
 
       const password = process.env.REDIS_CACHE_PASSWORD
         ? `:${process.env.REDIS_CACHE_PASSWORD}@`
-        : getDefaultOrThrowExceptionInProduction('REDIS_CACHE_PORT environment variable must be defined', '');
+        : process.env.NODE_ENV !== 'production'
+        ? ''
+        : throwException('REDIS_CACHE_PASSWORD environment variable is not defined');
 
       const redisCacheServer = `redis://${password}${redisCacheHost}:${redisCachePort}`;
+      const redisCacheServerForLogging = `redis://${redisCacheHost}:${redisCachePort}`
       const redis = new Redis(redisCacheServer);
 
       let cachedResponseJson;
@@ -415,13 +417,13 @@ export default async function tryExecuteServiceMethod(
         cachedResponseJson = await redis.get(key);
       } catch (error) {
         log(Severity.ERROR, 'Redis cache error: ' + error.message, error.stack, {
-          redisCacheServer,
+          redisCacheServerForLogging,
         });
       }
 
       if (cachedResponseJson) {
         log(Severity.DEBUG, 'Redis cache debug: fetched service function call response from cache', '', {
-          redisCacheServer,
+          redisCacheServerForLogging,
           key,
         });
 
@@ -709,12 +711,12 @@ export default async function tryExecuteServiceMethod(
 
           const password = process.env.REDIS_CACHE_PASSWORD
             ? `:${process.env.REDIS_CACHE_PASSWORD}@`
-            : getDefaultOrThrowExceptionInProduction(
-                'REDIS_CACHE_PORT environment variable must be defined',
-                ''
-              );
+            : process.env.NODE_ENV !== 'production'
+            ? ''
+            : throwException('REDIS_CACHE_PASSWORD environment variable is not defined');
 
           const redisCacheServer = `redis://${password}${redisCacheHost}:${redisCachePort}`;
+          const redisCacheServerForLogging = `redis://${redisCacheHost}:${redisCachePort}`
           const redis = new Redis(redisCacheServer);
 
           const responseJson = JSON.stringify(response);
@@ -732,7 +734,7 @@ export default async function tryExecuteServiceMethod(
             await redis.set(key, responseJson);
 
             log(Severity.DEBUG, 'Redis cache debug: stored service function call response to cache', '', {
-              redisCacheServer,
+              redisCacheServerForLogging,
               key,
             });
 
@@ -748,7 +750,7 @@ export default async function tryExecuteServiceMethod(
             }
           } catch (error) {
             log(Severity.ERROR, 'Redis cache error message: ' + error.message, error.stack, {
-              redisCacheServer,
+              redisCacheServerForLogging,
             });
           }
         }
@@ -819,14 +821,19 @@ export default async function tryExecuteServiceMethod(
   } catch (errorOrBackkError) {
     storedError = errorOrBackkError;
     if (isBackkError(errorOrBackkError)) {
+      let errorCode = errorOrBackkError.errorCode;
       if (
         Number.isInteger(errorOrBackkError.errorCode) ||
         !isNaN(parseInt(errorOrBackkError.errorCode, 10))
       ) {
-        errorOrBackkError.errorCode = serviceName + '.' + errorOrBackkError.errorCode;
+        errorCode = serviceName + '.' + errorOrBackkError.errorCode;
       }
       resp.writeHead((errorOrBackkError as BackkError).statusCode, { 'Content-Type': 'application/json' });
-      resp.end(JSON.stringify(errorOrBackkError));
+      resp.end(JSON.stringify({
+        errorCode,
+        statusCode: errorOrBackkError.statusCode,
+        message: errorOrBackkError.message
+      }));
     } else {
       resp.writeHead(HttpStatusCodes.INTERNAL_SERVER_ERROR, { 'Content-Type': 'application/json' });
       resp.end(JSON.stringify(createBackkErrorFromError(errorOrBackkError)));

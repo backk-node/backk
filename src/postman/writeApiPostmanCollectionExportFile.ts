@@ -1,16 +1,16 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { sign } from 'jsonwebtoken';
 import { Base64 } from 'js-base64';
+import { sign } from 'jsonwebtoken';
 import _ from 'lodash';
-import getServiceFunctionTestArgument from './getServiceFunctionTestArgument';
-import createPostmanCollectionItem from './createPostmanCollectionItem';
-import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
-import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
-import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
 import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
-import getServiceFunctionExampleReturnValue from './getServiceFunctionExampleReturnValue';
+import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
+import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
 import throwException from '../utils/exception/throwException';
-import getNamespacedMicroserviceName from "../utils/getNamespacedMicroserviceName";
+import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
+import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
+import createPostmanCollectionItem from './createPostmanCollectionItem';
+import getServiceFunctionExampleReturnValue from './getServiceFunctionExampleReturnValue';
+import getServiceFunctionTestArgument from './getServiceFunctionTestArgument';
 
 export default function writeApiPostmanCollectionExportFile<T>(
   controller: T,
@@ -67,13 +67,13 @@ export default function writeApiPostmanCollectionExportFile<T>(
 
       functionItemGroups.push({
         name: functionMetadata.functionName,
-        item: items
+        item: items,
       });
     });
 
     serviceItemGroups.push({
       name: serviceMetadata.serviceName,
-      item: functionItemGroups
+      item: functionItemGroups,
     });
   });
 
@@ -81,17 +81,9 @@ export default function writeApiPostmanCollectionExportFile<T>(
   const appName = cwd.split('/').reverse()[0];
   const payload = {};
 
-  _.set(
-    payload,
-    'sub',
-    'fbdb4e4a-6e93-4b08-a1e7-0b7bd08520a6'
-  );
+  _.set(payload, 'sub', 'fbdb4e4a-6e93-4b08-a1e7-0b7bd08520a6');
 
-  _.set(
-    payload,
-    'iss',
-    'http://localhost:8080/auth/realms/test'
-  );
+  _.set(payload, 'iss', 'http://localhost:8080/auth/realms/test');
 
   _.set(
     payload,
@@ -100,12 +92,15 @@ export default function writeApiPostmanCollectionExportFile<T>(
     [process.env.TEST_USER_ROLE]
   );
 
-  const jwt = sign(payload, process.env.JWT_SIGN_SECRET || 'abcdef');
+  const jwt = sign(
+    payload,
+    process.env.JWT_SIGN_SECRET || throwException('Environment variable JWT_SIGN_SECRET is not defined.')
+  );
 
   const postmanMetadata = {
     info: {
       name: appName + ' API',
-      schema: 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json'
+      schema: 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json',
     },
     auth: {
       type: 'bearer',
@@ -113,9 +108,9 @@ export default function writeApiPostmanCollectionExportFile<T>(
         {
           key: 'token',
           value: Base64.encode(jwt),
-          type: 'string'
-        }
-      ]
+          type: 'string',
+        },
+      ],
     },
     item: [
       {
@@ -123,25 +118,23 @@ export default function writeApiPostmanCollectionExportFile<T>(
         request: {
           method: 'POST',
           url: {
-            raw: `http://localhost:${process.env.HTTP_SERVER_PORT ??
-              3001}/${getNamespacedMicroserviceName()}/metadataService.getServicesMetadata`,
+            raw: `http://localhost:${
+              process.env.HTTP_SERVER_PORT ?? 3001
+            }/${getNamespacedMicroserviceName()}/metadataService.getServicesMetadata`,
             protocol: 'http',
             host: ['localhost'],
             port: `${process.env.HTTP_SERVER_PORT ?? 3001}`,
-            path: [getNamespacedMicroserviceName(), 'metadataService.getServicesMetadata']
-          }
-        }
+            path: [getNamespacedMicroserviceName(), 'metadataService.getServicesMetadata'],
+          },
+        },
       },
-      ...serviceItemGroups
-    ]
+      ...serviceItemGroups,
+    ],
   };
 
   if (!existsSync(cwd + '/postman')) {
     mkdirSync(cwd + '/postman');
   }
 
-  writeFileSync(
-    process.cwd() + '/postman/apiCollection.json',
-    JSON.stringify(postmanMetadata, null, 4)
-  );
+  writeFileSync(process.cwd() + '/postman/apiCollection.json', JSON.stringify(postmanMetadata, null, 4));
 }

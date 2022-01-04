@@ -1,6 +1,6 @@
 import { parseSync } from '@babel/core';
 import generate from '@babel/generator';
-import { exec } from 'child_process';
+import { execFile } from 'child_process';
 import { readFileSync, writeFileSync } from 'fs';
 import _ from 'lodash';
 import util from 'util';
@@ -9,7 +9,7 @@ import getTypeFilePathNameFor from '../../utils/file/getTypeFilePathNameFor';
 import parseTypescriptLinesForTypeName from '../parser/parseTypescriptLinesForTypeName';
 import mergeImports from '../utils/mergeImports';
 
-const promisifiedExec = util.promisify(exec);
+const promisifiedExecFile = util.promisify(execFile);
 
 function generateTypescriptFileFor(
   typeFilePathName: string,
@@ -251,9 +251,7 @@ function generateTypescriptFileFor(
       generateTypescriptFileFor(typeFilePathName, handledTypeFilePathNames, outputFilePathNames);
     });
 
-  await promisifiedExec(
-    process.cwd() + '/node_modules/.bin/prettier --write ' + outputFilePathNames.join(' ')
-  );
+  await promisifiedExecFile('node_modules/.bin/prettier', ['--write', ...outputFilePathNames]);
 })().catch((error) => {
   console.log(error);
   process.exit(1);

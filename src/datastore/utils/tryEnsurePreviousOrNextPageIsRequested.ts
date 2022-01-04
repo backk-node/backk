@@ -1,9 +1,10 @@
-import CurrentPageToken from '../../types/postqueryoperations/CurrentPageToken';
-import Pagination from '../../types/postqueryoperations/Pagination';
-import { createHmac } from 'crypto';
-import { getDefaultOrThrowExceptionInProduction } from '../../utils/exception/getDefaultOrThrowExceptionInProduction';
-import createBackkErrorFromErrorMessageAndStatusCode from '../../errors/createBackkErrorFromErrorMessageAndStatusCode';
-import { HttpStatusCodes } from '../../constants/constants';
+import { createHmac } from "crypto";
+import { HttpStatusCodes } from "../../constants/constants";
+import createBackkErrorFromErrorMessageAndStatusCode
+  from "../../errors/createBackkErrorFromErrorMessageAndStatusCode";
+import CurrentPageToken from "../../types/postqueryoperations/CurrentPageToken";
+import Pagination from "../../types/postqueryoperations/Pagination";
+import throwException from "../../utils/exception/throwException";
 
 export default function tryEnsurePreviousOrNextPageIsRequested(
   currentPageTokens: CurrentPageToken[] | undefined,
@@ -22,8 +23,7 @@ export default function tryEnsurePreviousOrNextPageIsRequested(
     }
 
     const encryptionKey =
-      process.env.ENCRYPTION_KEY ??
-      getDefaultOrThrowExceptionInProduction('Environment variable ENCRYPTION_KEY is not defined');
+      process.env.ENCRYPTION_KEY ?? throwException('Environment variable ENCRYPTION_KEY is not defined');
 
     const newPageToken = createHmac('sha256', encryptionKey)
       .update(pagination.pageNumber.toString())

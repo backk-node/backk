@@ -1,11 +1,19 @@
-import _ from "lodash";
-import throwException from "../utils/exception/throwException";
-import { sign } from "jsonwebtoken";
-import { Base64 } from "js-base64";
-import getNamespacedMicroserviceName from "../utils/getNamespacedMicroserviceName";
+import { Base64 } from 'js-base64';
+import { sign } from 'jsonwebtoken';
+import _ from 'lodash';
+import throwException from '../utils/exception/throwException';
+import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
 
 export default function createPostmanCollectionItemFromCustomTest({
-  testTemplate: { authJwtSubject, authJwtRole, testTemplateName, serviceFunctionName, argument, responseStatusCode, responseTests }
+  testTemplate: {
+    authJwtSubject,
+    authJwtRole,
+    testTemplateName,
+    serviceFunctionName,
+    argument,
+    responseStatusCode,
+    responseTests,
+  },
 }: any) {
   const checkResponseCode = responseStatusCode
     ? `pm.test("Status code is ${responseStatusCode} OK", function () {
@@ -17,37 +25,32 @@ export default function createPostmanCollectionItemFromCustomTest({
   if (authJwtRole || authJwtSubject) {
     const payload = {};
 
-    _.set(
-      payload,
-      'sub',
-      authJwtSubject
-    );
+    _.set(payload, 'sub', authJwtSubject);
 
-    _.set(
-      payload,
-      'iss',
-      'http://localhost:8080/auth/realms/test'
-    );
+    _.set(payload, 'iss', 'http://localhost:8080/auth/realms/test');
 
     _.set(
       payload,
       process.env.JWT_ROLES_CLAIM_PATH ??
-      throwException('JWT_ROLES_CLAIM_PATH environment variable must be defined'),
+        throwException('JWT_ROLES_CLAIM_PATH environment variable must be defined'),
       [authJwtRole ?? process.env.TEST_USER_ROLE]
     );
 
-    const jwt = sign(payload, process.env.JWT_SIGN_SECRET || 'abcdef');
+    const jwt = sign(
+      payload,
+      process.env.JWT_SIGN_SECRET || throwException('JWT_SIGN_SECRET environment variable not defined')
+    );
 
     auth = {
       type: 'bearer',
-        bearer: [
+      bearer: [
         {
           key: 'token',
           value: Base64.encode(jwt),
-          type: 'string'
-        }
-      ]
-    }
+          type: 'string',
+        },
+      ],
+    };
   }
 
   return {
@@ -63,8 +66,8 @@ export default function createPostmanCollectionItemFromCustomTest({
                 key: 'Content-Type',
                 name: 'Content-Type',
                 value: 'application/json',
-                type: 'text'
-              }
+                type: 'text',
+              },
             ],
       body:
         argument === undefined
@@ -74,17 +77,19 @@ export default function createPostmanCollectionItemFromCustomTest({
               raw: JSON.stringify(argument, null, 4),
               options: {
                 raw: {
-                  language: 'json'
-                }
-              }
+                  language: 'json',
+                },
+              },
             },
       url: {
-        raw: `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3001}/${getNamespacedMicroserviceName()}/` + serviceFunctionName,
+        raw:
+          `http://localhost:${process.env.HTTP_SERVER_PORT ?? 3001}/${getNamespacedMicroserviceName()}/` +
+          serviceFunctionName,
         protocol: 'http',
         host: ['localhost'],
         port: `${process.env.HTTP_SERVER_PORT ?? 3001}`,
-        path: [serviceFunctionName]
-      }
+        path: [serviceFunctionName],
+      },
     },
     response: [],
     event: [
@@ -103,10 +108,10 @@ export default function createPostmanCollectionItemFromCustomTest({
   ${test} 
 })`
                 )
-              : [])
-          ]
-        }
-      }
-    ]
+              : []),
+          ],
+        },
+      },
+    ],
   };
 }

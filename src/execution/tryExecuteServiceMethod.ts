@@ -835,7 +835,11 @@ export default async function tryExecuteServiceMethod(
         message: errorOrBackkError.message
       }));
     } else {
-      resp.writeHead(HttpStatusCodes.INTERNAL_SERVER_ERROR, { 'Content-Type': 'application/json' });
+      let statusCode = parseInt(errorOrBackkError.message?.slice(0, 3));
+      if (isNaN(statusCode)) {
+        statusCode = HttpStatusCodes.INTERNAL_SERVER_ERROR;
+      }
+      resp.writeHead(statusCode, { 'Content-Type': 'application/json' });
       resp.end(JSON.stringify(createBackkErrorFromError(errorOrBackkError)));
     }
   } finally {

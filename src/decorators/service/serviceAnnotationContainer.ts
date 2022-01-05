@@ -13,8 +13,8 @@ class ServiceAnnotationContainer {
     this.serviceClassNameToAllowedUserRolesMap[serviceClass.name] = roles;
   }
 
-  addServiceAllowedForEveryUser(serviceClass: Function) {
-    this.serviceClassNameToIsAllowedForEveryUserMap[serviceClass.name] = true;
+  addServiceAllowedForEveryUser(serviceClass: Function, isAuthenticationRequired: boolean) {
+    this.serviceClassNameToIsAllowedForEveryUserMap[serviceClass.name] = isAuthenticationRequired;
   }
 
   addServiceAllowedForClusterInternalUse(serviceClass: Function) {
@@ -47,6 +47,18 @@ class ServiceAnnotationContainer {
     }
 
     return false;
+  }
+
+  isServiceAllowedForEveryUserWithAuthentication(serviceClass: Function) {
+    let proto = Object.getPrototypeOf(new (serviceClass as new () => any)());
+    while (proto !== Object.prototype) {
+      if (this.serviceClassNameToIsAllowedForEveryUserMap[proto.constructor.name] !== undefined) {
+        this.serviceClassNameToIsAllowedForEveryUserMap[proto.constructor.name];
+      }
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    return true;
   }
 
   isServiceAllowedForClusterInternalUse(serviceClass: Function) {

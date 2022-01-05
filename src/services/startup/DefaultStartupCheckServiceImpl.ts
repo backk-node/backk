@@ -14,7 +14,7 @@ export default class DefaultStartupCheckServiceImpl extends StartupCheckService 
   }
 
   // noinspection FunctionWithMoreThanThreeNegationsJS
-  @AllowForEveryUser()
+  @AllowForEveryUser(false)
   async isMicroserviceStarted(): PromiseErrorOr<null> {
     if (
       !(await isDbInitialized(this.dataStore)) &&

@@ -12,6 +12,7 @@ type AuditLog = {
 class ServiceFunctionAnnotationContainer {
   private readonly serviceFunctionNameToHasNoCaptchaAnnotationMap: { [key: string]: boolean } = {};
   private readonly serviceFunctionNameToIsAllowedForEveryUserMap: { [key: string]: boolean } = {};
+  private readonly serviceFunctionNameToIsAllowedForEveryUserWithAuthenticationMap: { [key: string]: boolean } = {};
   private readonly serviceFunctionNameToIsAllowedForClusterInternalUseMap: { [key: string]: boolean } = {};
   private readonly serviceFunctionNameToUserAccountIdFieldName: { [key: string]: string } = {};
   private readonly serviceFunctionNameToIsAllowedForServicePrivateUseMap: { [key: string]: boolean } = {};
@@ -59,6 +60,15 @@ class ServiceFunctionAnnotationContainer {
   ) {
     this.serviceFunctionNameToIsAllowedForEveryUserMap[`${serviceClass.name}${functionName}`] =
       allowDespiteUserIdInArg;
+  }
+
+  addServiceFunctionAllowedForEveryUserWithAuthentication(
+    serviceClass: Function,
+    functionName: string,
+    isAuthenticationRequired: boolean
+  ) {
+    this.serviceFunctionNameToIsAllowedForEveryUserWithAuthenticationMap[`${serviceClass.name}${functionName}`] =
+      isAuthenticationRequired;
   }
 
   addServiceFunctionAllowedForClusterInternalUse(ServiceClass: Function, functionName: string) {
@@ -217,6 +227,21 @@ class ServiceFunctionAnnotationContainer {
     }
 
     return false;
+  }
+
+  isServiceFunctionAllowedForEveryUserWithAuthentication(serviceClass: Function, functionName: string) {
+    let proto = Object.getPrototypeOf(new (serviceClass as new () => any)());
+    while (proto !== Object.prototype) {
+      if (
+        this.serviceFunctionNameToIsAllowedForEveryUserWithAuthenticationMap[`${proto.constructor.name}${functionName}`] !==
+        undefined
+      ) {
+        return this.serviceFunctionNameToIsAllowedForEveryUserWithAuthenticationMap[`${proto.constructor.name}${functionName}`];
+      }
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    return undefined;
   }
 
   isServiceFunctionAllowedForEveryUserDespiteOfUserIdInArg(serviceClass: Function, functionName: string) {

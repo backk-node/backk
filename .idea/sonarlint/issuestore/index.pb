@@ -187,8 +187,6 @@ Dsrc/datastore/sql/operations/dql/utils/getSqlSelectStatementParts.ts,e/4/e404c
 0src/decorators/service/function/AllowForTests.ts,f/e/fed35f5a00aecdff94c63ec387c4297938b7e219
 V
 &src/remote/messagequeue/sendToKafka.ts,a/6/a6d3de11e1acf25957c19b8b6311ad057c353c31
-d
-4src/decorators/service/function/AllowForEveryUser.ts,8/3/83ff187a7fbb3434e468019f76ea81486266353e
 s
 Csrc/decorators/service/function/AllowForEveryUserForOwnResources.ts,b/0/b02f5f40cc9c8c54e4877bbf2ddff28051594269
 O
@@ -480,8 +478,6 @@ n
 >src/decorators/typeproperty/typePropertyAnnotationContainer.ts,c/8/c810282510d9ae8ef1f187c69f3bc3db0d6976fb
 [
 +src/services/startup/StartupCheckService.ts,5/6/5654861c9a9b9770edae3756116107b2d82a678b
-f
-6src/services/startup/DefaultStartupCheckServiceImpl.ts,a/b/abdb7f22fa7b7aa4de48bcbd4195a326d91ce82e
 B
 src/types/types.ts,c/a/ca15b85bec71704fc4a189e0d28db77b74c7e5a2
 `

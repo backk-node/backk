@@ -19,7 +19,7 @@ export default async function tryAuthorize(
 
   if (!authorizationService) {
     throw new Error(
-      'Authorization service missing. You must define an authorization service which is an instance of AuthorizationService in your MicroserviceImpl class '
+      'Authorization service missing. You must define an authorization service which is an instance of AuthorizationService in your MicroserviceImpl class'
     );
   }
 
@@ -40,11 +40,16 @@ export default async function tryAuthorize(
   } else {
     if (
       serviceAnnotationContainer.isServiceAllowedForEveryUser(ServiceClass) ||
+      serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUser(ServiceClass, functionName)
+    ) {
+      return [undefined, undefined];
+    }
+
+    if (
       serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUserForOwnResources(
         ServiceClass,
         functionName
-      ) ||
-      serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUser(ServiceClass, functionName)
+      )
     ) {
       const [subject, issuer] = await authorizationService.getSubjectAndIssuer(authHeader);
       if (subject && issuer) {

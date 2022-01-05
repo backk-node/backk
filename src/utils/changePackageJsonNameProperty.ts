@@ -15,8 +15,8 @@ export default async function changePackageJsonNameProperty() {
       const replaceConfig = {
         files: [
           'package.json',
-          'env.dev',
-          'env.ci',
+          '.env.dev',
+          '.env.ci',
           'package-lock.json',
           'sonar-project.properties',
           '.github/workflows/ci.yaml',

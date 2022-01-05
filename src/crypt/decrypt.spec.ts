@@ -1,6 +1,8 @@
 import decrypt from './decrypt';
 import encrypt from './encrypt';
 
+process.env.ENCRYPTION_KEY = 'abcdefghijklmnopqrstuvxyz01234567890123456789';
+
 describe('decrypt', () => {
   it('should decrypt encrypted value with random initialization vector', () => {
     // GIVEN

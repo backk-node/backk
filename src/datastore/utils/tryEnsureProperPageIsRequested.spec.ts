@@ -3,6 +3,8 @@ import CurrentPageToken from '../../types/postqueryoperations/CurrentPageToken';
 import { createHmac } from 'crypto';
 import Pagination from '../../types/postqueryoperations/Pagination';
 
+process.env.ENCRYPTION_KEY = 'abcdefghijklmnopqrstuvxyz01234567890123456789';
+
 describe('tryEnsurePreviousOrNextPageIsRequested', () => {
   it('returns void when currentPageTokens and paginations are undefined', () => {
     // WHEN

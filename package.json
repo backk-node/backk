@@ -43,7 +43,8 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint --ext .ts ./src",
     "test": "jest --coverage",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@babel/core": "7.13.15",
@@ -74,6 +75,7 @@
     "randexp": "0.5.3",
     "re2": "1.17.1",
     "reflect-metadata": "0.1.13",
+    "replace-in-file": "6.3.2",
     "typedoc-pksilen": "0.17.4",
     "typescript": "3.9.9",
     "xmldom": "0.6.0",

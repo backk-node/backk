@@ -89,7 +89,7 @@ export default class Microservice {
       log(Severity.INFO, `Microservice terminated with exit code: ${code}`, '');
     });
 
-    changePackageJsonNameProperty();
+    await changePackageJsonNameProperty();
     initializeCls();
     StartupCheckService.microservice = this;
     logEnvironment();

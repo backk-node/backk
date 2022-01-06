@@ -1,20 +1,19 @@
-import { existsSync, mkdirSync, writeFileSync } from "fs";
-import YAML from "yaml";
-import { HttpStatusCodes } from "../constants/constants";
-import serviceFunctionAnnotationContainer
-  from "../decorators/service/function/serviceFunctionAnnotationContainer";
-import { BACKK_ERRORS } from "../errors/BACKK_ERRORS";
-import { FunctionMetadata } from "../metadata/types/FunctionMetadata";
-import { ServiceMetadata } from "../metadata/types/ServiceMetadata";
-import getServiceFunctionExampleReturnValue from "../postman/getServiceFunctionExampleReturnValue";
-import getServiceFunctionTestArgument from "../postman/getServiceFunctionTestArgument";
-import isCreateFunction from "../services/crudentity/utils/isCreateFunction";
-import isReadFunction from "../services/crudentity/utils/isReadFunction";
-import isUpdateFunction from "../services/crudentity/utils/isUpdateFunction";
-import getNamespacedMicroserviceName from "../utils/getNamespacedMicroserviceName";
-import getTypeInfoForTypeName from "../utils/type/getTypeInfoForTypeName";
-import { ErrorDefinition } from "../types/ErrorDefinition";
-import { BackkError } from "../types/BackkError";
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import YAML from 'yaml';
+import { HttpStatusCodes } from '../constants/constants';
+import serviceFunctionAnnotationContainer from '../decorators/service/function/serviceFunctionAnnotationContainer';
+import { BACKK_ERRORS } from '../errors/BACKK_ERRORS';
+import { FunctionMetadata } from '../metadata/types/FunctionMetadata';
+import { ServiceMetadata } from '../metadata/types/ServiceMetadata';
+import getServiceFunctionExampleReturnValue from '../postman/getServiceFunctionExampleReturnValue';
+import getServiceFunctionTestArgument from '../postman/getServiceFunctionTestArgument';
+import isCreateFunction from '../services/crudentity/utils/isCreateFunction';
+import isReadFunction from '../services/crudentity/utils/isReadFunction';
+import isUpdateFunction from '../services/crudentity/utils/isUpdateFunction';
+import { BackkError } from '../types/BackkError';
+import { ErrorDefinition } from '../types/ErrorDefinition';
+import getNamespacedMicroserviceName from '../utils/getNamespacedMicroserviceName';
+import getTypeInfoForTypeName from '../utils/type/getTypeInfoForTypeName';
 
 function getErrorContent(error: ErrorDefinition | BackkError) {
   return {
@@ -63,16 +62,30 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
         false
       );
 
-      const { baseTypeName, isArrayType, isNull } = getTypeInfoForTypeName(functionMetadata.returnValueType);
+      const { baseTypeName, isArrayType, isNull, isOneOf, isManyOf } = getTypeInfoForTypeName(
+        functionMetadata.returnValueType
+      );
       const path = '/' + serviceMetadata.serviceName + '.' + functionMetadata.functionName;
 
-      const responseExample = getServiceFunctionExampleReturnValue(
+      let responseExample = getServiceFunctionExampleReturnValue(
         (microservice as any)[serviceMetadata.serviceName].Types,
         functionMetadata.functionName,
         baseTypeName,
         serviceMetadata,
         false
       );
+
+      if (isOneOf) {
+        responseExample = {
+          metadata: {},
+          data: responseExample
+        }
+      } else if (isManyOf) {
+        responseExample = {
+          metadata: {},
+          data: [responseExample]
+        }
+      }
 
       const errorResponseMap = functionMetadata.errors.reduce((errorResponseMap: any, error) => {
         const statusCode = error.statusCode ?? HttpStatusCodes.BAD_REQUEST;
@@ -149,7 +162,9 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
       ) {
         commonErrorMap[HttpStatusCodes.UNAUTHORIZED] = {
           description:
-            BACKK_ERRORS.USER_NOT_AUTHENTICATED.errorCode + ': ' + BACKK_ERRORS.USER_NOT_AUTHENTICATED.message,
+            BACKK_ERRORS.USER_NOT_AUTHENTICATED.errorCode +
+            ': ' +
+            BACKK_ERRORS.USER_NOT_AUTHENTICATED.message,
           ...getErrorContent(BACKK_ERRORS.USER_NOT_AUTHENTICATED),
         };
 
@@ -186,6 +201,44 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
         };
       }
 
+      let successResponseSchema;
+
+      if (isOneOf) {
+        successResponseSchema = {
+          type: 'object',
+          properties: {
+            metadata: {},
+            data: {
+              $ref: '#/components/schemas/' + baseTypeName,
+            },
+          },
+        };
+      } else if (isManyOf) {
+        successResponseSchema = {
+          type: 'object',
+          properties: {
+            metadata: {},
+            data: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/' + baseTypeName,
+              },
+            },
+          },
+        };
+      } else {
+        successResponseSchema = {
+          ...(isArrayType
+            ? {
+                type: 'array',
+                items: {
+                  $ref: '#/components/schemas/' + baseTypeName,
+                },
+              }
+            : { $ref: '#/components/schemas/' + baseTypeName }),
+        };
+      }
+
       paths[path] = {
         post: {
           summary: serviceMetadata.serviceName + '.' + functionMetadata.functionName,
@@ -215,16 +268,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
                 : {
                     content: {
                       'application/json': {
-                        schema: {
-                          ...(isArrayType
-                            ? {
-                                type: 'array',
-                                items: {
-                                  $ref: '#/components/schemas/' + baseTypeName,
-                                },
-                              }
-                            : { $ref: '#/components/schemas/' + baseTypeName }),
-                        },
+                        schema: successResponseSchema,
                         example: responseExample,
                       },
                     },

@@ -345,6 +345,7 @@ export default async function tryExecuteServiceMethod(
         serviceFunctionArgument?.userAccountId ||
         serviceFunctionArgument?.tenantId ||
         (serviceFunctionArgument?.subject && microservice[serviceName] instanceof UserBaseService)) &&
+      process.env.NODE_ENV === 'development' &&
       serviceFunctionAnnotationContainer.isServiceFunctionAllowedForEveryUserDespiteOfUserIdInArg(
         ServiceClass,
         functionName
@@ -408,7 +409,7 @@ export default async function tryExecuteServiceMethod(
         : throwException('REDIS_CACHE_PASSWORD environment variable is not defined');
 
       const redisCacheServer = `redis://${password}${redisCacheHost}:${redisCachePort}`;
-      const redisCacheServerForLogging = `redis://${redisCacheHost}:${redisCachePort}`
+      const redisCacheServerForLogging = `redis://${redisCacheHost}:${redisCachePort}`;
       const redis = new Redis(redisCacheServer);
 
       let cachedResponseJson;
@@ -716,7 +717,7 @@ export default async function tryExecuteServiceMethod(
             : throwException('REDIS_CACHE_PASSWORD environment variable is not defined');
 
           const redisCacheServer = `redis://${password}${redisCacheHost}:${redisCachePort}`;
-          const redisCacheServerForLogging = `redis://${redisCacheHost}:${redisCachePort}`
+          const redisCacheServerForLogging = `redis://${redisCacheHost}:${redisCachePort}`;
           const redis = new Redis(redisCacheServer);
 
           const responseJson = JSON.stringify(response);
@@ -829,11 +830,13 @@ export default async function tryExecuteServiceMethod(
         errorCode = serviceName + '.' + errorOrBackkError.errorCode;
       }
       resp.writeHead((errorOrBackkError as BackkError).statusCode, { 'Content-Type': 'application/json' });
-      resp.end(JSON.stringify({
-        errorCode,
-        statusCode: errorOrBackkError.statusCode,
-        message: errorOrBackkError.message
-      }));
+      resp.end(
+        JSON.stringify({
+          errorCode,
+          statusCode: errorOrBackkError.statusCode,
+          message: errorOrBackkError.message,
+        })
+      );
     } else {
       let statusCode = parseInt(errorOrBackkError.message?.slice(0, 3));
       if (isNaN(statusCode)) {

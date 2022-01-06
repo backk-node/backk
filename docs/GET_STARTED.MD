@@ -107,3 +107,14 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
     npm run integrationtest:dev
     ```
     You can also import the integration tests to Postman from file `generated/integrationtests/integrationTestsPostmanCollection.json`
+11. Remove the `.git` directory (e.g. `rm -rf .git`)
+12. Create a git repo (e.g. in Github)
+13. Initialize and push to new repo:
+    ```bash
+    git init
+    git add .
+    git commit -m "First commit"
+    git branch -M main
+    git remote add origin git@github.com:<organization>/<your-microservice-name>.git
+    git push -u origin main
+    ```

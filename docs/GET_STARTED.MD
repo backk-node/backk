@@ -17,7 +17,7 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
    ```
 
 2. Complete all the TODOs in the project (Find all TODOs using your IDE)
-3. Check that the environment variable values in the `.env.dev` file are correct for your development environment
+3. Check that the environment variable values in the `.env.dev` and `.env.ci` file are correct for your development environment
     - If you are using MongoDB, check
         - `MONGODB_HOST`
         - `MONGODB_PORT`

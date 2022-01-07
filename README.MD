@@ -11,6 +11,7 @@
 ## Table of Contents
 
 - [Features](#features)
+- [Architecture](#architecture)
 - [How Backk Works?](#howbackkworks)
 - [Prerequisites](docs/PREREQUISITES.MD)
 - [Get Started](docs/GET_STARTED.MD)
@@ -83,6 +84,17 @@
 - Ready-made Docker Compose file setting up an integration testing environment
 - Ready-made Helm templates for Kubernetes deployment
 - Ready-made CI pipelines (currently only Github workflow)
+
+## <a name="architecture"></a>Architecture
+Backk microservices are cloud-native microservices running in a Kubernetes cluster. Microservices can run
+in one or more namespaces.
+One Backk microservice consists of service(s) which consist of service function(s).
+These services and their functions comprise the API of your microservice. For example, if your have Backk microservice
+has service `emailNotificationService` and it has function `sendEmail`, that service function can be accessed with HTTP URL path `notificationService.sendEmail`.
+If your Backk microservice is named `notification-service` and is installed in default Kubernetes namespace, you can
+access your service function over HTTP like this: `https://<kube-cluster-edge-fqdn>/notification-service.default/emailNotificationService.sendEmail`
+
+![Backk Architecture](docs/Backk.png)
 
 ## <a name="howbackkworks"></a> How Backk Works?
 Backk microservices are written using Node.js and Typescript. A Backk microservice consists of one or more services classes with their dedicated purpose.

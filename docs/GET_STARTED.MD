@@ -16,8 +16,8 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
    cd <your-microservice-name>
    ```
 
-2. Complete all the TODOs in the project (Find all TODOs using your IDE)
-3. Check that the environment variable values in the `.env.dev` and `.env.ci` file are correct for your development environment
+2. Complete all the TODOs in the project (Find all TODOs using your IDE, e.g. TODO tab in Webstorm)
+3. Check that the environment variable values in the `.env.dev` and `.env.ci` file are correct for your development environment. In most cases, you don't need to change the environment variables. But if you don't have default localhost database instance with default port, please check database related environment variables: 
     - If you are using MongoDB, check
         - `MONGODB_HOST`
         - `MONGODB_PORT`
@@ -42,7 +42,7 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
     - if you are using Redis as a response cache, check
         - `REDIS_CACHE_HOST`
         - `REDIS_CACHE_PORT`
-4. OPTIONAL STEP: Remove unnecessary dependencies from `package.json` file
+5. OPTIONAL STEP: Remove unnecessary dependencies from `package.json` file
     - If you are using MongoDB, remove following lines:
       ```
       "@opentelemetry/plugin-mysql": "0.11.0",
@@ -82,24 +82,24 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
       "@opentelemetry/plugin-ioredis": "0.11.0",
       "ioredis": "^4.19.2",
       ```
-5. Run `npm install`
-6. Run `npm run build`
-7. Generate the [OpenAPI 3](https://swagger.io/specification/) API specs for your API implementation with following command:
+6. Run `npm install`
+7. Run `npm run build`
+8. Generate the [OpenAPI 3](https://swagger.io/specification/) API specs for your API implementation with following command:
    ```bash
    npm run generateApiSpecs
    ```
-8. Run `npm run start:dev`<br/><br/>
+9. Run `npm run start:dev`<br/><br/>
    There is one example service in `src/services/example` directory that you can use as a basis for your own service(s).
    If/When you don't need that example service anymore, just delete the `src/services/example` directory and remove the example service instantiation also from the `MicroserviceImpl` class in `src/microservice.ts` file.
-9. You can use your microservice API using [Postman](https://www.postman.com/downloads/) or [SwaggerHub](https://app.swaggerhub.com/home)  
-   For Postman:
-    1. Launch Postman
-    2. Choose `Import` and then choose file `generated/openapi/openApiPublicSpec.yaml`
+10. You can use your microservice API using [Postman](https://www.postman.com/downloads/) or [SwaggerHub](https://app.swaggerhub.com/home)  
+    For Postman:
+     1. Launch Postman
+     2. Choose `Import` and then choose file `generated/openapi/openApiPublicSpec.yaml`
 
-   For SwaggerHub:
-    1. Navigate to [SwaggerHub](https://app.swaggerhub.com/home)
-    2. Choose `Create New` and then `Import and Document API` and then choose file `generated/openapi/openApiPublicSpec.yaml`
-10. Backk automatically generates some integration tests, and they can be run with following command:
+    For SwaggerHub:
+     1. Navigate to [SwaggerHub](https://app.swaggerhub.com/home)
+     2. Choose `Create New` and then `Import and Document API` and then choose file `generated/openapi/openApiPublicSpec.yaml`
+11. Backk automatically generates some integration tests, and they can be run with following command:
     ```bash
     # NOTE! You need to have the microservice running before executing the integration tests,
     # so ensure you have run npm run start:dev before running the below command
@@ -107,9 +107,9 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
     npm run integrationtest:dev
     ```
     You can also import the integration tests to Postman from file `generated/integrationtests/integrationTestsPostmanCollection.json`
-11. Remove the `.git` directory (e.g. `rm -rf .git`)
-12. Create a git repo (e.g. in Github)
-13. Initialize and push to new repo:
+12. Remove the `.git` directory (e.g. `rm -rf .git`)
+13. Create a git repo (e.g. in Github)
+14. Initialize and push to new repo:
     ```bash
     git init
     git add .

@@ -116,11 +116,12 @@ Let's have a short example to showcase accessing Backk microservice over HTTP.
 Our microservice consist of one service `SalesItemService` that is for creating sales items and getting the created sales items, 
 and it is using a MySQL database as a persistent data store.
 
-Let's create the microservice implementation class:
+Let's create the microservice implementation class in `src` directory:
 
-MicroserviceImpl.ts
+microservice.ts
 ```ts
 import { Microservice, MySqlDataStore } from 'backk';
+import SalesItemServiceImpl from './services/salesitem/SalesItemServiceImpl'
 
 const dataStore = new MySqlDataStore();
 
@@ -132,9 +133,12 @@ export default class MicroserviceImpl extends Microservice {
     super(dataStore);
   }
 }
+
+const microservice = new MicroserviceImpl();
+export default microservice;
 ```
 
-Let's create the interface of the service:
+Let's create the interface of the service in `src/services/salesitem` directory:
 
 SalesItemService.ts
 ```ts
@@ -147,7 +151,7 @@ export default class SalesItemService implements Service {
 }
 ```
 
-Let's create the implementation class of the service:
+Let's create the implementation class of the service in `src/services/salesitem` directory:
 
 SalesItemServiceImpl.ts
 ```ts
@@ -170,7 +174,7 @@ export default class SalesItemServiceImpl extends CrudEntityService implements S
 }
 ```
 
-Let's create the `SalesItem` entity class:
+Let's create the `SalesItem` entity class in `src/services/salesitem/types/entities` directory:
 
 SalesItem.ts
 ```ts

@@ -4,6 +4,7 @@
 - [Generic Local In-Memory Caching](#genericlocalinmemorycaching)
 
 ### <a name="cachingservicefunctionresponses"></a> Caching Service Function Responses
+Backk can cache service function responses in a Redis instance.
 In order to cache service function response, you need to provide a response cache config service implementation class 
 that extends the `ResponseCacheConfigService` abstract class.
 
@@ -35,6 +36,11 @@ on the result of call to `shouldCacheServiceFunctionCallResponse`. If the call r
 check if cache already contains a response for same service function name and same service function argument.
 If the response is found from the cache, it is returned from the cache instead of executing the actual
 service function.
+
+Response cache service requires following environment variables to be defined:
+- `REDIS_CACHE_HOST` which denotes the Redis cache server host
+- `REDIS_CACHE_PORT` which denotes the Redis cache server port
+- `REDIS_CACHE_PASSWORD` which denotes the Redis server password
 
 ### <a name="genericlocalinmemorycaching"></a> Generic Local In-Memory Caching
 You can use local in-memory caching by importing `MemoryCache` from `memory-cache-node` and

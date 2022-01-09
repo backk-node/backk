@@ -104,3 +104,4 @@ npm run generateApiSpecs
 ```
 
 The above command generates two spec files, one for public services and one for Kubernetes cluster internal services.
+The files are generated in `generated/openapi` directory.

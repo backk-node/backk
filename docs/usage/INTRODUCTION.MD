@@ -266,7 +266,7 @@ For the above service function, we use `@AllowForTests` decorator to indicate th
 can only be accessed when executing tests, it cannot be accessed by any clients at all.
 
 There are following possible [authorization decorators](../api/DECORATORS.MD#service-function-decorators) available for use:
-- `@AllowForEveryUser()`
+- `@AllowForEveryUser(isAuthenticationRequired: boolean)`
 - `@AllowForEveryUserForOwnResources()`
 - `@AllowForUserRoles(roles: string[])`
 - `@AllowForKubeClusterInternalUse()`

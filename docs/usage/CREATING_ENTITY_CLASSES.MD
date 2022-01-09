@@ -22,6 +22,8 @@ Possible entity property types:
   - `number | null`
   - `boolean | null`
   - `string | null`
+  - `Date | null`
+  - `<another-entity-type> | null`
 
 If your entity class does not have a constructor, you need to define properties with
 exclamation mark (!), because otherwise a TypeScript error is generated:

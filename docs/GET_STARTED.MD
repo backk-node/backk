@@ -3,6 +3,7 @@
 ### <a name="development-environment"></a> Development Environment
 
 Follow the below steps: (In the future, there will be [backk-cli](https://github.com/backk-node/backk-cli) available, which can be used to generate a Backk project based on a set of questions)
+In Windows, you should use Git Bash as shell.
 
 1. Clone [Backk starter](https://github.com/backk-node/backk-starter) project to a directory named after your microservice and cd into that directory.
 
@@ -109,7 +110,7 @@ Follow the below steps: (In the future, there will be [backk-cli](https://github
     You can also import the integration tests to Postman from file `generated/integrationtests/integrationTestsPostmanCollection.json`
 12. Remove the `.git` directory (e.g. `rm -rf .git`)
 13. Create a git repo (e.g. in Github)
-14. Initialize and push to new repo:
+14. Initialize and push to new repo (Github in this example):
     ```bash
     git init
     git add .

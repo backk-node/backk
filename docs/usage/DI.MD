@@ -133,7 +133,8 @@ import { Microservice } from 'backk';
 @Inject('dataStore', 'notificationService')
 export default class MicroserviceImpl extends Microservice {
   private readonly notificationService;
-
+  
+  // Injections are supplied as properties of the first constructor parameter (options)
   constructor(options: any) {
     super(options.dataStore);
     this.notificationService = options.notificationService;

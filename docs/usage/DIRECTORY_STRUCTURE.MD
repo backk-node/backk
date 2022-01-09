@@ -13,6 +13,8 @@ Here is the suggested directory structure for a Backk microservice:
   |  |  |  |- entities 
   |  |  |  |- enum
   |  |  |  |- responses
+  |  |  |- Service1.ts
+  |  |  |- Service1Impl.ts
   |  |- service2
   |  |- .
   |  |- .

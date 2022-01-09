@@ -18,14 +18,14 @@ Following aspects of software system is tested as part of the non-functional tes
   - Penetration testing (Nessus/Nmap)
   - Web application security testing (Burp Suite)
 
-You should create a staging CD pipeline which is trigger at regular interval, e.g. once a week
+You should create a staging CD pipeline which is triggered at a regular interval, e.g. once a week
 every monday at 00:00. Staging CD pipeline should check out the CI environment GitOps repo and 
 update chart versions from CI environment GitOps repo to staging environment GitOps repo.
-Then CD pipeline should start automated functional and non-functional tests in staging environment.
+Then CD pipeline should start automated functional and non-functional tests in the staging environment.
 
 ### <a name="cdproduction"></a> Continuous Deployment to Production Environment
 You should have a manually or automatically triggerable production CD pipeline which should be 
-triggered only after successful functional and non-functional verification in staging environment.
+triggered only after successful functional and non-functional verification in the staging environment.
 Production CD pipeline should check out the staging environment GitOps repo and update chart versions
 from staging environment GitOps repo to production environment GitOps repo.
 

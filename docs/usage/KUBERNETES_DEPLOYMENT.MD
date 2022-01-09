@@ -9,19 +9,41 @@ The Kubernetes deployment of the Backk microservice contains following definitio
 - Service Account
 - Horizontal Pod Autoscaler
 - ConfigMap
-- Emissary Ingress Mapping and RateLimit
-- Keycloak IAM KeycloakClient
+- Secret
+- Emissary Ingress Mapping and RateLimit (Coming in the future)
+- Keycloak IAM KeycloakClient (Coming in the future)
 
 ### Deployment to a Local Kubernetes Environment
-Install [minikube](https://minikube.sigs.k8s.io/docs/)
-Install [helm](https://helm.sh/docs/intro/install/)
 
-Deploy your Backk Microservice with: 
-```bash
-helm install
-# or
-helm upgrade
-```
+#### Prepare Local Kubernetes Environment
+For using Minikube, you need to have Docker for Mac/Windows installed.
+
+1. Install [minikube](https://minikube.sigs.k8s.io/docs/)
+2. Install [helm](https://helm.sh/docs/intro/install/)
+3. Start minikube 
+   ```bash
+   npm run minikube:start
+   ```
+4. Install NGINX Ingress Controller
+   ```bash
+   minikube addons enable ingress
+   ```
+
+#### Deploy to a Local Kubernetes Environment
+1. Install to Minikube with Helm
+   ```bash
+   npm run helm:install
+   ```
+
+If you need to configure the values for the Helm installation, you can edit `helm/values/values-minikube.yaml` file
+
+The above script `npm run helm:install` will perform the following before Helm installation if needed:
+ - Builds Docker image with tag <git-user-name>-<git-branch> (`npm run docker:build`)
+ - Pushes Docker image to Docker registry (`npm run docker:push`)
+ - Starts Minikube (`npm run minikube:start`)
+ - Lints the Helm chart (`npm run helm:lint`)
+ - Packages the Helm chart (`npm run helm:package`)
+ - Removes existing Helm installation (`npm run helm:uninstall`)
 
 ### Deployment to a Shared Kubernetes Development Environment
 You want to have one or more shared Kubernetes dev environments where all teams and team members can 

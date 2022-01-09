@@ -1,6 +1,6 @@
 ## Client Generation
 
-Backk generates internal and frontend clients automatically when using th default git commit pre-hook
+Backk generates internal and frontend clients automatically when using the default git commit pre-hook
 that comes with the `backk-starter` project.
 
 You can also generate clients using the following command:
@@ -28,6 +28,5 @@ npm install --save --save-exact backk-frontend-utils
 ```
 
 ### Example Backk React Frontend
-
 There is an example React frontend available [backk-example-frontend](https://github.com/backk-node/backk-example-frontend)
 It is using [backk-example-microservice](https://github.com/backk-node/backk-example-microservice) as backend.

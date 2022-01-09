@@ -21,7 +21,7 @@ Following request processor classes are available:
 - `HttpServer`
 - `KafkaConsumer`
 - `RedisConsumer`
-- 
+
 The below example will start HTTP/2 server and both Kafka and Redis consumers:
 
 ```ts

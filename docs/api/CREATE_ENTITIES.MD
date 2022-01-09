@@ -21,9 +21,9 @@ interface DataStore {
 
 Creates a new entity `entity` of class `EntityClass` in the data store.
 
-`options.preHooks` are executed before the create operation and if any of the pre-hooks fails, the whole create operation fails.
+`options.preHooks` are executed before the create operation and if any of the pre-hooks fails, the whole create operation fails. See [Hooks](HOOKS.MD) for details.
 
-`options.postHook` is executed after successful create operation. If post-hook fails, the whole create operation fails.
+`options.postHook` is executed after successful create operation. If post-hook fails, the whole create operation fails. See [Hooks](HOOKS.MD) for details.
 
 `options.postQueryOperations` are applied to query that returns the just created entity. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details. If not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
 
@@ -47,9 +47,9 @@ interface DataStore {
 
 Creates new entities `entities` of class `EntityClass` in the data store.
 
-`options.preHooks` are executed before each create operation and if any of the pre-hooks fails, the whole create operation fails.
+`options.preHooks` are executed before each create operation and if any of the pre-hooks fails, the whole create operation fails. See [Hooks](HOOKS.MD) for details.
 
-`options.postHook` is executed after each successful create operation. If post-hook fails, the whole create operation fails.
+`options.postHook` is executed after each successful create operation. If post-hook fails, the whole create operation fails. See [Hooks](HOOKS.MD) for details.
 
 `options.postQueryOperations` are applied to each query that returns the just created entity. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.  If not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
 

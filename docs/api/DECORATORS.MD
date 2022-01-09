@@ -10,12 +10,12 @@
 
 You can use following decorators for your service implementation class:
 
-| Decorator                                    | Description                                                       |
-| -------------------------------------------- | ----------------------------------------------------------------- |
-| `@NoServiceAutoTests()`                      | Automatic integration tests are no generated for this service     |
-| `@AllowServiceForEveryUser()`                | Service can be accessed by any user                               |
-| `@AllowServiceForUserRoles(roles: string[])` | Service can be accessed only by users with specific role or roles |
-| `@AllowServiceForKubeClusterInternalUse()`   | Service can be accessed only from inside of Kubernetes cluster    |
+| Decorator                                                      | Description                                                       |
+|----------------------------------------------------------------|-------------------------------------------------------------------|
+| `@NoServiceAutoTests()`                                        | Automatic integration tests are no generated for this service     |
+| `@AllowServiceForEveryUser(isAuthenticationRequired: boolean)` | Service can be accessed by any user or any authenticated user     |
+| `@AllowServiceForUserRoles(roles: string[])`                   | Service can be accessed only by users with specific role or roles |
+| `@AllowServiceForKubeClusterInternalUse()`                     | Service can be accessed only from inside of Kubernetes cluster    |
 
 ### <a name="service-function-decorators"></a> Service Function Decorators
 
@@ -23,7 +23,7 @@ You can use following decorators for you service class's functions:
 
 | Decorator                                                                                                     | Description                                                                                                                                          |
 |---------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `@AllowForEveryUser()`                                                                                        | Service function can be accessed by any user                                                                                                         |
+| `@AllowForEveryUser(isAuthenticationRequired: boolean)`                                                                                        | Service function can be accessed by any user or any authenticated user                                                                               |
 | `@AllowForUserRoles(roles: string[])`                                                                         | Service function can be accessed only by users with specific role or roles                                                                           |
 | `@AllowForKubeClusterInternalUse()`                                                                           | Service function can be accessed only from inside of Kubernetes cluster                                                                              |
 | `@AllowForMicroserviceInternalUse()`                                                                          | Service function can be accessed only inside the Backk microservice.                                                                                 |

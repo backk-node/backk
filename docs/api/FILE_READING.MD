@@ -8,7 +8,7 @@
 
 ### <a name="trygetobjectsfromcsvfile"></a> getObjectsFromCsvFileOrThrow
 ```ts
-function tryGetObjectsFromCsvFile(
+function getObjectsFromCsvFileOrThrow(
   filePathNameRelativeToResourcesDir: string,
   columnNames: string[] | 'readFromFirstRow' = 'readFromFirstRow',
   delimiter = ','
@@ -47,7 +47,7 @@ will be parsed to following:
 
 ### <a name="trygetseparatedvaluesfromtextfile"></a> getSeparatedValuesFromTextFileOrThrow
 ```ts
-function tryGetSeparatedValuesFromTextFile(
+function getSeparatedValuesFromTextFileOrThrow(
   filePathNameRelativeToResourcesDir: string,
   separator = '\n'
 ): string[]
@@ -74,7 +74,7 @@ will be parsed to following:
 
 ### <a name="trygetseparatedintegervaluesfromtextfile"></a> getSeparatedIntegerValuesFromTextFileOrThrow
 ```ts
-function tryGetSeparatedIntegerValuesFromTextFile(
+function getSeparatedIntegerValuesFromTextFileOrThrow(
   filePathNameRelativeToResourcesDir: string,
   separator = '\n'
 ): number[]
@@ -102,7 +102,7 @@ will be parsed to following:
 
 ### <a name="trygetvaluesbyjsonpathfromjsonfile"></a> getValuesByJsonPathFromJsonFileOrThrow
 ```ts
-function tryGetValuesByJsonPathFromJsonFile(filePathNameRelativeToResourcesDir: string, jsonPath: string): any[]
+function getValuesByJsonPathFromJsonFileOrThrow(filePathNameRelativeToResourcesDir: string, jsonPath: string): any[]
 ```
 
 Reads a text file `filePathNameRelativeToResourcesDir` and parses returns values matching the `jsonPath`.
@@ -111,7 +111,7 @@ Returns an array of values or throws an error on file reading or parsing failure
 
 ### <a name="trygetvaluesbyxpathfromxmlfile"></a> getValuesByXPathFromXmlFileOrThrow
 ```ts
-function tryGetValuesByXPathFromXmlFile(filePathNameRelativeToResourcesDir: string, xPath: string): any[]
+function getValuesByXPathFromXmlFileOrThrow(filePathNameRelativeToResourcesDir: string, xPath: string): any[]
 ```
 
 Reads a text file `filePathNameRelativeToResourcesDir` and parses returns values matching the `xPath`.

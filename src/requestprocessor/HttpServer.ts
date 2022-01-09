@@ -62,6 +62,9 @@ export default class HttpServer implements RequestProcessor {
         const backkError = createBackkErrorFromErrorCodeMessageAndStatus(BACKK_ERRORS.REQUEST_IS_TOO_LONG);
         response.writeHead(backkError.statusCode, { 'Content-Type': 'application/json' });
         response.end(JSON.stringify(backkError));
+        if (process.env.NODE_ENV !== 'production') {
+          log(Severity.ERROR, 'HTTP request content length undefined or exceeded value defined in MAX_REQUEST_CONTENT_LENGTH_IN_BYTES environment variable', '');
+        }
         return;
       }
 
@@ -113,7 +116,8 @@ export default class HttpServer implements RequestProcessor {
         return;
       }
 
-      const serviceFunctionName = request.url?.split('/').pop() ?? '';
+      const url = request.url?.endsWith('/') ? request.url.slice(0, -1) : request.url;
+      const serviceFunctionName = url?.split('/').pop() ?? '';
       const [serviceName, functionName] = serviceFunctionName.split('.');
       const ServiceClass = (microservice as any)[serviceName]?.constructor;
 

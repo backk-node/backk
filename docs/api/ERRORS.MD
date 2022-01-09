@@ -44,12 +44,12 @@ export const BACKK_ERRORS = {
   UNKNOWN_SERVICE: {
     errorCode: 'error.8',
     message: 'Unknown service: ',
-    statusCode: HttpStatusCodes.NOT_IMPLEMENTED
+    statusCode: HttpStatusCodes.NOT_FOUND
   },
   UNKNOWN_SERVICE_FUNCTION: {
     errorCode: 'error.9',
     message: 'Unknown function: ',
-    statusCode: HttpStatusCodes.NOT_IMPLEMENTED
+    statusCode: HttpStatusCodes.NOT_FOUND
   },
   MISSING_SERVICE_FUNCTION_ARGUMENT: {
     errorCode: 'error.10',

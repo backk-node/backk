@@ -1,6 +1,7 @@
 ## Usage Documentation
 - [Introduction](usage/INTRODUCTION.MD)
 - [Directory Structure](usage/DIRECTORY_STRUCTURE.MD)
+- [NPM scripts](usage/NPM_SCRIPTS.MD)
 - [Starting Microservice](usage/INITIALIZATION.MD)
 - [Creating Entity Classes](usage/CREATING_ENTITY_CLASSES.MD)
 - [Creating Service Function Argument and Response Classes](usage/ARGUMENT_RESPONSE_CLASSES.MD)

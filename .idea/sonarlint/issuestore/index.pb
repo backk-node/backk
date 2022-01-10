@@ -206,8 +206,6 @@ $src/typescript/utils/mergeImports.ts,e/6/e62992d4cb9410bf503e1ffa8a63852639d1d
 :
 
 .gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302
-S
-#src/utils/file/getSourceFileName.ts,2/b/2b65dec05283a22149e7996cb36aa32c437d6efd
 a
 1src/services/startup/types/entity/SampleEntity.ts,1/c/1c27cd9cd77add2229000bdc2581f5f7ad4424ee
 Z
@@ -242,8 +240,6 @@ a
 1src/utils/type/isValidFunctionArgumentTypeName.ts,2/8/28d1df15cefe38e20259ba94146170cc82bed1ff
 X
 (src/metadata/generateTypesForServices.ts,e/3/e33ed263df79829e5748ddff6b4b1c33d09b1b1a
-_
-/src/utils/file/getSrcFilePathNameForTypeName.ts,0/e/0e8b631c4da7d29df106b7fda6bc971ce9fc27a1
 T
 $src/services/tenant/TenantService.ts,9/7/97002bd2b3da6cef47edbee6c171c862003f62af
 X

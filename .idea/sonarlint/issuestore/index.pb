@@ -1,8 +1,6 @@
 
 W
 'src/assertions/assertIsSortDirection.ts,d/4/d48738a44d8def1348b23656bdd8250e5027144a
-T
-$src/assertions/assertIsColumnName.ts,2/a/2ae36cbb6aeff087f0e729ef8722608bd752f54b
 d
 4src/decorators/service/function/AllowForUserRoles.ts,7/5/754251d4fed56a1d69dd227e152edfcecc5379ca
 Y

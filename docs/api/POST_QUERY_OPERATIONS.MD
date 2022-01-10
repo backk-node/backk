@@ -19,7 +19,10 @@ interface SortBys {
 
 class SortBy {
   subEntityPath?: string = '';
+  
+  @MaxLengthAndMatches(Lengths._512, /^[a-zA-Z_][a-zA-Z0-9_.]*$/)
   fieldName!: string;
+  
   sortDirection!: 'ASC' | 'DESC';
 
   constructor(subEntityPath: string, fieldName: string, sortDirection: 'ASC' | 'DESC');
@@ -42,6 +45,10 @@ class CurrentPageToken {
   currentPageToken!: string;
 }
 ```
+
+For `SortBy` class property `fieldName` you can also supply an SQL expression, but only when
+the object is not received from client. Because receiving an expression from client would make 
+your microservice susceptible to SQL injection attacks. 
 
 When you need to supply post query operations for data store operation requiring them,
 you can use an instance of `DefaultPostQueryOperationsImpl` as such if it is appropriate

@@ -43,7 +43,7 @@ In addition to Ingress, an API Gateway is needed to redirect traffic from Kubern
 microservices. [Ambassador Edge Stack](https://www.getambassador.io/docs/edge-stack/)
 is recommended as an API Gateway. If you need open-source, you can use Emissary-Ingress or [Kong API Gateway](https://konghq.com/kong/). In addition to routing, API Gateway performs other tasks like TLS termination, rate limiting,
 access logging, advanced load balancing, Automatic retries, circuit breakers, canary releases,
-HTTP header manipulation and response Gzip compression.
+HTTP header manipulation and response Gzip compression. Configuring Ambassador Edge Stack with Kubernetes CRDs is much easier than configuring Kong with its REST API.
 
 When taking API gateway into use, remember to configure at least following:
 - HTTPS/TLS termination

@@ -20,8 +20,14 @@ interface SortBys {
 class SortBy {
   subEntityPath?: string = '';
   
-  @MaxLengthAndMatches(Lengths._512, /^[a-zA-Z_][a-zA-Z0-9_.]*$/)
+  @LengthAndMatches(1, Lengths._512, /^[a-zA-Z_][a-zA-Z0-9_.]*$/)
   fieldName!: string;
+
+  // Ensure empty string when validating client input, NEVER allow sortExpression from client due to risk of SQL injection attack
+  // sortExpression can be set only on server side, but never include client input to sort expression on server side
+  // If you want client side to sort by an expression, you should create a new field in entity to store the sort expression result and allow client to sort by that field
+  @MaxLength(0)
+  sortExpression?: string;
   
   sortDirection!: 'ASC' | 'DESC';
 
@@ -45,10 +51,6 @@ class CurrentPageToken {
   currentPageToken!: string;
 }
 ```
-
-For `SortBy` class property `fieldName` you can also supply an SQL expression, but only when
-the object is not received from client. Because receiving an expression from client would make 
-your microservice susceptible to SQL injection attacks. 
 
 When you need to supply post query operations for data store operation requiring them,
 you can use an instance of `DefaultPostQueryOperationsImpl` as such if it is appropriate

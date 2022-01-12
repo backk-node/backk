@@ -1,9 +1,9 @@
-import tryGetProjection from './tryGetProjection';
 import assertIsSortDirection from '../../../../../assertions/assertIsSortDirection';
+import { BACKK_ERRORS } from '../../../../../errors/BACKK_ERRORS';
+import createErrorFromErrorCodeMessageAndStatus from '../../../../../errors/createErrorFromErrorCodeMessageAndStatus';
 import SortBy from '../../../../../types/postqueryoperations/SortBy';
 import AbstractSqlDataStore from '../../../../AbstractSqlDataStore';
-import createErrorFromErrorCodeMessageAndStatus from '../../../../../errors/createErrorFromErrorCodeMessageAndStatus';
-import { BACKK_ERRORS } from '../../../../../errors/BACKK_ERRORS';
+import tryGetProjection from './tryGetProjection';
 
 export default function tryGetOrderByClause<T>(
   dataStore: AbstractSqlDataStore,
@@ -24,34 +24,41 @@ export default function tryGetOrderByClause<T>(
       assertIsSortDirection(sortBy.sortDirection);
 
       let projection;
-      try {
-        projection = tryGetProjection(
-          dataStore,
-          {
-            includeResponseFields: [subEntityPath ? subEntityPath + '.' + sortBy.fieldName : sortBy.fieldName]
-          },
-          EntityClass,
-          Types
-        );
-      } catch (error) {
-        if (sortBy.subEntityPath !== '*') {
-          throw createErrorFromErrorCodeMessageAndStatus({
-            ...BACKK_ERRORS.INVALID_ARGUMENT,
-            message: BACKK_ERRORS.INVALID_ARGUMENT.message + 'invalid sort field: ' + sortBy.fieldName
-          });
+      if (sortBy.fieldName) {
+        try {
+          projection = tryGetProjection(
+            dataStore,
+            {
+              includeResponseFields: [
+                subEntityPath ? subEntityPath + '.' + sortBy.fieldName : sortBy.fieldName,
+              ],
+            },
+            EntityClass,
+            Types
+          );
+        } catch (error) {
+          if (sortBy.subEntityPath !== '*') {
+            throw createErrorFromErrorCodeMessageAndStatus({
+              ...BACKK_ERRORS.INVALID_ARGUMENT,
+              message: BACKK_ERRORS.INVALID_ARGUMENT.message + 'invalid sort field: ' + sortBy.fieldName,
+            });
+          }
         }
       }
 
-      if (projection) {
+      if (projection || sortBy.sortExpression) {
         if (tableAlias) {
           return (
             tableAlias.toLowerCase() +
             '.' +
-            sortBy.fieldName +
+            (sortBy.sortExpression || sortBy.fieldName) +
             (sortBy.sortDirection === 'DESC' ? ' ' + sortBy.sortDirection : '')
           );
         } else {
-          return sortBy.fieldName + (sortBy.sortDirection === 'DESC' ? ' ' + sortBy.sortDirection : '');
+          return (
+            (sortBy.sortExpression || sortBy.fieldName) +
+            (sortBy.sortDirection === 'DESC' ? ' ' + sortBy.sortDirection : '')
+          );
         }
       }
 

@@ -53,10 +53,8 @@ class CurrentPageToken {
 ```
 
 When you need to supply post query operations for data store operation requiring them,
-you can use an instance of `DefaultPostQueryOperationsImpl` as such if it is appropriate
+you can use an instance of `DefaultPostQueryOperationsImpl` as such if it is appropriate to your needs
 or an instance of your own class that extends `DefaultPostQueryOperationsImpl`, but overrides one or more class members.
-
-You can of course use an instance of any class that implements the `PostQueryOperations` interface.
 
 `DefaultPostQueryOperationsImpl` is defined as follows:
 

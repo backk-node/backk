@@ -153,7 +153,7 @@ SalesItemService.ts
 import { Many, One, PromiseErrorOr, Service } from 'backk';
 import SalesItem from './types/entities/SalesItem';
 
-export default class SalesItemService implements Service {
+export interface SalesItemService extends Service {
   createSalesItem(salesItem: SalesItem): PromiseErrorOr<One<SalesItem>>;
   getSalesItems(): PromiseErrorOr<Many<SalesItem>>;
 }

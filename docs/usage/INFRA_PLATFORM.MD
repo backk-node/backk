@@ -36,12 +36,12 @@ logging, monitoring and Identity and Access Management and Single Sign On.
 #### <a name="ingressapigateway"></a> Ingress Controller and API Gateway (Emissary Ingress or Ambassador Edge Stack)
 
 Kubernetes cluster needs to have an Ingress resource defined to control incoming traffic from external sources.
-In order for the Ingress resource to work, an Ingress Controller must be installed to run on edge nodes. [Emissary-Ingress](https://github.com/emissary-ingress/emissary)
-or [Ambassador Edge Stack](https://www.getambassador.io/docs/edge-stack/) is recommended to act as Kubernetes Ingress Controller. Emissary Ingress is a [CNCF Incubating project](https://landscape.cncf.io/)
+In order for the Ingress resource to work, an Ingress Controller must be installed to run on edge nodes. [Emissary-Ingress](https://github.com/emissary-ingress/emissary)(open-source)
+, [Ambassador Edge Stack](https://www.getambassador.io/docs/edge-stack/)(commercial) is recommended as Kubernetes Ingress Controller. Emissary Ingress is a [CNCF Incubating project](https://landscape.cncf.io/)
 
 In addition to Ingress, an API Gateway is needed to redirect traffic from Kubernetes cluster edge nodes to actual
-microservices. [Emissary-Ingress](https://github.com/emissary-ingress/emissary) or [Ambassador Edge Stack](https://www.getambassador.io/docs/edge-stack/)
-is recommended to act as an API Gateway. In addition to routing, API Gateway performs other tasks like TLS termination, rate limiting,
+microservices. [Ambassador Edge Stack](https://www.getambassador.io/docs/edge-stack/)
+is recommended as an API Gateway. If you need open-source, you can use Emissary-Ingress or [Kong API Gateway](https://konghq.com/kong/). In addition to routing, API Gateway performs other tasks like TLS termination, rate limiting,
 access logging, advanced load balancing, Automatic retries, circuit breakers, canary releases,
 HTTP header manipulation and response Gzip compression.
 
@@ -49,6 +49,11 @@ When taking API gateway into use, remember to configure at least following:
 - HTTPS/TLS termination
 - GZip compression
 - Global per user rate limiting
+
+If you have implemented Ambassador Edge Stack or Emissary Ingress in your Kubernetes cluster,
+you should set in you Backk microservice's Helm chart `values.yaml` file `apiGateway.type`
+to either `EmissaryIngress` or `AmbassadorEdgeStack`
+
 
 #### <a name="servicemesh"></a> Service Mesh (Linkerd)
 

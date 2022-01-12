@@ -33,17 +33,22 @@ Software systems and applications. The platform will consist of several SW compo
 between multiple applications and software systems. Platform services will consist of services like Centralized
 logging, monitoring and Identity and Access Management and Single Sign On.
 
-#### <a name="ingressapigateway"></a> Ingress Controller and API Gateway (Emissary)
+#### <a name="ingressapigateway"></a> Ingress Controller and API Gateway (Emissary Ingress or Ambassador Edge Stack)
 
 Kubernetes cluster needs to have an Ingress resource defined to control incoming traffic from external sources.
 In order for the Ingress resource to work, an Ingress Controller must be installed to run on edge nodes. [Emissary-Ingress](https://github.com/emissary-ingress/emissary)
-is recommended to act as Kubernetes Ingress Controller. Emissary Ingress is a [CNCF Incubating project](https://landscape.cncf.io/)
+or [Ambassador Edge Stack](https://www.getambassador.io/docs/edge-stack/) is recommended to act as Kubernetes Ingress Controller. Emissary Ingress is a [CNCF Incubating project](https://landscape.cncf.io/)
 
 In addition to Ingress, an API Gateway is needed to redirect traffic from Kubernetes cluster edge nodes to actual
-microservices. [Emissary-Ingress](https://github.com/emissary-ingress/emissary)
-is recommended to act as an API Gateway. In addition to routing, Emissary API Gateway performs other tasks like TLS termination, rate limiting,
+microservices. [Emissary-Ingress](https://github.com/emissary-ingress/emissary) or [Ambassador Edge Stack](https://www.getambassador.io/docs/edge-stack/)
+is recommended to act as an API Gateway. In addition to routing, API Gateway performs other tasks like TLS termination, rate limiting,
 access logging, advanced load balancing, Automatic retries, circuit breakers, canary releases,
 HTTP header manipulation and response Gzip compression.
+
+When taking API gateway into use, remember to configure at least following:
+- HTTPS/TLS termination
+- GZip compression
+- Global per user rate limiting
 
 #### <a name="servicemesh"></a> Service Mesh (Linkerd)
 

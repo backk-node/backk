@@ -182,7 +182,7 @@ Let's create the `SalesItem` entity class in `src/services/salesitem/types/entit
 
 SalesItem.ts
 ```ts
-import { _Id, Entity, IsAscii, IsFloat, ReadWrite } from 'backk';
+import { _Id, Entity, IsAscii, IsFloat, Length, MinMax, ReadWrite } from 'backk';
 
 @Entity()
 export default class SalesItem extends _Id {

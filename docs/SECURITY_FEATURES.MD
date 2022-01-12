@@ -10,7 +10,7 @@
 
 - Encryption
   - Automatic personally identifiable information (PII) encryption and hashing in data store
-    - Backk will automatically encrypt a database table column using AES-256, if its name implies personally identifiable information.
+    - Backk will automatically encrypt a database table column using AES-256-CBC, if its name implies personally identifiable information.
     - Backk will automatically hash password fields with Argon2
 
 - Denial of service (DoS) and Regular Expression Denial of Service (ReDoS) prevention

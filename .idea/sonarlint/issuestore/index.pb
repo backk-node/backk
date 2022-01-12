@@ -356,8 +356,6 @@ W
 'src/subscription/subscriptionManager.ts,0/2/02ba7e3b92f92172d0f6afbabec611bd9dfff73d
 O
 docs/OWASP_TOP_TEN_CHECKLIST.MD,f/7/f7e07f41d07950c8ed08e26bb67993ed4f0f54b1
-I
-docs/SECURITY_FEATURES.MD,4/f/4fd40ad1cc01a1cc8b5572b74a7e398e7e58980f
 e
 5src/decorators/typeproperty/datetime/IsDateBetween.ts,7/a/7a9209dbf8c49ed6ab55e006e43fa169a70fe49e
 m

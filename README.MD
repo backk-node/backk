@@ -41,7 +41,7 @@
   - Can be used both for resource and RPC style microservices
   - Backk does not really care if your microservice is really a microservice or more like a mini-service, macro-service or monolith.
 - Supports subscription endpoints using Server Sent Events (SSE) in HTTP/1.1 and HTTP/2
-- Supports multiple databases
+- Supports different databases
   - [PostgreSQL](https://www.postgresql.org/)
   - [MySQL](https://www.mysql.com/)
   - [MongoDB](https://www.mongodb.com/)
@@ -54,6 +54,10 @@
   - Comprehensive set of validations for all data types (number, string, Date, Arrays)
   - Drastically simplifies the definition of DTOs or totally removes the need for DTOs
 - Automatic database schema generation
+- Recommended source code directory structure for creating uniform microservices
+- Comprehensive set of NPM scripts from building and testing to Docker/Minikube/Helm management
+- Easy access of remote Backk microservices
+- Executing multiple service functions with one request
 - Security
   - Builds distro-less non-root Docker images for the microservice
   - OAuth 2.0 Authorization support
@@ -235,7 +239,7 @@ Content-Type: application/json
 }
 ```
 
-And then we can get the created entities with an HTTP POST call to `salesItemService.getSalesItems`:
+And then we can get the created entities with an HTTP POST request to `salesItemService.getSalesItems`:
 ```
 POST /salesItemService.getSalesItems
 ```

@@ -198,7 +198,7 @@ export default class SalesItem extends _Id {
 }
 ```
 
-Now we can create an entity with an HTTP POST call:
+Now we can create an entity with an HTTP POST request:
 ```
 POST /salesItemService.createSalesItem
 Content-Type: application/json

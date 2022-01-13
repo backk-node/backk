@@ -274,31 +274,31 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-### <a name="readinesscheckservice"></a> ReadinessCheckService
+### <a name="readinesscheckservice"></a> ReadinessCheckService and DefaultReadinessCheckService
 This service is called by Kubernetes pod's readiness probe to check if microservice is ready for handling requests
 
 ```typescript
 export default abstract class ReadinessCheckService extends BaseService {
-  abstract isMicroserviceReady(): PromiseErrorOr<null>;
+  abstract isMicroserviceReady(microservice: Microservice): PromiseErrorOr<null>;
 }
 ```
 
-Create a class `ReadinessCheckServiceImpl` that extends the `ReadinessCheckService` class and provide implementation for function:
-- isMicroserviceReady
+`DefaultReadinessCheckServiceImpl` is the Backk default implementation for the readiness check service. It returns `Service Unavailable` HTTP status code if microservice is requested to terminate. Otherwise it returns `200 OK` HTTP status code.
+If you need to perform additional checks, create a new class that extends the `DefaultReadinessCheckServiceImpl` class and provide implementation for the `isMicroserviceReady` function.
+NOTE! Your implementation should first call the base class method and then execute additional checks.
 
-Example implementation:
+Example implementation that only calls the base class method:
 
 ```typescript
-import { BACKK_ERRORS, HttpStatusCodes, ReadinessCheckService } from 'backk';
+import { BACKK_ERRORS, DefaultReadinessCheckServiceImpl, HttpStatusCodes, Microservice } from 'backk';
 
-export default class ReadinessCheckServiceImpl extends ReadinessCheckService {
-  constructor() {
-    super({});
+export default class ReadinessCheckServiceImpl extends DefaultReadinessCheckServiceImpl {
+  constructor(microservice: Microservice) {
+    super(microservice);
   }
   
   async isMicroserviceReady(): PromiseErrorOr<null> {
-    // isReady is some function implemented by you to perform checks for microservice readiness
-    return await isReady() ? [null, null] : [null, BACKK_ERRORS.MICROSERVICE_NOT_READY];
+    return super.isMicroserviceReady();
   }
 }
 ```
@@ -307,7 +307,7 @@ Then, instantiate your class and store it as a field in your `MicroserviceImpl` 
 
 ```typescript
 export default class MicroserviceImpl extends Microservice {
-  private readonly readinessCheckService = new ReadinessCheckServiceImpl();
+  private readonly readinessCheckService = new ReadinessCheckServiceImpl(this);
 }
 ```
 

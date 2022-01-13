@@ -27,10 +27,6 @@ export default class Microservice {
     requestProcessors: NonEmptyArray<RequestProcessor>,
     shouldGeneratePostmanIntegrationTestsOnRestartInDevEnv = true
   ) {
-    process.on('exit', (code) => {
-      log(Severity.INFO, `Microservice terminated with exit code: ${code}`, '');
-    });
-
     process.on('uncaughtExceptionMonitor', (error: Error) => {
       log(Severity.ERROR, `Microservice crashed with exception: ${error.message}`, error.stack ?? '');
     });
@@ -90,6 +86,10 @@ export default class Microservice {
       console.log("Type definitions have changed.\nRun 'npm run generateTypes'");
       process.exit(0);
     }
+
+    process.on('exit', (code) => {
+      log(Severity.INFO, `Microservice terminated with exit code: ${code}`, '');
+    });
 
     await changePackageJsonNameProperty();
     initializeCls();

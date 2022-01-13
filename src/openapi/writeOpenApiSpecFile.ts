@@ -362,7 +362,7 @@ export function getOpenApiSpec<T>(microservice: T, servicesMetadata: ServiceMeta
               return parseInt(valueStr, 10);
             }
             if (validation.startsWith('lengthAndMatches(')) {
-              const valueStr = validation.split(',')[2];
+              const valueStr = validation.split(',')[1];
               return parseInt(valueStr, 10);
             }
             if (validation.startsWith('maxLengthAndMatches(')) {

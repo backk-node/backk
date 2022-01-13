@@ -2,6 +2,7 @@ import { IsIn, IsOptional, IsString, MaxLength } from "class-validator";
 import MaxLengthAndMatches from "../../decorators/typeproperty/MaxLengthAndMatches";
 import { Lengths } from "../../constants/constants";
 import LengthAndMatches from "../../decorators/typeproperty/LengthAndMatches";
+import IsAnyString from "../../decorators/typeproperty/IsAnyString";
 
 export default class SortBy {
   constructor(subEntityPath: string, fieldName: string, sortDirection: 'ASC' | 'DESC') {
@@ -20,6 +21,7 @@ export default class SortBy {
   // sortExpression can be set only on server side, but never include client input to sort expression on server side
   // If you want client side to sort by an expression, you should create a new field in entity to store the sort expression result and allow client to sort by that field
   @MaxLength(0)
+  @IsAnyString()
   @IsString()
   sortExpression?: string;
 

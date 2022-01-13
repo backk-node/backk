@@ -173,11 +173,11 @@ export default class SalesItemServiceImpl extends CrudEntityService implements S
   }
   
   createSalesItem(salesItem: SalesItem): PromiseErrorOr<One<SalesItem>> {
-    this.dataStore.createEntity(SalesItem, salesItem);
+    return this.dataStore.createEntity(SalesItem, salesItem);
   }
   
   getSalesItems(): PromiseErrorOr<Many<SalesItem>> {
-    this.dataStore.getAllEntities(SalesItem);
+    return this.dataStore.getAllEntities(SalesItem);
   }
 }
 ```

@@ -1,0 +1,72 @@
+IF YOU ARE USING DEFAULTS FROM BACKK STARTER PROJECT,
+BELOW CHECKS SHOULD BE OK AND ARE CHECKED BY DEFAULT.
+
+Below checks are from https://learnk8s.io/production-best-practices
+
+(X) Containers have startup or readiness probe
+(X) Containers crash when there's a fatal error
+(X) Configure a passive Liveness probe
+(X) Liveness probes values aren't the same as the Readiness probe's
+(X) The microservice retries connecting to database
+(X) The microservice doesn't shut down on SIGTERM, but it gracefully terminates connections and stops accepting new connections
+(X) The microservice still processes existing requests during the termination grace period
+(X) The CMD in the Dockerfile forwards the SIGTERM to the process
+(X) Microservice closes all idle keep-alive sockets on termination
+(X) Runs at least 2 replicas for the deployment
+(X) Avoids pods being placed into a single node
+(X) Pods have disruption budgets
+(X) Set an appropriate Quality of Service (QoS) for Pods
+(X) Resources have technical labels defined
+(X) The application logs to stdout and stderr
+(X) Containers do not store any state in their local filesystem
+(X) Use the Horizontal Pod Autoscaler (HPA) for microservices with variable usage patterns
+(X) Don't use the Vertical Pod Autoscaler (VPA) while it's still in beta
+(X) Externalise all configuration
+(X) Enable Pod Security Policies
+(X) Disable privileged containers
+(X) Use a read-only filesystem in containers
+(X) Prevent containers from running as root
+(X) Limit container Linux capabilities
+(X) Prevent privilege escalation
+
+COMPLETE BELOW CHECKS
+
+() Segregate the production Kubernetes cluster from dev, CI and staging clusters
+() Setup replicated Kubernetes master nodes in odd numbers, minimum 3
+() Setup isolated etcd replicas on dedicated nodes
+() Schedule regular etcd backup
+() Setup distributed Kubernetes master nodes across availability zones
+() Setup distributed Kubernetes worker nodes across availability zones
+() Configure cluster autoscaling for both Kubernetes master and worker nodes
+() Configure active-passive setup for Kubernetes scheduler and controller manager
+() Deploy Ingress controller on Kubernetes cluster edge nodes
+() Deploy API Gateway on Kubernetes cluster edge nodes
+() Configure API Gateway to terminate HTTPS/TLS
+() Configure API Gateway to enable upstream Gzip compression
+() Configure API Gateway for per user request rate limiting
+() Deploy applications from different Business units and teams to separate Kubernetes namespaces
+() Configure default resource requests and limits for Kubernetes namespaces (LimitRange, ResourceQuota)
+() Databases deployed in Kubernetes implement automatic horizontal scaling if needed
+() Databases deployed in Kubernetes are be backed-up for disaster recovery
+() Use Cloud provider recommended settings for Persistent volumes
+() Create a default storage class
+() Enable Kubernetes RBAC (Role-Based Access Control), RBAC policies are set to the least amount of privileges necessary (https://thenewstack.io/three-realistic-approaches-to-kubernetes-rbac/
+() RBAC policies are granular and not shared (https://kubernetes-on-aws.readthedocs.io/en/latest/dev-guide/arch/access-control/adr-004-roles-and-service-accounts.html)
+() Enable Kubernetes audit logging
+() Create an audit logging service which is used by Backk microservices to send their audit logs to.
+() Configure network policies to allow/disallow traffic between Kubernetes namespaces/pods (https://github.com/ahmetb/kubernetes-network-policy-recipes)
+() Enable secret data encryption at rest (https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/)
+() Disable default service account
+() Scan images in your container image registry for security vulnerabilities at regular intervals (e.g. daily)
+() Deploy changes to staging environment first, execute needed functional and non-functional tests and only after that deploy to production environment
+() Microservices' Helm chart container image tag contains SHA digest
+() Allow deploying containers only from known registries using OPA (https://blog.openpolicyagent.org/securing-the-kubernetes-api-with-open-policy-agent-ce93af0552c3#3c6e)
+() Create Grafana dashboards to monitor a selected list of Prometheus metrics
+() Setup alerting with thresholds on selected Prometheus metrics, integrate alerting with other Enterprise tools sets (e.g. PagerDuty) if needed
+() Implement Service mesh with traffic proxying, retries, timeouts, circuit-breakers, authorization policies and mTLS
+() The cluster passes the The Center for Internet Security (CIS) benchmark using kube-bench tool
+() There's a retention and archival strategy for logs (You should retain 30-45 days of historical logs)
+() Logs are collected from Nodes(kubelet, container runtime), Control Plane(API server, scheduler, controller manager)
+() Use ElasticSearch + Fluentd + Kibana (EFK) stack for log collection and aggregation
+
+

@@ -23,3 +23,4 @@
 - [Infrastructure and Platform](usage/INFRA_PLATFORM.MD)
 - [Continuous Integration](usage/CI.MD)
 - [Continuous Deployment](usage/CD.MD)
+- [Production Readiness Checklist](PRODUCTION_READINESS_CHECKLIST.txt)

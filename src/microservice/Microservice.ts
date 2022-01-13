@@ -19,6 +19,8 @@ import initializeMicroservice from './initializeMicroservice';
 type NonEmptyArray<T> = [T, ...T[]];
 
 export default class Microservice {
+  private isTerminationRequested = false;
+
   constructor(public readonly dataStore: DataStore) {}
 
   async start(
@@ -119,5 +121,13 @@ export default class Microservice {
     reloadLoggingConfigOnChange();
     requestProcessors.forEach((requestProcessor) => requestProcessor.startProcessingRequests(this));
     log(Severity.INFO, 'Microservice started', '');
+  }
+
+  setIsTerminationRequested(isTerminationRequested: boolean) {
+    this.isTerminationRequested = isTerminationRequested;
+  }
+
+  getIsTerminationRequested() {
+    return this.isTerminationRequested
   }
 }

@@ -392,8 +392,6 @@ $src/services/LivenessCheckService.ts,7/1/71ba80695e96c2ea83c502bbb99d37751d713
 .src/errors/createErrorMessageWithStatusCode.ts,1/6/16c55c9d4f5a17047b3ddfabaa5458b5464aaa1d
 k
 ;src/errors/createBackkErrorFromErrorMessageAndStatusCode.ts,3/f/3f91cbf61f981da36b338ef6e33082fa2bd42f99
-U
-%src/services/ReadinessCheckService.ts,a/c/aca76d51d139ac7a3a39bedf668ebb966286244a
 Y
 )src/decorators/service/function/Update.ts,f/b/fbac1f5f3bfe8376906475aafd65211d321c7ed8
 d
@@ -450,8 +448,6 @@ f
 6src/observability/logging/audit/AuditLoggingService.ts,5/0/5094a81c71e92af423372d5e716a29f584c57805
 n
 >src/decorators/typeproperty/typePropertyAnnotationContainer.ts,c/8/c810282510d9ae8ef1f187c69f3bc3db0d6976fb
-[
-+src/services/startup/StartupCheckService.ts,5/6/5654861c9a9b9770edae3756116107b2d82a678b
 B
 src/types/types.ts,c/a/ca15b85bec71704fc4a189e0d28db77b74c7e5a2
 `

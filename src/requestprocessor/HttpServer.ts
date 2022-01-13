@@ -148,6 +148,7 @@ export default class HttpServer implements RequestProcessor {
     const serverWithShutdown = wrapShutDown(server);
 
     function exit(signal: string) {
+      microservice.setIsTerminationRequested(true);
       serverWithShutdown.shutdown(() => {
         log(Severity.INFO, `HTTP server terminated due to signal: ${signal}`, '');
         process.exitCode = 0;
@@ -280,6 +281,7 @@ export default class HttpServer implements RequestProcessor {
     });
 
     function exit(signal: string) {
+      microservice.setIsTerminationRequested(true);
       server.close(() => {
         log(Severity.INFO, `HTTP server terminated due to signal: ${signal}`, '');
         process.exitCode = 0;

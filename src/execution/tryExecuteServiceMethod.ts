@@ -28,7 +28,7 @@ import { getOpenApiSpec } from '../openapi/writeOpenApiSpecFile';
 import tryScheduleJobExecution from '../scheduling/tryScheduleJobExecution';
 import BaseService from '../services/BaseService';
 import LivenessCheckService from '../services/LivenessCheckService';
-import ReadinessCheckService from '../services/ReadinessCheckService';
+import ReadinessCheckService from '../services/readinesscheck/ReadinessCheckService';
 import StartupCheckService from '../services/startup/StartupCheckService';
 import TenantBaseService from '../services/tenant/TenantBaseService';
 import UserBaseService from '../services/useraccount/UserBaseService';

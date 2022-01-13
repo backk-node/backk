@@ -19,7 +19,7 @@ import writeTestsPostmanCollectionExportFile from '../postman/writeTestsPostmanC
 import { RequestProcessor } from '../requestprocessor/RequestProcessor';
 import BaseService from '../services/BaseService';
 import LivenessCheckService from '../services/LivenessCheckService';
-import ReadinessCheckService from '../services/ReadinessCheckService';
+import ReadinessCheckService from '../services/readinesscheck/ReadinessCheckService';
 import StartupCheckService from '../services/startup/StartupCheckService';
 import parseServiceFunctionNameToArgAndReturnTypeNameMaps from '../typescript/parser/parseServiceFunctionNameToArgAndReturnTypeNameMaps';
 import getSrcFilePathNameForTypeName from '../utils/file/getSrcFilePathNameForTypeName';

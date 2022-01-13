@@ -1,3 +1,4 @@
+export * from './constants/constants';
 
 // Microservice
 export { default as Microservice } from './microservice/Microservice';
@@ -237,8 +238,6 @@ export { default as executeForAll } from './utils/executeForAll';
 export { default as throwException } from './utils/exception/throwException';
 
 export { default as subscriptionManager } from './subscription/subscriptionManager';
-
-export { HttpStatusCodes } from './constants/constants';
 
 export * from 'class-validator';
 export * as argon2 from 'argon2';

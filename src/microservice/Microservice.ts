@@ -25,6 +25,14 @@ export default class Microservice {
     requestProcessors: NonEmptyArray<RequestProcessor>,
     shouldGeneratePostmanIntegrationTestsOnRestartInDevEnv = true
   ) {
+    process.on('exit', (code) => {
+      log(Severity.INFO, `Microservice terminated with exit code: ${code}`, '');
+    });
+
+    process.on('uncaughtExceptionMonitor', (error: Error) => {
+      log(Severity.ERROR, `Microservice crashed with exception: ${error.message}`, error.stack ?? '');
+    });
+
     if (
       process.env.NODE_ENV !== 'development' &&
       process.env.NODE_ENV !== 'integration' &&
@@ -45,10 +53,6 @@ export default class Microservice {
         'You can have at maximum one of each request processors: HttpServer, KafkaConsumer and RedisConsumer'
       );
     }
-
-    process.on('uncaughtExceptionMonitor', (error: Error) => {
-      log(Severity.ERROR, `Microservice crashed with exception: ${error.message}`, error.stack ?? '');
-    });
 
     if (
       commandLineArgs?.[2] &&
@@ -84,10 +88,6 @@ export default class Microservice {
       console.log("Type definitions have changed.\nRun 'npm run generateTypes'");
       process.exit(0);
     }
-
-    process.on('exit', (code) => {
-      log(Severity.INFO, `Microservice terminated with exit code: ${code}`, '');
-    });
 
     await changePackageJsonNameProperty();
     initializeCls();

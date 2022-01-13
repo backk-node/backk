@@ -64,6 +64,7 @@
     "dayjs": "1.10.7",
     "extends-classes": "1.0.5",
     "fetch-h2": "3.0.1",
+    "http-shutdown": "1.2.2",
     "join-js": "1.1.2",
     "js-base64": "3.6.0",
     "jsonpath-plus": "4.0.0",

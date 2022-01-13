@@ -119,8 +119,6 @@ U
 %.github/workflows/codeql-analysis.yml,c/3/c3aa8b7f1c613e43d3bb9d5ac52ac6603d945e89
 j
 :src/remote/utils/parseRemoteServiceFunctionCallUrlParts.ts,a/5/a561c9580c6e13f3634b5ea01a48c933b81f6652
-a
-1src/remote/messagequeue/redis/consumeFromRedis.ts,9/5/9541c525ce91b27a824e0fc5c6ebbac210511c63
 X
 (src/execution/fetchFromRemoteServices.ts,9/f/9f67fbcce7e8a77bfaaf0c281f22e576957cce6f
 e

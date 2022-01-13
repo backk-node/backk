@@ -4,6 +4,7 @@ import yj from "yieldable-json";
 import { createServer } from "http";
 import http2 from "http2";
 import { promisify } from "util";
+import wrapShutDown from 'http-shutdown'
 import { HttpStatusCodes, MAX_INT_VALUE } from "../constants/constants";
 import serviceFunctionAnnotationContainer
   from "../decorators/service/function/serviceFunctionAnnotationContainer";
@@ -144,8 +145,10 @@ export default class HttpServer implements RequestProcessor {
       );
     });
 
+    const serverWithShutdown = wrapShutDown(server);
+
     function exit(signal: string) {
-      server.close(() => {
+      serverWithShutdown.shutdown(() => {
         log(Severity.INFO, `HTTP server terminated due to signal: ${signal}`, '');
         process.exitCode = 0;
       });

@@ -164,7 +164,7 @@ Let's create the implementation class of the service in `src/services/salesitem`
 
 SalesItemServiceImpl.ts
 ```ts
-import { DataStore, CrudEntityService, Many, One, PromiseErrorOr } from 'backk';
+import { DataStore, DefaultPostQueryOperationsImpl, CrudEntityService, Many, One, PromiseErrorOr } from 'backk';
 import { SalesItemService } from './SalesItemService';
 import SalesItem from './types/entities/SalesItem';
 
@@ -178,7 +178,7 @@ export default class SalesItemServiceImpl extends CrudEntityService implements S
   }
   
   getSalesItems(): PromiseErrorOr<Many<SalesItem>> {
-    return this.dataStore.getAllEntities(SalesItem);
+    return this.dataStore.getAllEntities(SalesItem, new DefaultPostQueryOperationsImpl(), false);
   }
 }
 ```

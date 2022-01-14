@@ -227,8 +227,9 @@ In addition to that, you need to define the allowed range of values with
 `@MinMax()` decorator. If some needed validators is missing, Backk will throw an exception.
 
 For each property you must define the access mode of the property. The access mode defines the visibility of the
-property to the clients of the microservice. The following [access mode decorators](../api/DECORATORS.MD#entity-property-decorators) are available:
-
+property to the clients of the microservice. In many cases, when using access mode decorators, you don't need to define separate
+Data Transfer Object (DTO) classes, but you might be able to use the entity class as service function argument and response type.
+The following [access mode decorators](../api/DECORATORS.MD#entity-property-decorators) are available:
 - `@Private()`
 - `@ReadWrite()`
 - `@ReadOnly()`
@@ -385,11 +386,11 @@ import GetSalesItemArg from './types/args/GetSalesItemArg';
 
 export default class SalesItemServiceImpl extends CrudEntityService implements SalesItemService {
   @AllowForEveryUser()
-  getSalesItems({ nameFilter }: GetSalesItemsArg): PromiseErrorOr<Many<SalesItem>> {
+  getSalesItems({ nameFilter, pageNumber }: GetSalesItemsArg): PromiseErrorOr<Many<SalesItem>> {
     const filter = new SqlFilter('name LIKE :nameFilter', {
       nameFilter: `%${nameFilter}%`,
     });
-    const postQueryOperations = new DefaultPostQueryOperationsImpl();
+    const postQueryOperations = new DefaultPostQueryOperationsImpl(pageNumber);
     return this.dataStore.getEntitiesByFilters(SalesItem, [filter], postQueryOperations, false);
   }
 }
@@ -401,12 +402,16 @@ that only valid values are supplied to service function. Here is the implementat
 GetSalesItemsArg.ts
 
 ```ts
-import { IsAscii, MaxLength } from 'backk';
+import { IsAscii, IsInt, MaxLength, MinMax } from 'backk';
 
 export default class GetSalesItemsArg {
   @IsAscii()
   @MaxLength(128)
   nameFilter!: string;
+  
+  @IsInt()
+  @MinMax(1, 1000000)
+  pageNumber!: number
 }
 ```
 
@@ -414,16 +419,15 @@ For data store's `getEntitiesByFilters` you need to supply `postQueryOperations`
 They are needed and used to define what fields are included in the response, how returned entities are sorted and paginated.
 
 In this example, we are using the default post query operations provided by the class `DefaultPostQueryOperationsImpl`.
-You can provide an instance of your own class matching the `PostQueryOperations` interface, or you can get this
-information from the client. In the example above, one way to get that information from client is that `GetSalesItemsArg` class extends from `DefaultPostQueryOperationsImpl`
-or your own class (which can extend from `DefaultPostQueryOperationsImpl`, for example).
+In the example above, you could make `GetSalesItemsArg` class extends from `DefaultPostQueryOperationsImpl`. In that way, the client 
+would have all control of defining what fields are returned, sort order and pagination. 
 
 `DefaultPostQueryOperationsImpl` is defined as follows:
 
 ```ts
 class DefaultPostQueryOperationsImpl implements PostQueryOperations {
   constructor(pageNumber: number = 1, pageSize: number = 50) {
-    this.paginations = [new Pagination('*', 1, pageSize)];
+    this.paginations = [new Pagination('*', pageNumber, pageSize)];
   }
 
   includeResponseFields?: string[] = [];
@@ -435,8 +439,8 @@ class DefaultPostQueryOperationsImpl implements PostQueryOperations {
 ```
 
 Using an instance of `DefaultPostQueryOperationsImpl` will return all entity fields (this is because empty array for `includeResponseFields` means that all fields are returned)
-No fields are excluded from the response and entities and their sub-entities are sorted by `_id` or `id` fields.
-The response will contain the `pageNumber` page (default is first page) of entities and their sub-entities with page size of `pageSize` (default is 50)
+No fields are excluded from the response and root entities and their sub-entities are sorted by `_id` or `id` fields, respectively.
+The response will contain the `pageNumber` page (default is the first page) of root entities and their sub-entities with page size of `pageSize` (default is 50)
 
 More information about post query operations is provided [here](../api/POST_QUERY_OPERATIONS.MD)
 
@@ -450,7 +454,7 @@ import SalesItem from './types/entities/SalesItem';
 export default class SalesItemServiceImpl extends CrudEntityService implements SalesItemService {
   @AllowForEveryUser()
   getSalesItem({ _id }: _Id): PromiseErrorOr<One<SalesItem>> {
-    return this.dataStore.getEntityById(SalesItem, _id);
+    return this.dataStore.getEntityById(SalesItem, _id, new DefaultPostQueryOperationsImpl(), false);
   }
 
   @AllowForUserRoles(['admin', 'salesAdmin'])

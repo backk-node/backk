@@ -6,10 +6,10 @@ For getting your Backk development environment set up, please complete the [Prer
 ### Glossary
 
 | Term                          | Definition                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Client                        | Application using the microservice. Client can be e.g. web app or another microservice                                                                                                                                                                                                                                                                                                                                        |
 | Entity                        | A class that defines a database table structure for storing entities. Entity instances can be given as service function arguments and returned from service functions                                                                                                                                                                                                                                                         |
-| Root Entity                   | Entity class that has no parent entity. Root entity class must have an `_id` property. It should not have an `id` property, because only sub-entities have `id` property                                                                                                                                                                                                                                                      |     |
+| Root Entity                   | Entity class that has no parent entity. Root entity class must have an `_id` property. It should not have an `id` property, because only sub-entities have `id` property                                                                                                                                                                                                                                                      |
 | Sub-Entity                    | Entity class that has a parent entity. Sub-entity class must have an `id` property. It should not have an `_id` property, because only root entities has `_id` property.                                                                                                                                                                                                                                                      |
 | Microservice                  | Node.js Backk application running in pods in Kubernetes. Backk does not really care if you microservice is a real microservice or not. It can also be a mini-service or monolith, it is up to you, but in this documentation we always use a term 'microservice'.                                                                                                                                                             |
 | Microservice namespace        | Kubernetes namespace where microservice is running                                                                                                                                                                                                                                                                                                                                                                            |
@@ -34,7 +34,7 @@ For example if you have a sales item service:
 
 SalesItemService.ts
 
-```
+```ts
 import { Service} from 'backk';
 
 export interface SalesItemService extends Service {
@@ -44,7 +44,7 @@ export interface SalesItemService extends Service {
 
 SalesItemServiceImpl.ts
 
-```
+```ts
 import { CrudEntityService } from 'backk';
 
 export default class SalesItemServiceImpl extends CrudEntityService implements SalesItemService {
@@ -54,11 +54,11 @@ export default class SalesItemServiceImpl extends CrudEntityService implements S
 
 MicroserviceImpl.ts
 
-```
+```ts
 import { Microservice } from 'backk';
 
 export default class MicroserviceImpl extends Microservice {
-  private readonly salesItemService = new SalesItemServiceImpl()
+  private readonly salesItemService = new SalesItemServiceImpl();
 }
 ```
 

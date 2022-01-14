@@ -28,6 +28,8 @@ Below checks are from https://learnk8s.io/production-best-practices
 (X) Prevent containers from running as root
 (X) Limit container Linux capabilities
 (X) Prevent privilege escalation
+(X) In production environment, DB passwords length and strength is ensured
+(X) In production environment, Encryption key length and strength is checked
 
 COMPLETE BELOW CHECKS
 

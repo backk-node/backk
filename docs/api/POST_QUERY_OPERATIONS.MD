@@ -61,7 +61,7 @@ or an instance of your own class that extends `DefaultPostQueryOperationsImpl`, 
 ```ts
 class DefaultPostQueryOperationsImpl implements PostQueryOperations {
   constructor(pageNumber: number = 1, pageSize: number = 50) {
-    this.paginations = [new Pagination('*', 1, pageSize)];
+    this.paginations = [new Pagination('*', pageNumber, pageSize)];
   }
 
   @ArrayMinSize(0)

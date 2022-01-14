@@ -120,6 +120,10 @@ and read-write properties offer full access. Access mode decorators are:
 - `@CreateOnly()`
 - `@UpdateOnly()`
 
+Using entity access mode decorator helps you to avoid defining separate Data Transfer Objects (DTOs) in many cases.
+Because you can use the entity class as service function argument and response type. Depending on each entity property's
+access mode, entity property is either included or not in service function response or allowed to be either present or not in service function argument.
+
 You can document entity property by writing a comment above it:
 
 ```ts

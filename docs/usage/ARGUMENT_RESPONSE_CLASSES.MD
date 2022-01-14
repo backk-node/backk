@@ -59,9 +59,10 @@ class MyClass {
 }
 ```
 
-### Defining a Class with Property Composition
-
-You can make a class by composing its properties of one or more properties of another class.
+### Defining a Service Function Argument/Response Class with Property Composition
+You can make a service function argument or response class by composing its properties of one or more properties of another (source) class or classes (e.g. entity class).
+In this way, it is simpler to define the argument/response classes, i.e. Data Access Objects (DTOs). 
+If the source class(es) change, also the composed class will change automatically.
 To take advantage of this feature, you need to declare the class in special `.type` file.
 
 Below is an example of composing `PayOrderArg` service function argument class of some properties of `Order` entity class:

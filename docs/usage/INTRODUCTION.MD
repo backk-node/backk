@@ -11,13 +11,56 @@ For getting your Backk development environment set up, please complete the [Prer
 | Entity                        | A class that defines a database table structure for storing entities. Entity instances can be given as service function arguments and returned from service functions                                                                                                                                                                                                                                                         |
 | Root Entity                   | Entity class that has no parent entity. Root entity class must have an `_id` property. It should not have an `id` property, because only sub-entities have `id` property                                                                                                                                                                                                                                                      |     |
 | Sub-Entity                    | Entity class that has a parent entity. Sub-entity class must have an `id` property. It should not have an `_id` property, because only root entities has `_id` property.                                                                                                                                                                                                                                                      |
-| Microservice                  | Node.js Backk application running in pods in Kubernetes. Backk does not really care if you microservice is a real microservice or not. It can also be a mini-service or monolith, it is up to you, but in this documentation we always use a term 'microservice'.                                                                                                                                                                                                                                                                                                                                                                       |
+| Microservice                  | Node.js Backk application running in pods in Kubernetes. Backk does not really care if you microservice is a real microservice or not. It can also be a mini-service or monolith, it is up to you, but in this documentation we always use a term 'microservice'.                                                                                                                                                             |
 | Microservice namespace        | Kubernetes namespace where microservice is running                                                                                                                                                                                                                                                                                                                                                                            |
-| Namespaced microservice name  | Microservice name and Kubernetes namespace in format: <microservice-name>.<namespace>, for example: notification-service.platform
+| Namespaced microservice name  | Microservice name and Kubernetes namespace in format: <microservice-name>.<namespace>, for example: notification-service.platform                                                                                                                                                                                                                                                                                             |
 | Service                       | A constituent of Backk microservice. Backk microservice consists of one or more services. Service consist of an interface and at least one implementation class. For example: `SalesItemService` interface and `SalesItemServiceImpl` class. Service interface should declare service functions that service class(es) implement.                                                                                             |
 | Service function              | A method in a service interface/class. Service functions can be called by Backk clients. Service function is called by its name: `service-name.function-name`. Service name is the same as service interface name with lower case first letter. If there is `SalesItemService` interface, service name should be `salesItemService`. Function name is the name of the method. For example: `salesItemService.createSalesItem` |
-| Service function argument     | An instance of JavaScript class that is given as an argument to a service function. When client calls a service function over HTTP, argument is given in HTTP request body in JSON                                                                                                                                                                                                                                               |
+| Service function argument     | An instance of JavaScript class that is given as an argument to a service function. When client calls a service function over HTTP, argument is given in HTTP request body in JSON                                                                                                                                                                                                                                            |
 | Service function return value | Should be of type `PromiseErrorOr<T>`, where T can be `null` or Javascript object. When clients calls a service function over HTTP, return value (if not `null`) is returned in HTTP response body in JSON                                                                                                                                                                                                                    |
+
+### Naming Conventions
+
+The Backk microservice implementation class should be name `MicroserviceImpl`.
+The service interfaces of a Backk microservice should have a `Service` prefix.
+The service implementation classes should have a `ServiceImpl` prefix. There can be several different service implementation classes.
+The property name of the service instance in microservice class should have the same name as the service interface (with lower-case initial letter)
+
+For example if you have a sales item service:
+
+- `SalesItemService` is the name of the service interface
+- `SalesItemServiceImpl` is the name of the service implementation class
+- `salesItemService` is the property name of sales item service in microservice implementation class
+
+SalesItemService.ts
+
+```
+import { Service} from 'backk';
+
+export interface SalesItemService extends Service {
+  ...
+}
+```
+
+SalesItemServiceImpl.ts
+
+```
+import { CrudEntityService } from 'backk';
+
+export default class SalesItemServiceImpl extends CrudEntityService implements SalesItemService {
+  ...
+}
+```
+
+MicroserviceImpl.ts
+
+```
+import { Microservice } from 'backk';
+
+export default class MicroserviceImpl extends Microservice {
+  private readonly salesItemService = new SalesItemServiceImpl()
+}
+```
 
 ### Create Your First Service
 
@@ -122,6 +165,7 @@ If you service requires multiple data store, your service is not probably a micr
 your service into smaller pieces, so that each microservice requires only one data store to operate on.
 
 For the `CrudEntityService` class constructor, you need to give two parameters:
+
 - map of error definitions (or an empty object if the service does not raise any errors specific to business logic in your service functions)
 - dataStore
 
@@ -184,6 +228,7 @@ In addition to that, you need to define the allowed range of values with
 
 For each property you must define the access mode of the property. The access mode defines the visibility of the
 property to the clients of the microservice. The following [access mode decorators](../api/DECORATORS.MD#entity-property-decorators) are available:
+
 - `@Private()`
 - `@ReadWrite()`
 - `@ReadOnly()`
@@ -266,6 +311,7 @@ For the above service function, we use `@AllowForTests` decorator to indicate th
 can only be accessed when executing tests, it cannot be accessed by any clients at all.
 
 There are following possible [authorization decorators](../api/DECORATORS.MD#service-function-decorators) available for use:
+
 - `@AllowForEveryUser(isAuthenticationRequired: boolean)`
 - `@AllowForEveryUserForOwnResources()`
 - `@AllowForUserRoles(roles: string[])`

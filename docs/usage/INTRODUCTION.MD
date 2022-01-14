@@ -447,7 +447,7 @@ More information about post query operations is provided [here](../api/POST_QUER
 ### Implement rest of the SalesItemService
 
 ```ts
-import { _Id, AllowForEveryUser, AllowForUserRoles, CrudEntityService, PromiseErrorOr } from 'backk';
+import { _Id, AllowForEveryUser, AllowForUserRoles, CrudEntityService, DefaultPostQueryOperationsImpl, PromiseErrorOr } from 'backk';
 import SalesItemService from './SalesItemService';
 import SalesItem from './types/entities/SalesItem';
 

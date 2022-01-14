@@ -29,6 +29,9 @@ Creates a new entity `entity` of class `EntityClass` in the data store.
 
 Returns the created entity or error.
 
+Fetching entity for `options.postHook` uses `options.postQueryOperations`. If `options.postQueryOperations` is not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
+Instance of `DefaultPostQueryOperationsImpl` will fetch all entity fields, sort sub-entities by `id`, return the first page of sub-entities with page size of 50
+
 ### <a name="createEntities"></a> createEntities
 
 ```ts
@@ -54,3 +57,7 @@ Creates new entities `entities` of class `EntityClass` in the data store.
 `options.postQueryOperations` are applied to each query that returns the just created entity. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.  If not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
 
 Returns the created entities or error.
+
+Fetching entity for `options.postHook` uses `options.postQueryOperations`. If `options.postQueryOperations` is not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
+Instance of `DefaultPostQueryOperationsImpl` will fetch all entity fields, sort sub-entities by `id`, return the first page of sub-entities with page size of 50
+

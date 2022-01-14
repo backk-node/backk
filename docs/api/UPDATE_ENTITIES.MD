@@ -36,6 +36,9 @@ for example to notify other microservices about the operation. See [Hooks](HOOKS
 
 Returns nothing or error.
 
+Fetching entity for `options.entityPreHooks` or `options.postHook` uses `options.postQueryOperations`. If `options.postQueryOperations` is not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
+Instance of `DefaultPostQueryOperationsImpl` will fetch all entity fields, sort sub-entities by `id`, return the first page of sub-entities with page size of 50
+
 ### <a name="updateentitybyfilters"></a> updateEntityByFilters
 
 ```ts
@@ -67,6 +70,10 @@ if any of the pre-hooks fails, the whole update operation fails. See [Hooks](HOO
 for example to notify other microservices about the operation. See [Hooks](HOOKS.MD) for details.
 
 Returns nothing or error.
+
+Fetching entity for `options.entityPreHooks` or `options.postHook` uses `options.postQueryOperations`. If `options.postQueryOperations` is not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
+Instance of `DefaultPostQueryOperationsImpl` will fetch all entity fields, sort sub-entities by `id`, return the first page of sub-entities with page size of 50
+
 
 ### <a name="updateentitiesbyfilters"></a> updateEntitiesByFilters
 

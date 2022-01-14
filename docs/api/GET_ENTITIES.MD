@@ -26,7 +26,8 @@ export default class EntityCountRequest {
 
 Retrieves entities of class `EntityClass` from the data store.
 
-`postQueryOperations` defines which entity fields are retrieved, the sorting order of entities and pagination of entities. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details. If not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
+`postQueryOperations` defines which entity fields are retrieved, the sorting order of entities and pagination of entities. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+Instance of `DefaultPostQueryOperationsImpl` will fetch all entity fields, sort root entities with `_id` and sub-entities by `id`, return the first page of root entities and sub-entities with page size of 50
 
 `allowFetchingOnlyCurrentOrPreviousOrNextPage` specifies if client can fetch any page or only current, previous or next page.
 
@@ -72,7 +73,8 @@ interface DataStore {
 
 Retrieves the entity of class `EntityClass` identified by id `_id` from the data store.
 
-`postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of sub-entities and pagination of sub-entities. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details. If not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
+`postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of sub-entities and pagination of sub-entities. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+Instance of `DefaultPostQueryOperationsImpl` will fetch all entity fields, sort root entities with `_id` and sub-entities by `id`, return the first page of root entities and sub-entities with page size of 50
 
 `allowFetchingOnlyCurrentOrPreviousOrNextPage` specifies if client can fetch any page or only current, previous or next page.
 
@@ -103,7 +105,8 @@ interface DataStore {
 
 Retrieves the entities of class `EntityClass` identified by ids `_ids` from the data store.
 
-`postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of entities/sub-entities and pagination of entities/sub-entities. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details. If not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
+`postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of entities/sub-entities and pagination of entities/sub-entities. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+Instance of `DefaultPostQueryOperationsImpl` will fetch all entity fields, sort root entities with `_id` and sub-entities by `id`, return the first page of root entities and sub-entities with page size of 50.
 
 `allowFetchingOnlyCurrentOrPreviousOrNextPage` specifies if client can fetch any page or only current, previous or next page.
 
@@ -134,7 +137,8 @@ Retrieves the entity of class `EntityClass` matching filter(s) `filters` from th
 
 `filters` defines filter(s) for the query. See [Query Filters](QUERY_FILTERS.MD) for details.
 
-`postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of sub-entities and pagination of sub-entities. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details. If not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
+`postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of sub-entities and pagination of sub-entities. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+Instance of `DefaultPostQueryOperationsImpl` will fetch all entity fields, sort root entities with `_id` and sub-entities by `id`, return the first page of root entities and sub-entities with page size of 50
 
 `allowFetchingOnlyCurrentOrPreviousOrNextPage` specifies if client can fetch any page or only current, previous or next page.
 
@@ -171,7 +175,8 @@ Retrieves the entities of class `EntityClass` matching filter(s) `filters` from 
 
 `filters` defines filter(s) for the query. See [Query Filters](QUERY_FILTERS.MD) for details.
 
-`postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of sub-entities and pagination of sub-entities. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details. If not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
+`postQueryOperations` defines which entity/sub-entity fields are retrieved, the sorting order of sub-entities and pagination of sub-entities. See [PostQueryOperations](POST_QUERY_OPERATIONS.MD) for details.
+Instance of `DefaultPostQueryOperationsImpl` will fetch all entity fields, sort root entities with `_id` and sub-entities by `id`, return the first page of root entities and sub-entities with page size of 50
 
 `allowFetchingOnlyCurrentOrPreviousOrNextPage` specifies if client can fetch any page or only current, previous or next page.
 

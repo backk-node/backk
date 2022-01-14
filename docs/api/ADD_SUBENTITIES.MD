@@ -42,8 +42,8 @@ for example to notify other microservices about the operation. See [Hooks](HOOKS
 
 Returns nothing or error.
 
-Entity fetched for `options.entityPreHooks` or `options.postHook` uses `options.postQueryOperations`. If `options.postQueryOperations` is not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
-`DefaultPostQueryOperationsImpl` will fetch all entity fields, sort sub-entities by `id`, return the first page of sub-entities having page size of 50
+Fetching entity for `options.entityPreHooks` or `options.postHook` uses `options.postQueryOperations`. If `options.postQueryOperations` is not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
+Instance of `DefaultPostQueryOperationsImpl` will fetch all entity fields, sort sub-entities by `id`, return the first page of sub-entities with page size of 50
 
 ### <a name="addsubentitiestoentitybyfilters"></a> addSubEntitiesToEntityByFilters
 
@@ -86,5 +86,5 @@ for example to notify other microservices about the operation. See [Hooks](HOOKS
 
 Returns nothing or error.
 
-Entity fetched for `options.entityPreHooks` or `options.postHook` uses `options.postQueryOperations`. If `options.postQueryOperations` is not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
-`DefaultPostQueryOperationsImpl` will fetch all entity fields, sort sub-entities by `id`, return the first page of sub-entities having page size of 50
+Fetching entity for `options.entityPreHooks` or `options.postHook` uses `options.postQueryOperations`. If `options.postQueryOperations` is not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
+Instance of `DefaultPostQueryOperationsImpl` will fetch all entity fields, sort sub-entities by `id`, return the first page of sub-entities with page size of 50

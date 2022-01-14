@@ -44,6 +44,10 @@ if any of the pre-hooks fails, the whole delete operation fails. See [Hooks](HOO
 `options.postHook` is executed after the delete operation. If post-hook fails, the whole delete operation fails. A post-hook can be used
 for example to notify other microservices about the operation. See [Hooks](HOOKS.MD) for details.
 
+Fetching entity for `options.entityPreHooks` uses `options.postQueryOperations`. If `options.postQueryOperations` is not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
+Instance of `DefaultPostQueryOperationsImpl` will fetch all entity fields, sort sub-entities by `id`, return the first page of sub-entities with page size of 50
+
+
 Returns nothing or error.
 
 ### <a name="deleteentitiesbyids"></a> deleteEntitiesByIds
@@ -90,6 +94,10 @@ if any of the pre-hooks fails, the whole delete operation fails. See [Hooks](HOO
 for example to notify other microservices about the operation. See [Hooks](HOOKS.MD) for details.
 
 Returns nothing or error.
+
+Fetching entity for `options.entityPreHooks` uses `options.postQueryOperations`. If `options.postQueryOperations` is not supplied, instance of `DefaultPostQueryOperationsImpl` is used.
+Instance of `DefaultPostQueryOperationsImpl` will fetch all entity fields, sort sub-entities by `id`, return the first page of sub-entities with page size of 50
+
 
 ### <a name="deleteentitiesbyfilters"></a> deleteEntitiesByFilters
 

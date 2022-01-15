@@ -151,12 +151,12 @@ Let's create the interface of the service in `src/services/salesitem` directory:
 
 SalesItemService.ts
 ```ts
-import { Many, One, PromiseErrorOr, Service } from 'backk';
+import { DefaultPostQueryOperationsImpl, Many, One, PromiseErrorOr, Service } from 'backk';
 import SalesItem from './types/entities/SalesItem';
 
 export interface SalesItemService extends Service {
   createSalesItem(salesItem: SalesItem): PromiseErrorOr<One<SalesItem>>;
-  getSalesItems(): PromiseErrorOr<Many<SalesItem>>;
+  getSalesItems(postQueryOperations: DefaultPostQueryOperationsImpl): PromiseErrorOr<Many<SalesItem>>;
 }
 ```
 
@@ -177,8 +177,8 @@ export default class SalesItemServiceImpl extends CrudEntityService implements S
     return this.dataStore.createEntity(SalesItem, salesItem);
   }
   
-  getSalesItems(): PromiseErrorOr<Many<SalesItem>> {
-    return this.dataStore.getAllEntities(SalesItem, new DefaultPostQueryOperationsImpl(), false);
+  getSalesItems(postQueryOperations: DefaultPostQueryOperationsImpl): PromiseErrorOr<Many<SalesItem>> {
+    return this.dataStore.getAllEntities(SalesItem, postQueryOperations, false);
   }
 }
 ```
@@ -243,6 +243,13 @@ Content-Type: application/json
 And then we can get the created entities with an HTTP POST request to `salesItemService.getSalesItems`:
 ```
 POST /salesItemService.getSalesItems
+Content-Type: application/json
+
+{
+  includeResponseFields: ['_id', 'name'],
+  sortBys: [{ fieldName: '_id', sortDirection: 'DESC' }],
+  paginations: [{ pageNumber: 1, pageSize: 2 }]
+}
 ```
 
 And the response will be:
@@ -254,14 +261,12 @@ Content-Type: application/json
   metadata: {}
   data: [
     {
-      "_id": "1",
-      "name": "Sales item 1",
-      "price": 49.95
+      "_id": "2",
+      "name": "Sales item 2"
     },
     {
-      "_id": "2",
-      "name": "Sales item 2",
-      "price": 89.95
+      "_id": "1",
+      "name": "Sales item 1"
     }
   ]
 }

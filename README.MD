@@ -292,6 +292,25 @@ Content-Type: application/json
 }
 ```
 
+You can also achieve the same as above using `excludeResponseFields`:
+
+```ts
+const excludeResponseFields = [`
+{
+  price  
+}
+`]
+```
+
+```
+POST /salesItemService.getSalesItems
+Content-Type: application/json
+
+{
+  "excludeResponseFields": <value-from-above-excludeResponseFields-variable>,
+}
+```
+
 ## <a name="example-backk-microservice"></a> Example Backk Microservice
 
 If you want to dive right into the deep end, check out the [Backk example microservice.](https://github.com/backk-node/backk-example-microservice)

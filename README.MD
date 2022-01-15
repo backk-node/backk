@@ -274,14 +274,16 @@ Content-Type: application/json
 
 You can also use GraphQL style syntax in `includeResponseFields`:
 
-```
+```ts
 const includeResponseFields = [`
 {
   _id
   name  
 }
 `]
+```
 
+```
 POST /salesItemService.getSalesItems
 Content-Type: application/json
 
@@ -289,7 +291,6 @@ Content-Type: application/json
   "includeResponseFields": <value-from-above-includeResponseFields-variable>,
 }
 ```
-
 
 ## <a name="example-backk-microservice"></a> Example Backk Microservice
 

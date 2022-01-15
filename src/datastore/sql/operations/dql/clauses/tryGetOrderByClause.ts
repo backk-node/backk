@@ -4,6 +4,7 @@ import createErrorFromErrorCodeMessageAndStatus from '../../../../../errors/crea
 import SortBy from '../../../../../types/postqueryoperations/SortBy';
 import AbstractSqlDataStore from '../../../../AbstractSqlDataStore';
 import tryGetProjection from './tryGetProjection';
+import assertIsColumnName from "../../../../../assertions/assertIsColumnName";
 
 export default function tryGetOrderByClause<T>(
   dataStore: AbstractSqlDataStore,
@@ -25,6 +26,7 @@ export default function tryGetOrderByClause<T>(
 
       let projection;
       if (sortBy.fieldName) {
+        assertIsColumnName(sortBy.fieldName);
         try {
           projection = tryGetProjection(
             dataStore,

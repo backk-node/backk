@@ -10,12 +10,13 @@
 
 - Encryption
   - Automatic personally identifiable information (PII) encryption and hashing in data store
-    - Backk will automatically encrypt a database table column using AES-256-CBC, if its name implies personally identifiable information.
+    - Backk will automatically encrypt a database table column using AES-256-CBC, if its name implies personally identifiable information (PII).
     - Backk will automatically hash password fields with Argon2
+    - In production environment, Backk will assert that encryption key is long and strong enough
 
 - Denial of service (DoS) and Regular Expression Denial of Service (ReDoS) prevention
   - Request rate limiting
-    - Backk microservice comes with a default configuration of rate limiting at Kubernetes cluster edge 
+    - Backk microservice comes with a default configuration of rate limiting at Kubernetes cluster edge for Ambassador Edge Stack
   - Mandatory request content maximum length checking
     - It is mandatory to provide a value for maximum request content length in environment variable `MAX_REQUEST_CONTENT_LENGTH_IN_BYTES`
   - Mandatory numeric value range limitation
@@ -43,6 +44,7 @@
 
 - Databases
   - MongoDB cannot be run without authentication in production environment
+  - In production environment, Backk will assert that database password is long and strong enough
   
 - SQL injection and data sniffing prevention
   - Service function response validation

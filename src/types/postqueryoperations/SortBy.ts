@@ -9,10 +9,11 @@ export default class SortBy {
   constructor(subEntityPath: string, fieldNameOrSortExpression: string, sortDirection: 'ASC' | 'DESC') {
     this.subEntityPath = subEntityPath;
     try {
-      assertIsColumnName(fieldNameOrSortExpression, '');
+      assertIsColumnName(fieldNameOrSortExpression);
       this.fieldName = fieldNameOrSortExpression;
     } catch {
       this.sortExpression = fieldNameOrSortExpression;
+      this.fieldName = '';
     }
     this.sortDirection = sortDirection;
   }

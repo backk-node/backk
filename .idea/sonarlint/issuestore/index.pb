@@ -350,8 +350,6 @@ z
 Jsrc/services/crudentity/assertFunctionNamesAreValidForCrudEntityService.ts,f/1/f12c227b09aa1f1fdc63cf8330d2684463adfce7
 W
 'src/subscription/subscriptionManager.ts,0/2/02ba7e3b92f92172d0f6afbabec611bd9dfff73d
-O
-docs/OWASP_TOP_TEN_CHECKLIST.MD,f/7/f7e07f41d07950c8ed08e26bb67993ed4f0f54b1
 e
 5src/decorators/typeproperty/datetime/IsDateBetween.ts,7/a/7a9209dbf8c49ed6ab55e006e43fa169a70fe49e
 m

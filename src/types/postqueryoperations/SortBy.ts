@@ -1,13 +1,19 @@
-import { IsIn, IsOptional, IsString, MaxLength } from "class-validator";
-import MaxLengthAndMatches from "../../decorators/typeproperty/MaxLengthAndMatches";
-import { Lengths } from "../../constants/constants";
-import LengthAndMatches from "../../decorators/typeproperty/LengthAndMatches";
-import IsAnyString from "../../decorators/typeproperty/IsAnyString";
+import { IsIn, IsOptional, IsString, MaxLength } from 'class-validator';
+import assertIsColumnName from '../../assertions/assertIsColumnName';
+import { Lengths } from '../../constants/constants';
+import IsAnyString from '../../decorators/typeproperty/IsAnyString';
+import LengthAndMatches from '../../decorators/typeproperty/LengthAndMatches';
+import MaxLengthAndMatches from '../../decorators/typeproperty/MaxLengthAndMatches';
 
 export default class SortBy {
-  constructor(subEntityPath: string, fieldName: string, sortDirection: 'ASC' | 'DESC') {
+  constructor(subEntityPath: string, fieldNameOrSortExpression: string, sortDirection: 'ASC' | 'DESC') {
     this.subEntityPath = subEntityPath;
-    this.fieldName = fieldName;
+    try {
+      assertIsColumnName(fieldNameOrSortExpression, '');
+      this.fieldName = fieldNameOrSortExpression;
+    } catch {
+      this.sortExpression = fieldNameOrSortExpression;
+    }
     this.sortDirection = sortDirection;
   }
 

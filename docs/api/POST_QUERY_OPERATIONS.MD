@@ -129,6 +129,12 @@ included:
 const includeResponseFields = ['_id', 'orderItems']
 ```
 
+If the service function response includes current page token(s) in the `metadata` object of the response,
+you need to supply the same tokens in the post query operations. This is needed in case of data store operation
+allows only fetching current, next or previous page of data. There is a parameter in data store get-methods to specify
+if the data store method should allow requesting only current, previous or next page of data. In many cases, it is useful
+to limit page access to avoid excessive load and long-running queries for the database.
+
 ### <a name="graphql-json-support"></a> GraphQL and JSON support for including/excluding response fields
 
 `includeResponseFields` and `excludeResponseFields` can contain a GraphQL query format string, for example:

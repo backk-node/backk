@@ -246,9 +246,9 @@ POST /salesItemService.getSalesItems
 Content-Type: application/json
 
 {
-  includeResponseFields: ['_id', 'name'],
-  sortBys: [{ fieldName: '_id', sortDirection: 'DESC' }],
-  paginations: [{ pageNumber: 1, pageSize: 2 }]
+  "includeResponseFields": ["_id", "name"],
+  "sortBys": [{ "fieldName": "_id", "sortDirection": "DESC" }],
+  "paginations": [{ "pageNumber": 1, "pageSize": 2 }]
 }
 ```
 
@@ -271,6 +271,25 @@ Content-Type: application/json
   ]
 }
 ```
+
+You can also use GraphQL style syntax in `includeResponseFields`:
+
+```
+const includeResponseFields = [`
+{
+  _id
+  name  
+}
+`]
+
+POST /salesItemService.getSalesItems
+Content-Type: application/json
+
+{
+  "includeResponseFields": <value-from-above-includeResponseFields-variable>,
+}
+```
+
 
 ## <a name="example-backk-microservice"></a> Example Backk Microservice
 

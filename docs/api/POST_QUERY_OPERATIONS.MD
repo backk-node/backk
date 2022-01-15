@@ -137,10 +137,13 @@ to limit page access to avoid excessive load and long-running queries for the da
 
 ### <a name="graphql-json-support"></a> GraphQL and JSON support for including/excluding response fields
 
-`includeResponseFields` and `excludeResponseFields` can contain a GraphQL query format string, for example:
+`includeResponseFields` and `excludeResponseFields` can contain a GraphQL query format string.
+In case of GraphQL query string you, the `includeResponseFields` and `excludeResponseFields` arrays should contain only one element.
+For example:
 
 ```
-postQueryOperations.includeResponseFields = `{
+postQueryOperations.includeResponseFields = [`
+{
   _id
   createdAtTimestamp
   orderItems {
@@ -149,15 +152,18 @@ postQueryOperations.includeResponseFields = `{
       title
     }
   }
-}`
+}
+`]
 ```
 
 `includeResponseFields` and `excludeResponseFields` can contain a GraphQL query format string as JSON.
+In case of JSON query string you, the `includeResponseFields` and `excludeResponseFields` arrays should contain only one element.
 It is easier for clients to maintain query object as a plain JavaScript object instead of GraphQL query.
 For example:
 
 ```
-postQueryOperations.includeResponseFields = JSON.stringfy({
+postQueryOperations.includeResponseFields = [JSON.stringfy(
+{
   _id: true,
   createdAtTimestamp: true
   orderItems: {
@@ -166,5 +172,6 @@ postQueryOperations.includeResponseFields = JSON.stringfy({
       title: true
     }
   }
-});
+}
+)];
 ```

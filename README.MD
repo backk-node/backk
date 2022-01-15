@@ -275,12 +275,12 @@ Content-Type: application/json
 You can also use GraphQL style syntax in `includeResponseFields`:
 
 ```ts
-const includeResponseFields = [`
+const includeResponseFields = JSON.stringify([`
 {
   _id
   name  
 }
-`]
+`]);
 ```
 
 ```
@@ -295,11 +295,11 @@ Content-Type: application/json
 You can also achieve the same as above using `excludeResponseFields`:
 
 ```ts
-const excludeResponseFields = [`
+const excludeResponseFields = JSON.stringify([`
 {
   price  
 }
-`]
+`]);
 ```
 
 ```
@@ -310,6 +310,28 @@ Content-Type: application/json
   "excludeResponseFields": <value-from-above-excludeResponseFields-variable>,
 }
 ```
+
+You can also use just JSON instead of GraphQL query. This is an easier solution when you have the list of wanted
+fields stored in Javascript object, then you can just use that object directly:
+
+```ts
+const includeResponseFields = JSON.stringify([
+{
+  _id: true,
+  name: true  
+}
+]);
+```
+
+```
+POST /salesItemService.getSalesItems
+Content-Type: application/json
+
+{
+  "includeResponseFields": <value-from-above-includeResponseFields-variable>,
+}
+```
+
 
 ## <a name="example-backk-microservice"></a> Example Backk Microservice
 

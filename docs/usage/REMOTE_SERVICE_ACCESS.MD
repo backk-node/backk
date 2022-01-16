@@ -128,7 +128,8 @@ There are three different ways to access asynchronously remote Backk microservic
 3. Access multiple remote Backk microservices via Kafka inside a transaction.
 
 #### <a name="sendtokafka"></a> Send to Remote Backk Microservice via Kafka
-Sending service function call request to a remote Backk microservice can be achieved with a call to `sendToRemoteService` function.
+Sending a service function request to a remote Backk microservice via Kafka can be achieved with a call to `sendToRemoteService` function with `communicationMethod` of `kafka`.
+The remote Backk microservice should have a [`KafkaConsumer` request processor](../api/MICROSERVICE_INITIALIZATION.MD#kafka-consumer) running for consuming service function request from other Backk microservices.
 
 ```ts
 async function sendToRemoteService(
@@ -189,7 +190,8 @@ The seventh argument of `sendToRemoteService` function specifies the response de
 response from the async remote service function call.
 
 #### <a name="sendtoredis"></a> Send to Remote Backk Microservice via Redis
-Sending service function call request to a remote Backk microservice can be achieved with a call to `sendToRemoteService` function.
+Sending service function request to a remote Backk microservice via Redis can be achieved with a call to `sendToRemoteService` function with `communicationMethod` of `redis`.
+The remote Backk microservice should have a [`RedisConsumer` request processor](../api/MICROSERVICE_INITIALIZATION.MD#redis-consumer) running for consuming service function request from other Backk microservices.
 
 ```ts
 async function sendToRemoteService(

@@ -78,6 +78,8 @@ Additional default topic configuration can be supplied with `defaultTopicConfig`
 
 `additionalTopics` specifies a list of topic names that the Kafka consumer will listen to. If these topics don't exist, they won't be created automatically.
 
+You can send service function requests from remote Backk microservices for the Kafka consumer using [`sendToRemoteService`](REMOTE_SERVICE_ACCESS.MD#sendtoremoteservice) function
+
 ### <a name="redis-consumer"></a> RedisConsumer
 
 ```typescript
@@ -88,3 +90,6 @@ class RedisConsumer extends AbstractAsyncRequestProcessor {
 Represents a Redis consumer for the microservice.
 Redis server is defined with environment variables `REDIS_HOST` and `REDIS_PORT`. If the environment variables are not defined, an exception will be thrown.
 Redis consumer is consuming from the head of a list (LPOP) with a key named: `<microservice-name>.<service-namespace>`, e.g. `my-microservice.default` or `notification-service.platform`
+
+You can send service function requests from remote Backk microservices for the Redis consumer using [`sendToRemoteService`](REMOTE_SERVICE_ACCESS.MD#sendtoremoteservice) function
+

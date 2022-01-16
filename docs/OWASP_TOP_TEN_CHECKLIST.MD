@@ -30,10 +30,10 @@
 ### A02:2021 – Cryptographic Failures
 
  - Is any data transmitted in clear text? This concerns protocols such as HTTP, SMTP, FTP also using TLS upgrades like STARTTLS. External internet traffic is hazardous. Verify all internal traffic, e.g., between load balancers, web servers, or back-end systems.
-   - Backk platform in Kubernetes should implement TLS both internally inside the cluster using a service mesh and TLS termination for external clients in the API Gateway
+   - Your platform in Kubernetes should implement TLS both internally inside the cluster using a service mesh and TLS termination for external clients in the API Gateway
 
  - Are default crypto keys in use, weak crypto keys generated or re-used, or is proper key management or rotation missing? Are crypto keys checked into source code repositories
-   - In Production environment, Encryption key for Backk microservice must pass length and strength checks
+   - In Production environment, encryption key for Backk microservice must pass length and strength checks
 
  - Is encryption not enforced, e.g., are any HTTP headers (browser) security directives or headers missing?
    - Each Backk microservice request response has Strict Transport Security header set with max-age to max integer value
@@ -66,8 +66,7 @@
    - Backk validates all input data (service function arguments) using mandatory validation annotations
    
  - Dynamic queries or non-parameterized calls without context-aware escaping are used directly in the interpreter
-   - Backk uses ORM and SQL prepared statements to implement it
-   - Dynamic SQL queries cannot be supplied by clients
+   - Backk uses ORM and SQL prepared statements to implement queries
 
  - Hostile data is used within object-relational mapping (ORM) search parameters to extract additional, sensitive records
    - Backk microservice does not allow user defined (= client originated) dynamic queries to query any non-readable entity fields
@@ -96,22 +95,22 @@
  - Segregate tenants robustly by design throughout all tiers
 
  - Limit resource consumption by user or service
-   - Backk microservice defines default request rate limiting for services exposed to external clients
-   - Each Backk microservice has limits set on CPU and memory usage
+   - Backk microservice defines default request rate limiting for services exposed to external clients (in case of using Ambassador Edge Stack)
+   - Each Backk microservice has limits set on CPU and memory usage by default
 
 ### A05:2021 – Security Misconfiguration
  
  - Missing appropriate security hardening across any part of the application stack or improperly configured permissions on cloud services.
-   - Backk microservice runs in a distro-less container with non-root user. Privilege escalation is not allowed and all linux capabilities are dropped by default
+   - Backk microservice runs in a distro-less non-privileged container with non-root user. Privilege escalation is not allowed and all linux capabilities are dropped by default. Container has read-only filesystem.
 
  - Unnecessary features are enabled or installed (e.g., unnecessary ports, services, pages, accounts, or privileges)
-   - Backk microservice runs in a distro-less container with non-root user. Privilege escalation is not allowed and all linux capabilities are dropped by default
+   - Backk microservice runs in a distro-less non-privileged container with non-root user. Privilege escalation is not allowed and all linux capabilities are dropped by default. Container has read-only filesystem.
 
  - Default accounts and their passwords are still enabled and unchanged.
-   - Backk microservice database user passwords are randomly generated upon installation with Helm chart
+   - Backk microservice database user passwords have length and strength checks in production environment
 
  - Error handling reveals stack traces or other overly informative error messages to users.
-   - In production environment, Backk microservices never send clients stack traces.
+   - In production environment, Backk microservices never send stack traces to clients.
 
  - For upgraded systems, the latest security features are disabled or not configured securely.
 
@@ -119,7 +118,7 @@
    - Databases are secured with password and mTLS by service mesh. Redis cache is secured by authentication in production.
 
  - The server does not send security headers or directives, or they are not set to secure values.
-   - Backk microservice sends HTTP response headers:
+   - Backk microservice sends following HTTP response headers:
      - X-Content-Type-Options: nosniff
      - Strict-Transport-Security: max-age: <max-integer-value>; includeSubDomains
      - X-Frame-Options: DENY
@@ -127,10 +126,9 @@
      - Content-Type: application/json
      - If caching is not specifically enabled and configured, following header is set: Cache-Control: no-store
      - Access-Control-Allow-Origin: https://<api-gateway-fqdn>
-
-
+     
  - The software is out of date or vulnerable (see A06:2021-Vulnerable and Outdated Components).
-   - Backk recommends Continuous Vulnerability Scan pipeline as part of DevSecOps, where each latest microservice container is scanned for possible vulnerabilities at regular intervals (e.g. every night)
+   - It is recommended to have a Continuous Vulnerability Scan pipeline as part of DevSecOps, where each latest microservice container is scanned for possible vulnerabilities at regular intervals (e.g. every night)
    
    
 ### A06:2021 – Vulnerable and Outdated Components
@@ -147,8 +145,8 @@
 
 - If you do not secure the components’ configurations (see A05:2021-Security Misconfiguration).
 
-For all above:  Backk recommends Continuous Vulnerability Scan pipeline as part of DevSecOps, where each latest microservice container is scanned for possible vulnerabilities at regular intervals (e.g. every night).
-Found "Critical" and "High" level vulnerabilities should trigger a creation of issue that should be fixed with appropriate schedule.
+For all above:  It is recommended to have a Continuous Vulnerability Scan pipeline as part of DevSecOps, where each latest microservice container is scanned for possible vulnerabilities at regular intervals (e.g. every night).
+Found "Critical" and "High" level vulnerabilities should trigger a pipeline failure.
 
 ### A07:2021 – Identification and Authentication Failures
 
@@ -188,7 +186,7 @@ Found "Critical" and "High" level vulnerabilities should trigger a creation of i
 - Ensure libraries and dependencies, such as npm or Maven, are consuming trusted repositories. If you have a higher risk profile, consider hosting an internal known-good repository that's vetted.
 
 - Ensure that a software supply chain security tool, such as OWASP Dependency Check or OWASP CycloneDX, is used to verify that components do not contain known vulnerabilities
-  - Backk recommends Continuous Vulnerability Scan pipeline as part of DevSecOps, where each latest microservice container is scanned for possible vulnerabilities at regular intervals (e.g. every night)
+  - It is recommended to have a Continuous Vulnerability Scan pipeline as part of DevSecOps, where each latest microservice container is scanned for possible vulnerabilities at regular intervals (e.g. every night)
 
 - Ensure that there is a review process for code and configuration changes to minimize the chance that malicious code or configuration could be introduced into your software pipeline.
   - Rely on your source code repository tools, like GitLab Merge request or GitHub pull request for committing to the main branch.
@@ -208,7 +206,7 @@ Found "Critical" and "High" level vulnerabilities should trigger a creation of i
 
 - Auditable events, such as logins, failed logins, and high-value transactions, are not logged.
   - Ensure that needed events are properly logged by your IAM service (e.g. Keycloak)
-  - Backk microservice must define AuditLogService implementation to enable audit logging.
+  - Backk microservice should define AuditLogService implementation to enable audit logging.
   - Backk microservice audit logs events related to service function calls for a service that extends `UserAccountBaseService`
   - Backk microservice can audit log service function calls by annotating service function with `@AuditLog()` decorator.
 
@@ -218,16 +216,16 @@ Found "Critical" and "High" level vulnerabilities should trigger a creation of i
 - Logs of applications and APIs are not monitored for suspicious activity.
 
 - Logs are only stored locally.
-  - Backk platform stores microservice logs to Elasticsearch in Kubernetes cluster.
+  - Your platform should store microservice logs to Elasticsearch in Kubernetes cluster.
 
 - Appropriate alerting thresholds and response escalation processes are not in place or effective.
-  - System operators should create proper alerting using Prometheus AlertManager and forward alerts to an appropriate system like PagerDuty
+  - System admins should create proper alerting using Prometheus AlertManager and forward alerts to an appropriate system like PagerDuty
 
 - Penetration testing and scans by dynamic application security testing (DAST) tools (such as OWASP ZAP) do not trigger alerts.
   - OWASP ZAP API scan should be done as part of Backk microservice CI pipeline.
 
 - The application cannot detect, escalate, or alert for active attacks in real-time or near real-time.
-  - System operators should create proper alerting using Prometheus AlertManager and forward alerts to an appropriate system like PagerDuty
+  - System admins should create proper alerting using Prometheus AlertManager and forward alerts to an appropriate system like PagerDuty
 
 ### A10:2021 – Server-Side Request Forgery (SSRF)
 

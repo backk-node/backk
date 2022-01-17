@@ -52,7 +52,7 @@ Data store connection parameters are defined with following environment variable
  | MONGODB_TLS_CA_FILE_PATH_NAME | Full path name to file containing PEM encoded CA certificates to trust                                                                                |
  | MONGODB_TLS_CERT_KEY_FILE_PATH_NAME | Full path name of the client certificate file or the client private key file, in the case that they both are needed, the files should be concatenated |
 
-### <a name="methods></a> Methods
+### <a name="methods></a> Data Store Methods
 
 Data store provide following method groups for fetching or manipulating entities in data store:
 
@@ -63,6 +63,8 @@ Data store provide following method groups for fetching or manipulating entities
 - [Add Sub-Entities](../api/ADD_SUBENTITIES.MD)
 - [Remove Sub-Entities](../api/REMOVE_SUBENTITIES.MD)
 - [Add/Check/Remove Entity's Primitive Array Field Values](../api/ENTITY_ARRAYS.MD)
+- [Execute Custom SQL Operation](../api/EXECUTE_CUSTOM_SQL.MD)
+- [Execute Custom MongoDB Operation](../api/EXECUTE_CUSTOM_SQL.MD)
 
 If you are using multiple of the manipulating data store methods inside a single service function call,
 Backk will throw an exception, unless those method calls are wrapped in [`executeInsideTransaction`](../api/ABSTRACT_DATA_STORE.MD#executeinsidetransaction) call.

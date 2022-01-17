@@ -7,6 +7,8 @@
 - [Add Sub-Entities](ADD_SUBENTITIES.MD)
 - [Remove Sub-Entities](REMOVE_SUBENTITIES.MD)
 - [Add/Check/Remove Entity's Primitive Array Field Values](ENTITY_ARRAYS.MD)
+- [Execute Custom SQL Operation](EXECUTE_CUSTOM_SQL.MD)
+- [Execute Custom MongoDB Operation](EXECUTE_CUSTOM_SQL.MD)
 - [Hooks](HOOKS.MD)
 - [Query Filters](QUERY_FILTERS.MD)
 - [Post Query Operations](POST_QUERY_OPERATIONS.MD)

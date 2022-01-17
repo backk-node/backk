@@ -1,45 +1,45 @@
-import SqlFilter from './sql/filters/SqlFilter';
-import { DataStore, Field, Many, One, QueryFilters } from './DataStore';
-import createEntity from './sql/operations/dml/createEntity';
-import getEntitiesByFilters from './sql/operations/dql/getEntitiesByFilters';
-import getEntitiesCount from './sql/operations/dql/getEntitiesCount';
-import getEntityById from './sql/operations/dql/getEntityById';
-import updateEntity from './sql/operations/dml/updateEntity';
-import deleteEntityById from './sql/operations/dml/deleteEntityById';
-import removeSubEntities from './sql/operations/dml/removeSubEntities';
-import deleteAllEntities from './sql/operations/dml/deleteAllEntities';
-import getEntitiesByIds from './sql/operations/dql/getEntitiesByIds';
-import { RecursivePartial } from '../types/RecursivePartial';
-import { PreHook } from './hooks/PreHook';
-import { BackkEntity } from '../types/entities/BackkEntity';
-import { PostQueryOperations } from '../types/postqueryoperations/PostQueryOperations';
-import defaultServiceMetrics from '../observability/metrics/defaultServiceMetrics';
-import createBackkErrorFromError from '../errors/createBackkErrorFromError';
-import log, { Severity } from '../observability/logging/log';
-import addSubEntities from './sql/operations/dml/addSubEntities';
-import startDbOperation from './utils/startDbOperation';
-import recordDbOperationDuration from './utils/recordDbOperationDuration';
-import { getNamespace } from 'cls-hooked';
-import UserDefinedFilter from '../types/userdefinedfilters/UserDefinedFilter';
-import getAllEntities from './sql/operations/dql/getAllEntities';
-import { SubEntity } from '../types/entities/SubEntity';
-import deleteEntitiesByFilters from './sql/operations/dml/deleteEntitiesByFilters';
-import MongoDbFilter from './mongodb/MongoDbFilter';
-import { PostHook } from './hooks/PostHook';
-import { PromiseErrorOr } from '../types/PromiseErrorOr';
-import updateEntitiesByFilters from './sql/operations/dml/updateEntitiesByFilters';
-import { EntityPreHook } from './hooks/EntityPreHook';
-import removeSubEntitiesByFilters from './sql/operations/dml/removeSubEntitiesByFilters';
-import addFieldValues from './sql/operations/dml/addFieldValues';
-import removeFieldValues from './sql/operations/dml/removeFieldValues';
-import addSubEntitiesByFilters from './sql/operations/dml/addSubEntitiesByFilters';
-import { EntitiesPostHook } from './hooks/EntitiesPostHook';
-import getEntityByFilters from './sql/operations/dql/getEntityByFilters';
-import deleteEntityByFilters from './sql/operations/dml/deleteEntityByFilters';
-import updateEntityByFilters from './sql/operations/dml/updateEntityByFilters';
-import doesEntityArrayFieldContainValue from './sql/operations/dql/doesEntityArrayFieldContainValue';
-import EntityCountRequest from '../types/EntityCountRequest';
-import AbstractDataStore from './AbstractDataStore';
+import SqlFilter from "./sql/filters/SqlFilter";
+import { Field, Many, One, QueryFilters } from "./DataStore";
+import createEntity from "./sql/operations/dml/createEntity";
+import getEntitiesByFilters from "./sql/operations/dql/getEntitiesByFilters";
+import getEntitiesCount from "./sql/operations/dql/getEntitiesCount";
+import getEntityById from "./sql/operations/dql/getEntityById";
+import updateEntity from "./sql/operations/dml/updateEntity";
+import deleteEntityById from "./sql/operations/dml/deleteEntityById";
+import removeSubEntities from "./sql/operations/dml/removeSubEntities";
+import deleteAllEntities from "./sql/operations/dml/deleteAllEntities";
+import getEntitiesByIds from "./sql/operations/dql/getEntitiesByIds";
+import { RecursivePartial } from "../types/RecursivePartial";
+import { PreHook } from "./hooks/PreHook";
+import { BackkEntity } from "../types/entities/BackkEntity";
+import { PostQueryOperations } from "../types/postqueryoperations/PostQueryOperations";
+import defaultServiceMetrics from "../observability/metrics/defaultServiceMetrics";
+import createBackkErrorFromError from "../errors/createBackkErrorFromError";
+import log, { Severity } from "../observability/logging/log";
+import addSubEntities from "./sql/operations/dml/addSubEntities";
+import startDbOperation from "./utils/startDbOperation";
+import recordDbOperationDuration from "./utils/recordDbOperationDuration";
+import { getNamespace } from "cls-hooked";
+import UserDefinedFilter from "../types/userdefinedfilters/UserDefinedFilter";
+import getAllEntities from "./sql/operations/dql/getAllEntities";
+import { SubEntity } from "../types/entities/SubEntity";
+import deleteEntitiesByFilters from "./sql/operations/dml/deleteEntitiesByFilters";
+import MongoDbFilter from "./mongodb/MongoDbFilter";
+import { PostHook } from "./hooks/PostHook";
+import { PromiseErrorOr } from "../types/PromiseErrorOr";
+import updateEntitiesByFilters from "./sql/operations/dml/updateEntitiesByFilters";
+import { EntityPreHook } from "./hooks/EntityPreHook";
+import removeSubEntitiesByFilters from "./sql/operations/dml/removeSubEntitiesByFilters";
+import addFieldValues from "./sql/operations/dml/addFieldValues";
+import removeFieldValues from "./sql/operations/dml/removeFieldValues";
+import addSubEntitiesByFilters from "./sql/operations/dml/addSubEntitiesByFilters";
+import { EntitiesPostHook } from "./hooks/EntitiesPostHook";
+import getEntityByFilters from "./sql/operations/dql/getEntityByFilters";
+import deleteEntityByFilters from "./sql/operations/dml/deleteEntityByFilters";
+import updateEntityByFilters from "./sql/operations/dml/updateEntityByFilters";
+import doesEntityArrayFieldContainValue from "./sql/operations/dql/doesEntityArrayFieldContainValue";
+import EntityCountRequest from "../types/EntityCountRequest";
+import AbstractDataStore from "./AbstractDataStore";
 import assertThatPostQueryOperationsAreValid from "../assertions/assertThatPostQueryOperationsAreValid";
 
 export default abstract class AbstractSqlDataStore extends AbstractDataStore {
@@ -294,15 +294,15 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   }
 
-  async tryExecuteQuery(sqlStatement: string, values?: any[]): Promise<any> {
+  async tryExecuteQuery(sqlQueryStatement: string, values?: any[]): Promise<any> {
     if (this.getClsNamespace()?.get('remoteServiceCallCount') > 0) {
       this.getClsNamespace()?.set('dataStoreOperationAfterRemoteServiceCall', true);
     }
 
-    log(Severity.DEBUG, 'Database DQL operation', sqlStatement);
+    log(Severity.DEBUG, 'Database DQL operation', sqlQueryStatement);
 
     try {
-      const response = await this.executeSql(this.getClsNamespace()?.get('connection'), sqlStatement, values);
+      const response = await this.executeSql(this.getClsNamespace()?.get('connection'), sqlQueryStatement, values);
 
       if (this.firstDbOperationFailureTimeInMillis) {
         this.firstDbOperationFailureTimeInMillis = 0;
@@ -325,7 +325,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
         defaultServiceMetrics.incrementDbOperationErrorsByOne(this.getDataStoreType(), this.getDbHost());
 
         log(Severity.ERROR, error.message, error.stack ?? '', {
-          sqlStatement,
+          sqlStatement: sqlQueryStatement,
           function: `${this.constructor.name}.tryExecuteQuery`
         });
       }

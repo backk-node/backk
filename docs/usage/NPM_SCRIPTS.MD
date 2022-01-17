@@ -33,3 +33,8 @@
 | helm:package            | Packages the Helm chart                                                                                                                                                                                      |
 | helm:install            | Installs a Helm release to Minikube using the packaged Helm chart                                                                                                                                            |
 | helm:uninstall          | Uninstalls the Helm release from Minikube                                                                                                                                                                    |
+
+
+For docker scripts, you need to install Docker for Mac/Windows.
+For helm scripts, you need to install Helm.
+For Minikube scripts, you need to install Minikube

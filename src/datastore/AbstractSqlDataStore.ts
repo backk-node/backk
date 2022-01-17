@@ -40,6 +40,7 @@ import updateEntityByFilters from './sql/operations/dml/updateEntityByFilters';
 import doesEntityArrayFieldContainValue from './sql/operations/dql/doesEntityArrayFieldContainValue';
 import EntityCountRequest from '../types/EntityCountRequest';
 import AbstractDataStore from './AbstractDataStore';
+import assertThatPostQueryOperationsAreValid from "../assertions/assertThatPostQueryOperationsAreValid";
 
 export default abstract class AbstractSqlDataStore extends AbstractDataStore {
   protected lastInitError: Error | undefined = undefined;
@@ -434,6 +435,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     shouldReturnItem = true
   ): PromiseErrorOr<One<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'createEntity');
+    assertThatPostQueryOperationsAreValid(options?.postQueryOperations);
     const response = await createEntity(
       this,
       entity,
@@ -462,6 +464,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'addSubEntityToEntityById');
+    assertThatPostQueryOperationsAreValid(options?.postQueryOperations);
     const response = await addSubEntities(this, _id, subEntityPath, [subEntity], EntityClass, options);
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
     return response;
@@ -480,6 +483,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'addSubEntityToEntityByFilters');
+    assertThatPostQueryOperationsAreValid(options?.postQueryOperations);
     const response = await addSubEntitiesByFilters(
       this,
       filters,
@@ -505,6 +509,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'addSubEntitiesToEntityByFilters');
+    assertThatPostQueryOperationsAreValid(options?.postQueryOperations);
     const response = await addSubEntitiesByFilters(
       this,
       filters,
@@ -531,6 +536,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'addSubEntitiesToEntityById');
+    assertThatPostQueryOperationsAreValid(options?.postQueryOperations);
     const response = await addSubEntities(this, _id, subEntityPath, subEntities, EntityClass, options);
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
     return response;
@@ -543,6 +549,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     entityCountRequests?: EntityCountRequest[]
   ): PromiseErrorOr<Many<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntitiesByFilters');
+    assertThatPostQueryOperationsAreValid(postQueryOperations);
     const response = await getAllEntities(
       this,
       entityClass,
@@ -566,6 +573,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   ): PromiseErrorOr<Many<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntitiesByFilters');
+    assertThatPostQueryOperationsAreValid(postQueryOperations);
     const response = await getEntitiesByFilters(
       this,
       filters,
@@ -591,6 +599,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   ): PromiseErrorOr<One<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntityByFilters');
+    assertThatPostQueryOperationsAreValid(postQueryOperations);
     const response = await getEntityByFilters(
       this,
       filters,
@@ -626,6 +635,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   ): PromiseErrorOr<One<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntityById');
+    assertThatPostQueryOperationsAreValid(postQueryOperations);
     const response = await getEntityById(
       this,
       _id,
@@ -646,6 +656,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     entityCountRequests?: EntityCountRequest[]
   ): PromiseErrorOr<Many<T>> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'getEntitiesByIds');
+    assertThatPostQueryOperationsAreValid(postQueryOperations);
     const response = await getEntitiesByIds(
       this,
       _ids,
@@ -669,6 +680,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'updateEntity');
+    assertThatPostQueryOperationsAreValid(options?.postQueryOperations);
     const response = await updateEntity(
       this,
       entityUpdate,
@@ -693,6 +705,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'updateEntityByFilters');
+    assertThatPostQueryOperationsAreValid(options?.postQueryOperations);
     const response = await updateEntityByFilters(this, filters, entityUpdate, EntityClass, options);
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
     return response;
@@ -719,6 +732,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'deleteEntityById');
+    assertThatPostQueryOperationsAreValid(options?.postQueryOperations);
     const response = await deleteEntityById(
       this,
       _id,
@@ -741,6 +755,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'deleteEntityByFilters');
+    assertThatPostQueryOperationsAreValid(options?.postQueryOperations);
     const response = await deleteEntityByFilters(this, filters, EntityClass, options);
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
     return response;
@@ -767,7 +782,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'removeSubEntitiesFromEntityById');
-
+    assertThatPostQueryOperationsAreValid(options?.postQueryOperations);
     const response = await removeSubEntities(
       this,
       _id,
@@ -777,7 +792,6 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
       options?.postHook,
       options?.postQueryOperations
     );
-
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
     return response;
   }
@@ -794,6 +808,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'removeSubEntityFromEntityById');
+    assertThatPostQueryOperationsAreValid(options?.postQueryOperations);
     const subEntityJsonPath = `${subEntitiesJsonPath}[?(@.id == '${subEntityId}' || @._id == '${subEntityId}')]`;
     const response = await this.removeSubEntitiesFromEntityById(subEntityJsonPath, EntityClass, _id, options);
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
@@ -811,6 +826,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'removeSubEntitiesFromEntityByFilters');
+    assertThatPostQueryOperationsAreValid(options?.postQueryOperations);
     const response = await removeSubEntitiesByFilters(
       this,
       filters,
@@ -836,6 +852,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'removeSubEntityFromEntityByFilters');
+    assertThatPostQueryOperationsAreValid(options?.postQueryOperations);
     const subEntityJsonPath = `${subEntitiesJsonPath}[?(@.id == '${subEntityId}' || @._id == '${subEntityId}')]`;
     const response = await removeSubEntitiesByFilters(
       this,
@@ -869,6 +886,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'addArrayFieldValuesToEntityById');
+    assertThatPostQueryOperationsAreValid(options?.postQueryOperations);
     const response = await addFieldValues(this, _id, fieldName, fieldValuesToAdd, EntityClass, options);
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
     return response;
@@ -898,6 +916,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   ): PromiseErrorOr<null> {
     const dbOperationStartTimeInMillis = startDbOperation(this, 'removeArrayFieldValuesFromEntityById');
+    assertThatPostQueryOperationsAreValid(options?.postQueryOperations);
     const response = await removeFieldValues(this, _id, fieldName, fieldValuesToRemove, EntityClass, options);
     recordDbOperationDuration(this, dbOperationStartTimeInMillis);
     return response;

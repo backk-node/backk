@@ -1,6 +1,8 @@
 ## Hooks
 
-Hooks are operations performed before or after a data store operation.
+Hooks are operations performed before or after the actual data store operation. Using hooks you can avoid
+explicitly declaring a transaction. All hooks and the actual data store operation are executed inside a transaction
+by the Backk library. If any of the hooks or the actual data store operation fails, the whole transaction fails.
 
 - [Pre-Hooks](#pre-hooks)
 - [Entity Pre-Hooks](#entity-pre-hooks)

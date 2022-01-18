@@ -1,5 +1,4 @@
-import { PostQueryOperations } from "./PostQueryOperations";
-import SortBy from "./SortBy";
+import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   ArrayMinSize,
@@ -8,17 +7,21 @@ import {
   IsInstance,
   IsOptional,
   IsString,
-  ValidateNested
-} from "class-validator";
-import Pagination from "./Pagination";
-import MaxLengthAndMatches from "../../decorators/typeproperty/MaxLengthAndMatches";
-import { Lengths, Values } from "../../constants/constants";
-import CurrentPageToken from "./CurrentPageToken";
-import { Type } from "class-transformer";
+  ValidateNested,
+} from 'class-validator';
+import { Lengths, Values } from '../../constants/constants';
+import MaxLengthAndMatches from '../../decorators/typeproperty/MaxLengthAndMatches';
+import CurrentPageToken from './CurrentPageToken';
+import Pagination from './Pagination';
+import { PostQueryOperations } from './PostQueryOperations';
+import SortBy from './SortBy';
 
 export default class DefaultPostQueryOperationsImpl implements PostQueryOperations {
-  constructor(pageNumber: number = 1, pageSize: number = Values._50) {
-    this.paginations = [new Pagination('*', pageNumber, pageSize)]
+  constructor(rootEntitiesPageNumber: number = 1, rootEntitiesPageSize: number = Values._50) {
+    this.paginations = [
+      new Pagination('', rootEntitiesPageNumber, rootEntitiesPageSize),
+      new Pagination('*', 1, 50),
+    ];
   }
 
   @IsOptional()
@@ -64,5 +67,5 @@ export default class DefaultPostQueryOperationsImpl implements PostQueryOperatio
   @IsArray()
   @ArrayMinSize(0)
   @ArrayMaxSize(Values._100)
-  currentPageTokens: CurrentPageToken[] = []
+  currentPageTokens: CurrentPageToken[] = [];
 }

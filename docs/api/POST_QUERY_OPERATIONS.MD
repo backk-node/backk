@@ -24,9 +24,10 @@ class SortBy {
   fieldName!: string;
 
   // Ensure empty string when validating client input, NEVER allow sortExpression from client due to risk of SQL injection attack
-  // sortExpression can be set only on server side, but never include client input to sort expression on server side
-  // If you want client side to sort by an expression, you should create a new field in entity to store the sort expression result and allow client to sort by that field
-  // Having a separate sort field also makes the actual sort operation faster which might be beneficial to improved client user experience
+  // If you implement your own SortBy class, it must have MaxLength(0) annotation for sortExpression property, otherwise an exception will be thrown.
+  // sortExpression can be set only on server side, but never include client input to sort expression on server side. 
+  // If you want the client side to sort by an expression, you should create a new field in entity to store the sort expression result and allow client to sort by that field
+  // Having a separate sort field also makes the actual sort operation faster which probably results in improved user experience
   @MaxLength(0)
   sortExpression?: string;
   

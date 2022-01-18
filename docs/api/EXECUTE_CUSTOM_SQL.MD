@@ -7,8 +7,12 @@ new method.
 
 ### tryExecuteSql
 
+**NOTE! This method can throw an exception**
+
 ```ts
-async tryExecuteSql<T>(sqlStatement: string, values?: any[], shouldReportError = true): Promise<Field[]>
+interface DataStore {
+  tryExecuteSql<T>(sqlStatement: string, values?: any[], shouldReportError = true): Promise<Field[]>;
+}
 ```
 
 Executes `sqlStatement` with placeholder values given in `values` array.
@@ -19,10 +23,16 @@ You can put placeholders in `sqlStatement` with `?` symbol. For example:
 INSERT INTO salesitem (name, price) VALUES (?, ?)
 ```
 
+Returns fields or on error throws an exception.
+
 ### tryExecuteQuery
 
+**NOTE! This method can throw an exception**
+
 ```ts
-async tryExecuteQuery<T>(sqlStatement: string, values?: any[]): Promise<any>
+interface DataStore {
+  tryExecuteQuery<T>(sqlStatement: string, values?: any[]): Promise<any>;
+}
 ```
 
 Executes an SQL query given in `sqlStatement` with placeholder values given in `values` array.

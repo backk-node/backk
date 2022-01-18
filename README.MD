@@ -104,8 +104,6 @@ has service `emailNotificationService` and it has function `sendEmail`, that ser
 If your Backk microservice is named `notification-service` and is installed in default Kubernetes namespace, you can
 access your service function over HTTP like this: `https://<kube-cluster-edge-fqdn>/notification-service.default/emailNotificationService.sendEmail`
 
-
-
 ## <a name="howbackkworks"></a> How Backk Works?
 Backk microservices are written using Node.js and Typescript. A Backk microservice consists of one or more services classes with their dedicated purpose.
 Each service class can contain one or more service functions (class methods) that implement the service functionality.
@@ -126,29 +124,7 @@ Let's have a short example to showcase accessing Backk microservice over HTTP.
 Our microservice consist of one service `SalesItemService` that is for creating sales items and getting the created sales items, 
 and it is using a MySQL database as a persistent data store.
 
-Let's create the microservice implementation class in `src` directory:
-
-microservice.ts
-```ts
-import { Microservice, MySqlDataStore } from 'backk';
-import SalesItemServiceImpl from './services/salesitem/SalesItemServiceImpl'
-
-const dataStore = new MySqlDataStore();
-
-export default class MicroserviceImpl extends Microservice {
-  private readonly salesItemService = new SalesItemServiceImpl(dataStore);
-  // If you had other services in you microservice, you would instantiate them here
-
-  constructor() {
-    super(dataStore);
-  }
-}
-
-const microservice = new MicroserviceImpl();
-export default microservice;
-```
-
-Let's create the interface of the service in `src/services/salesitem` directory:
+Let's create the `SalesItemService` service interface in `src/services/salesitem` directory:
 
 SalesItemService.ts
 ```ts
@@ -161,7 +137,27 @@ export interface SalesItemService extends Service {
 }
 ```
 
-Let's create the implementation class of the service in `src/services/salesitem` directory:
+Let's create the `SalesItem` entity class in `src/services/salesitem/types/entities` directory:
+
+SalesItem.ts
+```ts
+import { _Id, Entity, IsAscii, IsFloat, Length, MinMax, ReadWrite } from 'backk';
+
+@Entity()
+export default class SalesItem extends _Id {
+  @IsAscii()
+  @Length(1, 128)
+  @ReadWrite()
+  name!: string;
+  
+  @IsFloat()
+  @MinMax(0, Number.MAX_VALUE)
+  @ReadWrite()
+  price!: number;
+}
+```
+
+Let's create the service implementation class in `src/services/salesitem` directory:
 
 SalesItemServiceImpl.ts
 ```ts
@@ -184,24 +180,26 @@ export default class SalesItemServiceImpl extends CrudEntityService implements S
 }
 ```
 
-Let's create the `SalesItem` entity class in `src/services/salesitem/types/entities` directory:
+Let's create the microservice implementation class in `src` directory and instantiate our sales item service:
 
-SalesItem.ts
+microservice.ts
 ```ts
-import { _Id, Entity, IsAscii, IsFloat, Length, MinMax, ReadWrite } from 'backk';
+import { Microservice, MySqlDataStore } from 'backk';
+import SalesItemServiceImpl from './services/salesitem/SalesItemServiceImpl'
 
-@Entity()
-export default class SalesItem extends _Id {
-  @IsAscii()
-  @Length(1, 128)
-  @ReadWrite()
-  name!: string;
-  
-  @IsFloat()
-  @MinMax(0, Number.MAX_VALUE)
-  @ReadWrite()
-  price!: number;
+const dataStore = new MySqlDataStore();
+
+export default class MicroserviceImpl extends Microservice {
+  private readonly salesItemService = new SalesItemServiceImpl(dataStore);
+  // If you had other services in you microservice, you would instantiate them here
+
+  constructor() {
+    super(dataStore);
+  }
 }
+
+const microservice = new MicroserviceImpl();
+export default microservice;
 ```
 
 Now we can create a new sales item with an HTTP POST request:

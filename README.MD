@@ -68,6 +68,7 @@
   - Mandatory validation using decorators is required for entity properties
     - e.g. string fields must have a maximum length validation and numbers must have minimum and maximum value validation
 - Supports a response cache using Redis
+- Distributed transactions with persistent sagas (This feature is coming soon)
 - Automatic microservice documentation generation
   - [TypeDoc](https://typedoc.org/)
 - Automatic microservice metadata/specification generation

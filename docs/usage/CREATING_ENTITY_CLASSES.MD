@@ -118,8 +118,9 @@ export default class UserAccount extends BaseUserAccount {
 
 In above example `PaymentMethod` is an internal entity of user account service and service will create
 necessary table structures to store payment methods. But `OwnSalesItem` and `Order` are external entities
-which are managed by sales item and order service, respectively. So user account service does not create
-any table structures neither for `OwnSalesItem` nor `Order`.
+which are managed by other services, sales item and order service, respectively. So the user account service does not create
+any table structures neither for `OwnSalesItem` nor `Order`. In case the mapping between entity and sub-entity with `isReferenceToExternalEntity` set to `true`,
+the mapping is done using ids. For example, the `_id` of `UserAccount` entity maps to `userAccountId` in the sub-entity.
 
 There is no `@ManyToOne()` annotation, but it can be achieved with a combination of following 3 annotations:
 

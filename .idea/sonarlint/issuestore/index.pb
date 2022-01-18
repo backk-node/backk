@@ -93,8 +93,6 @@ q
 Asrc/decorators/service/function/NoDistributedTransactionNeeded.ts,4/c/4cda45819b5c546ff0002016234bde9fdff440ac
 e
 5src/decorators/service/function/ResponseStatusCode.ts,5/5/55d04dd711e2223ac78db1fd6b21079553dedab4
-]
--src/decorators/entity/UniqueCompositeIndex.ts,b/7/b71a99022411a3ca26060dc947f200c4b285f8ae
 [
 +src/decorators/typeproperty/NotEncrypted.ts,0/e/0e4e2b52f5b05567299fb1247717c1e796167548
 `

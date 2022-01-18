@@ -21,7 +21,7 @@ class MicroserviceImpl extends Microservice {
 ```
 
 Backk provides following data stores out of the box:
-- `MySqlDataStore`
+- `MySqlDataStore` (This can be used for both MySQL and MariaDB)
 - `PostgreSqlDataStore`
 - `MongoDbDataStore`
 
@@ -64,7 +64,7 @@ Data store provide following method groups for fetching or manipulating entities
 - [Remove Sub-Entities](../api/REMOVE_SUBENTITIES.MD)
 - [Add/Check/Remove Entity's Primitive Array Field Values](../api/ENTITY_ARRAYS.MD)
 - [Execute Custom SQL Operation](../api/EXECUTE_CUSTOM_SQL.MD)
-- [Execute Custom MongoDB Operation](../api/EXECUTE_CUSTOM_SQL.MD)
+- [Execute Custom MongoDB Operation](../api/EXECUTE_CUSTOM_MONGODB.MD)
 
 If you are using multiple of the manipulating data store methods inside a single service function call,
 Backk will throw an exception, unless those method calls are wrapped in [`executeInsideTransaction`](../api/ABSTRACT_DATA_STORE.MD#executeinsidetransaction) call.
@@ -83,7 +83,7 @@ If you want to know what SQL statement each Data Store method is generating, you
 This can be done by changing the `LOG_LEVEL` environment variable to value `DEBUG` in `.env.dev` file.
 
 ### <a name="query-filters></a> Query Filters
-When you need to filter the entities queried from the data store, you can use [Query Filters](../api/QUERY_FILTERS.MD).
+When you need to filter the entities queried from the data store, you can use [Query Filters.](../api/QUERY_FILTERS.MD)
 With query filters you can filter both root entities and their sub-entities.
 
 ### <a name="post-query-operations"></a> Post Query Operations

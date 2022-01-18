@@ -1,11 +1,11 @@
 ## Dependency Injection (DI)
 
-Here is example how to use dependency injection (DI) with Backk using [noicejs](https://github.com/ssube/noicejs)
+Here is example how to use dependency injection (DI) with Backk using [noicejs.](https://github.com/ssube/noicejs)
 In this example we provide two alternative implementations (AWS and Azure) for a notification service.
 
 ### Implement services
 
-Create below 3 files in `src/services/notification`
+Create below 3 files in `src/services/notification`:
 
 NotificationService.ts
 ```ts
@@ -60,7 +60,6 @@ export default class AzureNotificationServiceImpl extends BaseService implements
 Create DI modules in `src/modules` directory:
 
 DataStoreModule.ts
-
 ```ts
 import { Module, ModuleOptions } from 'noicejs';
 import { MySqlDataStore } from "backk";

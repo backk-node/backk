@@ -5,11 +5,11 @@
 
 ### <a name="cdstaging"></a> Continuous Deployment to Staging Environment
 Continuous deployment to staging environment(s) should happen at regular intervals, for example
-once a week. During the one-week period, software system is first tested with functional E2E tests (same tests
-as are run periodically in CI environment) and then non-functional testing is performed using preferable automated
-test.
+once a week or more often. After deployment, the software system is first tested with functional E2E tests (same tests
+as are run periodically in CI environment) and then non-functional testing is performed using manual or automated (strongly preferable)
+tests.
 
-Following aspects of software system is tested as part of the non-functional testing period:
+Following aspects of software system should be tested as part of the non-functional testing period:
 - Endurance/soak/reliability testing
 - Recovery testing (by introducing artificial faults, chaos engineering)
 - Load, scalability and performance testing

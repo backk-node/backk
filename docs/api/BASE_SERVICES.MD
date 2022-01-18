@@ -48,12 +48,12 @@ export const orderServiceErrors = {
   cannotRemoveDeliveredOrderItem: {
     errorCode: 1,
     message: 'Cannot remove delivered order item',
-    statusCode: HttpStatusCodes.BAD_REQUEST,
+    statusCode: HttpStatusCodes.BAD_REQUEST
   },
   invalidOrderItemCurrentState: {
-    statusCode: HttpStatusCodes.BAD_REQUEST,
     errorCode: 2,
     message: 'Cannot update order item state due to invalid current state',
+    statusCode: HttpStatusCodes.BAD_REQUEST
   }
 }
 ```
@@ -169,7 +169,7 @@ Additionally, you can define following environment variables for HTTPS:
 - `AUTH_SERVER_TLS_KEY_FILE_PATH_NAME` defines the full path name of the file containing PEM encoded private key  (for mTLS)
 
 *NOTE!*
-In non-production environments, Authorization server as defined by `AUTH_SERVER_PUBLIC_KEY_URL` environment variable, is not contacted, but signing secret defined in `JWT_SIGN_SECRET` in used to sign/verify JWT.
+In non-production environments, Authorization server as defined by `AUTH_SERVER_PUBLIC_KEY_URL` environment variable is not contacted, but signing secret defined in `JWT_SIGN_SECRET` in used to sign/verify JWT.
 
 To use JWT authorization service, instantiate JwtAuthorizationServiceImpl class and store it as a field in your `MicroserviceImpl` class:
 
@@ -274,7 +274,7 @@ export default class MicroserviceImpl extends Microservice {
 }
 ```
 
-### <a name="readinesscheckservice"></a> ReadinessCheckService and DefaultReadinessCheckService
+### <a name="readinesscheckservice"></a> ReadinessCheckService and DefaultReadinessCheckServiceImpl
 This service is called by Kubernetes pod's readiness probe to check if microservice is ready for handling requests
 
 ```typescript
@@ -283,7 +283,7 @@ export default abstract class ReadinessCheckService extends BaseService {
 }
 ```
 
-`DefaultReadinessCheckServiceImpl` is the Backk default implementation for the readiness check service. It returns `Service Unavailable` HTTP status code if microservice is requested to terminate. Otherwise it returns `200 OK` HTTP status code.
+`DefaultReadinessCheckServiceImpl` is the Backk default implementation for the readiness check service. It returns `Service Unavailable` HTTP status code if microservice is requested to terminate (for example, microservice has got SIGTERM signal). Otherwise it returns `200 OK` HTTP status code.
 If you need to perform additional checks, create a new class that extends the `DefaultReadinessCheckServiceImpl` class and provide implementation for the `isMicroserviceReady` function.
 NOTE! Your implementation should first call the base class method and then execute additional checks.
 

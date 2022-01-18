@@ -4,6 +4,10 @@ Hooks are operations performed before or after the actual data store operation. 
 explicitly declaring a transaction. All hooks and the actual data store operation are executed inside a transaction
 by the Backk library. If any of the hooks or the actual data store operation fails, the whole transaction fails.
 
+Each hook has a function property `shouldSucceedOrBeTrue`, which is the hook function to be called.
+The hook is successful, if the hook function returns `true` or promise of `true` or does not return any error.
+The hook fails, if the hook function return `false` or promise of `false` or it returns an error.
+
 - [Pre-Hooks](#pre-hooks)
 - [Entity Pre-Hooks](#entity-pre-hooks)
 - [Post-Hook](#post-hook)

@@ -63,7 +63,7 @@ class SqlFilter {
 ```
 
 `sqlExpression` is any valid SQL expression that can be used in SQL WHERE clause in a prepared statement.
-It can contain named parameters. Named parameters start with a colon, e.g. `:namedParameter`.
+It can contain placeholders for named parameters. Placeholders for named parameters start with a colon, e.g. `:namedParameter`.
 
 **IMPORTANT NOTE!** Never use string concatenation or template strings with end-user supplied data to create the `sqlExpression`.
 This makes your application vulnerable for SQL injection attacks. Always use named parameters and supply data from end-user in the `values` object.

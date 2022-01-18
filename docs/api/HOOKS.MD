@@ -61,7 +61,9 @@ class SalesItemServiceImpl extends CrudEntityService implements SalesItemService
               state: 'forSale',
             });
 
-            return error ?? usersSellableSalesItemCount < 100;
+            return typeof usersSellableSalesItemCount === 'number'
+              ? usersSellableSalesItemCount < 100
+              : error;
           },
           error: salesItemServiceErrors.maximumSalesItemCountPerUserExceeded,
         },

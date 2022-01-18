@@ -113,8 +113,6 @@ j
 :src/remote/utils/parseRemoteServiceFunctionCallUrlParts.ts,a/5/a561c9580c6e13f3634b5ea01a48c933b81f6652
 X
 (src/execution/fetchFromRemoteServices.ts,9/f/9f67fbcce7e8a77bfaaf0c281f22e576957cce6f
-e
-5src/remote/messagequeue/redis/sendOneOrMoreToRedis.ts,0/6/061e27f289c43ca419f6e0c1bff415c218c91e2f
 F
 src/utils/promiseOf.ts,5/c/5c7e4d720aaef441eedf3a2d5e3f964455f11020
 b
@@ -169,8 +167,6 @@ t
 Dsrc/datastore/sql/operations/dql/utils/getSqlSelectStatementParts.ts,e/4/e404c3130e2a21eedadfd489b586591c6c3b3745
 `
 0src/decorators/service/function/AllowForTests.ts,f/e/fed35f5a00aecdff94c63ec387c4297938b7e219
-V
-&src/remote/messagequeue/sendToKafka.ts,a/6/a6d3de11e1acf25957c19b8b6311ad057c353c31
 s
 Csrc/decorators/service/function/AllowForEveryUserForOwnResources.ts,b/0/b02f5f40cc9c8c54e4877bbf2ddff28051594269
 O
@@ -358,8 +354,6 @@ n
 >src/decorators/typeproperty/acceptfiletypes/AcceptFileTypes.ts,3/3/3316a37da65ee0ea38fc91bf5331b8f5d36fef2b
 X
 (src/requestprocessor/RequestProcessor.ts,8/0/80b44487b867e3a7fb89e23bce1cf91bf695e146
-e
-5src/remote/messagequeue/kafka/sendOneOrMoreToKafka.ts,c/8/c85e63005baa112768508fc435ef3f685516a669
 `
 0src/execution/executeMultipleServiceFunctions.ts,d/4/d4d12c723aacc7da131331d4a853a2b0f225a2db
 Y
@@ -392,12 +386,6 @@ i
 9src/datastore/sql/operations/dml/updateEntityByFilters.ts,a/3/a365e4e371f2ade18ed598111bbb315de17f1db9
 k
 ;src/datastore/sql/operations/dml/updateEntitiesByFilters.ts,e/9/e94d289a45279802528282c03f50677bc43935ab
-\
-,src/remote/messagequeue/kafka/sendToKafka.ts,d/b/dbc342d1558a8147774c6129db7744957422c5ed
-o
-?src/remote/messagequeue/sendToRemoteServiceInsideTransaction.ts,8/5/85b6b92b6f40a0f38a1f3277c423ff3749ff443d
-^
-.src/remote/messagequeue/sendToRemoteService.ts,2/8/2898217950f733fa6c67c737e453b9d25969b79f
 R
 "src/remote/http/makeHttpRequest.ts,6/3/638d167128ba5c5cb0465430a3e6af7d84b27653
 U

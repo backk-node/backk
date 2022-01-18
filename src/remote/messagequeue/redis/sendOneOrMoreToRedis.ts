@@ -37,7 +37,7 @@ export default async function sendOneOrMoreToRedis(
           topic,
           JSON.stringify({
             serviceFunctionName,
-            remoteServiceFunctionArgument: serviceFunctionArgument,
+            serviceFunctionArgument: serviceFunctionArgument,
             headers: {
               Authorization: authHeader,
               sendResponseTo

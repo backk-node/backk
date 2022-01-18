@@ -80,6 +80,13 @@ Additional default topic configuration can be supplied with `defaultTopicConfig`
 
 You can send service function requests from remote Backk microservices for the Kafka consumer using [`sendToRemoteService`](REMOTE_SERVICE_ACCESS.MD#sendtoremoteservice) function
 
+Kafka consumer is expecting data in the topic to be in the same structure as `sendToRemoteService` function sends it:
+- key is service function name
+- value is the service function argument in JSON
+- headers:
+  - Authorization contains the Authorization header from remote microservice (or can be missing if no Authorization header in the remote microservice)
+  - sendResponseTo contains `ResponseDestination` object in JSON. This specifies the destination where Kafka consumer should send the service function execution response
+
 ### <a name="redis-consumer"></a> RedisConsumer
 
 ```typescript
@@ -93,3 +100,15 @@ Redis consumer is consuming from the head of a list (LPOP) with a key named: `<m
 
 You can send service function requests from remote Backk microservices for the Redis consumer using [`sendToRemoteService`](REMOTE_SERVICE_ACCESS.MD#sendtoremoteservice) function
 
+Redis consumer is expecting data in the list to be in the same structure as `sendToRemoteService` function sends it, a JavaScript object in JSON:
+
+```ts
+{
+  serviceFunctionName: <service-function-name>,
+  serviceFunctionArgument: <service-function-argument>,
+  headers: {
+    Authorization: authHeader,
+    sendResponseTo: <destination-where-to-send-response> // data type is ResponseDestination
+  }
+}
+```

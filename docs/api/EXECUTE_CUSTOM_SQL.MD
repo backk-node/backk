@@ -3,7 +3,7 @@
 By default, custom SQL operation should be avoided, if possible. They open up a possibility to accidentally
 craft vulnerable code (SQL injection attacks). Prefer to find a suitable existing data store method or create
 a new feature request for Backk, so that we can enhance an existing Backk data store method or create a totally
-new method.
+new method. Also, when using custom SQL operations, you make your code non-portable to use another type of data store.
 
 ### tryExecuteSql
 

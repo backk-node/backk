@@ -20,12 +20,13 @@ interface SortBys {
 class SortBy {
   subEntityPath?: string = '';
   
-  @LengthAndMatches(1, Lengths._512, /^[a-zA-Z_][a-zA-Z0-9_.]*$/)
+  @LengthAndMatches(1, Lengths._512, /^[a-zA-Z_][a-zA-Z0-9_]*$/)
   fieldName!: string;
 
   // Ensure empty string when validating client input, NEVER allow sortExpression from client due to risk of SQL injection attack
   // sortExpression can be set only on server side, but never include client input to sort expression on server side
   // If you want client side to sort by an expression, you should create a new field in entity to store the sort expression result and allow client to sort by that field
+  // Having a separate sort field also makes the actual sort operation faster which might be beneficial to improved client user experience
   @MaxLength(0)
   sortExpression?: string;
   
@@ -60,8 +61,8 @@ or an instance of your own class that extends `DefaultPostQueryOperationsImpl`, 
 
 ```ts
 class DefaultPostQueryOperationsImpl implements PostQueryOperations {
-  constructor(pageNumber: number = 1, pageSize: number = 50) {
-    this.paginations = [new Pagination('*', pageNumber, pageSize)];
+  constructor(rootEntitiesPageNumber: number = 1, rootEntitiesPageSize: number = 50) {
+    this.paginations = [new Pagination('', rootEntitiesPageNumber, rootEntitiesPageSize), new Pagination('*', 1, 50)];
   }
 
   @ArrayMinSize(0)

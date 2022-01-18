@@ -7,7 +7,7 @@
 3. Create a Git repository for End-To-End tests and implement the tests. E2E test should be implemented as Kubernetes CronJob and deployable by a Helm chart.
 4. Create a Git repository for CI environment where you create HelmRelease for Backk platform, Backk microservices and E2E tests. 
 5. In HelmReleases, set the Helm chart version to `>=1.0.0'. In this way, CI environment is automatically updated when new Helm chart version is available. 
-6. Take into use the GitHub CI workflow in `.github/workflows/ci.yaml` in your Backk microservice or implement similar CI pipeline with another CI tool (next section).
+6. Take into use the GitHub CI workflow in `.github/workflows/ci.yaml` in your Backk microservice or implement similar CI pipeline with another CI tool (see next section).
 
 ### Implement your own CI pipeline
 You should have the following steps in your CI pipeline:
@@ -16,8 +16,8 @@ You should have the following steps in your CI pipeline:
   - Install dependencies with command `npm ci`
   - Lint your source code with `npm run lint` command
   - Run unit tests with command `npm run test:coverage`
-- Perform static code analysis with SonarQube or SonarCloud or another similar tool
-- Implement legal and compliance check with Fossa scan or another similar tool
+- Perform static code analysis with SonarQube or SonarCloud or similar tool
+- Implement legal and compliance check with Fossa scan or similar tool
 - Execute in container containing Docker:
   - Setup integration testing environment by running command `docker-compose --env-file env.ci up --build -d`
   - Run integration tests with command `scripts/run-integration-tests-in-ci.sh`
@@ -41,7 +41,8 @@ You should have the following steps in your CI pipeline:
   - Package helm chart with command `helm package helm/<your-microservice-name>`
   - Push Helm chart package to Helm chart repository
 
-If you have generated client code for your Backk microservice, you can have additional steps in your CI pipeline to:
+#### Publishing generated client code as NPM packages
+If you have generated client code for your Backk microservice that you want to publish as npm package, you can have additional steps in your CI pipeline to:
 - Set the correct version of client in client's `package.json`
 - Publish the package to NPM registry with `npm publish`
 

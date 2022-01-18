@@ -43,4 +43,4 @@ export default class Microservice {
 ```
 
 starts the microservice with the given request processor(s). You must define at least one
-[Request Processor](MICROSERVICE_INITIALIZATION.MD).
+[Request Processor.](MICROSERVICE_INITIALIZATION.MD)

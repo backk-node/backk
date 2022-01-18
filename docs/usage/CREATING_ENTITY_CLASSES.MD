@@ -95,8 +95,31 @@ The maximum length of string type properties must be validated with following de
 - `@Length()`
 
 Each entity property having a sub-entity array type must have one of following decorators, or otherwise an exception will be thrown:
-- `@OneToMany()`
+- `@OneToMany(isReferenceToExternalEntity = false)`
 - `@ManyToMany()`
+
+Example usage of `OneToMany()` versus `OneToMany(true)`:
+```ts
+@Entity()
+export default class UserAccount extends BaseUserAccount {
+  @OneToMany()
+  @ReadWrite()
+  paymentMethods!: PaymentMethod[];
+
+  @OneToMany(true)
+  @ReadOnly()
+  ownSalesItems!: OwnSalesItem[];
+
+  @OneToMany(true)
+  @ReadOnly()
+  orders!: Order[];
+}
+```
+
+In above example `PaymentMethod` is an internal entity of user account service and service will create
+necessary table structures to store payment methods. But `OwnSalesItem` and `Order` are external entities
+which are managed by sales item and order service, respectively. So user account service does not create
+any table structures neither for `OwnSalesItem` nor `Order`.
 
 There is no `@ManyToOne()` annotation, but it can be achieved with a combination of following 3 annotations:
 

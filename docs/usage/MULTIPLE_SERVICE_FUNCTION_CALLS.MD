@@ -49,7 +49,7 @@ POST /multipleServiceFunctionExecutionService.executeInParallelWithoutTransactio
     }
   },
   "allTags": {
-    "serviceFunctionName": "tagService.getSalesItems",
+    "serviceFunctionName": "tagService.getTagsByName",
     "serviceFunctionArgument": {
       "nameFilter": ""
     }
@@ -92,7 +92,7 @@ POST /multipleServiceFunctionExecutionService.executeInParallelWithoutTransactio
   "allTags": {
     "microserviceName": "tag-service",
     "microserviceNamespace": "default",
-    "serviceFunctionName": "tagService.getSalesItems",
+    "serviceFunctionName": "tagService.getTagsByName",
     "serviceFunctionArgument": {
       "nameFilter": ""
     }

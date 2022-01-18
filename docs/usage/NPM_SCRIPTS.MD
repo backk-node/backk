@@ -35,6 +35,6 @@
 | helm:uninstall          | Uninstalls the Helm release from Minikube                                                                                                                                                                    |
 
 
-For docker scripts, you need to install Docker for Mac/Windows.
-For helm scripts, you need to install Helm.
-For Minikube scripts, you need to install Minikube
+For docker scripts, you need to install [Docker Desktop for Mac/Windows](https://www.docker.com/products/docker-desktop).
+For helm scripts, you need to install [Helm](https://helm.sh/docs/intro/install/).
+For Minikube scripts, you need to install [Minikube](https://minikube.sigs.k8s.io/docs/start/)

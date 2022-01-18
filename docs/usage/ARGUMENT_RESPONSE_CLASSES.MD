@@ -1,7 +1,9 @@
 ## Creating Service Function Argument and Response Classes
 
 Service function argument or response class can contain one or more properties.
-Possible property types are:
+Compared to e.g. REST technology, service function argument/response classes or the same as Data Transfer Objects (DTOs).
+
+Possible sservice function argument/response class property types are:
 - `number`
 - `boolean`
 - `string`
@@ -11,14 +13,14 @@ Possible property types are:
 - Arrays of above types
 
 If your Service function argument or response class does not have a constructor, you need to define properties with
-exclamation mark (!), because otherwise a TypeScript error is generated:
+an exclamation mark (!), because otherwise a TypeScript error is generated.
 
+Example use of the exclamation mark:
 ```ts
 class MyServiceFunctionArg {
   someValue!: string;
 }
 ```
-
 
 Any property can be optional:
 ```ts
@@ -27,23 +29,23 @@ class MyServiceFunctionArg {
 }
 ```
 
-Number type properties must be annotated with one of following decorators otherwise an exception will be thrown:
+Number type properties must be annotated with one of following decorators, or otherwise an exception will be thrown:
 - `IsInt()`
 - `IsFloat()`
 - `IsBigInt()`
 
 String type properties must be annotated with one of the string validators or with `IsAnyString()` decorator, otherwise an exception will be thrown.
-String validation decorators are listed [here](../api/DECORATORS.MD#validation-decorators) 
+String validation decorators are listed [here.](../api/DECORATORS.MD#validation-decorators)
 
-The possible value range of number type properties must be validated with following decorators or an exception will be thrown:
+The possible value range of number type properties must be validated with following decorators, or otherwise an exception will be thrown:
 - `@Min()` and `@Max()`
 - `@MinMax()`
 
-The maximum length of string type properties must be validated with following decorators or an exception will be thrown:
+The maximum length of string type properties must be validated with following decorators, or otherwise an exception will be thrown:
 - `@MaxLength()`
 - `@Length()`
 
-Each array type property must have the following decorators or an exception will be thrown:
+Each array type property must have the following decorators, or otherwise an exception will be thrown:
 - `@ArrayMinSize()`
 - `@ArrayMaxSize()`
 
@@ -61,7 +63,7 @@ class MyClass {
 
 ### Defining a Service Function Argument/Response Class with Property Composition
 You can make a service function argument or response class by composing its properties of one or more properties of another (source) class or classes (e.g. entity class).
-In this way, it is simpler to define the argument/response classes, i.e. Data Access Objects (DTOs). 
+In this way, it is simpler to define the argument/response classes. 
 If the source class(es) change, also the composed class will change automatically.
 To take advantage of this feature, you need to declare the class in special `.type` file.
 
@@ -87,6 +89,10 @@ You need to generate the `.ts` files from `.type` files by executing following c
 ```bash
 npm run generateTypes
 ```
+
+If your .type file(s) have changed or some of the files that .type file references have changed, and
+you try to start the microservice in dev environment (`npm run start:dev`), you will get an error where it is instructed that `npm run generateTypes`
+must be run to re-generate types before trying to start the microservice.
 
 Possible operations for class property composition:
 

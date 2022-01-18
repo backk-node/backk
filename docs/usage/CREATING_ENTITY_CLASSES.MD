@@ -164,6 +164,10 @@ You need to generate the `.ts` files from `.type` files by executing following c
 npm run generateTypes
 ```
 
+If your .type file(s) have changed or some of the files that .type file references have changed, and
+you try to start the microservice in dev environment (`npm run start:dev`), you will get an error where it is instructed that `npm run generateTypes`
+must be run to re-generate types before trying to start the microservice.
+
 Possible operations for class property composition:
 
 | Operation                                                                                        | Description                                                                                         |

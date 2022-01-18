@@ -26,8 +26,9 @@ Possible entity property types:
   - `<another-entity-type> | null`
 
 If your entity class does not have a constructor, you need to define properties with
-exclamation mark (!), because otherwise a TypeScript error is generated:
+exclamation mark (!), because otherwise a TypeScript error is generated.
 
+Example use of exclamation mark:
 ```ts
 @Entity()
 class MyEntity {
@@ -72,28 +73,28 @@ class UserAccount extends BaseUserAccount {
 }
 ```
 
-Number type properties must be annotated with one of following decorators otherwise an exception will be thrown:
+Number type properties must be annotated with one of following decorators, or otherwise an exception will be thrown:
 - `IsInt()`
 - `IsFloat()`
 - `IsBigInt()`
 
-String type properties must be annotated with one of the string validators or with `IsAnyString()` decorator, otherwise an exception will be thrown.
-String validation decorators are listed [here](../api/DECORATORS.MD#validation-decorators)
+String type properties must be annotated with one of the string validators or with `IsAnyString()` decorator, or otherwise an exception will be thrown.
+String validation decorators are listed [here.](../api/DECORATORS.MD#validation-decorators)
 
 String and integer type properties must be annotated with one of following to validate the uniqueness of values in the database,
-otherwise an exception will be thrown:
+or otherwise an exception will be thrown:
 - `@Unique()`
 - `@NotUnique()`
 
-The possible value range of number type properties must be validated with following decorators or an exception will be thrown:
+The possible value range of number type properties must be validated with following decorators, or otherwise an exception will be thrown:
 - `@Min()` and `@Max()`
 - `@MinMax()`
 
-The maximum length of string type properties must be validated with following decorators or an exception will be thrown:
+The maximum length of string type properties must be validated with following decorators, or otherwise an exception will be thrown:
 - `@MaxLength()`
 - `@Length()`
 
-Each entity property having a sub-entity array type must have one of following decorators or an exception will be thrown:
+Each entity property having a sub-entity array type must have one of following decorators, or otherwise an exception will be thrown:
 - `@OneToMany()`
 - `@ManyToMany()`
 
@@ -105,11 +106,11 @@ There is no `@ManyToOne()` annotation, but it can be achieved with a combination
 @ArrayMaxSize(1)
 ```
 
-Each array type property that IS NOT read-only must have the following decorators or an exception will be thrown:
+Each array type property that IS NOT read-only must have the following decorators, or otherwise an exception will be thrown:
 - `@ArrayMinSize()`
 - `@ArrayMaxSize()`
 
-Each entity property must be annotated with property access mode decorator or an exception will be thrown.
+Each entity property must be annotated with property access mode decorator, or otherwise an exception will be thrown.
 Access mode defines how the property can be accessed by the microservice clients. Private properties cannot be accessed by clients
 and read-write properties offer full access. Access mode decorators are:
 - `@Private()`
@@ -133,6 +134,39 @@ class MyEntity extends _Id {
   myProperty!: string;
 
   // this is an example of property documentation
+  myProperty2!: string;
+}
+```
+
+### Indexing
+
+#### Composite Index
+
+Composite index can be defined for entity class with `CompositeIndex` or `UniqueCompositeIndex` decorator.
+For example:
+
+```ts
+@Entity()
+@CompositeIndex(['myProperty', 'myProperty2'])
+// The above is same as @CompositeIndex(['myProperty', 'myProperty2'], 'ASC')
+class MyEntity extends _Id {
+  myProperty!: string;
+  myProperty2!: string;
+}
+```
+
+#### Property index
+
+Property can be indexed with `Indexed` decorator.
+For example:
+
+```ts
+@Entity()
+class MyEntity extends _Id {
+  @Indexed() // This is same as @Indexed('ASC')
+  myProperty!: string;
+  
+  @Indexed('DESC')
   myProperty2!: string;
 }
 ```

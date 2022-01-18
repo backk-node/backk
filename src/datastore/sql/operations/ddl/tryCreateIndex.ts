@@ -13,7 +13,7 @@ export default async function tryCreateIndex(
     entityAnnotationContainer.indexNameToAdditionalSqlCreateIndexStatementOptionsMap[indexName];
 
   const lowerCaseIndexFields = indexFields.map(indexField => indexField.toLowerCase());
-  const sortOrderStr = indexFields.length === 1 ? entityAnnotationContainer.indexNameToSortOrderMap[indexName] : '';
+  const sortOrderStr = entityAnnotationContainer.indexNameToSortOrderMap[indexName];
 
   try {
     const createIndexStatement = `CREATE ${

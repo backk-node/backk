@@ -94,7 +94,7 @@ export default async function removeSubEntitiesByFilters<T extends BackkEntity, 
 
           const numericId = parseInt(currentEntity.data._id, 10);
 
-          await dataStore.tryExecuteSql(
+          await dataStore.executeSqlOrThrow(
             `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${associationTableName.toLowerCase()} WHERE ${entityForeignIdFieldName.toLowerCase()} = ${dataStore.getValuePlaceholder(
               1
             )} AND ${subEntityForeignIdFieldName.toLowerCase()} = ${dataStore.getValuePlaceholder(2)}`,

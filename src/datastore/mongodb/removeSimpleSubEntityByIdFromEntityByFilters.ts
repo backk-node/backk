@@ -81,7 +81,7 @@ export default async function removeSimpleSubEntityByIdFromEntityByFilters<T ext
   try {
     shouldUseTransaction = await tryStartLocalTransactionIfNeeded(dataStore);
 
-    return await dataStore.tryExecute(shouldUseTransaction, async (client) => {
+    return await dataStore.executeMongoDbOperationsOrThrow(shouldUseTransaction, async (client) => {
       if (options?.entityPreHooks) {
         const [currentEntity, error] = await dataStore.getEntityByFilters(
           EntityClass,

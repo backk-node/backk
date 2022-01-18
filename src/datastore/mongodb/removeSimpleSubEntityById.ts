@@ -38,7 +38,7 @@ export default async function removeSimpleSubEntityById<T extends BackkEntity, U
   try {
     shouldUseTransaction = await tryStartLocalTransactionIfNeeded(dataStore);
 
-    return await dataStore.tryExecute(shouldUseTransaction, async (client) => {
+    return await dataStore.executeMongoDbOperationsOrThrow(shouldUseTransaction, async (client) => {
       if (options?.entityPreHooks) {
         const [currentEntity, error] = await dataStore.getEntityById(
           EntityClass,

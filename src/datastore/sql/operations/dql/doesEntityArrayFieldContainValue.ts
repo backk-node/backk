@@ -59,7 +59,7 @@ export default async function doesEntityArrayFieldContainValue<T extends BackkEn
       1
     )} AND ${fieldName.slice(0, -1).toLowerCase()} = ${dataStore.getValuePlaceholder(2)}`;
 
-    const result = await dataStore.tryExecuteQuery(selectStatement, [numericId, fieldValue]);
+    const result = await dataStore.executeSqlQueryOrThrow(selectStatement, [numericId, fieldValue]);
     const entityCount = dataStore.getResultRows(result)[0].count;
 
     return [entityCount >= 1, null];

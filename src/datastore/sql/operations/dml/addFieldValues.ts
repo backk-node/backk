@@ -79,7 +79,7 @@ export default async function addFieldValues<T extends BackkEntity>(
           currentEntity.data[fieldName].length
         }, ${dataStore.getValuePlaceholder(1)}, ${dataStore.getValuePlaceholder(2)})`;
 
-        await dataStore.tryExecuteSql(insertStatement, [_id, fieldValue]);
+        await dataStore.executeSqlOrThrow(insertStatement, [_id, fieldValue]);
       })
     );
 
@@ -111,7 +111,7 @@ export default async function addFieldValues<T extends BackkEntity>(
       }
 
       promises.push(
-        dataStore.tryExecuteQuery(sqlStatement, numericId === undefined ? values : [...values, numericId])
+        dataStore.executeSqlQueryOrThrow(sqlStatement, numericId === undefined ? values : [...values, numericId])
       );
     }
 

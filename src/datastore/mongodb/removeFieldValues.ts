@@ -34,7 +34,7 @@ export default async function removeFieldValues<T extends BackkEntity>(
   try {
     shouldUseTransaction = await tryStartLocalTransactionIfNeeded(dataStore);
 
-    return await dataStore.tryExecute(shouldUseTransaction, async (client) => {
+    return await dataStore.executeMongoDbOperationsOrThrow(shouldUseTransaction, async (client) => {
       if (options?.entityPreHooks) {
         const [currentEntity, error] = await dataStore.getEntityById(
           EntityClass,

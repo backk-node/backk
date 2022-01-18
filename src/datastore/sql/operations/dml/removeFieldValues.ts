@@ -77,7 +77,7 @@ export default async function removeFieldValues<T extends BackkEntity>(
             .toLowerCase()} WHERE ${foreignIdFieldName.toLowerCase()} = ${dataStore.getValuePlaceholder(
           1
         )} AND ${fieldName.slice(0, -1).toLowerCase()} = ${dataStore.getValuePlaceholder(2)}`;
-        await dataStore.tryExecuteSql(deleteStatement, [_id, fieldValue]);
+        await dataStore.executeSqlOrThrow(deleteStatement, [_id, fieldValue]);
       })
     );
 
@@ -109,7 +109,7 @@ export default async function removeFieldValues<T extends BackkEntity>(
       }
 
       promises.push(
-        dataStore.tryExecuteQuery(sqlStatement, numericId === undefined ? values : [...values, numericId])
+        dataStore.executeSqlQueryOrThrow(sqlStatement, numericId === undefined ? values : [...values, numericId])
       );
     }
 

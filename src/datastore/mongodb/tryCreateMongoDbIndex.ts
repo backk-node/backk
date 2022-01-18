@@ -22,7 +22,7 @@ export default async function tryCreateMongoDbIndex(
 
   await dataStore.tryReserveDbConnectionFromPool();
 
-  await dataStore.tryExecute(false, async (client) => {
+  await dataStore.executeMongoDbOperationsOrThrow(false, async (client) => {
     await client
       .db(dataStore.getDbName())
       .createIndex(collectionName,

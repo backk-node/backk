@@ -41,6 +41,7 @@ import doesEntityArrayFieldContainValue from "./sql/operations/dql/doesEntityArr
 import EntityCountRequest from "../types/EntityCountRequest";
 import AbstractDataStore from "./AbstractDataStore";
 import assertThatPostQueryOperationsAreValid from "../assertions/assertThatPostQueryOperationsAreValid";
+import { MongoClient } from "mongodb";
 
 export default abstract class AbstractSqlDataStore extends AbstractDataStore {
   protected lastInitError: Error | undefined = undefined;
@@ -92,6 +93,13 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     sqlStatement: string,
     values: object
   ): Promise<any>;
+
+  executeMongoDbOperationsOrThrow<T>(
+    shouldUseTransaction: boolean,
+    executeDbOperations: (client: MongoClient) => Promise<T>
+  ): Promise<T> {
+    throw new Error('Not implemented');
+  }
 
   getFilters<T>(
     mongoDbFilters: Array<MongoDbFilter<T>> | Partial<T> | object,
@@ -237,7 +245,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   }
 
-  async tryExecuteSql<T>(sqlStatement: string, values?: any[], shouldReportError = true): Promise<Field[]> {
+  async executeSqlOrThrow<T>(sqlStatement: string, values?: any[], shouldReportError = true): Promise<Field[]> {
     if (this.getClsNamespace()?.get('remoteServiceCallCount') > 0) {
       this.getClsNamespace()?.set('dataStoreOperationAfterRemoteServiceCall', true);
     }
@@ -294,7 +302,7 @@ export default abstract class AbstractSqlDataStore extends AbstractDataStore {
     }
   }
 
-  async tryExecuteQuery(sqlQueryStatement: string, values?: any[]): Promise<any> {
+  async executeSqlQueryOrThrow(sqlQueryStatement: string, values?: any[]): Promise<any> {
     if (this.getClsNamespace()?.get('remoteServiceCallCount') > 0) {
       this.getClsNamespace()?.set('dataStoreOperationAfterRemoteServiceCall', true);
     }

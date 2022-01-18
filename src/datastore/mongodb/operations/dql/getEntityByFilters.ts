@@ -122,7 +122,7 @@ export default async function getEntityByFilters<T extends BackkEntity>(
       isSelectForUpdate = true;
     }
 
-    return await dataStore.tryExecute(shouldUseTransaction, async (client) => {
+    return await dataStore.executeMongoDbOperationsOrThrow(shouldUseTransaction, async (client) => {
       if (isSelectForUpdate) {
         await client
           .db(dataStore.getDbName())

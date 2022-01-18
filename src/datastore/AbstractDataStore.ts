@@ -12,7 +12,7 @@ import { PostHook } from "./hooks/PostHook";
 import { PromiseErrorOr } from "../types/PromiseErrorOr";
 import { ArrayFieldValue, DataStore, Field, Many, One, QueryFilters } from "./DataStore";
 import MongoDbFilter from "./mongodb/MongoDbFilter";
-import { FilterQuery } from "mongodb";
+import { FilterQuery, MongoClient } from "mongodb";
 import SqlFilter from "./sql/filters/SqlFilter";
 import { SubEntity } from "../types/entities/SubEntity";
 import { EntityPreHook } from "./hooks/EntityPreHook";
@@ -140,11 +140,18 @@ export default abstract class AbstractDataStore implements DataStore {
     isUnique: boolean
   ): string;
 
-  abstract tryExecuteSql<T>(
+  abstract executeSqlOrThrow<T>(
     sqlStatement: string,
     values?: any[],
     shouldReportError?: boolean
   ): Promise<Field[]>;
+
+  abstract executeSqlQueryOrThrow(sqlQueryStatement: string, values?: any[]): Promise<any>;
+
+  abstract executeMongoDbOperationsOrThrow<T>(
+    shouldUseTransaction: boolean,
+    executeDbOperations: (client: MongoClient) => Promise<T>
+  ): Promise<T>
 
   abstract tryExecuteSqlWithoutCls<T>(
     sqlStatement: string,

@@ -89,7 +89,7 @@ export default async function getAllEntities<T extends BackkEntity>(
       .filter((sqlPart) => sqlPart)
       .join(' ');
 
-    const result = await dataStore.tryExecuteQuery(selectStatement, whereClause ? [userAccountId] : undefined);
+    const result = await dataStore.executeSqlQueryOrThrow(selectStatement, whereClause ? [userAccountId] : undefined);
 
     const entities = transformRowsToObjects(
       dataStore.getResultRows(result),

@@ -5,10 +5,22 @@ import MongoDbFilter from "./mongodb/MongoDbFilter";
 import SqlFilter from "./sql/filters/SqlFilter";
 import { PromiseErrorOr } from "../types/PromiseErrorOr";
 import AbstractDataStore from "./AbstractDataStore";
+import { MongoClient } from "mongodb";
 
 export default class NullDataStore extends AbstractDataStore {
   constructor() {
     super('');
+  }
+
+  executeSqlQueryOrThrow(sqlQueryStatement: string, values?: any[]): Promise<any> {
+    throw new Error('Not implemented');
+  }
+
+  executeMongoDbOperationsOrThrow<T>(
+    shouldUseTransaction: boolean,
+    executeDbOperations: (client: MongoClient) => Promise<T>
+  ): Promise<T> {
+    throw new Error('Not implemented');
   }
 
   updateEntityByFilters<T extends BackkEntity>(): PromiseErrorOr<null> {
@@ -111,7 +123,7 @@ export default class NullDataStore extends AbstractDataStore {
     throw new Error('Not implemented');
   }
 
-  tryExecuteSql<T>(): Promise<Field[]> {
+  executeSqlOrThrow<T>(): Promise<Field[]> {
     throw new Error('Not implemented');
   }
 

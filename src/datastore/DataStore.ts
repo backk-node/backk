@@ -13,7 +13,7 @@ import { EntityPreHook } from "./hooks/EntityPreHook";
 import { EntitiesPostHook } from "./hooks/EntitiesPostHook";
 import CurrentPageToken from "../types/postqueryoperations/CurrentPageToken";
 import EntityCountRequest from "../types/EntityCountRequest";
-import { FilterQuery } from "mongodb";
+import { FilterQuery, MongoClient } from "mongodb";
 import BaseService from "../services/BaseService";
 import { Namespace } from "cls-hooked";
 
@@ -71,11 +71,18 @@ export interface DataStore {
     isUnique: boolean
   ): string;
 
-  tryExecuteSql<T>(
+  executeSqlOrThrow<T>(
     sqlStatement: string,
     values?: any[],
     shouldReportError?: boolean
   ): Promise<Field[]>;
+
+  executeSqlQueryOrThrow(sqlQueryStatement: string, values?: any[]): Promise<any>;
+
+  executeMongoDbOperationsOrThrow<T>(
+    shouldUseTransaction: boolean,
+    executeDbOperations: (client: MongoClient) => Promise<T>
+  ): Promise<T>
 
   tryExecuteSqlWithoutCls<T>(
     sqlStatement: string,

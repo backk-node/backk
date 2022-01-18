@@ -160,7 +160,7 @@ export default async function updateEntity<T extends BackkEntity>(
                     subEntityForeignIdFieldName
                   } = entityAnnotationContainer.getManyToManyRelationTableSpec(associationTableName);
 
-                  await dataStore.tryExecuteSql(
+                  await dataStore.executeSqlOrThrow(
                     `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${associationTableName.toLowerCase()} WHERE ${entityForeignIdFieldName.toLowerCase()} = ${dataStore.getValuePlaceholder(
                       1
                     )} AND ${subEntityForeignIdFieldName.toLowerCase()} = ${dataStore.getValuePlaceholder(
@@ -183,7 +183,7 @@ export default async function updateEntity<T extends BackkEntity>(
                     entityForeignIdFieldName,
                     subEntityForeignIdFieldName
                   } = entityAnnotationContainer.getManyToManyRelationTableSpec(associationTableName);
-                  await dataStore.tryExecuteSql(
+                  await dataStore.executeSqlOrThrow(
                     `INSERT INTO ${dataStore.getSchema().toLowerCase()}.${associationTableName.toLowerCase()} (${entityForeignIdFieldName.toLowerCase()}, ${subEntityForeignIdFieldName.toLowerCase()}) VALUES (${dataStore.getValuePlaceholder(
                       1
                     )}, ${dataStore.getValuePlaceholder(2)})`,
@@ -264,7 +264,7 @@ export default async function updateEntity<T extends BackkEntity>(
                   .toLowerCase()} WHERE ${foreignIdFieldName.toLowerCase()} = ${dataStore.getValuePlaceholder(
                 1
               )}`;
-              await dataStore.tryExecuteSql(deleteStatement, [_id]);
+              await dataStore.executeSqlOrThrow(deleteStatement, [_id]);
 
               const insertStatement = `INSERT INTO ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase() +
                 '_' +
@@ -275,7 +275,7 @@ export default async function updateEntity<T extends BackkEntity>(
                 .toLowerCase()}) VALUES(${index}, ${dataStore.getValuePlaceholder(
                 1
               )}, ${dataStore.getValuePlaceholder(2)})`;
-              await dataStore.tryExecuteSql(insertStatement, [_id, subItem]);
+              await dataStore.executeSqlOrThrow(insertStatement, [_id, subItem]);
             })
           );
         } else if (fieldName !== '_id' && fieldName !== 'id') {
@@ -323,7 +323,7 @@ export default async function updateEntity<T extends BackkEntity>(
       }
 
       promises.push(
-        dataStore.tryExecuteQuery(sqlStatement, numericId === undefined ? values : [...values, numericId])
+        dataStore.executeSqlQueryOrThrow(sqlStatement, numericId === undefined ? values : [...values, numericId])
       );
     }
 

@@ -157,7 +157,7 @@ export default async function addSubEntities<T extends BackkEntity, U extends Su
           subEntityForeignIdFieldName
         } = entityAnnotationContainer.getManyToManyRelationTableSpec(associationTable);
 
-        await dataStore.tryExecuteSql(
+        await dataStore.executeSqlOrThrow(
           `INSERT INTO ${dataStore.getSchema().toLowerCase()}.${associationTable.toLowerCase()} (${entityForeignIdFieldName.toLowerCase()}, ${subEntityForeignIdFieldName.toLowerCase()}) VALUES (${dataStore.getValuePlaceholder(
             1
           )}, ${dataStore.getValuePlaceholder(2)})`,

@@ -73,7 +73,7 @@ export default async function deleteEntityById<T extends BackkEntity>(
         Object.values(entityContainer.entityNameToJoinsMap[EntityClass.name] || {}),
         async (joinSpec: EntityJoinSpec) => {
           if (!joinSpec.isReadonly) {
-            await dataStore.tryExecuteSql(
+            await dataStore.executeSqlOrThrow(
               `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${joinSpec.subEntityTableName.toLowerCase()} WHERE ${joinSpec.subEntityForeignIdFieldName.toLowerCase()} = ${dataStore.getValuePlaceholder(
                 1
               )}`,
@@ -89,13 +89,13 @@ export default async function deleteEntityById<T extends BackkEntity>(
             const sqlStatement = `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${associationTableName.toLowerCase()} WHERE ${entityForeignIdFieldName.toLowerCase()} = ${dataStore.getValuePlaceholder(
               1
             )}`;
-            await dataStore.tryExecuteSql(sqlStatement, [numericId]);
+            await dataStore.executeSqlOrThrow(sqlStatement, [numericId]);
           }
         }
       ),
       isRecursive
         ? Promise.resolve(undefined)
-        : dataStore.tryExecuteSql(
+        : dataStore.executeSqlOrThrow(
             `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase()} WHERE ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase()}._id = ${dataStore.getValuePlaceholder(
               1
             )}`,

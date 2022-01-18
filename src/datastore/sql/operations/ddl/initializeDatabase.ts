@@ -40,7 +40,7 @@ export async function isDbInitialized(dataStore: DataStore) {
       const clsNamespace = getClsNamespace('serviceFunctionExecution');
       return await clsNamespace.runAndReturn(async () => {
         await dataStore.tryReserveDbConnectionFromPool();
-        const result = await dataStore.tryExecuteQuery(getAppVersionInitializationStatusSql, [
+        const result = await dataStore.executeSqlQueryOrThrow(getAppVersionInitializationStatusSql, [
           process.env.MICROSERVICE_VERSION,
         ]);
         const rows = dataStore.getResultRows(result);

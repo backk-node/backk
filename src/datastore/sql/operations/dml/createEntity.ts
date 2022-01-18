@@ -133,7 +133,7 @@ export default async function createEntity<T extends BackkEntity>(
 
     const getIdSqlStatement = dataStore.getReturningIdClause('_id');
     sqlStatement = `INSERT INTO ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase()} (${sqlColumns}) VALUES (${sqlValuePlaceholders}) ${getIdSqlStatement}`;
-    const result = await dataStore.tryExecuteQuery(sqlStatement, values);
+    const result = await dataStore.executeSqlQueryOrThrow(sqlStatement, values);
     const _id = dataStore.getInsertId(result, '_id')?.toString();
 
     await forEachAsyncParallel(
@@ -155,7 +155,7 @@ export default async function createEntity<T extends BackkEntity>(
                 subEntityForeignIdFieldName
               } = entityAnnotationContainer.getManyToManyRelationTableSpec(associationTableName);
 
-              await dataStore.tryExecuteSql(
+              await dataStore.executeSqlOrThrow(
                 `INSERT INTO ${dataStore.getSchema().toLowerCase()}.${associationTableName.toLowerCase()} (${entityForeignIdFieldName.toLowerCase()}, ${subEntityForeignIdFieldName.toLowerCase()}) VALUES (${dataStore.getValuePlaceholder(
                   1
                 )}, ${dataStore.getValuePlaceholder(2)})`,
@@ -224,7 +224,7 @@ export default async function createEntity<T extends BackkEntity>(
                 1
               )}, ${dataStore.getValuePlaceholder(2)})`;
 
-              await dataStore.tryExecuteSql(insertStatement, [_id, subItem]);
+              await dataStore.executeSqlOrThrow(insertStatement, [_id, subItem]);
             }
           );
         }

@@ -47,7 +47,6 @@ class SalesItemServiceImpl extends CrudEntityService implements SalesItemService
         ...salesItem,
         state: 'forSale',
         previousPrice: null,
-        primaryImageThumbnailDataUri: getThumbnailImageDataUri(salesItem.primaryImageDataUri),
         likeCount: 0,
       },
       {
@@ -58,9 +57,7 @@ class SalesItemServiceImpl extends CrudEntityService implements SalesItemService
               state: 'forSale',
             });
 
-            return typeof usersSellableSalesItemCount === 'number'
-              ? usersSellableSalesItemCount < 100
-              : error;
+            return error ?? usersSellableSalesItemCount < 100;
           },
           error: salesItemServiceErrors.maximumSalesItemCountPerUserExceeded,
         },

@@ -50,7 +50,7 @@ export default async function deleteAllEntities<T>(
         Object.values(entityContainer.entityNameToJoinsMap[EntityClass.name] || {}),
         async (joinSpec: EntityJoinSpec) => {
           if (!joinSpec.isReadonly) {
-            await dataStore.tryExecuteSql(
+            await dataStore.executeSqlOrThrow(
               `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${joinSpec.subEntityTableName.toLowerCase()}`
             );
           }
@@ -58,14 +58,14 @@ export default async function deleteAllEntities<T>(
       ),
       forEachAsyncParallel(entityContainer.manyToManyRelationTableSpecs, async ({ associationTableName }) => {
         if (associationTableName.startsWith(EntityClass.name + '_')) {
-          await dataStore.tryExecuteSql(
+          await dataStore.executeSqlOrThrow(
             `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${associationTableName.toLowerCase()}`
           );
         }
       }),
       isRecursive
         ? Promise.resolve(undefined)
-        : dataStore.tryExecuteSql(
+        : dataStore.executeSqlOrThrow(
             `DELETE FROM ${dataStore.getSchema().toLowerCase()}.${EntityClass.name.toLowerCase()}${whereClause}`,
             whereClause ? [userAccountId] : undefined
           )

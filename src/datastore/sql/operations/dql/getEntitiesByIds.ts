@@ -106,7 +106,7 @@ export default async function getEntitiesByIds<T>(
       .filter((sqlPart) => sqlPart)
       .join(' ');
 
-    const result = await dataStore.tryExecuteQuery(selectStatement, [
+    const result = await dataStore.executeSqlQueryOrThrow(selectStatement, [
       ...numericIds,
       ...(additionalWhereExpression ? [userAccountId] : [])
     ]);

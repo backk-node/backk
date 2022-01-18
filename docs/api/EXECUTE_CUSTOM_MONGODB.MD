@@ -5,13 +5,11 @@ craft vulnerable code (Injection attacks). Prefer to find a suitable existing da
 a new feature request for Backk, so that we can enhance an existing Backk data store method or create a totally
 new method. Also, when using custom MongoDB operations, you make your code non-portable to use another type of data store.
 
-### tryExecute
-
-**NOTE! This method can throw an exception**
+### executeMongoDbOperationsOrThrow
 
 ```ts
 interface DataStore {
-  tryExecute<T>(
+  executeMongoDbOperationsOrThrow<T>(
     shouldUseTransaction: boolean,
     executeDbOperations: (client: MongoClient) => Promise<T>
   ): Promise<T>;

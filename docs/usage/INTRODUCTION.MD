@@ -33,7 +33,6 @@ For example if you have a sales item service:
 - `salesItemService` is the property name of sales item service in microservice implementation class
 
 SalesItemService.ts
-
 ```ts
 import { Service} from 'backk';
 
@@ -43,7 +42,6 @@ export interface SalesItemService extends Service {
 ```
 
 SalesItemServiceImpl.ts
-
 ```ts
 import { CrudEntityService } from 'backk';
 
@@ -53,7 +51,6 @@ export default class SalesItemServiceImpl extends CrudEntityService implements S
 ```
 
 MicroserviceImpl.ts
-
 ```ts
 import { Microservice } from 'backk';
 
@@ -426,8 +423,8 @@ would have all control of defining what fields are returned, sort order and pagi
 
 ```ts
 class DefaultPostQueryOperationsImpl implements PostQueryOperations {
-  constructor(pageNumber: number = 1, pageSize: number = 50) {
-    this.paginations = [new Pagination('*', pageNumber, pageSize)];
+  constructor(rootEntitiesPageNumber: number = 1, rootEntitiesPageSize: number = 50) {
+    this.paginations = [new Pagination('', rootEntitiesPageNumber, rootEntititesPageSize), new Pagination('*', 1, 50)];
   }
 
   includeResponseFields?: string[] = [];

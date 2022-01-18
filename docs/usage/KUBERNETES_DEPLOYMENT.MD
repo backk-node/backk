@@ -10,8 +10,9 @@ The Kubernetes deployment of the Backk microservice contains following definitio
 - Horizontal Pod Autoscaler
 - ConfigMap
 - Secret
-- Emissary Ingress Mapping and RateLimit (Coming in the future)
-- Keycloak IAM KeycloakClient (Coming in the future)
+- Custom Resource Definitions (CRDs)
+  - Emissary-Ingress Mapping and Ambassador Edge Stack Mapping and RateLimit
+  - Keycloak IAM KeycloakClient (Coming in the future)
 
 ### Deployment to a Local Kubernetes Environment
 
@@ -43,7 +44,7 @@ The above script `npm run helm:install` will perform the following before Helm i
  - Starts Minikube (`npm run minikube:start`)
  - Lints the Helm chart (`npm run helm:lint`)
  - Packages the Helm chart (`npm run helm:package`)
- - Removes existing Helm installation (`npm run helm:uninstall`)
+ - Removes a possible existing Helm installation (`npm run helm:uninstall`)
 
 ### Deployment to a Shared Kubernetes Development Environment
 You want to have one or more shared Kubernetes dev environments where all teams and team members can 

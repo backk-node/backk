@@ -12,7 +12,7 @@ The Kubernetes deployment of the Backk microservice contains following definitio
 - Secret
 - Custom Resource Definitions (CRDs)
   - Emissary-Ingress Mapping and Ambassador Edge Stack Mapping and RateLimit
-  - Keycloak IAM KeycloakClient (Coming in the future)
+  - Keycloak IAM KeycloakClient (Not yet available, coming in the future)
 
 ### Deployment to a Local Kubernetes Environment
 

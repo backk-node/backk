@@ -51,7 +51,9 @@
     - Backk validates the response object or the first object of the response array about to be sent to the client, in order to mitigate possible SQL injection attacks that might return unwanted and invalid information from database
   - Backk data store operations don't require writing SQL statements
   - Backk data store operations internally always use SQL prepared statements
+  - There is eslint-plugin-backk rule for checking that SQL expression given for SqlFilter constructor is a string literal to avoid crafting an SQL expression string that might contain vulnerable code from client input.
   - Backk always validates input given to SQL ORDER BY clause that they can contain only valid column names and sort direction
+  - There is eslint-plugin-backk rule for checking that when defining a sort expression, it must be a literal string to avoid crafting an SQL expression string that might contain vulnerable code from client input.
   - Backk always validates input given to SQL LIMIT/OFFSET clause that they can contain only numbers
   - Backk validates the requested column names in SQL SELECT statements and does not return any columns that are not specified in Entity class as readable
   - Backk never allows non-readable entity fields to be used in user defined (= client originated) query filters

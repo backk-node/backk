@@ -24,6 +24,9 @@ class ResponseCacheConfigServiceImpl extends ResponseCacheConfigService {
 }
 ```
 
+If you want to disable caching in development environment, implement `shouldCacheServiceFunctionCallResponse`
+to return false always when `NODE_ENV` environment variable is `development`.
+
 Instantiate your response cache config service in your microservice implementation class:
 ```ts
 class MicroserviceImpl extends Microservice {
@@ -41,6 +44,7 @@ Response cache service requires following environment variables to be defined:
 - `REDIS_CACHE_HOST` which denotes the Redis cache server host
 - `REDIS_CACHE_PORT` which denotes the Redis cache server port
 - `REDIS_CACHE_PASSWORD` which denotes the Redis server password
+
 
 ### <a name="genericlocalinmemorycaching"></a> Generic Local In-Memory Caching
 You can use local in-memory caching by importing `MemoryCache` from `memory-cache-node` and

@@ -5,7 +5,7 @@
 
 ### <a name="automaticintegrationtests"></a> Automatic Integration Tests
 By default, Backk Microservice will automatically generate integration tests for your `CrudEntityService` based 
-services. The integration tests are generated as a Postman collection, which you import to [Postman](https://www.postman.com/) application or
+services. Integration tests are generated currently only for microservice that uses HTTP server request processor. Integration tests for Kafka/Redis consumers are coming in the future. The integration tests are generated as a Postman collection, which you import to [Postman](https://www.postman.com/) application or
 run using [Newman](https://www.npmjs.com/package/newman). Integration tests can be executed in development environment using Newman from the command line with following command:
 
 ```bash

@@ -369,6 +369,14 @@ second hand items. Users can add their own sales items and browse others' sales 
 follow sales items for price changes. Users can add/remove sales item to/from shopping cart and place orders.
 Vitja will also track the order delivery and possible order return process.
 
+## Usage Documentation
+
+Usage documentation is available [here.](docs/USAGE_DOCUMENTATION.MD)
+
+## API Documentation
+
+Usage documentation is available [here.](docs/API_DOCUMENTATION.MD)
+
 ## <a name="feedback"></a> Feedback
 
 ### <a name="report-bug"></a> Report Bug

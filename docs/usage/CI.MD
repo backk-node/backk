@@ -23,6 +23,7 @@ You should have the following steps in your CI pipeline:
   - Run integration tests with command `scripts/run-integration-tests-in-ci.sh`
   - Perform OWASP ZAP API scan against file `generated/openapi/openApiPublicSpec.yaml`
   - Tear down integration testing environment with command `docker-compose --env-file env.ci down -v`
+  - Lint Dockerfile with Hadolint
   - Log in to your Docker registry
   - Build docker image
   - Tag docker image with 
@@ -38,6 +39,7 @@ You should have the following steps in your CI pipeline:
     - For security reasons, dockerImageTag should contain both version and digest, for example 1.0.0@sha256:3235326357dfb65f1781dbc4df3b834546d8bf914e82cce58e6e6b
     - `sed -i "s/^imageTag:.*/imageTag: ${{ dockerImageTag }}/g helm/<your-microservice-name>/values.yaml"`
   - Lint Helm chart with command `helm lint -f helm/values/values-minikube.yaml helm/<your-microservice-name>`
+  - Perform static code analysis for Helm chart with Checkov. If you have added other infrastructure code, e.g. Terraform, perform SCA for that also.
   - Package helm chart with command `helm package helm/<your-microservice-name>`
   - Push Helm chart package to Helm chart repository
 

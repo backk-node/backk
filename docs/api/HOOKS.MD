@@ -1,8 +1,9 @@
 ## Hooks
 
 Hooks are operations performed before or after the actual data store operation. Using hooks you can avoid
-explicitly declaring a transaction. All hooks and the actual data store operation are executed inside a transaction
+explicitly declaring a transaction. All hooks and the actual data store operation are executed implicitly inside a transaction
 by the Backk library. If any of the hooks or the actual data store operation fails, the whole transaction fails.
+When using hooks, most of your service functions become a single operation. Usage of hooks is totally optional.
 
 Each hook has a function property `shouldSucceedOrBeTrue`, which is the hook function to be called.
 The hook is successful, if the hook function returns `true` or promise of `true` or does not return any error.

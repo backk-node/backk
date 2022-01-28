@@ -494,8 +494,6 @@ n
 >src/decorators/typeproperty/typePropertyAnnotationContainer.ts,c/8/c810282510d9ae8ef1f187c69f3bc3db0d6976fb
 `
 0src/datastore/sql/operations/dml/updateEntity.ts,0/5/05f62d510684151a2f5e7ae4730cc044e9d5de10
-O
-src/datastore/MySqlDataStore.ts,8/f/8f134bc4a4f1e8125d58c46d089a814d427d922b
 `
 0src/datastore/sql/operations/dml/createEntity.ts,5/e/5ef41390bfb0e700418cdd08ce9f36a0dd37aa7a
 I
@@ -536,8 +534,6 @@ S
 #docs/usage/MICROSERVICE_METADATA.MD,d/8/d871bca4101499475e31f84c6e6f47975caa7357
 ]
 -docs/usage/MULTIPLE_SERVICE_FUNCTION_CALLS.MD,0/d/0dcf4f2c1aaf839293469ddd2d16d9d734c85417
-I
-docs/usage/NPM_SCRIPTS.MD,1/f/1f3e1fcfaa28267d91d60240a13399cbc692a19e
 K
 docs/usage/OBSERVABILITY.MD,4/d/4d9b1b6d3f0a0e8206402fca26b682aefa7844e6
 S
@@ -574,8 +570,6 @@ N
 docs/api/EXECUTE_CUSTOM_SQL.MD,1/2/1264618e8349e1ae830b301d84ab163513d2f1c4
 o
 ?src/services/readinesscheck/DefaultReadinessCheckServiceImpl.ts,a/2/a2ae23c97e04aa5867d59e13ed15b9cbbca3db65
-Q
-!src/datastore/MongoDbDataStore.ts,7/f/7f6815388428de13693ae11762a77f1789593f07
 N
 src/datastore/NullDataStore.ts,2/e/2e928b6ee6da950485438ecb838be1ab236d6091
 R

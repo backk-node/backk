@@ -1,7 +1,7 @@
 ## NPM scripts
 
 | Script                  | Purpose                                                                                                                                                                                                      |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| ----------------------- |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | prepare                 | Installs Husky and Git commit hooks. This is execute automatically after npm install                                                                                                                         |
 | generateTypes           | Generates .ts files from Backk proprietary .type files                                                                                                                                                       |
 | generateDoc             | Generates a documentation web site of the Backk microservice                                                                                                                                                 |
@@ -22,7 +22,8 @@
 | test:debug              | Executes Jest unit tests in debug mode using .env.dev as environment                                                                                                                                         |
 | integrationtest:dev     | Executes integration tests with Newman using Postman collection from generated/integrationtests directory and using .env.dev as environment. This scripts requires that microservice is started and running. |
 | integrationtest:ci      | Runs integration tests using .env.ci as enviroment. Launches needed services with 'docker-compose:up' before testing and performs 'docker-compose:down' after testing                                        |
-| docker:build            | Builds Docker image and tags it with <username>-<git-branch> tag                                                                                                                                             |
+| dockerfile:lint         | Lints Dockerfile with Hadolint                                                                                                                                                                               |
+| docker:build            | Builds Docker image and tags it with <username>-<git-branch> tag. Dockerfile is linted before building.                                                                                                      |
 | docker:push             | Pushes Docker image with tag <username>-<git-branch to Git repository. Builds Docker image before pushing if needed                                                                                          |
 | docker-compose:up       | Sets up a Docker Compose environment using .env.ci as environment                                                                                                                                            |
 | docker-compose:down     | Tears down a Docker Compose environment                                                                                                                                                                      |
@@ -30,10 +31,9 @@
 | minikube:serviceurl     | Creates an HTTP URL to access your microservice in Minikube from localhost                                                                                                                                   |
 | minikube:stop           | Stops Minikube                                                                                                                                                                                               |
 | helm:lint               | Lints the Helm chart. Helm tool must installed first.                                                                                                                                                        |
-| helm:package            | Packages the Helm chart                                                                                                                                                                                      |
-| helm:install            | Installs a Helm release to Minikube using the packaged Helm chart                                                                                                                                            |
+| helm:package            | Packages the Helm chart. Chart is linted before packaging.                                                                                                                                                   |
+| helm:install            | Installs a Helm release to Minikube using the packaged Helm chart. If needed, performs following before install: starts Minikube, lints chart and packages chart.                                            |
 | helm:uninstall          | Uninstalls the Helm release from Minikube                                                                                                                                                                    |
-
 
 For docker scripts, you need to install [Docker Desktop for Mac/Windows](https://www.docker.com/products/docker-desktop).
 For helm scripts, you need to install [Helm](https://helm.sh/docs/intro/install/).

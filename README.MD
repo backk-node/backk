@@ -30,13 +30,6 @@
 - [Sponsor](#sponsor)
 - [License](#license)
 
-## <a name="status"></a> Status
-
-Backk is currently in beta phase. It might still contain some bugs, because everything is not 100% tested yet.
-We are still working with a couple of features, namely backk-cli to generate new Backk microservice projects and distributed transactions with persistent sagas.
-If you notice any problems or bugs, don't hesitate to submit an issue about that. See [Report a Bug](#report-bug). We are trying to address issues as fast as possible.
-If you want/need any new features, please submit an issue about that. See [Request a New Feature](#request-new-feature).
-
 ## <a name="features"></a> Features
 
 - Create synchronous and asynchronous microservices using

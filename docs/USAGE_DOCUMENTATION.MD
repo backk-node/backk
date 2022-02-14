@@ -18,6 +18,7 @@
 - [Observability](usage/OBSERVABILITY.MD)
 - [Dependency Injection](usage/DI.MD)
 - [Version Control](usage/VERSION_CONTROL.MD)
+- [Unit Testing](usage/UNIT_TESTING.MD)
 - [Integration Testing](usage/INTEGRATION_TESTING.MD)
 - [Client Generation](usage/CLIENT_GENERATION.MD)
 - [Kubernetes Deployment](usage/KUBERNETES_DEPLOYMENT.MD)

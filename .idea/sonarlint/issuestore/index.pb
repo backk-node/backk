@@ -424,10 +424,6 @@ e
 5src/decorators/typeproperty/FetchFromRemoteService.ts,7/4/748f74847fd0f98e5bfef277f1921ce711d5ee3f
 L
 src/types/ErrorDefinition.ts,b/d/bdddc5a4ea19c1d1a503ef76b0bc3261f648deba
-T
-$src/datastore/hooks/EntityPreHook.ts,d/3/d319140efd71c42c6cfa25104fdcc432f38db21e
-W
-'src/datastore/hooks/EntitiesPostHook.ts,4/d/4d3980890d2f9b90c77a82e519a031a14955d694
 J
 src/errors/BACKK_ERRORS.ts,6/4/64e3477056196aae3c3a3b96d1c524968ad619fd
 S
@@ -456,8 +452,6 @@ P
  src/microservice/Microservice.ts,b/2/b203b2517f9ead474bfd9ed8b4aa05bb628a6597
 S
 #src/openapi/writeOpenApiSpecFile.ts,f/2/f2fd425c36694198fd59a76c96f5848e5bf5657c
-O
-src/datastore/hooks/PostHook.ts,5/b/5b3637908f89509b2d93c0cccb4faf9813c90f12
 K
 docs/api/UPDATE_ENTITIES.MD,e/e/eebdc47e8db894055f17a22af6d1b04c7a877998
 W

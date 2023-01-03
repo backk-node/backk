@@ -117,9 +117,9 @@
     "prettier-plugin-organize-imports": "^2.3.4",
     "rimraf": "^3.0.2",
     "ts-jest": "29.0.3",
-    "ts-loader": "6.2.2",
+    "ts-loader": "9.4.2",
     "ts-node": "8.10.2",
-    "tsconfig-paths": "3.9.0"
+    "tsconfig-paths": "3.10.1"
   },
   "jest": {
     "moduleFileExtensions": [
